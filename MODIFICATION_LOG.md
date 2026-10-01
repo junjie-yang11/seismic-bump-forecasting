@@ -58,3 +58,10 @@ The dataset lacks timestamps and wall IDs. No temporal confidence intervals or p
 - Added four paired-resampling regression tests and `verify_additions.py` checks for all seed metrics, interval percentiles, bin conservation, engineering counts and source mapping. Updated README and data documentation so the GitHub project exposes the evidence and the paper directly.
 
 Final validation: the complete integrated experiment run succeeded; 21 regression tests passed and 719 consistency checks passed. Final Word and PDF contain the same text and numerical tables. All four-decimal report occurrences were verified in extracted PDF text. All eight final PDF pages were visually inspected, and embedded body/heading fonts are Times New Roman. No original ARFF data file is committed.
+
+## Contribution-led paper polish (2026-10-02)
+
+- Applied the anti-defensive-writing skill to the title, abstract, introduction, results, discussion and conclusions. The paper now leads with cohort comparability, training-prior calibration and the engineering consequences of a fixed warning threshold.
+- Consolidated repeated qualifications into the relevant methods, interpretation and prospective-validation passages. Retained conditional bootstrap scope, both model intervals, negative Brier skill, missed-event counts and the record-order assumption. UAV/image validation remains a proposed extension.
+- Updated `paper_content.py` and the README narrative, then regenerated `report/technical_note.md`, `report/technical_report.docx` and `report/technical_report.pdf`. Updated `generate_report.py` to keep the short warning-results introduction together across page breaks.
+- No model, experiment, prediction or numerical result table was changed. All 719 report/result consistency checks passed; all four-decimal numerical occurrences were verified against PDF text. All eight final PDF pages were visually inspected, with embedded Times New Roman fonts.

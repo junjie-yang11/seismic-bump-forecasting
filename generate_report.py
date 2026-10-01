@@ -139,6 +139,8 @@ def write_word_report():
             p.paragraph_format.keep_with_next=True
         else:
             p=doc.add_paragraph(line)
+            if line.startswith('Table 5 reports fixed-threshold holdout performance.'):
+                p.paragraph_format.keep_together = True
             if i < 8:
                 p.alignment=WD_ALIGN_PARAGRAPH.CENTER
                 for r in p.runs: r.font.size=Pt(10.5)

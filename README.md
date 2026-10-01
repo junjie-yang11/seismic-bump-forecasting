@@ -1,6 +1,6 @@
-# When the validation gap shrinks: seismic bump forecasting
+# Cohort matched evaluation of seismic bump forecasting for mine warning decisions
 
-A mining-engineering study connecting monitoring data, reproducible machine-learning evaluation and warning consequences. The report examines three separate questions: ranking hazardous shifts, interpreting probabilities and transferring a warning threshold to a later period.
+A mining-engineering evaluation workflow that matches test cohorts across protocols, assesses forecast probabilities using training-only information and translates fixed thresholds into event detection and inspection workload.
 
 **Main finding:** matching the evaluation records reduces the apparent random-versus-record-order PR-AUC gap by 89.7% for logistic regression and 86.9% for CART. This is a descriptive cohort-sensitivity result; it is not a causal estimate of drift or leakage. In the common 2,063-row cohort:
 
@@ -11,7 +11,7 @@ A mining-engineering study connecting monitoring data, reproducible machine-lear
 
 Intervals use 2,000 phase-stratified paired moving-block replicates (length 32), averaging all five random seeds in each replicate. They condition on fixed predictions; they do not include model-refit uncertainty. Lengths 16 and 64 and paired IID resampling are sensitivity checks. LR crosses zero; CART retains a positive conditional difference.
 
-**Calibration and warning consequences:** fold-local LR correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439, but corrected Brier skill remains negative against an oracle constant baseline. In the final 774 shifts, a training-derived LR threshold flags 8 shifts and detects only 2 of 26 hazardous shifts. Ranking, calibration and a useful operational policy are separate outcomes.
+**Calibration and warning consequences:** fold-local LR correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. Against a retrospective oracle constant reference, corrected Brier skill is -0.0751. In the final 774 shifts, a training-derived LR threshold produces 8 alerts, detects 2 hazardous shifts and misses 24. These results make probability assessment and threshold transfer explicit parts of the warning evaluation.
 
 Read the [paper-style Word report](report/technical_report.docx), [PDF](report/technical_report.pdf), or [Markdown](report/technical_note.md). The discussion links shift-level forecasts to inspection workload and missed-event consequences, and develops transferable validation principles for UAV and mine-image datasets. The experiments in this repository use tabular monitoring data.
 
