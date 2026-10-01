@@ -1,0 +1,12 @@
+# Minimum versions rather than pins, so that pip resolves the newest release
+# compatible with the Python you are running.
+#
+# Verified working on:
+#   Python 3.7.0  ->  numpy 1.21.6, pandas 1.1.5, Pillow 9.5.0
+#   Python 3.12   ->  numpy 2.3.x,  pandas 3.0.x, Pillow 12.x
+#
+# Pillow is used only to draw the PNG figures for the report. The analysis
+# itself needs nothing beyond numpy and pandas.
+numpy>=1.21
+pandas>=1.1
+Pillow>=9.0

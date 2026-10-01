@@ -1,0 +1,21 @@
+# Normalise line endings so that the repository behaves identically on
+# Windows, macOS and Linux. Without this, Git warns on every operation and
+# Windows checkouts silently convert LF to CRLF, which shows up as spurious
+# "modified" files when the repository is cloned elsewhere.
+* text=auto eol=lf
+
+# Windows-native scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary artefacts must never be line-ending converted
+*.png  binary
+*.pdf  binary
+*.docx binary
+
+# Curated text formats
+*.md   text eol=lf
+*.py   text eol=lf
+*.csv  text eol=lf
+*.json text eol=lf

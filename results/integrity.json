@@ -1,0 +1,21 @@
+{
+  "n_rows": 2578,
+  "n_cols": 19,
+  "n_positive": 170,
+  "prevalence": 0.06594259115593483,
+  "duplicate_rows": 0,
+  "constant_columns": [
+    "nbumps6",
+    "nbumps7",
+    "nbumps89"
+  ],
+  "nbumps_range_rank": 4,
+  "nbumps_range_ncols": 7,
+  "prevalence_by_quintile": {
+    "0": 0.1609,
+    "1": 0.068,
+    "2": 0.0213,
+    "3": 0.0447,
+    "4": 0.0349
+  }
+}

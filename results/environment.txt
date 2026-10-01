@@ -1,0 +1,27 @@
+Environment record for this run
+============================================================
+
+Recorded (local) : 2026-10-01 19:38:40
+Recorded (UTC)   : 2026-10-01 11:38:40 UTC
+
+Operating system : Windows 10
+Machine          : AMD64
+Processor        : AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD
+
+Python           : 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:59:51) [MSC v.1914 64 bit (AMD64)]
+Python executable: D:\yjjjjjj\Documents\雅思\seismic-bump-forecasting\.venv\Scripts\python.exe
+Byte order       : little
+
+numpy            : 1.21.6
+pandas           : 1.1.5
+
+Command used     : python run_experiments.py
+
+------------------------------------------------------------
+pip freeze
+------------------------------------------------------------
+numpy==1.21.6
+pandas==1.1.5
+python-dateutil==2.9.0.post0
+pytz==2026.4
+six==1.17.0

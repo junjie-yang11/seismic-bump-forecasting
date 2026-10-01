@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------------------
+# Data — NOT committed on purpose.
+# `src/data.py` downloads the CSV on first run, so anyone who clones this repo
+# can reproduce everything with one command. Committing the file would only
+# bloat the repository and hide whether the download step actually works.
+#
+# Note the `data/*` form rather than `data/`: ignoring the directory itself
+# would also ignore data/README.md, which documents where the data comes from.
+# ---------------------------------------------------------------------------
+data/*
+!data/README.md
+*.csv
+!results/*.csv
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------------------------------------------------------------------------
+# Editors and operating systems
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Notes on what IS committed:
+#   results/          -> committed: this is the evidence for the write-up
+#   results/figures/  -> committed: the figures referenced in the note
+#   report/           -> committed: the technical note
+# ---------------------------------------------------------------------------
