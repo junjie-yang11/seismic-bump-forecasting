@@ -1,5 +1,5 @@
 model,validation,roc_auc,pr_auc
 "logistic regression (L2, class-weighted)",random stratified 10-fold,0.7618990619503615,0.20646425516140343
 "logistic regression (L2, class-weighted)",time-ordered expanding window,0.6093153049482163,0.06296626637324587
-"bagged CART (60 trees, depth 6)",random stratified 10-fold,0.8040319034590581,0.2807411539040312
-"bagged CART (60 trees, depth 6)",time-ordered expanding window,0.6694390103567319,0.08505215854196528
+"bagged CART (60 trees, depth 6)",random stratified 10-fold,0.8040319034590581,0.28074099699452093
+"bagged CART (60 trees, depth 6)",time-ordered expanding window,0.6694390103567319,0.08503525162866063

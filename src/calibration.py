@@ -41,13 +41,22 @@ def reliability_curve(y, p, n_bins: int = 10, strategy: str = "quantile"):
     """
     y = np.asarray(y, dtype=float)
     p = np.asarray(p, dtype=float)
+    if y.shape != p.shape or y.size == 0:
+        raise ValueError("y and p must be non-empty arrays with the same shape")
+    if not np.all(np.isfinite(p)):
+        raise ValueError("predicted probabilities must be finite")
+    if n_bins < 1:
+        raise ValueError("n_bins must be positive")
     if strategy == "quantile":
         edges = np.unique(np.quantile(p, np.linspace(0.0, 1.0, n_bins + 1)))
     elif strategy == "uniform":
-        edges = np.linspace(p.min(), p.max(), n_bins + 1)
+        lo, hi = float(p.min()), float(p.max())
+        edges = np.linspace(lo, hi, n_bins + 1) if hi > lo else np.array([lo, hi + 1.0])
     else:
         raise ValueError("strategy must be 'quantile' or 'uniform'")
 
+    if len(edges) < 2:
+        edges = np.array([float(p.min()), float(p.max()) + 1e-12])
     idx = np.clip(np.digitize(p, edges[1:-1], right=False), 0, len(edges) - 2)
     rows = []
     for b in range(len(edges) - 1):

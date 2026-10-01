@@ -122,6 +122,10 @@ def svg_bars(labels, values, out, title, ymax=1.0):
 # --------------------------------------------------------------------------- #
 def main(refresh: bool = False):
     X, y, features, df = load(refresh)
+    # Estimate the alert-rate and calibration prior from historical labels only.
+    # No threshold or probability correction may inspect the evaluation labels.
+    reference_cut = int(0.7 * len(y))
+    reference_prevalence = float(y[:reference_cut].mean())
     rep = integrity_report(df)
     with open(os.path.join(RESULTS, "integrity.json"), "w", encoding="utf-8") as f:
         json.dump(rep, f, indent=2, ensure_ascii=False)
@@ -163,7 +167,8 @@ def main(refresh: bool = False):
             if sd == RANDOM_SEEDS[0]:
                 pooled = p
         oof_store[(mname, "random")] = pooled
-        s = summarise(y[~np.isnan(pooled)], pooled[~np.isnan(pooled)])
+        s = summarise(y[~np.isnan(pooled)], pooled[~np.isnan(pooled)],
+                      prevalence=reference_prevalence)
         rows.append(dict(model=mname, validation="random stratified 10-fold",
                          roc_auc=float(np.mean(aucs)), roc_auc_sd=float(np.std(aucs)),
                          pr_auc=float(np.mean(prs)), pr_auc_sd=float(np.std(prs)),
@@ -173,7 +178,7 @@ def main(refresh: bool = False):
         p = cross_validate_splits(mfac, X, y, time_ordered_folds(len(y), k=5))
         oof_store[(mname, "time")] = p
         m = ~np.isnan(p)
-        s = summarise(y[m], p[m])
+        s = summarise(y[m], p[m], prevalence=reference_prevalence)
         rows.append(dict(model=mname, validation="time-ordered expanding window",
                          roc_auc=roc_auc(y[m], p[m]), roc_auc_sd=0.0,
                          pr_auc=average_precision(y[m], p[m]), pr_auc_sd=0.0,
@@ -218,7 +223,7 @@ def main(refresh: bool = False):
     (Xtr, ytr), (Xte, yte) = chronological_holdout(X, y, 0.7)
     for mname, mfac in MODELS.items():
         mdl = mfac().fit(Xtr, ytr)
-        s = summarise(yte, mdl.predict_proba(Xte))
+        s = summarise(yte, mdl.predict_proba(Xte), prevalence=float(ytr.mean()))
         hold.append(dict(model=mname, n_test=s["n"], roc_auc=s["roc_auc"],
                          pr_auc=s["pr_auc"], accuracy=s["accuracy"],
                          balanced_accuracy=s["balanced_accuracy"],
@@ -245,31 +250,32 @@ def main(refresh: bool = False):
     print("=" * 104)
     from calibration import (prior_correction, calibration_summary,
                              reliability_curve)
-    prev = float(y.mean())
+    prev = reference_prevalence
     cal_rows, cal_panels = [], []
-    families = [("logistic regression (L2, class-weighted)", "LR"),
-                ("bagged CART (60 trees, depth 6)", "CART")]
-    print("  Class weights make the fit behave as if the base rate were 0.50,")
-    print("  so the output probabilities sit on the wrong scale and need a")
-    print("  log-odds correction. Ranking metrics are blind to this.")
-    for ci, (mname, short) in enumerate(families):
+    families = [("logistic regression (L2, class-weighted)", "LR", True),
+                ("bagged CART (60 trees, depth 6)", "CART", False)]
+    print("  The logistic model uses balanced class weights, so its output")
+    print("  probabilities need a prior correction estimated from historical data.")
+    print("  CART is unweighted and is reported as fitted.")
+    for ci, (mname, short, weighted) in enumerate(families):
         p = oof_store[(mname, "time")]          # the honest scheme
         m = ~np.isnan(p)
         yt, pt = y[m], p[m]
-        pc = prior_correction(pt, prev, 0.5)
-        for tag, pp in (("as fitted (class-weighted)", pt),
-                        ("after prior correction", pc)):
+        variants = [("as fitted (class-weighted)", pt),
+                    ("after prior correction", prior_correction(pt, prev, 0.5))] \
+            if weighted else [("as fitted (unweighted CART)", pt)]
+        for tag, pp in variants:
             s = calibration_summary(yt, pp, short)
             s.update(model=short, variant=tag)
             cal_rows.append(s)
-        for tag, pp in (("as fitted", pt), ("after prior correction", pc)):
+        for tag, pp in variants:
             rc = reliability_curve(yt, pp, n_bins=10)
             cal_panels.append(("%s \u2014 %s" % (short, tag),
                                rc["mean_pred"], rc["obs_freq"], rc["count"]))
     cal = pd.DataFrame(cal_rows)[["model", "variant", "brier", "brier_skill",
                                   "ece", "mce", "mean_predicted", "observed_rate"]]
     cal.to_csv(os.path.join(RESULTS, "calibration.csv"), index=False)
-    print("  observed prevalence in the test folds = %.4f" % prev)
+    print("  historical prevalence used for threshold/calibration = %.4f" % prev)
     print(cal.to_string(index=False, float_format=lambda v: f"{v:.4f}"))
 
     # ---------------- figures ----------------
@@ -280,7 +286,7 @@ def main(refresh: bool = False):
     from figures import save_curves_png, save_bars_png, save_reliability_png
 
     combined, roc_curves, pr_curves = [], [], []
-    for ci, (mname, short) in enumerate(families):
+    for ci, (mname, short, _) in enumerate(families):
         for scheme, dashed in [("random", False), ("time", True)]:
             p = oof_store[(mname, scheme)]
             m = ~np.isnan(p)
@@ -351,9 +357,9 @@ def main(refresh: bool = False):
         f.write("## 5. Permutation importance (bagged CART, in-sample)\n\n"
                 + md(imp.head(12)) + "\n\n")
         f.write("## 6. Probability calibration\n\n")
-        f.write("Class weights make the fit behave as if the base rate were 0.50, so the "
-                "output probabilities sit on the wrong scale. `prior correction` shifts the "
-                "log-odds back to the observed prevalence (%.4f).\n\n" % prev)
+        f.write("The logistic model uses balanced class weights; its `prior correction` "
+                "uses the historical prevalence (%.4f). CART is unweighted and is shown "
+                "as fitted.\n\n" % prev)
         f.write(md(cal) + "\n")
     print("  wrote results/summary.md")
     print("\ndone.")

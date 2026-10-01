@@ -49,25 +49,32 @@ def roc_auc(y: np.ndarray, score: np.ndarray) -> float:
 
 
 def average_precision(y: np.ndarray, score: np.ndarray) -> float:
-    """Area under the precision-recall curve (step-wise / trapezoid-free)."""
+    """Area under the precision-recall curve, grouping tied scores."""
+    y = np.asarray(y, dtype=float)
+    score = np.asarray(score, dtype=float)
     order = np.argsort(-score, kind="mergesort")
-    yy = y[order]
-    tp = np.cumsum(yy)
-    if tp[-1] == 0:
+    yy, ss = y[order], score[order]
+    total_pos = float(yy.sum())
+    if total_pos == 0:
         return float("nan")
-    precision = tp / np.arange(1, len(yy) + 1)
-    recall = tp / tp[-1]
+    end = np.r_[np.flatnonzero(np.diff(ss)) + 1, len(ss)]
+    tp = np.cumsum(yy)[end - 1]
+    fp = end - tp
+    precision = tp / (tp + fp)
+    recall = tp / total_pos
     return float(np.sum(np.diff(np.r_[0.0, recall]) * precision))
 
 
 def prior_threshold(score: np.ndarray, prevalence: float) -> float:
     """Flag the riskiest `prevalence` fraction of shifts (operationally useful)."""
+    if not 0.0 < prevalence <= 1.0:
+        raise ValueError("prevalence must be in (0, 1]")
     return float(np.quantile(score, 1.0 - prevalence))
 
 
 def summarise(y: np.ndarray, score: np.ndarray, prevalence: float | None = None) -> dict:
     if prevalence is None:
-        prevalence = float(y.mean())
+        raise ValueError("prevalence must be supplied from training data; test labels may not set the threshold")
     thr = prior_threshold(score, prevalence)
     out = dict(n=int(len(y)), positives=int((y == 1).sum()), prevalence=float(y.mean()),
                roc_auc=roc_auc(y, score), pr_auc=average_precision(y, score),
@@ -78,11 +85,14 @@ def summarise(y: np.ndarray, score: np.ndarray, prevalence: float | None = None)
 
 def curve_points(y: np.ndarray, score: np.ndarray, n_points: int = 200):
     """ROC and PR coordinates for plotting."""
-    thresholds = np.quantile(score, np.linspace(1.0, 0.0, n_points))
-    thresholds = np.unique(thresholds)
+    thresholds = np.unique(np.asarray(score, dtype=float))
+    if len(thresholds) > n_points:
+        thresholds = np.quantile(thresholds, np.linspace(1.0, 0.0, n_points))
+        thresholds = np.unique(thresholds)
+    thresholds = np.r_[np.inf, thresholds[::-1], -np.inf]
     roc, pr = [], []
     for t in thresholds:
         m = threshold_metrics(y, score, t)
-        roc.append((m["specificity"] and 1 - m["specificity"], m["recall"]))
+        roc.append((1.0 - m["specificity"], m["recall"]))
         pr.append((m["recall"], m["precision"]))
     return np.array(roc), np.array(pr)

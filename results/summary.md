@@ -34,10 +34,10 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 | model | validation | roc_auc | roc_auc_sd | pr_auc | pr_auc_sd | accuracy | balanced_accuracy | recall | precision | f1 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| logistic regression (L2, class-weighted) | random stratified 10-fold | 0.755 | 0.004 | 0.195 | 0.003 | 0.904 | 0.610 | 0.271 | 0.271 | 0.271 |
-| logistic regression (L2, class-weighted) | time-ordered expanding window | 0.668 | 0.000 | 0.084 | 0.000 | 0.927 | 0.555 | 0.148 | 0.148 | 0.148 |
-| bagged CART (60 trees, depth 6) | random stratified 10-fold | 0.774 | 0.003 | 0.222 | 0.008 | 0.902 | 0.603 | 0.259 | 0.259 | 0.259 |
-| bagged CART (60 trees, depth 6) | time-ordered expanding window | 0.640 | 0.000 | 0.078 | 0.000 | 0.924 | 0.537 | 0.114 | 0.114 | 0.114 |
+| logistic regression (L2, class-weighted) | random stratified 10-fold | 0.755 | 0.004 | 0.195 | 0.003 | 0.896 | 0.627 | 0.318 | 0.262 | 0.287 |
+| logistic regression (L2, class-weighted) | time-ordered expanding window | 0.668 | 0.000 | 0.084 | 0.000 | 0.895 | 0.565 | 0.205 | 0.109 | 0.142 |
+| bagged CART (60 trees, depth 6) | random stratified 10-fold | 0.774 | 0.003 | 0.222 | 0.008 | 0.894 | 0.621 | 0.306 | 0.252 | 0.277 |
+| bagged CART (60 trees, depth 6) | time-ordered expanding window | 0.640 | 0.000 | 0.078 | 0.000 | 0.895 | 0.565 | 0.205 | 0.109 | 0.142 |
 
 ## 3. Leakage probe (record index added as a feature)
 
@@ -52,8 +52,8 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 | model | n_test | roc_auc | pr_auc | accuracy | balanced_accuracy | recall | precision |
 |---|---|---|---|---|---|---|---|
-| logistic regression (L2, class-weighted) | 774 | 0.568 | 0.090 | 0.941 | 0.542 | 0.115 | 0.115 |
-| bagged CART (60 trees, depth 6) | 774 | 0.612 | 0.087 | 0.941 | 0.542 | 0.115 | 0.115 |
+| logistic regression (L2, class-weighted) | 774 | 0.568 | 0.090 | 0.897 | 0.538 | 0.154 | 0.065 |
+| bagged CART (60 trees, depth 6) | 774 | 0.612 | 0.087 | 0.902 | 0.578 | 0.231 | 0.097 |
 
 ## 5. Permutation importance (bagged CART, in-sample)
 
@@ -74,11 +74,10 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 ## 6. Probability calibration
 
-Class weights make the fit behave as if the base rate were 0.50, so the output probabilities sit on the wrong scale. `prior correction` shifts the log-odds back to the observed prevalence (0.0659).
+The logistic model uses balanced class weights; its `prior correction` uses the historical prevalence (0.0798). CART is unweighted and is shown as fitted.
 
 | model | variant | brier | brier_skill | ece | mce | mean_predicted | observed_rate |
 |---|---|---|---|---|---|---|---|
 | LR | as fitted (class-weighted) | 0.146 | -2.579 | 0.290 | 0.570 | 0.333 | 0.043 |
-| LR | after prior correction | 0.041 | -0.013 | 0.014 | 0.041 | 0.044 | 0.043 |
-| CART | as fitted (class-weighted) | 0.043 | -0.061 | 0.037 | 0.122 | 0.066 | 0.043 |
-| CART | after prior correction | 0.042 | -0.028 | 0.037 | 0.093 | 0.005 | 0.043 |
+| LR | after prior correction | 0.042 | -0.023 | 0.018 | 0.067 | 0.052 | 0.043 |
+| CART | as fitted (unweighted CART) | 0.043 | -0.061 | 0.037 | 0.122 | 0.066 | 0.043 |
