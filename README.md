@@ -11,6 +11,14 @@ genuine chronological holdout the model is barely better than chance (ROC-AUC 0.
 Adding the record index as a feature — pure noise, physically — *improves* the random-CV
 score and *degrades* the honest one, which is the signature of temporal leakage.
 
+**Probability calibration.** Class weights are what make these models usable at 6.6 %
+positives, but they push the output probabilities onto the wrong scale. The logistic
+regression's mean predicted probability is **0.333** against an observed rate of **0.0427**
+— it over-states risk by roughly eight times. A single log-odds prior correction reduces the
+expected calibration error from **0.290** to **0.014**. The same correction *over-corrects*
+the bagged tree ensemble, which is already close to calibrated (mean predicted 0.066).
+Ranking metrics such as ROC-AUC and PR-AUC are blind to all of this.
+
 ## Why this matters
 
 Seismic-bump forecasting is early warning for a rare, dangerous event. On this dataset
@@ -28,6 +36,8 @@ seismic-bump-forecasting/
 │   ├── data.py             # loading, encoding, integrity checks
 │   ├── metrics.py          # ROC-AUC, PR-AUC, confusion, curves
 │   ├── models.py           # logistic regression (IRLS), CART, bagging, permutation importance
+│   ├── calibration.py      # reliability curves, Brier score, ECE, prior correction
+│   ├── figures.py          # Pillow-based figure rendering (no matplotlib)
 │   └── evaluation.py       # stratified random CV, time-ordered CV, chronological holdout
 ├── data/                   # downloaded on first run (not committed)
 ├── report/technical_note.md

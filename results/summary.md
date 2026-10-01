@@ -71,3 +71,14 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 | seismoacoustic | 0.004 | 0.001 |
 | seismic | 0.004 | 0.000 |
 | nbumps4 | 0.001 | 0.000 |
+
+## 6. Probability calibration
+
+Class weights make the fit behave as if the base rate were 0.50, so the output probabilities sit on the wrong scale. `prior correction` shifts the log-odds back to the observed prevalence (0.0659).
+
+| model | variant | brier | brier_skill | ece | mce | mean_predicted | observed_rate |
+|---|---|---|---|---|---|---|---|
+| LR | as fitted (class-weighted) | 0.146 | -2.579 | 0.290 | 0.570 | 0.333 | 0.043 |
+| LR | after prior correction | 0.041 | -0.013 | 0.014 | 0.041 | 0.044 | 0.043 |
+| CART | as fitted (class-weighted) | 0.043 | -0.061 | 0.037 | 0.122 | 0.066 | 0.043 |
+| CART | after prior correction | 0.042 | -0.028 | 0.037 | 0.093 | 0.005 | 0.043 |

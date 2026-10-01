@@ -239,15 +239,46 @@ def main(refresh: bool = False):
     print(f"  in-sample ROC-AUC of the fitted forest: {base:.3f}")
     print(imp.head(10).to_string(index=False, float_format=lambda v: f"{v:.4f}"))
 
-    # ---------------- figures ----------------
+    # ---------------- calibration ----------------
     print("\n" + "=" * 104)
-    print("7. FIGURES")
+    print("7. PROBABILITY CALIBRATION")
     print("=" * 104)
-    from metrics import curve_points
-    from figures import save_curves_png, save_bars_png
-
+    from calibration import (prior_correction, calibration_summary,
+                             reliability_curve)
+    prev = float(y.mean())
+    cal_rows, cal_panels = [], []
     families = [("logistic regression (L2, class-weighted)", "LR"),
                 ("bagged CART (60 trees, depth 6)", "CART")]
+    print("  Class weights make the fit behave as if the base rate were 0.50,")
+    print("  so the output probabilities sit on the wrong scale and need a")
+    print("  log-odds correction. Ranking metrics are blind to this.")
+    for ci, (mname, short) in enumerate(families):
+        p = oof_store[(mname, "time")]          # the honest scheme
+        m = ~np.isnan(p)
+        yt, pt = y[m], p[m]
+        pc = prior_correction(pt, prev, 0.5)
+        for tag, pp in (("as fitted (class-weighted)", pt),
+                        ("after prior correction", pc)):
+            s = calibration_summary(yt, pp, short)
+            s.update(model=short, variant=tag)
+            cal_rows.append(s)
+        for tag, pp in (("as fitted", pt), ("after prior correction", pc)):
+            rc = reliability_curve(yt, pp, n_bins=10)
+            cal_panels.append(("%s \u2014 %s" % (short, tag),
+                               rc["mean_pred"], rc["obs_freq"], rc["count"]))
+    cal = pd.DataFrame(cal_rows)[["model", "variant", "brier", "brier_skill",
+                                  "ece", "mce", "mean_predicted", "observed_rate"]]
+    cal.to_csv(os.path.join(RESULTS, "calibration.csv"), index=False)
+    print("  observed prevalence in the test folds = %.4f" % prev)
+    print(cal.to_string(index=False, float_format=lambda v: f"{v:.4f}"))
+
+    # ---------------- figures ----------------
+    print("\n" + "=" * 104)
+    print("8. FIGURES")
+    print("=" * 104)
+    from metrics import curve_points
+    from figures import save_curves_png, save_bars_png, save_reliability_png
+
     combined, roc_curves, pr_curves = [], [], []
     for ci, (mname, short) in enumerate(families):
         for scheme, dashed in [("random", False), ("time", True)]:
@@ -285,10 +316,17 @@ def main(refresh: bool = False):
     save_bars_png(os.path.join(FIGURES, "prevalence_drift.png"), q_labels, q_vals,
                   "Hazard prevalence across the record sequence (5 equal blocks)",
                   ymax=0.18, fmt="%.4f", highlight=0)
+    save_reliability_png(os.path.join(FIGURES, "reliability.png"), cal_panels,
+                         "Probability calibration, before and after prior correction")
+    # the logistic-regression pair carries the story most clearly in print
+    save_reliability_png(os.path.join(FIGURES, "reliability_lr.png"),
+                         cal_panels[:2],
+                         "Logistic regression: probability calibration")
 
     print("  wrote figures/roc_pr.svg, figures/pr_auc_by_scheme.svg (web)")
     print("  wrote figures/roc_curves.png, figures/pr_curves.png, "
-          "figures/pr_auc_by_scheme.png, figures/prevalence_drift.png (report)")
+          "figures/pr_auc_by_scheme.png, figures/prevalence_drift.png, "
+          "figures/reliability.png (report)")
 
     # ---------------- summary.md ----------------
     def md(dframe):
@@ -311,7 +349,12 @@ def main(refresh: bool = False):
                 + md(probe_df) + "\n\n")
         f.write("## 4. Chronological holdout (70 / 30)\n\n" + md(hold_df) + "\n\n")
         f.write("## 5. Permutation importance (bagged CART, in-sample)\n\n"
-                + md(imp.head(12)) + "\n")
+                + md(imp.head(12)) + "\n\n")
+        f.write("## 6. Probability calibration\n\n")
+        f.write("Class weights make the fit behave as if the base rate were 0.50, so the "
+                "output probabilities sit on the wrong scale. `prior correction` shifts the "
+                "log-odds back to the observed prevalence (%.4f).\n\n" % prev)
+        f.write(md(cal) + "\n")
     print("  wrote results/summary.md")
     print("\ndone.")
 

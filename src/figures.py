@@ -129,6 +129,72 @@ def save_curves_png(path, curves, title, xlab, ylab, diagonal=False,
     return path
 
 
+def save_reliability_png(path, panels, title):
+    """Reliability diagrams, one panel per curve set.
+
+    panels: list of (subtitle, mean_pred, obs_freq, counts). Each panel gets its
+    own axes, because the whole point is that the before/after scales differ by
+    an order of magnitude.
+    """
+    import numpy as np
+    n = len(panels)
+    pw, ph = 400, 400
+    gap = 150
+    W = 130 + n * pw + (n - 1) * gap + 130
+    H = 150 + ph + 170
+    img = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(img)
+    f_title = _font(25, True)
+    f_sub = _font(19, True)
+    f_lab = _font(16)
+    f_tick = _font(14)
+    f_leg = _font(16)
+
+    d.text((48, 32), title, font=f_title, fill=FG)
+
+    for k, (sub, mp, of, cnt) in enumerate(panels):
+        ox = 130 + k * (pw + gap)
+        oy = 130
+        hi = float(max(np.max(mp), np.max(of))) if len(mp) else 1.0
+        for cand in (0.05, 0.1, 0.2, 0.25, 0.5, 1.0):
+            if hi <= cand:
+                hi = cand
+                break
+        _frame(d, ox, oy, pw, ph)
+        d.text((ox, oy - 34), sub, font=f_sub, fill=FG)
+
+        # diagonal = perfect calibration
+        d.line([ox, oy + ph, ox + pw, oy], fill=(195, 195, 195), width=2)
+
+        colour = PALETTE[k % len(PALETTE)]
+        pts = []
+        for a, b in zip(mp, of):
+            x = ox + min(float(a) / hi, 1.0) * pw
+            y = oy + ph - min(float(b) / hi, 1.0) * ph
+            pts.append((x, y))
+        for i in range(len(pts) - 1):
+            d.line([pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1]],
+                   fill=colour, width=3)
+        for x, y in pts:
+            d.ellipse([x - 5, y - 5, x + 5, y + 5], fill=colour)
+
+        for v in (0.0, 0.25, 0.5, 0.75, 1.0):
+            d.text((ox - 10, oy + ph - v * ph), "%.2f" % (v * hi), font=f_tick,
+                   fill=MUTED, anchor="rm")
+            d.text((ox + v * pw, oy + ph + 10), "%.2f" % (v * hi), font=f_tick,
+                   fill=MUTED, anchor="ma")
+
+    ly = 150 + ph + 54
+    d.text((130 + (n * pw + (n - 1) * gap) / 2, ly + 22),
+           "mean predicted probability", font=f_lab, fill=FG, anchor="ma")
+    _rotated_label(img, "observed frequency", f_lab, FG, (74, 130 + ph / 2))
+    d.text((130, ly + 2),
+           "grey diagonal = perfect calibration   \u00b7   points = decile bins",
+           font=f_leg, fill=MUTED)
+    img.save(path)
+    return path
+
+
 def save_bars_png(path, labels, values, title, ymax=1.0, fmt="%.3f",
                   highlight=None):
     """Horizontal bar chart. `highlight` = index to colour differently."""
