@@ -111,6 +111,8 @@ def verify(reports=False):
             summary=calibration_summary(time.y,scores,'check')
             for key in ('brier','brier_skill','ece','mce','mean_predicted','observed_rate'):
                 close(r[key],summary[key],'recomputed calibration '+key)
+    from verify_additions import verify_additions
+    verify_additions(ROOT,check,close,y)
     source=report_markdown()
     check((ROOT/'report/technical_note.md').read_text(encoding='utf-8')==source,'Markdown matches current results')
     if reports:

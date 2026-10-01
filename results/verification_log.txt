@@ -1,1 +1,1 @@
-RESULT: all 496 consistency checks passed.
+RESULT: all 719 consistency checks passed.

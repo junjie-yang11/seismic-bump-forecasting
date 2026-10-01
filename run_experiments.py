@@ -154,6 +154,7 @@ def main(refresh: bool = False):
     print("=" * 104)
     rows, oof_store, detail_store = [], {}, {}
     seed_rows, shared_rows, fold_rows, prediction_rows = [], [], [], []
+    random_prediction_rows = []
 
     def record_details(model, scheme, details):
         for record in details['records']:
@@ -174,6 +175,8 @@ def main(refresh: bool = False):
             m = ~np.isnan(p)
             s = summarise(y[m], p[m], threshold=details['threshold'][m])
             random_details.append(details)
+            random_prediction_rows.append(pd.DataFrame(dict(model=mname,seed=sd,
+                row=np.arange(len(y)),y=y,score=p)))
             random_summaries.append(s)
             seed_rows.append(dict(model=mname, seed=sd, **s))
         pooled = random_details[0]['score']
@@ -215,6 +218,8 @@ def main(refresh: bool = False):
     met = pd.DataFrame(rows)
     met.to_csv(os.path.join(RESULTS, "metrics_by_scheme.csv"), index=False)
     pd.DataFrame(seed_rows).to_csv(os.path.join(RESULTS, 'random_metrics_by_seed.csv'), index=False)
+    pd.concat(random_prediction_rows,ignore_index=True).to_csv(
+        os.path.join(RESULTS,'random_predictions_by_seed.csv'),index=False)
     shared = pd.DataFrame(shared_rows)
     shared.to_csv(os.path.join(RESULTS, 'shared_test_by_seed.csv'), index=False)
     shared_mean = shared.drop(columns='seed').groupby('model', sort=False).mean().reset_index()
@@ -419,6 +424,8 @@ def main(refresh: bool = False):
                 "as an oracle constant baseline, not as a deployed forecasting rule.\n\n")
         f.write(md(cal) + "\n")
     print("  wrote results/summary.md")
+    from refresh_analysis import refresh
+    refresh()
     from generate_report import write_markdown_report
     write_markdown_report()
     print('  wrote report/technical_note.md from the generated results')

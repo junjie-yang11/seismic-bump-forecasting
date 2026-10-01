@@ -78,10 +78,10 @@ def save_curves_png(path, curves, title, xlab, ylab, diagonal=False,
     ox, oy, pw, ph = 118, 108, 700, 470
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    f_title = _font(25, True)
-    f_lab = _font(19)
-    f_tick = _font(15)
-    f_leg = _font(17)
+    f_title = _font(29, True)
+    f_lab = _font(23)
+    f_tick = _font(22)
+    f_leg = _font(23)
 
     d.text((48, 34), title, font=f_title, fill=FG)
     _frame(d, ox, oy, pw, ph)
@@ -144,11 +144,11 @@ def save_reliability_png(path, panels, title):
     H = 150 + ph + 170
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    f_title = _font(25, True)
-    f_sub = _font(19, True)
-    f_lab = _font(16)
-    f_tick = _font(14)
-    f_leg = _font(16)
+    f_title = _font(29, True)
+    f_sub = _font(23, True)
+    f_lab = _font(21)
+    f_tick = _font(19)
+    f_leg = _font(19)
 
     d.text((48, 32), title, font=f_title, fill=FG)
 
@@ -175,8 +175,11 @@ def save_reliability_png(path, panels, title):
         for i in range(len(pts) - 1):
             d.line([pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1]],
                    fill=colour, width=3)
-        for x, y in pts:
-            d.ellipse([x - 5, y - 5, x + 5, y + 5], fill=colour)
+        for (x, y), count in zip(pts, cnt):
+            radius = 3 + 5 * float(np.sqrt(count / max(cnt)))
+            d.ellipse([x-radius,y-radius,x+radius,y+radius],fill=colour)
+        d.text((ox, oy+ph+46), 'n=%d; %d bins; bin n=%d-%d' %
+               (sum(cnt),len(cnt),min(cnt),max(cnt)),font=f_tick,fill=MUTED)
 
         for v in (0.0, 0.25, 0.5, 0.75, 1.0):
             d.text((ox - 10, oy + ph - v * ph), "%.2f" % (v * hi), font=f_tick,
@@ -188,11 +191,40 @@ def save_reliability_png(path, panels, title):
     d.text((130 + (n * pw + (n - 1) * gap) / 2, ly + 22),
            "mean predicted probability", font=f_lab, fill=FG, anchor="ma")
     _rotated_label(img, "observed frequency", f_lab, FG, (74, 130 + ph / 2))
-    d.text((130, ly + 2),
-           "grey diagonal = perfect calibration   \u00b7   points = decile bins",
+    d.text((130, ly + 62),
+           "Quantile bins (ties merged); marker size reflects count; grey line = ideal",
            font=f_leg, fill=MUTED)
     img.save(path)
     return path
+
+
+def save_intervals_png(path, rows):
+    """Forest plot of paired AP differences and conditional bootstrap intervals."""
+    W,H=1180,650
+    img=Image.new('RGB',(W,H),BG); d=ImageDraw.Draw(img)
+    ox,oy,pw=340,120,610
+    lo=min(-.02,min(r['ci_low'] for r in rows)-.005)
+    hi=max(.04,max(r['ci_high'] for r in rows)+.005)
+    def px(v): return ox+(v-lo)/(hi-lo)*pw
+    d.text((42,30),'Same-test PR-AUC gap: random minus record order',font=_font(29,True),fill=FG)
+    for v in (-.02,-.01,0.,.01,.02,.03,.04):
+        if v<lo or v>hi: continue
+        x=px(v)
+        d.line([x,oy-20,x,oy+len(rows)*62],fill=GRID,width=1)
+        d.text((x,oy+len(rows)*62+14),'%.3f'%v,font=_font(22),fill=MUTED,anchor='ma')
+    d.line([px(0),oy-20,px(0),oy+len(rows)*62],fill=AXIS,width=2)
+    for i,r in enumerate(rows):
+        y=oy+i*62; primary=r['block_length']==32
+        color=PALETTE[0 if r['model']=='LR' else 1]
+        d.text((ox-18,y),'%s: block %d%s'%(r['model'],r['block_length'],' (primary)' if primary else ''),font=_font(23,primary),fill=FG,anchor='rm')
+        a,b,c=px(r['ci_low']),px(r['ci_high']),px(r['delta'])
+        d.line([a,y,b,y],fill=color,width=4 if primary else 2)
+        for x in (a,b): d.line([x,y-7,x,y+7],fill=color,width=2)
+        d.ellipse([c-5,y-5,c+5,y+5],fill=color)
+    d.text((ox+pw/2,oy+len(rows)*62+48),'Paired difference in average precision',font=_font(22),fill=FG,anchor='ma')
+    d.text((42,H-56),'95% percentile intervals; 2,000 replicates; five random seeds averaged.',font=_font(22),fill=MUTED)
+    d.text((42,H-30),'Fixed predictions, blocks within test phases; intervals exclude model-refit uncertainty.',font=_font(22),fill=MUTED)
+    img.save(path); return path
 
 
 def save_bars_png(path, labels, values, title, ymax=1.0, fmt="%.3f",

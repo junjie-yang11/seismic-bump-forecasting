@@ -15,8 +15,12 @@ test_changed_prior (test_result_verifier.VerifierTests) ... ok
 test_changed_random_mean (test_result_verifier.VerifierTests) ... ok
 test_changed_threshold (test_result_verifier.VerifierTests) ... ok
 test_missing_test_row (test_result_verifier.VerifierTests) ... ok
+test_blocks_keep_phase_size_and_adjacency (test_uncertainty.UncertaintyTests) ... ok
+test_deterministic_bootstrap (test_uncertainty.UncertaintyTests) ... ok
+test_identical_paired_predictions_have_zero_gap (test_uncertainty.UncertaintyTests) ... ok
+test_weighted_tied_ap_equals_explicit_resampling (test_uncertainty.UncertaintyTests) ... ok
 
 ----------------------------------------------------------------------
-Ran 17 tests in 0.345s
+Ran 21 tests in 0.448s
 
 OK

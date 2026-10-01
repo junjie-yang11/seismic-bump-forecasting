@@ -77,6 +77,15 @@ model                            variant  brier  brier_skill    ece    mce  mean
   wrote figures/roc_pr.svg, figures/pr_auc_by_scheme.svg (web)
   wrote figures/roc_curves.png, figures/pr_curves.png, figures/pr_auc_by_scheme.png, figures/prevalence_drift.png, figures/reliability.png (report)
   wrote results/summary.md
+LR L=1: delta 0.0114, CI [-0.0092, 0.0258]
+LR L=16: delta 0.0114, CI [-0.0083, 0.0224]
+LR L=32: delta 0.0114, CI [-0.0110, 0.0243]
+LR L=64: delta 0.0114, CI [-0.0113, 0.0261]
+CART L=1: delta 0.0188, CI [0.0035, 0.0433]
+CART L=16: delta 0.0188, CI [0.0049, 0.0366]
+CART L=32: delta 0.0188, CI [0.0064, 0.0323]
+CART L=64: delta 0.0188, CI [0.0082, 0.0302]
+Refreshed paired intervals, same-test curves and operating diagnostics.
   wrote report/technical_note.md from the generated results
 
 done.

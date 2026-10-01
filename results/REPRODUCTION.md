@@ -25,3 +25,17 @@ Thresholds are numerical cutoffs frozen from training-only inner validation. The
 ## Audit artifacts
 
 `fold_audit.csv` stores training/test ranges, training priors, inner fit/reference sizes and fixed thresholds. `predictions.csv` stores row IDs, labels, raw and corrected probabilities, thresholds and fold IDs for random seed 0, record-order validation and holdout. `random_metrics_by_seed.csv` and `shared_test_by_seed.csv` retain all five seeds' summaries.
+
+## Supplementary paired analysis and paper edition
+
+The supplementary analysis saves all five random seeds' OOF scores. The primary paired moving-block percentile intervals use length 32, 2,000 replicates and RNG seed 20261002; phase sizes are preserved. Lengths 16 and 64 and phase-stratified IID resampling are sensitivity analyses. No model is refitted in the bootstrap, so the intervals condition on observed predictions rather than estimating all sources of learning uncertainty.
+
+LR common-test gap: 0.0114, 95% interval [-0.0110, 0.0243]. CART: 0.0188, [0.0064, 0.0323]. Descriptive reductions from the original different-cohort gap are 89.7% and 86.9%. These percentages are not drift or leakage attribution estimates.
+
+The original UCI ARFF was independently downloaded and compared. First-occurrence deduplication matches the mirror exactly in order and contents. Six removed rows are negatives; hashes, full duplicate contents and original/mirror row mappings are saved. The audit establishes the mirror transformation, not the validity of deduplication for distinct shifts or the chronological interpretation of row order.
+
+The main experiment now writes `random_predictions_by_seed.csv` and invokes `refresh_analysis.py`. To refresh the additions alone, run `python refresh_analysis.py`. To refit its random predictions, add `--rebuild`. The Word/PDF paper is generated after analysis, then checked with `verify_results.py --reports` and visual PDF inspection.
+
+Final edition verification: 21 regression tests passed and 719 consistency checks passed, including every seed's AP/ROC, bootstrap percentile reproduction, sample/bin conservation, operating counts, source hashes/mapping, and Word-to-Markdown agreement.
+
+The final paper edition has eight PDF pages. All eight were inspected after the last layout change. Numeric occurrences and paired interval bounds were checked against extracted PDF text; embedded text fonts are Times New Roman.

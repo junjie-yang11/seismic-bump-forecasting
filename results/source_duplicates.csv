@@ -1,0 +1,7 @@
+removed_uci_row_1based,kept_uci_row_1based,seismic,seismoacoustic,shift,genergy,gpuls,gdenergy,gdpuls,ghazard,nbumps,nbumps2,nbumps3,nbumps4,nbumps5,nbumps6,nbumps7,nbumps89,energy,maxenergy,class
+90,88,a,a,N,63550,325,15,35,a,0,0,0,0,0,0,0,0,0,0,0
+91,89,a,a,W,194580,697,-35,-32,a,0,0,0,0,0,0,0,0,0,0,0
+973,971,a,b,N,5250,66,-49,36,a,0,0,0,0,0,0,0,0,0,0,0
+974,972,a,b,N,19420,60,98,20,a,0,0,0,0,0,0,0,0,0,0,0
+1018,1016,a,a,N,590,11,-74,-72,a,0,0,0,0,0,0,0,0,0,0,0
+1019,1017,a,a,N,3720,43,75,8,a,0,0,0,0,0,0,0,0,0,0,0
