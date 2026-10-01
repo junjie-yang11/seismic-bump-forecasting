@@ -1,0 +1,2 @@
+# Optional report authoring dependencies; not needed for experiments.
+python-docx>=0.8.11

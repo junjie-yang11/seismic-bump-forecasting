@@ -32,12 +32,23 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 ## 2. Model x validation scheme
 
-| model | validation | roc_auc | roc_auc_sd | pr_auc | pr_auc_sd | accuracy | balanced_accuracy | recall | precision | f1 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| logistic regression (L2, class-weighted) | random stratified 10-fold | 0.755 | 0.004 | 0.195 | 0.003 | 0.896 | 0.627 | 0.318 | 0.262 | 0.287 |
-| logistic regression (L2, class-weighted) | time-ordered expanding window | 0.668 | 0.000 | 0.084 | 0.000 | 0.895 | 0.565 | 0.205 | 0.109 | 0.142 |
-| bagged CART (60 trees, depth 6) | random stratified 10-fold | 0.774 | 0.003 | 0.222 | 0.008 | 0.894 | 0.621 | 0.306 | 0.252 | 0.277 |
-| bagged CART (60 trees, depth 6) | time-ordered expanding window | 0.640 | 0.000 | 0.078 | 0.000 | 0.895 | 0.565 | 0.205 | 0.109 | 0.142 |
+| model | validation | roc_auc | roc_auc_sd | pr_auc | pr_auc_sd | accuracy | balanced_accuracy | recall | precision | f1 | alert_rate |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| logistic regression (L2, class-weighted) | random stratified 10-fold | 0.755 | 0.004 | 0.195 | 0.003 | 0.903 | 0.606 | 0.264 | 0.266 | 0.264 | 0.065 |
+| logistic regression (L2, class-weighted) | time-ordered expanding window | 0.668 | 0.000 | 0.084 | 0.000 | 0.791 | 0.505 | 0.193 | 0.045 | 0.073 | 0.183 |
+| bagged CART (60 trees, depth 6) | random stratified 10-fold | 0.774 | 0.003 | 0.222 | 0.008 | 0.898 | 0.621 | 0.302 | 0.262 | 0.280 | 0.076 |
+| bagged CART (60 trees, depth 6) | time-ordered expanding window | 0.640 | 0.000 | 0.078 | 0.000 | 0.874 | 0.500 | 0.091 | 0.043 | 0.058 | 0.091 |
+
+All random-CV metrics are means across five seeds. Thresholds are selected on inner training validation, then fixed for each outer test fold. Boundary ties are excluded; future alert rates can differ from the training budget.
+
+## Same test sample comparison
+
+| model | n | prevalence | random_roc_auc | random_pr_auc | time_roc_auc | time_pr_auc |
+|---|---|---|---|---|---|---|
+| logistic regression (L2, class-weighted) | 2063 | 0.043 | 0.694 | 0.095 | 0.668 | 0.084 |
+| bagged CART (60 trees, depth 6) | 2063 | 0.043 | 0.705 | 0.097 | 0.640 | 0.078 |
+
+This comparison uses the same test rows but does not control training size or training periods; differences cannot be attributed solely to leakage.
 
 ## 3. Leakage probe (record index added as a feature)
 
@@ -50,10 +61,10 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 ## 4. Chronological holdout (70 / 30)
 
-| model | n_test | roc_auc | pr_auc | accuracy | balanced_accuracy | recall | precision |
-|---|---|---|---|---|---|---|---|
-| logistic regression (L2, class-weighted) | 774 | 0.568 | 0.090 | 0.897 | 0.538 | 0.154 | 0.065 |
-| bagged CART (60 trees, depth 6) | 774 | 0.612 | 0.087 | 0.902 | 0.578 | 0.231 | 0.097 |
+| model | n_test | roc_auc | pr_auc | accuracy | balanced_accuracy | recall | precision | f1 | alert_rate | threshold |
+|---|---|---|---|---|---|---|---|---|---|---|
+| logistic regression (L2, class-weighted) | 774 | 0.568 | 0.090 | 0.961 | 0.534 | 0.077 | 0.250 | 0.118 | 0.010 | 0.662 |
+| bagged CART (60 trees, depth 6) | 774 | 0.612 | 0.087 | 0.961 | 0.516 | 0.038 | 0.167 | 0.062 | 0.008 | 0.179 |
 
 ## 5. Permutation importance (bagged CART, in-sample)
 
@@ -74,10 +85,10 @@ Accuracy of the trivial 'always predict 0' model: **0.9341**
 
 ## 6. Probability calibration
 
-The logistic model uses balanced class weights; its `prior correction` uses the historical prevalence (0.0798). CART is unweighted and is shown as fitted.
+The logistic model uses balanced class weights; its `prior correction` uses each fold's training prevalence. CART is unweighted and is shown as fitted. The Brier skill reference uses evaluation prevalence retrospectively, as an oracle constant baseline, not as a deployed forecasting rule.
 
 | model | variant | brier | brier_skill | ece | mce | mean_predicted | observed_rate |
 |---|---|---|---|---|---|---|---|
 | LR | as fitted (class-weighted) | 0.146 | -2.579 | 0.290 | 0.570 | 0.333 | 0.043 |
-| LR | after prior correction | 0.042 | -0.023 | 0.018 | 0.067 | 0.052 | 0.043 |
+| LR | after fold-local prior correction | 0.044 | -0.075 | 0.027 | 0.118 | 0.069 | 0.043 |
 | CART | as fitted (unweighted CART) | 0.043 | -0.061 | 0.037 | 0.122 | 0.066 | 0.043 |

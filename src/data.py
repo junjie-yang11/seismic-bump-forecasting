@@ -79,7 +79,7 @@ def load(force_download: bool = False):
     """Return (X, y, feature_names, dataframe).
 
     X is float64 with categorical fields ordinally encoded; y is 0/1.
-    Redundant columns are dropped so that the design matrix is full rank.
+    nbumps is dropped; constant columns remain, so full rank is not guaranteed.
     """
     path = download(force_download)
     df = pd.read_csv(path)

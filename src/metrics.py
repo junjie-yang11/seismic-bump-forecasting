@@ -66,20 +66,37 @@ def average_precision(y: np.ndarray, score: np.ndarray) -> float:
 
 
 def prior_threshold(score: np.ndarray, prevalence: float) -> float:
-    """Flag the riskiest `prevalence` fraction of shifts (operationally useful)."""
-    if not 0.0 < prevalence <= 1.0:
-        raise ValueError("prevalence must be in (0, 1]")
-    return float(np.quantile(score, 1.0 - prevalence))
+    """Select on TRAINING validation scores; exclude boundary ties together.
+
+    At most floor(n * prevalence) reference samples are flagged. The future
+    alert rate can differ from this training-only budget.
+    """
+    score = np.asarray(score, dtype=float)
+    if score.ndim != 1 or score.size == 0 or not np.isfinite(score).all():
+        raise ValueError("reference scores must be a non-empty finite vector")
+    if not 0.0 <= prevalence <= 1.0:
+        raise ValueError("prevalence must be in [0, 1]")
+    budget = int(np.floor(len(score) * prevalence))
+    if budget == 0:
+        return float("inf")
+    if budget == len(score):
+        return float("-inf")
+    boundary = np.sort(score)[::-1][budget]
+    return float(np.nextafter(boundary, np.inf))
 
 
-def summarise(y: np.ndarray, score: np.ndarray, prevalence: float | None = None) -> dict:
-    if prevalence is None:
-        raise ValueError("prevalence must be supplied from training data; test labels may not set the threshold")
-    thr = prior_threshold(score, prevalence)
+def summarise(y: np.ndarray, score: np.ndarray, *, threshold=None) -> dict:
+    """Evaluate with a fixed scalar or per-row training-derived threshold."""
+    if threshold is None:
+        raise ValueError("a threshold selected on training validation data is required")
+    thr = np.asarray(threshold, dtype=float)
+    if thr.ndim > 1 or (thr.ndim == 1 and thr.shape != np.asarray(score).shape) or np.isnan(thr).any():
+        raise ValueError("threshold must be scalar or match score shape and contain no NaN")
     out = dict(n=int(len(y)), positives=int((y == 1).sum()), prevalence=float(y.mean()),
                roc_auc=roc_auc(y, score), pr_auc=average_precision(y, score),
-               threshold=thr)
+               threshold=float(thr) if thr.ndim == 0 else None)
     out.update(threshold_metrics(y, score, thr))
+    out['alert_rate'] = float(np.mean(score >= thr))
     return out
 
 
@@ -94,5 +111,5 @@ def curve_points(y: np.ndarray, score: np.ndarray, n_points: int = 200):
     for t in thresholds:
         m = threshold_metrics(y, score, t)
         roc.append((1.0 - m["specificity"], m["recall"]))
-        pr.append((m["recall"], m["precision"]))
+        pr.append((m["recall"], 1.0 if t == np.inf else m["precision"]))
     return np.array(roc), np.array(pr)

@@ -33,7 +33,7 @@ from models import (LogisticRegressionIRLS, BaggedForest,             # noqa: E4
                     permutation_importance)
 from evaluation import (stratified_random_folds, time_ordered_folds,  # noqa: E402
                         cross_validate, cross_validate_splits,
-                        chronological_holdout)
+                        chronological_holdout, select_training_threshold)
 
 RESULTS = os.path.join(HERE, "results")
 FIGURES = os.path.join(RESULTS, "figures")
@@ -57,7 +57,7 @@ def _svg_header(w, h):
 
 def svg_curves(paths, out):
     """paths: list of (label, Nx2 array, colour, dashed)."""
-    W, H, M = 560, 460, 62
+    W, H, M = 560, 500, 62
     s = [_svg_header(W, H)]
     s.append(f'<text x="{M}" y="26" font-size="15" font-weight="bold">'
              f'ROC and precision-recall curves (out-of-fold)</text>')
@@ -79,6 +79,7 @@ def svg_curves(paths, out):
         s.append(f'<text x="{ox - 6}" y="{oy + 4}" font-size="9" text-anchor="end">1.0</text>')
         s.append(f'<text x="{ox - 6}" y="{oy + panel_h}" font-size="9" text-anchor="end">0.0</text>')
     for label, arr, colour, dash in paths:
+        colour = ['#2c6fbb', '#c0392b'][colour] if isinstance(colour, int) else colour
         panel = 0 if arr.shape[1] == 2 and label.endswith("ROC") else 1
         ox, oy = M + panel * (panel_w + 60), 60
         pts = " ".join(f"{ox + x*panel_w:.1f},{oy + panel_h - y*panel_h:.1f}"
@@ -89,6 +90,7 @@ def svg_curves(paths, out):
     # legend
     ly = 320
     for label, _, colour, dash in paths:
+        colour = ['#2c6fbb', '#c0392b'][colour] if isinstance(colour, int) else colour
         d = ' stroke-dasharray="5,4"' if dash else ''
         s.append(f'<line x1="{M}" y1="{ly}" x2="{M+26}" y2="{ly}" stroke="{colour}" '
                  f'stroke-width="2.4"{d}/>')
@@ -122,10 +124,6 @@ def svg_bars(labels, values, out, title, ymax=1.0):
 # --------------------------------------------------------------------------- #
 def main(refresh: bool = False):
     X, y, features, df = load(refresh)
-    # Estimate the alert-rate and calibration prior from historical labels only.
-    # No threshold or probability correction may inspect the evaluation labels.
-    reference_cut = int(0.7 * len(y))
-    reference_prevalence = float(y[:reference_cut].mean())
     rep = integrity_report(df)
     with open(os.path.join(RESULTS, "integrity.json"), "w", encoding="utf-8") as f:
         json.dump(rep, f, indent=2, ensure_ascii=False)
@@ -154,38 +152,73 @@ def main(refresh: bool = False):
     print("\n" + "=" * 104)
     print("3. MODEL x VALIDATION SCHEME")
     print("=" * 104)
-    rows, oof_store = [], {}
+    rows, oof_store, detail_store = [], {}, {}
+    seed_rows, shared_rows, fold_rows, prediction_rows = [], [], [], []
+
+    def record_details(model, scheme, details):
+        for record in details['records']:
+            fold_rows.append(dict(model=model, validation=scheme, **record))
+        mask = details['fold'] >= 0
+        prediction_rows.append(pd.DataFrame(dict(model=model, validation=scheme,
+            row=np.flatnonzero(mask), y=y[mask], score=details['score'][mask],
+            calibrated=details['calibrated'][mask], threshold=details['threshold'][mask],
+            training_prior=details['training_prior'][mask], fold=details['fold'][mask])))
+
     for mname, mfac in MODELS.items():
         # random CV averaged over seeds (report mean and spread)
-        aucs, prs, pooled = [], [], None
+        random_details, random_summaries = [], []
         for sd in RANDOM_SEEDS:
             fold = stratified_random_folds(y, k=10, seed=sd)
-            p = cross_validate(mfac, X, y, fold)
+            details = cross_validate(mfac, X, y, fold, return_details=True)
+            p = details['score']
             m = ~np.isnan(p)
-            aucs.append(roc_auc(y[m], p[m]))
-            prs.append(average_precision(y[m], p[m]))
-            if sd == RANDOM_SEEDS[0]:
-                pooled = p
+            s = summarise(y[m], p[m], threshold=details['threshold'][m])
+            random_details.append(details)
+            random_summaries.append(s)
+            seed_rows.append(dict(model=mname, seed=sd, **s))
+        pooled = random_details[0]['score']
         oof_store[(mname, "random")] = pooled
-        s = summarise(y[~np.isnan(pooled)], pooled[~np.isnan(pooled)],
-                      prevalence=reference_prevalence)
+        detail_store[(mname, 'random')] = random_details[0]
+        record_details(mname, 'random', random_details[0])
+        s = {key: float(np.mean([r[key] for r in random_summaries]))
+             for key in ('accuracy', 'balanced_accuracy', 'recall', 'precision', 'f1', 'alert_rate')}
         rows.append(dict(model=mname, validation="random stratified 10-fold",
-                         roc_auc=float(np.mean(aucs)), roc_auc_sd=float(np.std(aucs)),
-                         pr_auc=float(np.mean(prs)), pr_auc_sd=float(np.std(prs)),
+                         roc_auc=float(np.mean([r['roc_auc'] for r in random_summaries])),
+                         roc_auc_sd=float(np.std([r['roc_auc'] for r in random_summaries])),
+                         pr_auc=float(np.mean([r['pr_auc'] for r in random_summaries])),
+                         pr_auc_sd=float(np.std([r['pr_auc'] for r in random_summaries])),
                          accuracy=s["accuracy"], balanced_accuracy=s["balanced_accuracy"],
-                         recall=s["recall"], precision=s["precision"], f1=s["f1"]))
+                         recall=s["recall"], precision=s["precision"], f1=s["f1"],
+                         alert_rate=s['alert_rate']))
         # time-ordered (deterministic -> no seed spread)
-        p = cross_validate_splits(mfac, X, y, time_ordered_folds(len(y), k=5))
+        details = cross_validate_splits(mfac, X, y, time_ordered_folds(len(y), k=5), return_details=True)
+        p = details['score']
+        detail_store[(mname, 'time')] = details
+        record_details(mname, 'time', details)
         oof_store[(mname, "time")] = p
         m = ~np.isnan(p)
-        s = summarise(y[m], p[m], prevalence=reference_prevalence)
+        s = summarise(y[m], p[m], threshold=details['threshold'][m])
         rows.append(dict(model=mname, validation="time-ordered expanding window",
                          roc_auc=roc_auc(y[m], p[m]), roc_auc_sd=0.0,
                          pr_auc=average_precision(y[m], p[m]), pr_auc_sd=0.0,
                          accuracy=s["accuracy"], balanced_accuracy=s["balanced_accuracy"],
-                         recall=s["recall"], precision=s["precision"], f1=s["f1"]))
+                         recall=s["recall"], precision=s["precision"], f1=s["f1"],
+                         alert_rate=s['alert_rate']))
+        for sd, rnd in zip(RANDOM_SEEDS, random_details):
+            common = m & np.isfinite(rnd['score'])
+            shared_rows.append(dict(model=mname, seed=sd, n=int(common.sum()),
+                prevalence=float(y[common].mean()),
+                random_roc_auc=roc_auc(y[common], rnd['score'][common]),
+                random_pr_auc=average_precision(y[common], rnd['score'][common]),
+                time_roc_auc=roc_auc(y[common], p[common]),
+                time_pr_auc=average_precision(y[common], p[common])))
     met = pd.DataFrame(rows)
     met.to_csv(os.path.join(RESULTS, "metrics_by_scheme.csv"), index=False)
+    pd.DataFrame(seed_rows).to_csv(os.path.join(RESULTS, 'random_metrics_by_seed.csv'), index=False)
+    shared = pd.DataFrame(shared_rows)
+    shared.to_csv(os.path.join(RESULTS, 'shared_test_by_seed.csv'), index=False)
+    shared_mean = shared.drop(columns='seed').groupby('model', sort=False).mean().reset_index()
+    shared_mean.to_csv(os.path.join(RESULTS, 'shared_test_comparison.csv'), index=False)
     print(met.to_string(index=False, float_format=lambda v: f"{v:.3f}"))
 
     # ---------------- leakage probe ----------------
@@ -223,13 +256,31 @@ def main(refresh: bool = False):
     (Xtr, ytr), (Xte, yte) = chronological_holdout(X, y, 0.7)
     for mname, mfac in MODELS.items():
         mdl = mfac().fit(Xtr, ytr)
-        s = summarise(yte, mdl.predict_proba(Xte), prevalence=float(ytr.mean()))
+        threshold, threshold_info = select_training_threshold(mfac, Xtr, ytr, temporal=True)
+        scores = mdl.predict_proba(Xte)
+        s = summarise(yte, scores, threshold=threshold)
+        weighted = bool(getattr(mdl, 'class_weight', False))
+        from calibration import prior_correction
+        pc = prior_correction(scores, float(ytr.mean()), .5) if weighted else scores
+        cut = len(ytr)
+        hold_details = dict(score=np.r_[np.full(cut, np.nan), scores],
+            calibrated=np.r_[np.full(cut, np.nan), pc],
+            threshold=np.r_[np.full(cut, np.nan), np.full(len(yte), threshold)],
+            training_prior=np.r_[np.full(cut, np.nan), np.full(len(yte), ytr.mean())],
+            fold=np.r_[np.full(cut, -1), np.zeros(len(yte), dtype=int)],
+            records=[dict(fold=0, n_train=cut, n_test=len(yte), train_end=cut-1,
+                test_start=cut, test_end=len(y)-1, training_prior=float(ytr.mean()),
+                threshold=threshold, class_weighted=weighted, **threshold_info)])
+        record_details(mname, 'holdout', hold_details)
         hold.append(dict(model=mname, n_test=s["n"], roc_auc=s["roc_auc"],
                          pr_auc=s["pr_auc"], accuracy=s["accuracy"],
                          balanced_accuracy=s["balanced_accuracy"],
-                         recall=s["recall"], precision=s["precision"]))
+                         recall=s["recall"], precision=s["precision"], f1=s['f1'],
+                         alert_rate=s['alert_rate'], threshold=threshold))
     hold_df = pd.DataFrame(hold)
     hold_df.to_csv(os.path.join(RESULTS, "holdout.csv"), index=False)
+    pd.DataFrame(fold_rows).to_csv(os.path.join(RESULTS, 'fold_audit.csv'), index=False)
+    pd.concat(prediction_rows, ignore_index=True).to_csv(os.path.join(RESULTS, 'predictions.csv'), index=False)
     print(hold_df.to_string(index=False, float_format=lambda v: f"{v:.3f}"))
 
     # ---------------- importance ----------------
@@ -250,7 +301,6 @@ def main(refresh: bool = False):
     print("=" * 104)
     from calibration import (prior_correction, calibration_summary,
                              reliability_curve)
-    prev = reference_prevalence
     cal_rows, cal_panels = [], []
     families = [("logistic regression (L2, class-weighted)", "LR", True),
                 ("bagged CART (60 trees, depth 6)", "CART", False)]
@@ -262,7 +312,7 @@ def main(refresh: bool = False):
         m = ~np.isnan(p)
         yt, pt = y[m], p[m]
         variants = [("as fitted (class-weighted)", pt),
-                    ("after prior correction", prior_correction(pt, prev, 0.5))] \
+                    ("after fold-local prior correction", detail_store[(mname, 'time')]['calibrated'][m])] \
             if weighted else [("as fitted (unweighted CART)", pt)]
         for tag, pp in variants:
             s = calibration_summary(yt, pp, short)
@@ -275,7 +325,7 @@ def main(refresh: bool = False):
     cal = pd.DataFrame(cal_rows)[["model", "variant", "brier", "brier_skill",
                                   "ece", "mce", "mean_predicted", "observed_rate"]]
     cal.to_csv(os.path.join(RESULTS, "calibration.csv"), index=False)
-    print("  historical prevalence used for threshold/calibration = %.4f" % prev)
+    print("  Calibration priors come exclusively from each fold's training labels.")
     print(cal.to_string(index=False, float_format=lambda v: f"{v:.4f}"))
 
     # ---------------- figures ----------------
@@ -351,6 +401,12 @@ def main(refresh: bool = False):
         f.write("\n```\n\n")
         f.write(f"Accuracy of the trivial 'always predict 0' model: **{null_acc:.4f}**\n\n")
         f.write("## 2. Model x validation scheme\n\n" + md(met) + "\n\n")
+        f.write("All random-CV metrics are means across five seeds. Thresholds are selected "
+                "on inner training validation, then fixed for each outer test fold. Boundary "
+                "ties are excluded; future alert rates can differ from the training budget.\n\n")
+        f.write("## Same test sample comparison\n\n" + md(shared_mean) + "\n\n")
+        f.write("This comparison uses the same test rows but does not control training size "
+                "or training periods; differences cannot be attributed solely to leakage.\n\n")
         f.write("## 3. Leakage probe (record index added as a feature)\n\n"
                 + md(probe_df) + "\n\n")
         f.write("## 4. Chronological holdout (70 / 30)\n\n" + md(hold_df) + "\n\n")
@@ -358,10 +414,14 @@ def main(refresh: bool = False):
                 + md(imp.head(12)) + "\n\n")
         f.write("## 6. Probability calibration\n\n")
         f.write("The logistic model uses balanced class weights; its `prior correction` "
-                "uses the historical prevalence (%.4f). CART is unweighted and is shown "
-                "as fitted.\n\n" % prev)
+                "uses each fold's training prevalence. CART is unweighted and is shown "
+                "as fitted. The Brier skill reference uses evaluation prevalence retrospectively, "
+                "as an oracle constant baseline, not as a deployed forecasting rule.\n\n")
         f.write(md(cal) + "\n")
     print("  wrote results/summary.md")
+    from generate_report import write_markdown_report
+    write_markdown_report()
+    print('  wrote report/technical_note.md from the generated results')
     print("\ndone.")
 
 

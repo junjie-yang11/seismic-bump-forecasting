@@ -1,0 +1,22 @@
+test_all_negative_test_block_is_retained (test_evaluation.EvaluationTests) ... ok
+test_ap_is_invariant_to_tie_order (test_evaluation.EvaluationTests) ... ok
+test_boundary_ties_do_not_exceed_reference_budget (test_evaluation.EvaluationTests) ... ok
+test_constant_calibration_bins_conserve_samples (test_evaluation.EvaluationTests) ... ok
+test_curve_endpoints (test_evaluation.EvaluationTests) ... ok
+test_fold_correction_uses_training_prior (test_evaluation.EvaluationTests) ... ok
+test_future_features_cannot_affect_threshold_or_prior (test_evaluation.EvaluationTests) ... ok
+test_future_labels_cannot_affect_scores_threshold_or_prior (test_evaluation.EvaluationTests) ... ok
+test_invalid_prior_rejected (test_evaluation.EvaluationTests) ... ok
+test_overlapping_training_and_test_rejected (test_evaluation.EvaluationTests) ... ok
+test_summary_requires_fixed_threshold (test_evaluation.EvaluationTests) ... ok
+test_unweighted_model_is_not_corrected (test_evaluation.EvaluationTests) ... ok
+test_changed_calibration_metric (test_result_verifier.VerifierTests) ... ok
+test_changed_prior (test_result_verifier.VerifierTests) ... ok
+test_changed_random_mean (test_result_verifier.VerifierTests) ... ok
+test_changed_threshold (test_result_verifier.VerifierTests) ... ok
+test_missing_test_row (test_result_verifier.VerifierTests) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.345s
+
+OK

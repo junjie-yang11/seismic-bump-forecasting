@@ -3,7 +3,7 @@ Probability calibration for rare-event classifiers.
 
 Why this matters here
 ---------------------
-The classifiers in this study are trained with class weights, so that the
+The logistic classifier in this study is trained with class weights, so that the
 positive class carries weight ``n / (2 * n_pos)`` instead of 1. That weighting
 is what makes the model usable on a 6.6 %-positive dataset: it stops the fit
 from collapsing onto the majority class. But it has a side effect that is easy
@@ -11,8 +11,9 @@ to miss -- **the output probabilities are no longer on the true prevalence
 scale.** The model is effectively trained as if the base rate were 50 %, so its
 predicted probabilities are far too high.
 
-Discrimination metrics such as ROC-AUC and PR-AUC are unaffected by this,
-because they depend only on the *ranking* of scores. Any statement of the form
+A single monotone correction preserves rankings within one fold. Different
+fold-specific corrections may change pooled rankings, so the discrimination
+metrics in this study use raw scores. Any statement of the form
 "this shift has a 30 % chance of being hazardous", however, is wrong by a large
 factor. For an early-warning system that is the difference between a usable
 threshold rule and a useless one.
@@ -35,14 +36,16 @@ import numpy as np
 def reliability_curve(y, p, n_bins: int = 10, strategy: str = "quantile"):
     """Bin predictions and compare mean predicted probability with observed rate.
 
-    Returns a dict with bin centres, mean predicted probability, observed
-    frequency, and bin counts. ``strategy='quantile'`` gives equally populated
-    bins, which is essential when almost all scores are near zero.
+    Returns mean predicted probability, observed frequency, and bin counts.
+    Quantile bins are approximately equally populated when ties permit it;
+    duplicate edges are collapsed and tied predictions stay together.
     """
     y = np.asarray(y, dtype=float)
     p = np.asarray(p, dtype=float)
     if y.shape != p.shape or y.size == 0:
         raise ValueError("y and p must be non-empty arrays with the same shape")
+    if y.ndim != 1 or not np.isin(y, [0, 1]).all() or np.any((p < 0) | (p > 1)):
+        raise ValueError("labels must be binary vectors and probabilities in [0, 1]")
     if not np.all(np.isfinite(p)):
         raise ValueError("predicted probabilities must be finite")
     if n_bins < 1:
@@ -118,6 +121,8 @@ def prior_correction(p, prevalence_true: float, prevalence_training: float = 0.5
     ``prevalence_training`` is the effective positive rate the model was fitted
     against. With weights n/(2*n_pos) and n/(2*n_neg) this is 0.5.
     """
+    if not (0 < prevalence_true < 1 and 0 < prevalence_training < 1):
+        raise ValueError('correction priors must be strictly between zero and one')
     delta = (np.log(prevalence_true / (1.0 - prevalence_true))
              - np.log(prevalence_training / (1.0 - prevalence_training)))
     return sigmoid(logit(p) + delta)

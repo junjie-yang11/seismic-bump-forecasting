@@ -13,12 +13,14 @@ The whole point of the study is the difference between:
 
 * `chronological_holdout` — a single train/early -> test/late split.
 
-All three return out-of-fold predictions on the same 0..1 scale so that the
-pooled ROC-AUC and PR-AUC are directly comparable.
+The schemes evaluate different test populations and training histories. Pooled
+ROC-AUC and PR-AUC differences cannot be attributed solely to temporal leakage.
 """
 from __future__ import annotations
 
 import numpy as np
+from calibration import prior_correction
+from metrics import prior_threshold
 
 
 def stratified_random_folds(y: np.ndarray, k: int = 10, seed: int = 0) -> np.ndarray:
@@ -39,28 +41,78 @@ def time_ordered_folds(n: int, k: int = 5) -> list[tuple[np.ndarray, np.ndarray]
             for i in range(k - 1)]
 
 
-def cross_validate(make_model, X, y, fold) -> np.ndarray:
+def cross_validate(make_model, X, y, fold, return_details=False):
     """Out-of-fold predictions under an explicit fold assignment."""
-    preds = np.full(len(y), np.nan)
-    for f in np.unique(fold):
-        test = fold == f
-        train = ~test
-        if y[train].sum() < 5 or y[test].sum() < 1:
-            continue
-        model = make_model().fit(X[train], y[train])
-        preds[test] = model.predict_proba(X[test])
-    return preds
+    splits = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
+    return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
 
 
-def cross_validate_splits(make_model, X, y, splits) -> np.ndarray:
+def cross_validate_splits(make_model, X, y, splits, return_details=False, temporal=True):
     """Out-of-fold predictions from an explicit list of (train, test) index pairs."""
     preds = np.full(len(y), np.nan)
-    for train, test in splits:
-        if y[train].sum() < 5 or y[test].sum() < 1:
-            continue
+    thresholds = np.full(len(y), np.nan)
+    calibrated = np.full(len(y), np.nan)
+    priors = np.full(len(y), np.nan)
+    folds = np.full(len(y), -1, dtype=int)
+    records = []
+    for f, (train, test) in enumerate(splits):
+        train, test = np.asarray(train), np.asarray(test)
+        if len(train) == 0 or len(test) == 0 or np.intersect1d(train, test).size:
+            raise ValueError('train/test must be non-empty and disjoint')
+        if temporal and train.max() >= test.min():
+            raise ValueError('temporal training must precede the test block')
+        if np.any(folds[test] >= 0):
+            raise ValueError('test indices overlap between folds')
+        if len(np.unique(y[train])) < 2:
+            raise ValueError('training fold must contain both classes')
         model = make_model().fit(X[train], y[train])
         preds[test] = model.predict_proba(X[test])
+        folds[test] = f
+        if return_details:
+            threshold, info = select_training_threshold(make_model, X[train], y[train], temporal)
+            prior = float(y[train].mean())
+            thresholds[test], priors[test] = threshold, prior
+            weighted = bool(getattr(model, 'class_weight', False))
+            calibrated[test] = prior_correction(preds[test], prior, .5) if weighted else preds[test]
+            records.append(dict(fold=f, n_train=len(train), n_test=len(test),
+                                train_end=int(train.max()), test_start=int(test.min()),
+                                test_end=int(test.max()), training_prior=prior,
+                                threshold=threshold, class_weighted=weighted, **info))
+    if return_details:
+        return dict(score=preds, threshold=thresholds, calibrated=calibrated,
+                    training_prior=priors, fold=folds, records=records)
     return preds
+
+
+def select_training_threshold(make_model, X, y, temporal=True):
+    """Inner validation uses only outer training rows, never future test data.
+
+    Reserve the last 20% of training history for temporal validation, or 20%
+    of each class (seed 7) for random validation. Fit the inner model on the
+    remainder, use its training prevalence as alert budget, and freeze the
+    threshold selected on the held-out training scores for outer evaluation.
+    """
+    n = len(y)
+    if temporal:
+        cut = max(1, int(.8 * n))
+        fit_idx, ref_idx = np.arange(cut), np.arange(cut, n)
+    else:
+        rng = np.random.default_rng(7)
+        fit_parts, ref_parts = [], []
+        for cls in (0, 1):
+            idx = np.where(y == cls)[0]
+            rng.shuffle(idx)
+            cut = max(1, int(.8 * len(idx)))
+            fit_parts.append(idx[:cut])
+            ref_parts.append(idx[cut:])
+        fit_idx, ref_idx = np.concatenate(fit_parts), np.concatenate(ref_parts)
+    if len(ref_idx) == 0 or len(np.unique(y[fit_idx])) < 2:
+        raise ValueError('insufficient training history for inner threshold selection')
+    inner = make_model().fit(X[fit_idx], y[fit_idx])
+    rate = float(y[fit_idx].mean())
+    threshold = prior_threshold(inner.predict_proba(X[ref_idx]), rate)
+    return threshold, dict(threshold_fit_n=len(fit_idx), threshold_reference_n=len(ref_idx),
+                           threshold_target_rate=rate)
 
 
 def chronological_holdout(X, y, frac: float = 0.7):
