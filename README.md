@@ -11,7 +11,7 @@ A mining-engineering evaluation workflow that matches test cohorts across protoc
 
 Intervals use 2,000 phase-stratified paired moving-block replicates (length 32), averaging all five random seeds in each replicate. They condition on fixed predictions; they do not include model-refit uncertainty. Lengths 16 and 64 and paired IID resampling are sensitivity checks. LR crosses zero; CART retains a positive conditional difference.
 
-**Calibration and warning consequences:** fold-local LR correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. Against a retrospective oracle constant reference, corrected Brier skill is -0.0751. In the final 774 shifts, a training-derived LR threshold produces 8 alerts, detects 2 hazardous shifts and misses 24. These results make probability assessment and threshold transfer explicit parts of the warning evaluation.
+**Calibration and warning consequences:** fold-local LR correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. Against a retrospective oracle constant reference, corrected Brier skill is -0.0751. In the final 774 shifts, the training-derived historical-prevalence LR policy produces 8 alerts, detects 2 hazardous shifts and misses 24. The paper's separate fixed 10% reference-budget policy produces 14 LR alerts, also detecting 2 shifts and missing 24. These are different frozen cutoffs, rather than conflicting results.
 
 Read the [paper-style Word report](report/technical_report.docx), [PDF](report/technical_report.pdf), or [Markdown](report/technical_note.md). The discussion links shift-level forecasts to inspection workload and missed-event consequences. The experiments in this repository use tabular monitoring data.
 
@@ -25,18 +25,18 @@ The original UCI ARFF has 2,584 records. The mirror removes six exact duplicate 
 python -m pip install -r requirements.txt
 python run_experiments.py
 python audit_source.py
-python -B -m unittest discover -s tests -v
-python verify_results.py
 ```
 
 `audit_source.py --source PATH_TO_ARFF` can audit a local original file without downloading. `--proxy URL` optionally supplies a proxy for the UCI download. Raw source data stay uncommitted. The supplied source audit describes the verified mirror version; changed sources should be audited again.
+
+These commands refresh the original LR/CART stage. Complete the engineering and research stages below before rebuilding or checking the extended paper. Run the complete test suite and verifiers in the research environment, where XGBoost is installed; the legacy environment is retained for baseline reproducibility.
 
 For an existing result set, `python refresh_analysis.py` regenerates the paired uncertainty and matched-cohort figures. `--rebuild` refits random predictions. A full experiment run saves all five seeds and invokes the paired analysis automatically.
 
 ```powershell
 python -m pip install -r requirements-report.txt
 python generate_report.py --docx
-powershell -NoProfile -File export_report.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File export_report.ps1
 python verify_results.py --reports
 ```
 
@@ -51,11 +51,13 @@ The current paper also includes nine engineering feature sets, native XGBoost Tr
 python run_engineering.py
 # Run in the Python 3.12 research environment next.
 python run_research.py
+# Refresh descriptive review supplements from saved evidence if needed.
+python review_analysis.py
 python -B -m unittest discover -s tests -v
 python verify_research.py --replay
 python -m pip install -r requirements-report.txt
 python generate_report.py --docx
-powershell -NoProfile -File export_report.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File export_report.ps1
 python verify_results.py --reports
 ```
 
@@ -74,8 +76,12 @@ Both experiment stages must finish before regenerating the extended paper. A bas
 | `operating_points.csv` | Per-phase and holdout warning counts |
 | `calibration.csv`, `calibration_bins.csv` | Calibration metrics and conserved bin counts |
 | `source_audit.json`, `source_duplicates.csv`, `source_row_mapping.csv` | Original-to-mirror provenance |
+| `probability_reference_comparison.csv` | Historical training-prior and retrospective test-prevalence probability references |
+| `shap_stability_sensitivity.csv`, `feature_ablation_phase_contrasts.csv` | Fixed-universe explanation stability and phase-specific ablation contrasts |
 
 All output names above refer to `results/`. The verifier recomputes every seed's ranking metrics, operating counts, bin summaries, interval percentiles and row coverage, and checks generated Word text against Markdown. Behavioral tests cover leakage invariance, tied scores, paired resampling and rejection of corrupted result files. This establishes reproducibility and consistency, not the truth of the ordering assumptions.
+
+Blank aggregate `threshold` cells denote vector cutoffs retained in row-level predictions and fold audits. A feature-value/contribution correlation is undefined when either variable is constant; alerts per detection is undefined when there are no detections. These empty cells represent explicit mathematical or storage conventions, rather than substitute measurements. See `EXECUTION_AUDIT.md` for the independent full-run comparison.
 
 ## Evaluation rules and limitations
 

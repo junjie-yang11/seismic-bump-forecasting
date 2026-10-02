@@ -123,6 +123,8 @@ def svg_bars(labels, values, out, title, ymax=1.0):
 
 # --------------------------------------------------------------------------- #
 def main(refresh: bool = False):
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(line_buffering=True)
     X, y, features, df = load(refresh)
     rep = integrity_report(df)
     with open(os.path.join(RESULTS, "integrity.json"), "w", encoding="utf-8") as f:
@@ -146,7 +148,7 @@ def main(refresh: bool = False):
     print("=" * 104)
     null_acc = 1.0 - y.mean()
     print(f"  accuracy of 'always predict 0' : {null_acc:.4f}")
-    print("  any model must beat this before its accuracy means anything.")
+    print("  high accuracy alone does not demonstrate hazard detection; inspect ranking and warning metrics.")
 
     # ---------------- main experiment ----------------
     print("\n" + "=" * 104)
@@ -169,6 +171,7 @@ def main(refresh: bool = False):
         # random CV averaged over seeds (report mean and spread)
         random_details, random_summaries = [], []
         for sd in RANDOM_SEEDS:
+            print('  fitting %s: random CV seed %d' % (mname, sd), flush=True)
             fold = stratified_random_folds(y, k=10, seed=sd)
             details = cross_validate(mfac, X, y, fold, return_details=True)
             p = details['score']
@@ -228,7 +231,7 @@ def main(refresh: bool = False):
 
     # ---------------- leakage probe ----------------
     print("\n" + "=" * 104)
-    print("4. LEAKAGE PROBE: add the record index (a pure time proxy) as a feature")
+    print("4. DESCRIPTIVE INDEX PROBE: add record position as a feature")
     print("=" * 104)
     Xidx = np.hstack([X, (np.arange(len(y)) / len(y)).reshape(-1, 1)])
     probe = []
@@ -250,8 +253,8 @@ def main(refresh: bool = False):
     print(f"\n  univariate signal of the record index alone: "
           f"ROC-AUC = {roc_auc(y, -np.arange(len(y), dtype=float)):.3f} "
           f"(using -index, since risk falls over the record)")
-    print("  -> the record position alone is as discriminative as the full "
-          "17-feature model under honest temporal validation.")
+    print("  This full-cohort index association is descriptive; it does not "
+          "confirm calendar time or isolate leakage.")
 
     # ---------------- chronological holdout ----------------
     print("\n" + "=" * 104)
@@ -426,9 +429,14 @@ def main(refresh: bool = False):
     print("  wrote results/summary.md")
     from refresh_analysis import refresh
     refresh()
-    from generate_report import write_markdown_report
-    write_markdown_report()
-    print('  wrote report/technical_note.md from the generated results')
+    if os.path.exists(os.path.join(RESULTS, 'research_config.json')):
+        print('  extended paper retained; rerun engineering and research stages before regenerating it')
+    elif os.path.exists(os.path.join(RESULTS, 'source_audit.json')):
+        from generate_report import write_markdown_report
+        write_markdown_report()
+        print('  wrote report/technical_note.md from the generated results')
+    else:
+        print('  paper generation deferred: run audit_source.py, then generate_report.py')
     print("\ndone.")
 
 

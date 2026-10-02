@@ -33,6 +33,15 @@ class ResearchVerifierTests(unittest.TestCase):
     def test_inner_selection_corruption_rejected(self):
         self.reject('xgboost_tuning.csv', 'value', 99, 'training-only selection value')
 
+    def test_stability_sensitivity_corruption_rejected(self):
+        self.reject('shap_stability_sensitivity.csv', 'rank_spearman', -.99, 'recomputed sensitivity Spearman')
+
+    def test_historical_reference_corruption_rejected(self):
+        self.reject('probability_reference_comparison.csv', 'historical_brier', .9, 'historical')
+
+    def test_phase_contrast_corruption_rejected(self):
+        self.reject('feature_ablation_phase_contrasts.csv', 'without_seismic_minus_full', .9, 'without_seismic_minus_full')
+
 
 if __name__ == '__main__':
     unittest.main()

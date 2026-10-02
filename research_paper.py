@@ -34,6 +34,14 @@ def build_paper(root):
     raw = next(r for r in cal if r['model'] == 'LR' and r['variant'].startswith('as'))
     corrected = next(r for r in cal if r['model'] == 'LR' and r['variant'].startswith('after'))
     differences = read('research_model_intervals.csv')
+    sensitivity = read('shap_stability_sensitivity.csv')
+    nonconstant = [float(r['rank_spearman']) for r in sensitivity if r['scope'] == 'nonconstant_features']
+    reference = read('probability_reference_comparison.csv')
+    historical = {m: next(r for r in reference if r['model'] == m and r['validation'] == 'time' and int(r['fold']) == -1) for m in models}
+    phase_contrast = read('feature_ablation_phase_contrasts.csv')
+    xgb_phase = sorted([r for r in phase_contrast if r['model'] == 'XGBoost'], key=lambda r: int(r['fold']))
+    seismic_removed = next(r for r in ab if r['model'] == 'XGBoost' and r['variant'] == 'without_seismic_activity')
+    seismic_interval = next(r for r in ci if r['model'] == 'XGBoost' and r['variant'] == 'without_seismic_activity')
     labels = {'full': 'All features', 'ratings_only': 'Hazard ratings only', 'without_ratings': 'Without hazard ratings',
         'geophone_only': 'Geophone only', 'without_geophone': 'Without geophone',
         'seismic_activity_only': 'Seismic activity only', 'without_seismic_activity': 'Without seismic activity',
@@ -49,52 +57,53 @@ def build_paper(root):
             result = next(r for r in old_ci if r['model'] == m and int(r['block_length']) == 32)
         protocol_rows.append([m, number(random_ap), number(full[m]['pr_auc']), number(result['delta']), interval(result['ci_low'], result['ci_high'])])
     out = [
-        '# Reliable and explainable seismic hazard forecasting for underground mine monitoring',
+        '# Evaluating reliability and explainability in seismic hazard forecasting for underground mine monitoring',
         'Junjie Yang',
         'Mining Engineering, Fuzhou University',
         'Research code: https://github.com/junjie-yang11/seismic-bump-forecasting',
         '## Abstract',
-        'A common-cohort evaluation links mine-monitoring signals to explainable seismic warning decisions and quantifies the inspection workload those decisions create. '
-        'Using 2,578 UCI Seismic Bumps mirror records, we assess logistic regression (LR), bagged CART and training-tuned XGBoost on the same 2,063 record-order test rows. '
-        'Matching the test rows reduces the apparent random-versus-record-order average-precision gap by %.1f percent for LR and %.1f percent for CART, demonstrating the importance of evaluation-cohort composition. '
+        'Matching evaluation cohorts changes the interpretation of seismic forecasting performance and provides a common basis for assessing forecast probabilities and warning workload. '
+        'We evaluate logistic regression (LR), bagged CART and training-tuned XGBoost on 2,063 common test rows from the 2,578-row UCI Seismic Bumps mirror. Record order serves as a temporal proxy because timestamps and longwall identifiers are absent. '
+        'Matching test rows reduces the apparent random-versus-record-order average-precision gap by %.1f percent for LR and %.1f percent for CART, quantifying sensitivity to evaluation-cohort composition. '
         'Training-prior correction improves LR expected calibration error from %s to %s and Brier score from %s to %s. '
-        'Nine engineering feature combinations assess the information in hazard ratings, geophone signals, seismic activity and shift type. '
+        'Corrected LR Brier skill is %s against the historical training-prior reference and %s against the retrospective test-prevalence reference. '
+        'Nine prespecified feature combinations assess the predictive information in hazard ratings, geophone signals, seismic activity and shift type. '
         'Exact TreeSHAP identifies total seismic energy, low-energy event counts and pulse activity as recurring contributors to XGBoost predictions; '
-        'importance-rank correlations across four test phases range from %.3f to %.3f, with changing top-five membership. '
+        'importance-rank correlations across four test phases range from %.3f to %.3f, or %.3f to %.3f after excluding the three constant features. '
         'At training reference budgets of 10 and 20 percent, supplementary holdout XGBoost produces %s and %s alerts and detects %s and %s of 26 hazardous shifts. '
-        'The resulting framework connects comparable validation, interpretable monitoring signals and measurable detection-workload tradeoffs. '
-        'Record order supplies the forecasting proxy, and paired intervals quantify uncertainty conditional on fixed predictions.'
+        'These results connect the interpretation of monitoring signals to measurable detection and inspection demands. Paired intervals describe uncertainty conditional on fixed predictions.'
         % (100 * float(gaps[0]['gap_reduction_fraction']), 100 * float(gaps[1]['gap_reduction_fraction']),
            number(raw['ece']), number(corrected['ece']), number(raw['brier']), number(corrected['brier']),
-           min(correlations), max(correlations), integer(ten['alerts']), integer(twenty['alerts']), integer(ten['tp']), integer(twenty['tp'])),
+           number(historical['LR']['historical_skill']), number(historical['LR']['oracle_skill']),
+           min(correlations), max(correlations), min(nonconstant), max(nonconstant),
+           integer(ten['alerts']), integer(twenty['alerts']), integer(ten['tp']), integer(twenty['tp'])),
         'Keywords: mining engineering; seismic hazard forecasting; engineering feature ablation; TreeSHAP; explanation stability; warning budget',
         '## 1 Introduction',
-        'Underground mine monitoring combines measurements of rock-mass activity with assessments of dangerous conditions. '
-        'Forecasts become useful for engineering review when measured signals can be traced through a model to a warning decision and its inspection demands. '
-        'This requires evidence on the information supplied by each monitoring source, the consistency of its use across operating phases, '
-        'and the hazardous shifts detected at a defined review workload.',
+        'Underground mine monitoring records rock-mass activity to support the assessment of hazardous conditions. '
+        'A forecast becomes useful for engineering review when its warning decisions can be related to measured signals and inspection demands. '
+        'An evaluation must therefore establish which monitoring inputs inform the fitted predictor and how its warnings translate into detected and missed hazardous shifts.',
         'The UCI Seismic Bumps data provide a defined next-shift forecasting task: each record summarizes an eight-hour shift, '
         'and the target indicates whether the following shift contains a seismic event above 10,000 J [1]. Existing seismic and seismoacoustic hazard ratings '
         'appear alongside energy, pulse and event-count measurements. Their coexistence makes the additional predictive information in measured signals testable against the recorded assessments. '
         'The target is next-shift high-energy seismic occurrence; confirmed rockburst accidents are outside its label definition.',
-        'Ranking metrics describe how well a model orders hazardous shifts, while engineering evaluation also needs to explain which signals shape that ordering and what a warning rule demands. '
-        'Validation protocols can change both the training history and the test population [3,4], making a common test cohort essential for interpreting their difference. '
-        'Model explanations reveal how monitoring inputs contribute to fitted predictions, and frozen thresholds connect those predictions to detection counts and inspection workload.',
-        'This study integrates these assessments in one reproducible framework. A matched cohort establishes the comparison across three model families; '
-        'nine prespecified feature combinations separate recorded hazard assessments from geophone, seismic-activity and operational information. '
-        'Training-prior correction evaluates the probability scale, and exact TreeSHAP traces feature contributions across four test phases. '
-        'Four fixed training reference budgets then express warning policies as detections, false alerts and missed hazardous shifts. '
-        'The framework provides an engineering account of what monitoring information contributes, how a predictor uses it and what its warnings require.',
+        'Validation protocols can change both the training history and the test population [3,4]. A score gap therefore needs a common test cohort before it can inform a comparison of forecasting workflows. '
+        'Ranking performance also leaves an engineering question unresolved: which signals shape the predictions, and how many inspections are associated with the resulting detections? '
+        'Feature ablation and model explanations address the use of monitoring information, while frozen thresholds make detection and false-alert workload measurable.',
+        'We combine matched-cohort validation with training-prior calibration and an explicit assessment of monitoring information. '
+        'The common cohort supports comparisons across three model families, and nine prespecified feature combinations test the contribution of each engineering group. '
+        'Exact TreeSHAP traces how the fitted XGBoost models use these signals across four test phases; comparison with refitted ablations separates model reliance from observed predictive gains. '
+        'Four training reference budgets connect the forecast scores to detection counts and inspection workload. Together, these analyses establish a reproducible basis for interpreting seismic forecasts in their mining context.',
         '## 2 Data and engineering feature hypotheses',
         '### 2.1 Dataset and provenance',
         'The original UCI dataset contains 2,584 records from two longwalls of a Polish coal mine, with 170 positive target records [1]. '
         'The positive count refers to labelled shift records, rather than a catalogue of 170 independently identified seismic events. '
         'The CSV mirror retains 2,578 records [2]. A direct ARFF-to-CSV audit confirms first-occurrence deduplication without reordering: '
         'six excluded original rows, 90, 91, 973, 974, 1018 and 1019, are exact duplicate negatives. All positive records remain. '
-        'The retained original row IDs are 88, 89, 971, 972, 1016 and 1017, respectively.',
+        'The content-identical first-occurrence records retained for these rows have original IDs 88, 89, 971, 972, 1016 and 1017, respectively. '
+        'These IDs are one-based data-row numbers excluding the ARFF header.',
         'Row order is used as the temporal proxy because explicit timestamps and longwall identifiers are absent. '
         'The initial training block contains %.2f percent positive records, compared with %s percent in the four subsequent test phases. '
-        'Exact phase counts and prevalence are provided in Table 6. The full dataset prevalence is 6.59 percent, whereas the common test cohort has 88 positives '
+        'Exact phase counts and prevalence are provided in Table 7. The full dataset prevalence is 6.59 percent, whereas the common test cohort has 88 positives '
         'among 2,063 records, or 4.27 percent. These differences motivate both matched evaluation and phase-specific analysis.'
         % (100 * (integrity['n_positive'] - int(full['LR']['positives'])) / (integrity['n_rows'] - int(full['LR']['n'])),
            ', '.join('%.2f' % (100 * float(next(r for r in phase if r['model'] == 'LR' and r['variant'] == 'full' and int(r['fold']) == f)['prevalence'])) for f in range(4))),
@@ -158,6 +167,9 @@ def build_paper(root):
         'The reference budgets are fixed at 1, 5, 10 and 20 percent. For each outer fold, an inner model predicts the last 20 percent of the training history. '
         'The threshold excludes the boundary score and all tied scores together, so at most floor(reference size times budget) reference records are flagged. '
         'After outer refitting, the numerical threshold is frozen and evaluated on future test records. All budgets use the same model scores; no test labels enter threshold selection.',
+        'For LR, both threshold selection and alert classification use raw weighted-model scores. Prior-corrected probabilities are used separately for probability assessment. '
+        'The inner and outer models are distinct fits, so refitting can alter raw-score distributions and the transferred alert rate even though the probability scales are not mixed. '
+        'A frozen-inner-model comparison would isolate this refitting contribution from temporal distribution changes.',
         'Reference budgets are experimental workload scenarios, not established operating limits for a mine. '
         'The future actual alert rate is measured separately because refitting and changing score distributions can alter it. '
         'Warning outcomes include true detections, false alerts, missed hazardous shifts, precision and recall. '
@@ -172,6 +184,8 @@ def build_paper(root):
            number(differences[1]['delta']), interval(differences[1]['ci_low'], differences[1]['ci_high'])),
         'Table 2. AP on identical 2,063 test rows and paired random-minus-record-order intervals; random values average five seeds.',
         table(['Model', 'Random AP', 'Record-order AP', 'Difference', '95% interval'], protocol_rows),
+        'Table 2 note. LR uses balanced class weights, bagged CART is unweighted, and XGBoost is unweighted with an additional training-only parameter search. '
+        'This is a comparison of stated workflows with asymmetric weighting and tuning. The CART and XGBoost protocol intervals exclude zero; the LR interval includes zero.',
         'Matching test rows reduces the original different-cohort AP gap by %.1f percent for LR and %.1f percent for CART. '
         'The size of this change establishes test-cohort composition as a material part of protocol comparison. '
         'It measures evaluation-population sensitivity; the remaining differences combine training history, training size and, for XGBoost, training-selected configurations, '
@@ -199,27 +213,45 @@ def build_paper(root):
            number(next(r for r in ci if r['model'] == 'XGBoost' and r['variant'] == 'without_seismic_activity')['delta']),
            interval(next(r for r in ci if r['model'] == 'XGBoost' and r['variant'] == 'without_seismic_activity')['ci_low'],
                     next(r for r in ci if r['model'] == 'XGBoost' and r['variant'] == 'without_seismic_activity')['ci_high'])),
-        '### 4.3 Training prior correction and probability assessment',
+        '### 4.3 Calibration improvement and reference choice',
         'Training-prior correction improves LR ECE from %s to %s and Brier score from %s to %s, providing a direct adjustment to the probability scale using historical labels. '
         'Corrected LR, raw CART and raw XGBoost Brier scores are %s, %s and %s. '
         'Corrected LR Brier skill against a retrospective evaluation-prevalence constant is %s. '
         'The constant is an oracle reference used for assessment, with no role in generating forecasts. '
-        'The correction improves the weighted LR probabilities on this cohort, while the negative skill score records their position relative to that retrospective reference.'
+        'Table 5 also compares each model with a deployable historical reference: every test row receives the unweighted prevalence of its outer training fold. '
+        'Corrected LR has Brier skill %s against this historical reference. ECE improvement compares LR before and after correction, while skill compares its squared error with a stated reference; the two assessments therefore answer different questions.'
         % (number(raw['ece']), number(corrected['ece']), number(raw['brier']), number(corrected['brier']),
-           number(full['LR']['brier']), number(full['CART']['brier']), number(full['XGBoost']['brier']), number(corrected['brier_skill'])),
+           number(full['LR']['brier']), number(full['CART']['brier']), number(full['XGBoost']['brier']), number(corrected['brier_skill']),
+           number(historical['LR']['historical_skill'])),
+        'Table 5. Probability assessment on the common test cohort. LR uses corrected probabilities; CART and XGBoost use raw probabilities. Historical references are frozen within training; oracle references use the evaluation prevalence for retrospective assessment.',
+        table(['Model', 'Model Brier', 'Historical Brier', 'Historical skill', 'Oracle Brier', 'Oracle skill'],
+              [[m] + [number(historical[m][k]) for k in ('model_brier', 'historical_brier', 'historical_skill', 'oracle_brier', 'oracle_skill')] for m in models]),
         '![Figure 1. LR calibration on the common test cohort. Each panel contains 10 quantile bins of 206 or 207 observations; ties stay together, marker sizes encode counts, and panel axes differ.](../results/figures/reliability_lr.png)',
         '## 5 Model explanations and phase stability',
         '### 5.1 Global and stage-specific feature use',
         'Total seismic energy, low-energy event count nbumps2 and pulse count gpuls have the largest mean absolute XGBoost contributions. '
         'These are observable indicators of seismic and geophone activity; their importance describes how the fitted models use monitoring information. '
-        'Table 5 reports the leading contributions and value associations. Read alongside the ablations, these explanations distinguish a model\'s reliance on a signal from the incremental value of its monitoring group.',
-        'Table 5. Leading full-feature XGBoost contributions on 2,063 test rows. Magnitudes are in raw log-odds units; correlations are descriptive value-contribution associations.',
+        'Table 6 reports the leading contributions and value associations. Read alongside the ablations, these explanations distinguish a model\'s reliance on a signal from the incremental value of its monitoring group.',
+        'Table 6. Leading full-feature XGBoost contributions on 2,063 test rows. Magnitudes are in raw log-odds units; correlations are descriptive value-contribution associations.',
         table(['Feature', 'Mean absolute contribution', 'Value association'], [[r['feature'], number(r['mean_abs']), number(r['value_contribution_spearman'])] for r in global_shap[:5]]),
+        'The two largest contributions, energy and nbumps2, belong to the seismic-activity group. Removing that group and refitting gives pooled XGBoost AP %s versus %s for the full design, '
+        'a difference of %s with paired interval %s. The interval includes zero. '
+        'SHAP attributes the predictions of the full fitted model; ablation evaluates a newly fitted model with different inputs. '
+        'High reliance on these signals can therefore coexist with this ablation result, without establishing that the group is harmful or the explanation is unreliable. '
+        'Correlated inputs, fitted interactions and sampling variability are plausible contributors. Appendix Table A2 reports all feature sets by phase; '
+        'for XGBoost, without-seismic-minus-full AP differences are %s across phases 1 to 4. These phase patterns accompany the pooled comparison rather than identify its cause.'
+        % (number(seismic_removed['pr_auc']), number(full['XGBoost']['pr_auc']),
+           number(float(seismic_removed['pr_auc']) - float(full['XGBoost']['pr_auc'])),
+           interval(seismic_interval['ci_low'], seismic_interval['ci_high']),
+           ', '.join(number(r['without_seismic_minus_full']) for r in xgb_phase)),
         '![Figure 2. Global importance and phase shares for the eight globally leading features. Each cell is that feature\'s mean absolute contribution divided by the sum over all 17 features in the phase.](../results/figures/shap_phase_stability.png)',
         'Across the six phase pairs, importance-rank correlations range from %s to %s and top-five Jaccard overlap ranges from %s to %s. '
         'This combination shows recurring feature use alongside changing membership of the most influential group. '
-        'Correlations include all 17 features, including tied low-importance columns; top-five overlap supplies a complementary check focused on leading variables.'
-        % (number(min(correlations)), number(max(correlations)), number(min(overlaps)), number(max(overlaps))),
+        'Excluding the globally constant nbumps6, nbumps7 and nbumps89 leaves one fixed 14-feature universe for every phase and gives correlations from %s to %s. '
+        'Ranks are recomputed using average ranks on each fixed universe; alphabetical ordering resolves only top-five membership ties. '
+        'Top-five overlap is unchanged by excluding these constants. Appendix Table A3 reports every phase pair under both universes.'
+        % (number(min(correlations)), number(max(correlations)), number(min(overlaps)), number(max(overlaps)),
+           number(min(nonconstant)), number(max(nonconstant))),
         '![Figure 3. Values and TreeSHAP contributions for the three globally leading features. Colours identify test phases; horizontal values use signed log1p for display, and vertical values are raw log-odds contributions.](../results/figures/shap_dependence.png)',
         'The scatter distributions expose phase-dependent and nonlinear feature use. A high global importance can coexist with a weak global monotonic association: '
         'genergy, for example, has a descriptive value-contribution correlation of %s. '
@@ -227,10 +259,10 @@ def build_paper(root):
         'For engineering review, the contribution describes the signal in its prediction context.'
         % number(next(r for r in global_shap if r['feature'] == 'genergy')['value_contribution_spearman']),
         '### 5.2 Phase outcomes and illustrative warning cases',
-        'Table 6 connects explanation changes to the phase outcomes. Positive prevalence and full-model AP vary across the record sequence. '
+        'Table 7 connects explanation changes to the phase outcomes. Positive prevalence and full-model AP vary across the record sequence. '
         'Computing AP within each block separates its observed discrimination from the cross-model score-scale differences that can affect pooled AP. '
-        'Together, Tables 5 and 6 show why monitoring review benefits from examining feature use and phase outcomes side by side.',
-        'Table 6. Four common test phases with positive counts, prevalence and within-phase full-feature AP.',
+        'Together, Tables 6 and 7 show why monitoring review benefits from examining feature use and phase outcomes side by side.',
+        'Table 7. Four common test phases with positive counts, prevalence and within-phase full-feature AP.',
         table(['Phase', 'Rows', 'Positives', 'Prevalence', 'LR AP', 'CART AP', 'XGBoost AP'],
             [[f + 1, integer(next(r for r in phase if r['model'] == 'LR' and r['variant'] == 'full' and int(r['fold']) == f)['n']),
               integer(next(r for r in phase if r['model'] == 'LR' and r['variant'] == 'full' and int(r['fold']) == f)['positives']),
@@ -240,6 +272,7 @@ def build_paper(root):
         'The five largest absolute contributions are displayed individually, with remaining contributions combined as Other features. '
         'The three outcomes show how combinations of measured signals place different records above or below the same frozen cutoff. '
         'Signed contributions locate each model adjustment relative to its baseline.',
+        'TP, FP and FN categories depend on predicted alerts and observed labels. Selecting the first row within each category is deterministic and limits discretionary case picking; it is neither outcome-independent nor the only reproducible selection rule.',
         '![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin.](../results/figures/shap_warning_cases.png)',
         '## 6 Warning budgets and inspection workload',
         'Changing the reference budget changes the frozen threshold while leaving fitted scores unchanged. '
@@ -247,28 +280,26 @@ def build_paper(root):
         'This provides a direct comparison between intended historical workload and its transferred operating outcome.'
         % tuple(number(selected_budget(m, .1, 'time')['alert_rate']) for m in models),
         '![Figure 5. Recall versus actual test alert fraction under the four fixed training reference budgets. Colours identify models and increasing circle sizes identify 1, 5, 10 and 20 percent budgets.](../results/figures/research_warning_tradeoff.png)',
-        'Table 7 reports the supplementary holdout outcomes for every model and budget. '
+        'Table 8 reports the supplementary holdout outcomes for every model and budget. '
         'For XGBoost, increasing the reference budget from 10 to 20 percent increases alerts from %s to %s and detections from %s to %s, '
         'while missed hazardous shifts change from %s to %s. The corresponding actual alert rates are %s and %s. '
         'Reporting both detection counts and actual alert rates makes the workload change measurable when a historical threshold is transferred to later records.'
         % (integer(ten['alerts']), integer(twenty['alerts']), integer(ten['tp']), integer(twenty['tp']), integer(ten['fn']), integer(twenty['fn']), number(ten['alert_rate']), number(twenty['alert_rate'])),
-        'Table 7. All holdout warning policies on 774 records with 26 positive targets. Budget is the training reference fraction; alert rate is measured on holdout rows.',
-        table(['Model', 'Budget', 'Alerts', 'Detected', 'False alerts', 'Missed', 'Alert rate', 'Recall'],
+        'Table 8. All holdout warning policies on 774 records with 26 positive targets. Budget is the training reference fraction; alert rate is measured on holdout rows. Precision is reported as zero when no alerts are issued.',
+        table(['Model', 'Budget', 'Alerts', 'Detected', 'False alerts', 'Missed', 'Alert rate', 'Recall', 'Precision'],
             [[m, '%.0f%%' % (100 * b)] + [integer(selected_budget(m, b)[k]) for k in ('alerts', 'tp', 'fp', 'fn')]
-             + [number(selected_budget(m, b)[k]) for k in ('alert_rate', 'recall')] for m in models for b in (.01, .05, .10, .20)]),
+             + [number(selected_budget(m, b)[k]) for k in ('alert_rate', 'recall', 'precision')] for m in models for b in (.01, .05, .10, .20)]),
         'At the 1 percent reference budget, holdout LR issues one alert and detects one hazardous shift, while CART and XGBoost issue no alerts. '
         'Detection and missed-shift counts make these sparse outcomes interpretable alongside precision. '
         'Higher budgets increase detections together with additional false-alert workload. '
         'The resulting policy curves provide evidence for selecting a budget once inspection capacity and the consequences of missed hazards are specified.',
         '## 7 Discussion',
         '### 7.1 Connecting monitoring evidence to warning decisions',
-        'The engineering contribution is the connection between information sources, model explanations and warning workload. '
-        'Recorded hazard ratings establish an assessment baseline, while geophone and seismic-activity comparisons measure what monitoring signals add within the tested designs. '
-        'TreeSHAP then identifies recurring energy, event-count and pulse contributions and shows where their relative importance changes. '
-        'A high contribution and an incremental AP gain answer different questions: the first describes model reliance, and the second measures the value of adding information to an existing predictor.',
-        'Training-prior correction and frozen budgets complete this connection. Probability assessment establishes the effect of restoring the historical prior, '
-        'and policy evaluation converts fitted scores into detected hazardous shifts, missed shifts and false-alert workload. '
-        'For an engineer reviewing monitoring forecasts, these outputs support tracing an unusual prediction to its input signals and comparing warning rules against available inspection capacity.',
+        'Matched evaluation makes cohort composition visible in the interpretation of validation gaps. The large reduction in the LR and CART gaps shows why the tested shifts belong in the performance comparison alongside the training protocol. '
+        'Probability assessment then supplies a separate decision-relevant distinction: calibration improvement and skill against a stated reference measure different properties of the forecasts.',
+        'The SHAP-ablation comparison provides an engineering reading of the monitoring signals. Energy and low-energy event counts strongly influence the fitted XGBoost predictions, '
+        'while refitting without their group yields a positive pooled AP difference whose interval includes zero. This result motivates examining signal combinations and phase outcomes alongside global importance. '
+        'The complete budget table carries that interpretation into warning consequences, making detections, missed shifts and false-alert workload available for the same policy comparison.',
         '### 7.2 Scope and prospective validation',
         'These results concern the audited mirror under a record-order forecasting assumption. '
         'Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. '
@@ -281,20 +312,22 @@ def build_paper(root):
         'The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. '
         'A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.',
         '## 8 Conclusions',
-        'This study establishes a reproducible connection from mine-monitoring information to explainable seismic warning decisions. '
-        'Matched test rows make validation gaps interpretable on a common population, and training-prior correction improves the LR probability scale using historical information. '
-        'Engineering ablations quantify the contribution of monitoring groups, while TreeSHAP identifies recurring energy, event-count and pulse signals and traces changes in their use across phases. '
-        'Frozen-budget evaluation translates forecasts into detection counts, missed hazardous shifts and inspection workload. '
-        'The combined evidence provides a practical basis for reviewing which signals a forecasting model uses and what its warning policy requires.',
+        'This study establishes a common basis for evaluating seismic forecasting workflows and interpreting their warning consequences. '
+        'Matching test rows substantially reduces the apparent random-versus-record-order gap, identifying evaluation-cohort composition as an essential part of the comparison. '
+        'Training-prior correction improves LR calibration, with probability skill interpreted against explicit historical and retrospective references. '
+        'Comparing TreeSHAP with refitted ablations distinguishes feature reliance from observed predictive gains, while complete warning-budget outcomes quantify the associated detection and false-alert workload. '
+        'The contribution is an evidence-based evaluation of how monitoring information becomes a forecast and what that forecast requires of an inspection policy.',
         '## Data and computational reproducibility',
         'Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence includes all feature-set predictions, inner-reference scores, '
         'fold audits, candidate-selection predictions and row-index manifests, bootstrap replicates, five random seeds, native XGBoost models, '
         'row-level TreeSHAP contributions and the predetermined case records. '
-        'Each reported table is generated from these files. Source hashes and duplicate row mappings preserve the data version.',
+        'Result tables are generated from saved evidence. Source hashes and duplicate row mappings preserve the data version. '
+        'Appendix Table A1 maps feature names to UCI definitions and the implemented engineering groups.',
         'The extended analysis uses Python %s, NumPy %s, pandas %s, XGBoost %s and SciPy %s. '
         'The legacy LR/CART baselines use the original verified Python 3.7 environment and retain their saved full-model predictions. '
         'To reproduce the extensions, install requirements-research.txt in a separate Python 3.12 environment, run run_engineering.py followed by run_research.py, '
-        'and execute verify_research.py --replay. Report generation uses generate_report.py --docx; export_report.ps1 exports the Word document to PDF. '
+        'run review_analysis.py to refresh the reference and stability supplements, and execute verify_research.py --replay. '
+        'Report generation uses generate_report.py --docx; export_report.ps1 exports the Word document to PDF. '
         'The original experiment and report consistency checks remain available through verify_results.py --reports.'
         % tuple(config['environment'][k] for k in ('python', 'numpy', 'pandas', 'xgboost', 'scipy')),
         '## References',
@@ -307,4 +340,37 @@ def build_paper(root):
         '[7] Lundberg SM et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence, 2020, 2:56-67. DOI: 10.1038/s42256-019-0138-9.',
         '[8] XGBoost documentation. Booster.predict and exact feature contributions. https://xgboost.readthedocs.io/en/stable/python/python_api.html',
     ]
+    definitions = {
+        'seismic': ('Hazard ratings', 'Seismic-method shift hazard rating', 'Ordinal a-d'),
+        'seismoacoustic': ('Hazard ratings', 'Seismoacoustic shift hazard rating', 'Ordinal a-d'),
+        'ghazard': ('Hazard ratings', 'GMax geophone hazard rating', 'Ordinal a-d'),
+        'genergy': ('Geophone', 'Previous-shift energy at GMax', 'Numeric'),
+        'gpuls': ('Geophone', 'Previous-shift pulse count at GMax', 'Numeric'),
+        'gdenergy': ('Geophone', 'Energy deviation from previous eight-shift mean', 'Numeric'),
+        'gdpuls': ('Geophone', 'Pulse-count deviation from previous eight-shift mean', 'Numeric'),
+        'shift': ('Operation', 'Coal-getting W or preparation N', 'Binary'),
+        'energy': ('Seismic activity', 'Previous-shift total bump energy', 'Numeric'),
+        'maxenergy': ('Seismic activity', 'Previous-shift maximum bump energy', 'Numeric'),
+    }
+    for feature, bounds in [('nbumps2', '[10^2, 10^3)'), ('nbumps3', '[10^3, 10^4)'),
+                            ('nbumps4', '[10^4, 10^5)'), ('nbumps5', '[10^5, 10^6)'),
+                            ('nbumps6', '[10^6, 10^7)'), ('nbumps7', '[10^7, 10^8)'),
+                            ('nbumps89', '[10^8, 10^10)')]:
+        definitions[feature] = ('Seismic activity', 'Previous-shift bump count in ' + bounds + ' J',
+                                'Constant' if feature in ('nbumps6', 'nbumps7', 'nbumps89') else 'Numeric')
+    out.extend([
+        '## Appendix A Feature definitions and phase evidence',
+        'Table A1. Implemented feature groups and concise UCI variable definitions [1]. GMax is the most active geophone. Constant marks a numeric column with one value in the audited mirror.',
+        table(['Feature', 'Group', 'Definition', 'Encoding'], [[name] + list(values) for name, values in definitions.items()]),
+        'The total count nbumps is excluded from the 17-column design because its energy-band counts are retained. Ordinal ratings and the binary shift type use the fixed mappings documented in the preprocessing code; scaling is fitted within training.',
+        'Table A2. Within-phase AP for every prespecified feature set. Phases use the same test rows across models and subsets. XGBoost subsets reuse the configuration selected on full-feature training data.',
+        table(['Model', 'Feature set', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4'],
+              [[model, label] + [number(next(r for r in phase if r['model'] == model and r['variant'] == variant and int(r['fold']) == f)['pr_auc']) for f in range(4)]
+               for model in models for variant, label in labels.items()]),
+        'Table A3. Phase-pair stability with a fixed universe of 17 columns and after excluding the three constant columns. Average ranks are used for Spearman; top-five overlap uses the stated alphabetical boundary rule.',
+        table(['Phase pair', 'Spearman 17', 'Spearman 14', 'Top-5 Jaccard 17', 'Top-5 Jaccard 14'],
+              [['%d-%d' % (a+1, b+1)] + [number(next(r for r in sensitivity if r['scope'] == scope and int(r['fold_a']) == a and int(r['fold_b']) == b)[metric])
+               for metric in ('rank_spearman', 'top5_jaccard') for scope in ('all_features', 'nonconstant_features')]
+               for a in range(4) for b in range(a+1, 4)]),
+    ])
     return '\n\n'.join(out) + '\n'

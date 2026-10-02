@@ -1,4 +1,10 @@
-# Project review 2 October 2026
+# Project reviews
+
+## Complete execution audit — 3 October 2026
+
+The full baseline, engineering and research workflow was rerun from an empty results directory. All 44 result CSVs and the regenerated paper agree with the saved evidence. Current validation passed 42 tests, 8,169 integrated checks and 7,460 extended replay checks. See [EXECUTION_AUDIT.md](EXECUTION_AUDIT.md) for source hashes, figure comparisons, undefined-cell conventions and the execution-flow fixes.
+
+## Historical project review — 2 October 2026
 
 The current experiment outputs remain reproducible and internally consistent. This review found input-validation and reproduction-documentation defects, fixed them, and restored the paper's authorized byline and repository link. It did not identify renewed use of test labels for threshold selection, calibration priors or XGBoost parameter selection in the saved experiment workflow.
 

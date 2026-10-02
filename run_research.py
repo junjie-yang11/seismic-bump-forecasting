@@ -142,6 +142,8 @@ def run():
     (results / 'xgboost_tuning_manifest.json').write_text(json.dumps(manifests, indent=2), encoding='utf-8')
     from research_analysis import analyse
     analyse(ROOT)
+    from review_analysis import analyse as analyse_review
+    analyse_review(ROOT)
     from generate_report import write_markdown_report
     write_markdown_report()
     print('Extended experiments and explanations saved.', flush=True)

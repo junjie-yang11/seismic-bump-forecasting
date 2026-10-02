@@ -1,4 +1,16 @@
-# Reproduction record: corrected pipeline, 2 October 2026
+# Reproduction records
+
+## Current complete execution audit: 3 October 2026
+
+The baseline, engineering and research workflows were rerun in an isolated copy with an initially empty results directory. No saved predictions or metrics were copied into that directory. A new source audit, bootstrap analysis, training-only XGBoost search, native TreeSHAP and review supplements were computed. All 44 published result CSVs match within rtol=1e-9 and atol=1e-10; the maximum observed numeric difference is 4.0245584642661925e-16. The complete regenerated paper matches the current Markdown exactly.
+
+All 17 figures were checked. Fourteen files match byte-for-byte; three baseline raster figures have different text rendering between Pillow environments, with identical colored curve and marker pixels. All five figures embedded in Word match the verified figure files.
+
+Current validation: 42 tests, 8,169 integrated result/report checks and 7,460 extended checks with five independent full XGBoost refits and native TreeSHAP replay. The fresh result-only audit passed 8,167 checks; the two additional integrated checks concern the existing Word document. Live UCI ARFF and CSV mirror downloads match the model input hashes.
+
+The engineering stage took 86.6091008 seconds and the research stage 11.5567641 seconds in this run; timings depend on hardware and environment. The baseline stage completed successfully, but was not separately instrumented. Detailed evidence is in `../EXECUTION_AUDIT.md` and `execution_audit_comparison.json`.
+
+## Historical baseline record: 2 October 2026
 
 The complete experiment was rerun locally using Python 3.7.0, NumPy 1.21.6, pandas 1.1.5 and Pillow 9.5.0. Raw output is in `run_log.txt`.
 

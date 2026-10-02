@@ -31,6 +31,7 @@ def audit(source):
     if list(original.columns) != list(mirror.columns): raise ValueError('column mismatch')
     matched = bool((dedup == mirror).to_numpy().all()) if dedup.shape == mirror.shape else False
     if not matched: raise ValueError('mirror is not the order-preserving first-occurrence deduplication')
+    (ROOT / 'results').mkdir(exist_ok=True)
     mapping = pd.DataFrame({'mirror_row_0based':range(len(dedup)),
                             'uci_row_1based':original.index[~duplicate]+1})
     mapping.to_csv(ROOT/'results/source_row_mapping.csv',index=False)
@@ -55,5 +56,6 @@ if __name__=='__main__':
     else:
         opener=urllib.request.build_opener(urllib.request.ProxyHandler({'https':args.proxy})) if args.proxy else urllib.request.build_opener()
         with opener.open(URL,timeout=40) as r: archive=zipfile.ZipFile(io.BytesIO(r.read()))
+        (ROOT / 'data').mkdir(exist_ok=True)
         path=ROOT/'data/original-seismic-bumps.arff'; path.write_bytes(archive.read('seismic-bumps.arff'))
     audit(path)

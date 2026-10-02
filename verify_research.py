@@ -19,6 +19,9 @@ from calibration import calibration_summary, prior_correction
 def verify_research(root, check, close, replay=False):
     def read(name): return pd.read_csv(root / 'results' / name)
     X, y, names, _ = load(); variants = feature_variants(names)
+    if (root / 'results/review_analysis_config.json').exists():
+        from verify_review import verify_review
+        verify_review(root, check, close, X, y, names)
     config = json.loads((root / 'results/research_config.json').read_text(encoding='utf-8'))
     check(config['data_sha256'] == hashlib.sha256(Path(CSV_PATH).read_bytes()).hexdigest(), 'research source hash')
     check(config['budgets'] == list(BUDGETS), 'prespecified budgets')

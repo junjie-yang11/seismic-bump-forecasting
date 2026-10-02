@@ -60,6 +60,7 @@ def report_markdown():
     return build_paper(ROOT)
 
 def write_markdown_report():
+    (ROOT / 'report').mkdir(exist_ok=True)
     (ROOT / 'report/technical_note.md').write_text(report_markdown(), encoding='utf-8')
 
 def write_word_report():
@@ -128,6 +129,8 @@ def write_word_report():
             if data[0][0]=='Model': weights[0]=1.15
             if data[0][-1]=='95% interval': weights[-1]=2.
             if data[0][0]=='Model / variant': weights[0]=2.2
+            if data[0][:2]==['Model', 'Feature set']: weights=[.9, 2.4, 1., 1., 1., 1.]
+            if data[0]==['Feature', 'Group', 'Definition', 'Encoding']: weights=[1.1, 1.1, 3.4, .9]
             widths=[6.5*w/sum(weights) for w in weights]
             for col,width in zip(tbl.columns,widths): col.width=Inches(width)
             for ri, values in enumerate(data):
@@ -169,7 +172,7 @@ def write_word_report():
             p=doc.add_paragraph(line[3:],style='Heading 1')
             if line[3:]=='Abstract': p.alignment=WD_ALIGN_PARAGRAPH.CENTER
         elif line.startswith('### '): doc.add_paragraph(line[4:], style='Heading 2')
-        elif re.match(r'^Table \d+\.',line):
+        elif re.match(r'^Table (?:\d+|A\d+)\.',line):
             p=doc.add_paragraph(line,style='Caption')
             p.paragraph_format.keep_with_next=True
         else:

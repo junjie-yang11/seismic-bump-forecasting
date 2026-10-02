@@ -1,0 +1,47 @@
+{
+  "feature_sets": {
+    "all_features": [
+      "seismic",
+      "seismoacoustic",
+      "shift",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "ghazard",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "nonconstant_features": [
+      "seismic",
+      "seismoacoustic",
+      "shift",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "ghazard",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "energy",
+      "maxenergy"
+    ]
+  },
+  "constant_features": [
+    "nbumps6",
+    "nbumps7",
+    "nbumps89"
+  ],
+  "scope": "Descriptive reanalysis of saved predictions; no model or budget selection",
+  "historical_reference": "Per-row outer-training unweighted prevalence; frozen before each test phase",
+  "oracle_reference": "Evaluation-cohort prevalence; retrospective metric reference only"
+}

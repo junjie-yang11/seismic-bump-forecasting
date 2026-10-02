@@ -8,8 +8,8 @@ The whole point of the study is the difference between:
   it is tested on.
 
 * `time_ordered_folds` — expanding-window validation. Fold i trains on the first
-  i blocks and is tested on block i+1, which mirrors the real forecasting task
-  ("given everything so far, what happens next shift?").
+  i blocks and is tested on block i+1. Record order is a temporal proxy because
+  timestamps and longwall IDs are absent; it cannot confirm real chronology.
 
 * `chronological_holdout` — a single train/early -> test/late split.
 

@@ -1,0 +1,17 @@
+XGBoost time: full
+XGBoost time: ratings_only
+XGBoost time: without_ratings
+XGBoost time: geophone_only
+XGBoost time: without_geophone
+XGBoost time: seismic_activity_only
+XGBoost time: without_seismic_activity
+XGBoost time: operation_only
+XGBoost time: without_operation
+XGBoost holdout: full
+XGBoost random seed 0
+XGBoost random seed 1
+XGBoost random seed 2
+XGBoost random seed 3
+XGBoost random seed 4
+Review supplements saved without refitting or changing predictions.
+Extended experiments and explanations saved.
