@@ -29,6 +29,8 @@ dist/
 # Virtual environments
 # ---------------------------------------------------------------------------
 .venv/
+.venv-research/
+pip-*/
 venv/
 env/
 ENV/

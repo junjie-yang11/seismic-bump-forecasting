@@ -18,6 +18,7 @@ import urllib.request
 
 import numpy as np
 import pandas as pd
+from input_checks import supervised_arrays
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(os.path.dirname(HERE), "data")
@@ -67,8 +68,8 @@ def integrity_report(df: pd.DataFrame) -> dict:
         "nbumps_range_rank": int(np.linalg.matrix_rank(df[bump_cols].to_numpy(float))),
         "nbumps_range_ncols": len(bump_cols),
     }
-    # Positive rate drift across the record sequence: this is what makes random
-    # cross-validation optimistic (see report).
+    # Describe prevalence variation; it does not isolate the cause of a
+    # random-versus-record-order validation difference.
     q = pd.qcut(np.arange(len(df)), 5, labels=False)
     rep["prevalence_by_quintile"] = (
         df.groupby(q)["class"].mean().round(4).to_dict())
@@ -99,4 +100,5 @@ def load(force_download: bool = False):
             X[c] = df[c].astype(float)
 
     integrity_report(df)  # available to callers that want it
-    return X.to_numpy(float), y, list(X.columns), df
+    design, y = supervised_arrays(X.to_numpy(float), y)
+    return design, y, list(X.columns), df

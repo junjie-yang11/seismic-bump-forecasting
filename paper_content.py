@@ -3,7 +3,7 @@ import csv
 import json
 from pathlib import Path
 
-def build_paper(root):
+def build_cohort_paper(root):
     def rows(name):
         with (root/'results'/name).open(encoding='utf-8',newline='') as f: return list(csv.DictReader(f))
     def num(x): return '%.4f'%float(x)
@@ -58,8 +58,7 @@ def build_paper(root):
       'We organize the analysis around this common test cohort and extend it to the decisions a warning model must support. '
       'The comparison measures how much of the apparent protocol gap changes when the test rows are matched; paired block resampling quantifies the residual difference. '
       'Training-fold prior correction then assesses the probability scale, while a fixed-threshold holdout expresses performance as detected events, missed events and alerts. '
-      'The resulting contribution is an auditable evaluation workflow that links mine-monitoring records to warning consequences. '
-      'Section 5.3 develops its transfer to UAV and mine-image validation.',
+      'The resulting contribution is an auditable evaluation workflow that links mine-monitoring records to warning consequences.',
       '## 2 Data provenance and engineering scope',
       '### 2.1 Original dataset and mirror',
       'The original UCI file has %d shifts from two Polish mine longwalls [1]. The CSV mirror documents removal of repeated rows [2]. '
@@ -173,12 +172,6 @@ def build_paper(root):
       'The next validation stage should combine matched training sizes with phase-level calibration and a prospectively frozen warning policy. '
       'The record-index probe and in-sample permutation importance, available in the supplementary result files, offer descriptive diagnostics for choosing '
       'which record structure and correlated monitoring features to investigate. This sequence extends the present evaluation to field conditions with defined data timing and warning actions.',
-      '### 5.3 Transferable lessons for UAV and mine-image data',
-      'For UAV and mine-image analysis, the same evaluation logic begins with an inspection target, such as locating a visible surface defect or mapping a feature for follow-up. '
-      'Nearby frames, overlapping image tiles and repeated views of the same area should be grouped by flight, site and acquisition period for validation, '
-      'since a random image split may put nearly identical views on both sides. Common test sites and periods would make protocol comparisons interpretable. '
-      'Spatial resolution, image quality and annotation consistency would be audited as measurement conditions, while missed targets and review workload would be reported separately from recognition accuracy. '
-      'These design principles define a subsequent image-data study with grouped validation and explicit inspection outcomes.',
       '## 6 Conclusions',
       'Cohort matching changes the interpretation of validation performance in this seismic forecasting study. Holding the test rows fixed removes most of '
       'the apparent random-versus-record-order PR-AUC gap and reveals a smaller, model-dependent residual difference. Training-fold prior correction '
@@ -198,3 +191,10 @@ def build_paper(root):
       '[5] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html',
     ]
     return '\n\n'.join(out)+'\n'
+
+
+def build_paper(root):
+    if (root / 'results/research_config.json').exists():
+        from research_paper import build_paper as build_extended
+        return build_extended(root)
+    return build_cohort_paper(root)

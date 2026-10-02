@@ -8,9 +8,13 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from input_checks import binary_vectors
 
 
 def confusion(y: np.ndarray, pred: np.ndarray) -> dict:
+    y, pred = binary_vectors(y, pred)
+    if not np.isin(pred, (0, 1)).all():
+        raise ValueError('predicted classes must be binary')
     tp = int(((pred == 1) & (y == 1)).sum())
     fp = int(((pred == 1) & (y == 0)).sum())
     fn = int(((pred == 0) & (y == 1)).sum())
@@ -19,6 +23,10 @@ def confusion(y: np.ndarray, pred: np.ndarray) -> dict:
 
 
 def threshold_metrics(y: np.ndarray, score: np.ndarray, thr: float) -> dict:
+    y, score = binary_vectors(y, score)
+    thr = np.asarray(thr, dtype=float)
+    if thr.ndim > 1 or (thr.ndim == 1 and thr.shape != score.shape) or np.isnan(thr).any():
+        raise ValueError('threshold must be scalar or aligned vector without NaN')
     c = confusion(y, (score >= thr).astype(float))
     tp, fp, fn, tn = c["tp"], c["fp"], c["fn"], c["tn"]
     n = len(y)
@@ -40,6 +48,7 @@ def threshold_metrics(y: np.ndarray, score: np.ndarray, thr: float) -> dict:
 
 def roc_auc(y: np.ndarray, score: np.ndarray) -> float:
     """Rank (Mann-Whitney) formulation; ties receive average ranks."""
+    y, score = binary_vectors(y, score)
     npos = int((y == 1).sum())
     nneg = int((y == 0).sum())
     if npos == 0 or nneg == 0:
@@ -50,8 +59,7 @@ def roc_auc(y: np.ndarray, score: np.ndarray) -> float:
 
 def average_precision(y: np.ndarray, score: np.ndarray) -> float:
     """Area under the precision-recall curve, grouping tied scores."""
-    y = np.asarray(y, dtype=float)
-    score = np.asarray(score, dtype=float)
+    y, score = binary_vectors(y, score)
     order = np.argsort(-score, kind="mergesort")
     yy, ss = y[order], score[order]
     total_pos = float(yy.sum())
@@ -87,6 +95,7 @@ def prior_threshold(score: np.ndarray, prevalence: float) -> float:
 
 def summarise(y: np.ndarray, score: np.ndarray, *, threshold=None) -> dict:
     """Evaluate with a fixed scalar or per-row training-derived threshold."""
+    y, score = binary_vectors(y, score)
     if threshold is None:
         raise ValueError("a threshold selected on training validation data is required")
     thr = np.asarray(threshold, dtype=float)
@@ -102,6 +111,9 @@ def summarise(y: np.ndarray, score: np.ndarray, *, threshold=None) -> dict:
 
 def curve_points(y: np.ndarray, score: np.ndarray, n_points: int = 200):
     """ROC and PR coordinates for plotting."""
+    y, score = binary_vectors(y, score)
+    if not isinstance(n_points, (int, np.integer)) or isinstance(n_points, (bool, np.bool_)) or n_points < 2:
+        raise ValueError('n_points must be an integer of at least two')
     thresholds = np.unique(np.asarray(score, dtype=float))
     if len(thresholds) > n_points:
         thresholds = np.quantile(thresholds, np.linspace(1.0, 0.0, n_points))

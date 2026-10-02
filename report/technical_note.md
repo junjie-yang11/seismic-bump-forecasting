@@ -1,4 +1,4 @@
-# Cohort matched evaluation of seismic bump forecasting for mine warning decisions
+# Reliable and explainable seismic hazard forecasting for underground mine monitoring
 
 Junjie Yang
 
@@ -8,160 +8,233 @@ Research code: https://github.com/junjie-yang11/seismic-bump-forecasting
 
 ## Abstract
 
-Seismic warning evaluation must distinguish changes in the test population from changes in model behavior. We present an evaluation workflow that matches test records across validation protocols and connects discrimination, probability calibration and warning counts. On a 2,578-row mirror of the UCI Seismic Bumps dataset, evaluating both protocols on the same 2,063 records reduces the random-versus-record-order PR-AUC gap by 89.7 percent for logistic regression (LR) and 86.9 percent for bagged CART. The residual differences are 0.0114 and 0.0188, with paired moving-block bootstrap 95 percent intervals of [-0.0110, 0.0243] and [0.0064, 0.0323]. Training-fold prior correction reduces LR expected calibration error from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. A holdout evaluation then translates the fixed LR threshold into 8 alerts, 2 detected hazardous shifts and 24 missed hazardous shifts among 774 records. Together, these results establish test-cohort comparability as a prerequisite for interpreting validation gaps and show how calibration and threshold transfer require separate assessment. The gap reduction describes sensitivity to cohort composition; the intervals condition on fixed predictions. The workflow provides traceable evidence for evaluating mine-warning policies before prospective trials.
+A common-cohort evaluation links mine-monitoring signals to explainable seismic warning decisions and quantifies the inspection workload those decisions create. Using 2,578 UCI Seismic Bumps mirror records, we assess logistic regression (LR), bagged CART and training-tuned XGBoost on the same 2,063 record-order test rows. Matching the test rows reduces the apparent random-versus-record-order average-precision gap by 89.7 percent for LR and 86.9 percent for CART, demonstrating the importance of evaluation-cohort composition. Training-prior correction improves LR expected calibration error from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. Nine engineering feature combinations assess the information in hazard ratings, geophone signals, seismic activity and shift type. Exact TreeSHAP identifies total seismic energy, low-energy event counts and pulse activity as recurring contributors to XGBoost predictions; importance-rank correlations across four test phases range from 0.712 to 0.941, with changing top-five membership. At training reference budgets of 10 and 20 percent, supplementary holdout XGBoost produces 30 and 81 alerts and detects 3 and 6 of 26 hazardous shifts. The resulting framework connects comparable validation, interpretable monitoring signals and measurable detection-workload tradeoffs. Record order supplies the forecasting proxy, and paired intervals quantify uncertainty conditional on fixed predictions.
 
-Keywords: mining engineering; seismic hazard; rare-event prediction; test-cohort shift; paired block bootstrap; probability calibration
+Keywords: mining engineering; seismic hazard forecasting; engineering feature ablation; TreeSHAP; explanation stability; warning budget
 
 ## 1 Introduction
 
-A mine-warning forecast has value when it supports a timely monitoring or inspection decision. For rare seismic hazards, evaluation must connect a model score to the hazardous shifts it detects and the workload its alerts create. The UCI Seismic Bumps target records an event above 10^4 J in the following shift [1]. This provides a concrete setting for studying early-warning evaluation: hazardous shifts comprise a small fraction of the records, and an always-negative predictor already achieves 93.41 percent accuracy.
+Underground mine monitoring combines measurements of rock-mass activity with assessments of dangerous conditions. Forecasts become useful for engineering review when measured signals can be traced through a model to a warning decision and its inspection demands. This requires evidence on the information supplied by each monitoring source, the consistency of its use across operating phases, and the hazardous shifts detected at a defined review workload.
 
-Validation protocols are central to this assessment. Random splitting and validation along a record sequence admit different training histories [3,4], but they can also evaluate different test populations. A large PR-AUC gap may consequently reflect changes in which shifts are scored alongside changes in prediction behavior. Comparing the protocols on a common cohort makes this overlooked source of variation directly measurable.
+The UCI Seismic Bumps data provide a defined next-shift forecasting task: each record summarizes an eight-hour shift, and the target indicates whether the following shift contains a seismic event above 10,000 J [1]. Existing seismic and seismoacoustic hazard ratings appear alongside energy, pulse and event-count measurements. Their coexistence makes the additional predictive information in measured signals testable against the recorded assessments. The target is next-shift high-energy seismic occurrence; confirmed rockburst accidents are outside its label definition.
 
-We organize the analysis around this common test cohort and extend it to the decisions a warning model must support. The comparison measures how much of the apparent protocol gap changes when the test rows are matched; paired block resampling quantifies the residual difference. Training-fold prior correction then assesses the probability scale, while a fixed-threshold holdout expresses performance as detected events, missed events and alerts. The resulting contribution is an auditable evaluation workflow that links mine-monitoring records to warning consequences. Section 5.3 develops its transfer to UAV and mine-image validation.
+Ranking metrics describe how well a model orders hazardous shifts, while engineering evaluation also needs to explain which signals shape that ordering and what a warning rule demands. Validation protocols can change both the training history and the test population [3,4], making a common test cohort essential for interpreting their difference. Model explanations reveal how monitoring inputs contribute to fitted predictions, and frozen thresholds connect those predictions to detection counts and inspection workload.
 
-## 2 Data provenance and engineering scope
+This study integrates these assessments in one reproducible framework. A matched cohort establishes the comparison across three model families; nine prespecified feature combinations separate recorded hazard assessments from geophone, seismic-activity and operational information. Training-prior correction evaluates the probability scale, and exact TreeSHAP traces feature contributions across four test phases. Four fixed training reference budgets then express warning policies as detections, false alerts and missed hazardous shifts. The framework provides an engineering account of what monitoring information contributes, how a predictor uses it and what its warnings require.
 
-### 2.1 Original dataset and mirror
+## 2 Data and engineering feature hypotheses
 
-The original UCI file has 2584 shifts from two Polish mine longwalls [1]. The CSV mirror documents removal of repeated rows [2]. A direct comparison of the downloaded ARFF and the local CSV confirms that keeping the first occurrence of each complete row reproduces all 2578 mirror rows in the same order. The six removed rows are exact duplicates and all have class 0; all 170 positive rows remain. Table 1 records the original one-based row IDs. File hashes, complete duplicate contents and the mirror-to-original row mapping are saved in source_audit.json, source_duplicates.csv and source_row_mapping.csv.
+### 2.1 Dataset and provenance
 
-Table 1. Exact duplicate rows excluded by the mirror; row IDs refer to the original UCI data records, excluding the ARFF header.
+The original UCI dataset contains 2,584 records from two longwalls of a Polish coal mine, with 170 positive target records [1]. The positive count refers to labelled shift records, rather than a catalogue of 170 independently identified seismic events. The CSV mirror retains 2,578 records [2]. A direct ARFF-to-CSV audit confirms first-occurrence deduplication without reordering: six excluded original rows, 90, 91, 973, 974, 1018 and 1019, are exact duplicate negatives. All positive records remain. The retained original row IDs are 88, 89, 971, 972, 1016 and 1017, respectively.
 
-| Removed row | Retained first row | Target class |
+Row order is used as the temporal proxy because explicit timestamps and longwall identifiers are absent. The initial training block contains 15.92 percent positive records, compared with 6.98, 1.94, 4.65, 3.49 percent in the four subsequent test phases. Exact phase counts and prevalence are provided in Table 6. The full dataset prevalence is 6.59 percent, whereas the common test cohort has 88 positives among 2,063 records, or 4.27 percent. These differences motivate both matched evaluation and phase-specific analysis.
+
+### 2.2 Engineering feature groups
+
+Table 1 partitions the existing 17-column design into four engineering groups. The three hazard-rating variables encode recorded assessments, while the geophone and seismic-activity groups contain monitoring measurements. Shift type describes preparation or coal-getting activity. These groups define comparisons between existing hazard assessments and the measured signals available to a forecasting model.
+
+Table 1. Engineering feature groups and the predictive hypotheses examined.
+
+| Group | Variables | Question |
 | --- | --- | --- |
-| 90 | 88 | 0 |
-| 91 | 89 | 0 |
-| 973 | 971 | 0 |
-| 974 | 972 | 0 |
-| 1018 | 1016 | 0 |
-| 1019 | 1017 | 0 |
+| Hazard ratings | seismic, seismoacoustic, ghazard | How much information is already represented by recorded assessments? |
+| Geophone | genergy, gpuls, gdenergy, gdpuls | Do energy, pulse activity and deviations add information beyond ratings? |
+| Seismic activity | nbumps2 to nbumps89, energy, maxenergy | Do event counts by energy band and released-energy measures add information? |
+| Operation | shift | Does shift type provide predictive context? |
 
-The analysis uses this audited mirror throughout. Its version is reported explicitly so that comparisons can distinguish the 2,578-row cohort from published evaluations of the 2,584-row original. Row order serves as the temporal proxy; the file supplies no explicit timestamps or longwall identifiers.
-
-### 2.2 Predictors and target
-
-Each record summarizes one eight-hour shift. Predictor groups include mine hazard assessments, geophone energy and pulse measures, deviations from preceding-shift reference levels, bump counts by energy range, and total or maximum bump energy [1]. The target refers to the following shift. This measurement-to-target timing is essential when reconstructing a field prediction task. Ordinal categorical encoding and removal of total nbumps leave 17 input columns. Three retained bump-count columns are constant; constant-safe scaling and L2 regularization accommodate the resulting rank deficiency.
-
-The first record-order block has a much larger positive proportion than later blocks (Figure 1). Random validation covers all 2,578 rows with prevalence 0.0659; the common later test cohort contains 88 positives among 2,063 rows, prevalence 0.0427. These are different evaluation populations, even when the underlying model family is unchanged.
-
-![Figure 1. Hazard prevalence in five consecutive record blocks; row order is a proxy rather than verified clock time.](../results/figures/prevalence_drift.png)
+Categorical fields retain the existing ordinal encoding. The total count nbumps is excluded because it is the sum of the energy-band counts; constant energy-band columns remain in the audited design. LR uses constant-safe training standardization and L2 regularization. The design uses the supplied shift summaries; constructing cross-shift lag features would require known longwall continuity.
 
 ## 3 Methods
 
-### 3.1 Models and validation protocols
+### 3.1 Common test cohort and model comparison
 
-LR uses IRLS, L2 penalty 1.0, an unpenalized intercept and balanced class weights. Scaling is fitted on training rows only. The tree baseline uses 60 ordinary bootstrap CART trees, depth 6 and at least 20 observations per leaf, with unweighted Gini impurity and unweighted leaf probabilities. Hyperparameters are fixed across protocols, providing a controlled comparison of evaluation behavior for linear and nonlinear predictors.
+Record-order evaluation divides the mirror into five consecutive blocks. Four expanding-window fits train on earlier blocks and predict the next block; the first block supplies training only. Every model and feature combination therefore evaluates the same 2,063 rows. A supplementary holdout trains on the first 70 percent and evaluates the last 774 records, containing 26 positive targets. This holdout was inspected in the earlier project, so it is reported as descriptive supplementary evidence and is not used to select a feature set, model or budget.
 
-Random stratified validation has ten folds and five seeds, 0 to 4. Every aggregate random metric is the mean of the five seed-specific metrics. Record-order validation divides the mirror into five consecutive blocks; four expanding windows train on earlier blocks and test the next one. The first block is training only. The final holdout trains on the first 70 percent and tests the last 774 rows. All test rows, including all-negative blocks, are retained. ROC-AUC is undefined for a single-class cohort; PR-AUC here means non-interpolated average precision, with ties grouped before integration.
+LR retains L2 penalty 1.0, an unpenalized intercept and balanced class weights. Bagged CART retains 60 ordinary bootstrap trees, maximum depth 6, minimum leaf size 20, unweighted Gini and forest seed 7. XGBoost uses unweighted binary logistic loss and histogram trees, learning rate 0.05, minimum child weight 10 and L2 penalty 5.0, with full row and column sampling, seed 7 and two CPU threads [6]. Its fixed candidate grid combines depth 2 or 3 with 80 or 160 boosting rounds.
 
-### 3.2 Common test cohort and paired uncertainty
+Each XGBoost search uses only its supplied training rows: the final 20 percent forms an inner reference, and candidates are fitted on the preceding 80 percent. Selection maximizes tied-score average precision (AP), with negative Brier score as the predefined fallback for a zero-positive reference; the first grid entry wins exact ties. The selected model is refitted on the entire supplied training set. Threshold-reference models conduct their own search within the earlier inner-fit prefix. For feature ablations, full-feature training selects parameters once per fold and the same choices are used for all nine feature combinations.
 
-Random predictions for each seed are restricted to the exact 2,063 rows covered by record-order validation. The reported difference is the mean random average precision across five seeds minus the temporal average precision. The aggregation averages seed-specific metrics. Seeds describe sensitivity to fold assignment rather than independent sampling of mine populations.
+The random protocol uses ten stratified folds and five seeds, 0 to 4. XGBoost selects parameters through a stratified inner split within each outer training fold. Random predictions are restricted to the record-order test cohort before calculating comparative metrics. Reported random AP is the mean of five seed-specific AP values, rather than AP after averaging scores. LR and CART retain fixed settings; XGBoost is training-tuned. Comparisons characterize these stated workflows rather than equally extensive searches for every model.
 
-The primary interval uses 2,000 paired moving-block bootstrap replicates, block length 32 records and fixed random generator seed 20261002. For every replicate, contiguous blocks are sampled with replacement separately within each of the four temporal test phases, preserving each phase size; the final block is truncated. The identical sampled row indices are applied to labels, all five random prediction vectors and the temporal vector. The statistic is recomputed on each resampled cohort, and its 2.5th and 97.5th percentiles form a conditional interval. Block lengths 16 and 64, plus phase-stratified paired IID resampling, are sensitivity checks. Resampling contiguous records preserves local dependence within blocks [5]. Models remain fixed during resampling, so the intervals describe test-cohort uncertainty conditional on the saved predictions. Section 5.2 sets out the scope of this analysis.
+### 3.2 Feature comparisons and conditional uncertainty
 
-### 3.3 Warning thresholds and probability correction
+The prespecified feature sets are the full design, each group alone and the design with each group removed. They are all reported, without choosing a final feature set from test outcomes. The full-versus-ratings-only contrast addresses the additional predictive information in monitoring measurements and shift type. Group-removal contrasts assess predictive dependence on information groups in the presence of correlated alternatives.
 
-Each outer training fold has an inner split: temporal folds reserve the latest 20 percent of training rows, while random folds reserve 20 percent within each class. An inner model scores these reference rows; its own training prevalence sets a reference alert budget. The boundary score and all its ties are excluded together so the reference count cannot exceed the integer budget. The outer model is refitted on its full training fold and evaluated using that fixed numerical threshold. Threshold selection is completed within training; the realized test alert rate is then measured as an outcome. The prevalence-based budget defines a reference operating point for studying threshold transfer.
+AP is the main ranking measure and groups tied scores before integration. ROC-AUC, Brier score and ten-quantile-bin expected calibration error (ECE) provide complementary discrimination and probability assessments. LR probability assessment uses each outer training fold's unweighted prior to correct its balanced-weight output; CART and XGBoost are assessed as fitted. No test-label prior is used in forecasting or calibration.
 
-For balanced-weight LR, a log-odds offset converts the effective training prior of 0.5 to each outer training fold's unweighted positive proportion. The transformation is applied fold by fold before pooling calibration predictions. CART is unweighted and receives no such correction. A correction with one fixed prior is monotone and preserves rankings within that fold; different corrections across folds can change the pooled ordering. The discrimination tables retain raw scores, separating the assessment of probability scale from the assessment of ranking.
+Paired moving-block intervals use 2,000 replicates, block length 32 and RNG seed 20261002. Contiguous blocks are sampled separately within each test phase, preserving phase sizes and applying identical sampled rows to every compared score vector. Intervals are the 2.5th and 97.5th percentiles of paired AP differences and condition on fixed predictions. Random-protocol differences average the five seed-specific AP values within each replicate. The earlier LR/CART protocol analysis also checks lengths 16 and 64. The intervals are descriptive, unadjusted for multiple feature contrasts, and exclude model-refit and parameter-selection uncertainty [5].
 
-Calibration uses Brier score, expected calibration error (ECE), maximum calibration error and reliability diagrams. Ten quantile bins are requested; repeated edges are merged and tied scores remain together. Reliability diagrams and Brier error complement the bin-dependent ECE. Brier skill uses an evaluation-prevalence constant predictor as a retrospective oracle reference.
+### 3.3 Explanations and phase stability
 
-## 4 Results
+Full-feature XGBoost models explain their own outer-test predictions through native exact TreeSHAP, using the training-derived leaf covers as the tree-path-dependent reference [7,8]. Each row has 17 feature contributions and a bias term. Their sum reconstructs the raw log-odds margin; applying the logistic function reconstructs the predicted probability. Contributions are additive on the model's log-odds scale and describe fitted predictive associations.
 
-### 4.1 Test cohort matching reduces the apparent validation gap
+Global importance is mean absolute contribution on the common test cohort. Each phase also has its own importance ranks. Pairwise Spearman correlations compare the ranks of all 17 features, with average ranks for ties; top-five Jaccard overlap measures agreement in leading features. A fixed feature-name order resolves ties at the top-five boundary. Value-contribution Spearman associations and scatter plots describe how observed values relate to contributions. Together, the rank and overlap measures characterize recurring feature use and changes among leading inputs.
 
-Matching the test records reduces the absolute PR-AUC gap by 89.7 percent for LR and 86.9 percent for CART (Table 2). The random-model fits and predictions remain unchanged; their evaluation is restricted to the rows covered by record-order validation. The large reduction therefore demonstrates how strongly the apparent protocol gap depends on test composition, including prevalence and record difficulty.
+Illustrative cases use the earliest record in each true-positive, false-positive and false-negative category under the predeclared 10 percent training reference budget. Case selection is a post-evaluation explanation step, independent of model and threshold selection.
 
-Table 2. Absolute random-minus-record-order PR-AUC gaps before and after matching test rows; reduction is descriptive.
+### 3.4 Training reference budgets and warning outcomes
 
-| Model | Different-cohort gap | Same-cohort gap | Gap reduction |
-| --- | --- | --- | --- |
-| LR | 0.1114 | 0.0114 | 89.7% |
-| CART | 0.1433 | 0.0188 | 86.9% |
+The reference budgets are fixed at 1, 5, 10 and 20 percent. For each outer fold, an inner model predicts the last 20 percent of the training history. The threshold excludes the boundary score and all tied scores together, so at most floor(reference size times budget) reference records are flagged. After outer refitting, the numerical threshold is frozen and evaluated on future test records. All budgets use the same model scores; no test labels enter threshold selection.
 
-Table 3. Common-cohort average precision and primary paired 95 percent moving-block intervals (2,063 rows, 88 positives; block length 32). Differences use unrounded metrics.
+Reference budgets are experimental workload scenarios, not established operating limits for a mine. The future actual alert rate is measured separately because refitting and changing score distributions can alter it. Warning outcomes include true detections, false alerts, missed hazardous shifts, precision and recall. The target and available labels measure shift-level detections, not event counts, spatial warning coverage or avoided accidents.
 
-| Model | Random mean AP | Record-order AP | Difference | 95% interval |
+## 4 Predictive contribution of monitoring information
+
+### 4.1 Cohort sensitivity and matched model comparison
+
+Table 2 compares validation protocols on identical test records. Full-feature XGBoost record-order AP is 0.0862, compared with 0.0838 for LR and 0.0784 for CART. The XGBoost-minus-LR paired difference is 0.0024 with interval [-0.0290, 0.0291], and the XGBoost-minus-CART difference is 0.0079 with interval [-0.0019, 0.0267]. These paired comparisons establish the model context for the monitoring-information and warning-policy analyses below.
+
+Table 2. AP on identical 2,063 test rows and paired random-minus-record-order intervals; random values average five seeds.
+
+| Model | Random AP | Record-order AP | Difference | 95% interval |
 | --- | --- | --- | --- | --- |
 | LR | 0.0953 | 0.0838 | 0.0114 | [-0.0110, 0.0243] |
 | CART | 0.0972 | 0.0784 | 0.0188 | [0.0064, 0.0323] |
+| XGBoost | 0.0995 | 0.0862 | 0.0133 | [0.0004, 0.0256] |
 
-Across the five random fold assignments, the common-cohort AP difference ranges from 0.0088 to 0.0128 for LR and from 0.0169 to 0.0223 for CART. These ranges summarize split sensitivity alongside the paired test-cohort intervals.
+Matching test rows reduces the original different-cohort AP gap by 89.7 percent for LR and 86.9 percent for CART. The size of this change establishes test-cohort composition as a material part of protocol comparison. It measures evaluation-population sensitivity; the remaining differences combine training history, training size and, for XGBoost, training-selected configurations, so the reduction is not a causal decomposition of leakage or drift.
 
-The paired analysis distinguishes the residual behavior of the two model families (Figure 2). The LR interval spans zero, while the CART interval stays positive across the examined block lengths. The common cohort thus reveals a smaller and model-dependent protocol difference that the original pooled comparison obscured. An interval spanning zero leaves a range of residual differences compatible with the resampling analysis; it is not an equivalence test. The gap reduction measures cohort sensitivity, while remaining differences in training history and size preclude a causal leakage decomposition.
+### 4.2 Engineering feature comparisons
 
-![Figure 2. Paired PR-AUC differences and 95 percent conditional intervals, with block lengths 16, 32 and 64; five random seeds are averaged in each replicate.](../results/figures/paired_ap_intervals.png)
+Table 3 reports every prespecified feature set. Hazard ratings alone yield AP 0.0596, 0.0738 and 0.0766 for LR, CART and XGBoost. The full-feature gains are 0.0243, 0.0046 and 0.0096, respectively (Table 4). Paired intervals in Table 4 include zero for all three gains. The comparisons quantify the observed contribution of measured signals and its conditional uncertainty.
 
-![Figure 3. Precision-recall curves on the identical 2,063 test rows. The random curves use seed 0 for display; Tables 2 and 3 use five-seed mean metrics.](../results/figures/pr_same_test.png)
+Table 3. Engineering feature ablations on the common record-order cohort; entries are AP. All three models use the same columns per row.
 
-Figure 3 visualizes the common-cohort comparison at random seed 0. The shared positive proportion of 0.0427 supplies a consistent prevalence reference for interpreting both precision-recall curves; Table 3 and Figure 2 provide the aggregate estimates and their uncertainty.
-
-### 4.2 Training priors improve probability calibration
-
-Fold-local LR prior correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439 (Table 4). Mean predicted probability falls from 0.3331 to 0.0694 against observed prevalence 0.0427. The correction brings the probability scale substantially closer to the observed event frequency using historical labels available to each training fold. Against the retrospective constant reference, corrected LR Brier skill is -0.0751 and unweighted CART Brier skill is -0.0607. These benchmark values quantify the remaining probability error alongside the improvement from the weighted LR output.
-
-Table 4. Probability assessment on record-order test rows. Correction uses training priors, and only LR has a corrected variant.
-
-| Model / variant | Brier | ECE | Mean forecast | Observed |
+| Feature set | Columns | LR | CART | XGBoost |
 | --- | --- | --- | --- | --- |
-| LR / raw | 0.1462 | 0.2904 | 0.3331 | 0.0427 |
-| LR / fold prior | 0.0439 | 0.0271 | 0.0694 | 0.0427 |
-| CART / raw | 0.0433 | 0.0374 | 0.0662 | 0.0427 |
+| All features | 17 | 0.0838 | 0.0784 | 0.0862 |
+| Hazard ratings only | 3 | 0.0596 | 0.0738 | 0.0766 |
+| Without hazard ratings | 14 | 0.0900 | 0.0766 | 0.0856 |
+| Geophone only | 4 | 0.0792 | 0.1000 | 0.1025 |
+| Without geophone | 13 | 0.0734 | 0.0794 | 0.0828 |
+| Seismic activity only | 9 | 0.0751 | 0.0761 | 0.0785 |
+| Without seismic activity | 8 | 0.1020 | 0.0952 | 0.1292 |
+| Shift type only | 1 | 0.0504 | 0.0824 | 0.0824 |
+| Without shift type | 16 | 0.0837 | 0.0778 | 0.0862 |
 
-![Figure 4. LR reliability diagrams on 2,063 rows. Both panels contain 10 quantile bins of 206-207 observations; marker size reflects count. Panel axes differ. Tied scores remain together and repeated edges are merged.](../results/figures/reliability_lr.png)
+Table 4. Full-feature AP minus hazard-ratings-only AP with conditional paired 95 percent intervals.
 
-The reliability diagrams show how the training-prior correction redistributes forecasts toward the low-risk range (Figure 4). Each panel contains all 2,063 observations, with closely spaced low-probability bins appearing near the origin. Brier skill and the forecast-to-observation mean comparison retain a complementary assessment of the remaining probability error.
+| Model | Incremental AP | 95% interval |
+| --- | --- | --- |
+| LR | 0.0243 | [-0.0039, 0.0619] |
+| CART | 0.0046 | [-0.0252, 0.0264] |
+| XGBoost | 0.0096 | [-0.0148, 0.0413] |
 
-### 4.3 Warning counts expose threshold transfer behavior
+The geophone-only XGBoost achieves AP 0.1025, while removal of the seismic-activity group gives 0.1292. The latter differs from the full model by 0.0430 with interval [-0.0034, 0.1067]. Together with the LR and CART contrasts, these results show that predictive use of a monitoring group depends on the other available inputs and fitted model. The comparisons hold XGBoost settings fixed within each fold, assessing the sensitivity of that design to information sources. Redundancy, estimation variability and changing phase distributions are candidate explanations for the observed patterns; they are not separately identified here.
 
-Table 5 reports fixed-threshold holdout performance. For LR, 8 of 774 shifts are flagged, including 2 true positives and 6 false positives; 24 of 26 hazardous shifts are missed. Recall is 0.0769 and the alert rate is 0.0103. These counts translate the selected operating point into event detection and review workload, which overall accuracy does not resolve.
+### 4.3 Training prior correction and probability assessment
 
-Table 5. Record-order holdout warning outcomes, using frozen numerical thresholds selected inside training.
+Training-prior correction improves LR ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439, providing a direct adjustment to the probability scale using historical labels. Corrected LR, raw CART and raw XGBoost Brier scores are 0.0439, 0.0433 and 0.0429. Corrected LR Brier skill against a retrospective evaluation-prevalence constant is -0.0751. The constant is an oracle reference used for assessment, with no role in generating forecasts. The correction improves the weighted LR probabilities on this cohort, while the negative skill score records their position relative to that retrospective reference.
 
-| Model | Hazardous shifts | Alerts | Detected | Missed | Recall |
-| --- | --- | --- | --- | --- | --- |
-| LR | 26 | 8 | 2 | 24 | 0.0769 |
-| CART | 26 | 6 | 1 | 25 | 0.0385 |
+![Figure 1. LR calibration on the common test cohort. Each panel contains 10 quantile bins of 206 or 207 observations; ties stay together, marker sizes encode counts, and panel axes differ.](../results/figures/reliability_lr.png)
 
-The historical reference budget becomes a fixed score cutoff, whose later alert rate depends on the score distribution. The holdout produces an LR alert rate of 0.0103, whereas pooled record-order testing produces 0.1832 at prevalence 0.0427. This variation establishes threshold transfer as an evaluation target in its own right. Lower event prevalence, feature shifts and refitting are candidate contributors to the change; the warning-count analysis measures the operating outcome without assigning it to a single mechanism.
+## 5 Model explanations and phase stability
 
-## 5 Discussion
+### 5.1 Global and stage-specific feature use
 
-### 5.1 Implications for mine monitoring
+Total seismic energy, low-energy event count nbumps2 and pulse count gpuls have the largest mean absolute XGBoost contributions. These are observable indicators of seismic and geophone activity; their importance describes how the fitted models use monitoring information. Table 5 reports the leading contributions and value associations. Read alongside the ablations, these explanations distinguish a model's reliance on a signal from the incremental value of its monitoring group.
 
-The common-cohort analysis makes a large evaluation-population effect visible before interpreting protocol differences. The calibration experiment then identifies a practical adjustment to weighted LR probabilities, and the warning counts show what a frozen threshold means for a later set of shifts. Each result points to a distinct engineering decision: select a comparable evaluation cohort, assess the probability scale, and validate the alert policy at its intended operating point.
+Table 5. Leading full-feature XGBoost contributions on 2,063 test rows. Magnitudes are in raw log-odds units; correlations are descriptive value-contribution associations.
 
-For mine monitoring, the decision unit and prediction lead time should be tied to a defined inspection or escalation action. Missed hazardous shifts, false alarms and inspection capacity provide the operational quantities for choosing a threshold using training or prospective validation data. Site records of face advance, work activity, sensor changes and monitoring coverage would help investigate score-distribution changes in a subsequent field study. This connects predictive evaluation to how monitoring teams allocate attention and investigate elevated seismic activity.
+| Feature | Mean absolute contribution | Value association |
+| --- | --- | --- |
+| energy | 0.5642 | 0.6854 |
+| nbumps2 | 0.3902 | 0.7179 |
+| gpuls | 0.3523 | 0.7668 |
+| genergy | 0.1466 | 0.0148 |
+| seismic | 0.1391 | 0.8297 |
 
-### 5.2 Scope and prospective validation
+![Figure 2. Global importance and phase shares for the eight globally leading features. Each cell is that feature's mean absolute contribution divided by the sum over all 17 features in the phase.](../results/figures/shap_phase_stability.png)
 
-The results characterize the audited mirror under a record-order forecasting assumption. Timestamps and longwall identifiers would enable direct temporal and site-specific validation, while retaining the original 2,584 records would assess the effect of repeated measurements that may represent distinct shifts. The paired intervals quantify uncertainty conditional on fixed predictions and empirical test phases; they exclude model-refit uncertainty. Block lengths 16, 32 and 64 provide sensitivity checks around a chosen dependence scale, with coverage under nonstationary conditions requiring further assessment.
+Across the six phase pairs, importance-rank correlations range from 0.7122 to 0.9412 and top-five Jaccard overlap ranges from 0.4286 to 0.6667. This combination shows recurring feature use alongside changing membership of the most influential group. Correlations include all 17 features, including tied low-importance columns; top-five overlap supplies a complementary check focused on leading variables.
 
-The next validation stage should combine matched training sizes with phase-level calibration and a prospectively frozen warning policy. The record-index probe and in-sample permutation importance, available in the supplementary result files, offer descriptive diagnostics for choosing which record structure and correlated monitoring features to investigate. This sequence extends the present evaluation to field conditions with defined data timing and warning actions.
+![Figure 3. Values and TreeSHAP contributions for the three globally leading features. Colours identify test phases; horizontal values use signed log1p for display, and vertical values are raw log-odds contributions.](../results/figures/shap_dependence.png)
 
-### 5.3 Transferable lessons for UAV and mine-image data
+The scatter distributions expose phase-dependent and nonlinear feature use. A high global importance can coexist with a weak global monotonic association: genergy, for example, has a descriptive value-contribution correlation of 0.0148. The phase-coloured patterns show how a measurement's contribution varies with the other inputs and the fitted model. For engineering review, the contribution describes the signal in its prediction context.
 
-For UAV and mine-image analysis, the same evaluation logic begins with an inspection target, such as locating a visible surface defect or mapping a feature for follow-up. Nearby frames, overlapping image tiles and repeated views of the same area should be grouped by flight, site and acquisition period for validation, since a random image split may put nearly identical views on both sides. Common test sites and periods would make protocol comparisons interpretable. Spatial resolution, image quality and annotation consistency would be audited as measurement conditions, while missed targets and review workload would be reported separately from recognition accuracy. These design principles define a subsequent image-data study with grouped validation and explicit inspection outcomes.
+### 5.2 Phase outcomes and illustrative warning cases
 
-## 6 Conclusions
+Table 6 connects explanation changes to the phase outcomes. Positive prevalence and full-model AP vary across the record sequence. Computing AP within each block separates its observed discrimination from the cross-model score-scale differences that can affect pooled AP. Together, Tables 5 and 6 show why monitoring review benefits from examining feature use and phase outcomes side by side.
 
-Cohort matching changes the interpretation of validation performance in this seismic forecasting study. Holding the test rows fixed removes most of the apparent random-versus-record-order PR-AUC gap and reveals a smaller, model-dependent residual difference. Training-fold prior correction substantially improves the LR probability scale, while fixed-threshold warning counts connect predictions to detected events and inspection workload. The contribution is an auditable workflow that makes test comparability, calibration and warning-policy transfer explicit before a prospective mine trial. It provides a concrete basis for designing mine-monitoring evaluations around the decisions their predictions must support.
+Table 6. Four common test phases with positive counts, prevalence and within-phase full-feature AP.
 
-## Data and code availability
+| Phase | Rows | Positives | Prevalence | LR AP | CART AP | XGBoost AP |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 516 | 36 | 0.0698 | 0.1360 | 0.1136 | 0.1341 |
+| 2 | 515 | 10 | 0.0194 | 0.0204 | 0.0274 | 0.0284 |
+| 3 | 516 | 24 | 0.0465 | 0.0873 | 0.0632 | 0.0731 |
+| 4 | 516 | 18 | 0.0349 | 0.1142 | 0.0781 | 0.0618 |
 
-Source data are available from UCI [1] and the CSV mirror [2]. The repository contains analysis code, row-level OOF predictions for all five random seeds, paired-bootstrap replicates, provenance hashes, fold audits and generated reports. Reproduction commands and the report-generation workflow are documented in the repository README. The analysis uses NumPy, pandas and Pillow, with all reported comparisons linked to saved predictions and result tables.
+The predetermined holdout cases are shown in Figure 4. Each case decomposes the bias and all feature contributions to reconstruct the model margin. The five largest absolute contributions are displayed individually, with remaining contributions combined as Other features. The three outcomes show how combinations of measured signals place different records above or below the same frozen cutoff. Signed contributions locate each model adjustment relative to its baseline.
+
+![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin.](../results/figures/shap_warning_cases.png)
+
+## 6 Warning budgets and inspection workload
+
+Changing the reference budget changes the frozen threshold while leaving fitted scores unchanged. In the common record-order cohort, LR, CART and XGBoost actual alert rates at the 10 percent reference budget are 0.1609, 0.0785 and 0.0999. This provides a direct comparison between intended historical workload and its transferred operating outcome.
+
+![Figure 5. Recall versus actual test alert fraction under the four fixed training reference budgets. Colours identify models and increasing circle sizes identify 1, 5, 10 and 20 percent budgets.](../results/figures/research_warning_tradeoff.png)
+
+Table 7 reports the supplementary holdout outcomes for every model and budget. For XGBoost, increasing the reference budget from 10 to 20 percent increases alerts from 30 to 81 and detections from 3 to 6, while missed hazardous shifts change from 23 to 20. The corresponding actual alert rates are 0.0388 and 0.1047. Reporting both detection counts and actual alert rates makes the workload change measurable when a historical threshold is transferred to later records.
+
+Table 7. All holdout warning policies on 774 records with 26 positive targets. Budget is the training reference fraction; alert rate is measured on holdout rows.
+
+| Model | Budget | Alerts | Detected | False alerts | Missed | Alert rate | Recall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| LR | 1% | 1 | 1 | 0 | 25 | 0.0013 | 0.0385 |
+| LR | 5% | 5 | 1 | 4 | 25 | 0.0065 | 0.0385 |
+| LR | 10% | 14 | 2 | 12 | 24 | 0.0181 | 0.0769 |
+| LR | 20% | 52 | 4 | 48 | 22 | 0.0672 | 0.1538 |
+| CART | 1% | 0 | 0 | 0 | 26 | 0.0000 | 0.0000 |
+| CART | 5% | 4 | 1 | 3 | 25 | 0.0052 | 0.0385 |
+| CART | 10% | 8 | 1 | 7 | 25 | 0.0103 | 0.0385 |
+| CART | 20% | 61 | 5 | 56 | 21 | 0.0788 | 0.1923 |
+| XGBoost | 1% | 0 | 0 | 0 | 26 | 0.0000 | 0.0000 |
+| XGBoost | 5% | 4 | 0 | 4 | 26 | 0.0052 | 0.0000 |
+| XGBoost | 10% | 30 | 3 | 27 | 23 | 0.0388 | 0.1154 |
+| XGBoost | 20% | 81 | 6 | 75 | 20 | 0.1047 | 0.2308 |
+
+At the 1 percent reference budget, holdout LR issues one alert and detects one hazardous shift, while CART and XGBoost issue no alerts. Detection and missed-shift counts make these sparse outcomes interpretable alongside precision. Higher budgets increase detections together with additional false-alert workload. The resulting policy curves provide evidence for selecting a budget once inspection capacity and the consequences of missed hazards are specified.
+
+## 7 Discussion
+
+### 7.1 Connecting monitoring evidence to warning decisions
+
+The engineering contribution is the connection between information sources, model explanations and warning workload. Recorded hazard ratings establish an assessment baseline, while geophone and seismic-activity comparisons measure what monitoring signals add within the tested designs. TreeSHAP then identifies recurring energy, event-count and pulse contributions and shows where their relative importance changes. A high contribution and an incremental AP gain answer different questions: the first describes model reliance, and the second measures the value of adding information to an existing predictor.
+
+Training-prior correction and frozen budgets complete this connection. Probability assessment establishes the effect of restoring the historical prior, and policy evaluation converts fitted scores into detected hazardous shifts, missed shifts and false-alert workload. For an engineer reviewing monitoring forecasts, these outputs support tracing an unusual prediction to its input signals and comparing warning rules against available inspection capacity.
+
+### 7.2 Scope and prospective validation
+
+These results concern the audited mirror under a record-order forecasting assumption. Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. Repeated measurements can correspond to distinct shifts; the provenance audit establishes the mirror transformation rather than the operational validity of deduplication. Native TreeSHAP uses training leaf covers, and correlated inputs affect the allocation of contributions. Its signed values explain fitted associations rather than the causal effect of changing a monitoring variable. Phase stability is conditional on the fitted models and observed test distributions.
+
+The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. A maximum AP among these feature sets is not treated as a validated model-selection result. The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.
+
+## 8 Conclusions
+
+This study establishes a reproducible connection from mine-monitoring information to explainable seismic warning decisions. Matched test rows make validation gaps interpretable on a common population, and training-prior correction improves the LR probability scale using historical information. Engineering ablations quantify the contribution of monitoring groups, while TreeSHAP identifies recurring energy, event-count and pulse signals and traces changes in their use across phases. Frozen-budget evaluation translates forecasts into detection counts, missed hazardous shifts and inspection workload. The combined evidence provides a practical basis for reviewing which signals a forecasting model uses and what its warning policy requires.
+
+## Data and computational reproducibility
+
+Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence includes all feature-set predictions, inner-reference scores, fold audits, candidate-selection predictions and row-index manifests, bootstrap replicates, five random seeds, native XGBoost models, row-level TreeSHAP contributions and the predetermined case records. Each reported table is generated from these files. Source hashes and duplicate row mappings preserve the data version.
+
+The extended analysis uses Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, XGBoost 3.1.3 and SciPy 1.18.1. The legacy LR/CART baselines use the original verified Python 3.7 environment and retain their saved full-model predictions. To reproduce the extensions, install requirements-research.txt in a separate Python 3.12 environment, run run_engineering.py followed by run_research.py, and execute verify_research.py --replay. Report generation uses generate_report.py --docx; export_report.ps1 exports the Word document to PDF. The original experiment and report consistency checks remain available through verify_results.py --reports.
 
 ## References
 
 [1] Sikora M, Wrobel L. Seismic Bumps [Dataset]. UCI Machine Learning Repository, 2010. DOI: 10.24432/C5W902. https://archive.ics.uci.edu/dataset/266/seismic+bumps
 
-[2] datasets/seismic-bumps. CSV mirror and preparation description: repeated-row removal. https://github.com/datasets/seismic-bumps
+[2] datasets/seismic-bumps. CSV mirror and preparation description. https://github.com/datasets/seismic-bumps
 
 [3] Bergmeir C, Benitez JM. On the use of cross-validation for time series predictor evaluation. Information Sciences, 2012, 191:192-213.
 
 [4] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography, 2017, 40:913-929.
 
 [5] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html
+
+[6] Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of KDD, 2016, 785-794. DOI: 10.1145/2939672.2939785.
+
+[7] Lundberg SM et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence, 2020, 2:56-67. DOI: 10.1038/s42256-019-0138-9.
+
+[8] XGBoost documentation. Booster.predict and exact feature contributions. https://xgboost.readthedocs.io/en/stable/python/python_api.html

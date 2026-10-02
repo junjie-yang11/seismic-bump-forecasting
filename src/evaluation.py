@@ -21,9 +21,15 @@ from __future__ import annotations
 import numpy as np
 from calibration import prior_correction
 from metrics import prior_threshold
+from input_checks import supervised_arrays, split_indices
 
 
 def stratified_random_folds(y: np.ndarray, k: int = 10, seed: int = 0) -> np.ndarray:
+    y = np.asarray(y)
+    if y.ndim != 1 or not len(y) or not np.isin(y, (0, 1)).all():
+        raise ValueError('nonempty binary label vector required')
+    if not isinstance(k, (int, np.integer)) or isinstance(k, (bool, np.bool_)) or not 2 <= k <= len(y):
+        raise ValueError('fold count must be an integer between two and sample size')
     rng = np.random.default_rng(seed)
     fold = np.empty(len(y), dtype=int)
     for cls in (0, 1):
@@ -36,6 +42,9 @@ def stratified_random_folds(y: np.ndarray, k: int = 10, seed: int = 0) -> np.nda
 
 def time_ordered_folds(n: int, k: int = 5) -> list[tuple[np.ndarray, np.ndarray]]:
     """Expanding window: train on blocks [0..i], test on block i+1."""
+    if (not isinstance(n, (int, np.integer)) or not isinstance(k, (int, np.integer))
+            or isinstance(n, (bool, np.bool_)) or isinstance(k, (bool, np.bool_)) or not 2 <= k <= n):
+        raise ValueError('integer sample and fold counts with 2 <= k <= n required')
     bounds = np.linspace(0, n, k + 1).astype(int)
     return [(np.arange(0, bounds[i + 1]), np.arange(bounds[i + 1], bounds[i + 2]))
             for i in range(k - 1)]
@@ -49,6 +58,7 @@ def cross_validate(make_model, X, y, fold, return_details=False):
 
 def cross_validate_splits(make_model, X, y, splits, return_details=False, temporal=True):
     """Out-of-fold predictions from an explicit list of (train, test) index pairs."""
+    X, y = supervised_arrays(X, y)
     preds = np.full(len(y), np.nan)
     thresholds = np.full(len(y), np.nan)
     calibrated = np.full(len(y), np.nan)
@@ -56,11 +66,7 @@ def cross_validate_splits(make_model, X, y, splits, return_details=False, tempor
     folds = np.full(len(y), -1, dtype=int)
     records = []
     for f, (train, test) in enumerate(splits):
-        train, test = np.asarray(train), np.asarray(test)
-        if len(train) == 0 or len(test) == 0 or np.intersect1d(train, test).size:
-            raise ValueError('train/test must be non-empty and disjoint')
-        if temporal and train.max() >= test.min():
-            raise ValueError('temporal training must precede the test block')
+        train, test = split_indices(train, test, len(y), temporal)
         if np.any(folds[test] >= 0):
             raise ValueError('test indices overlap between folds')
         if len(np.unique(y[train])) < 2:
@@ -116,5 +122,8 @@ def select_training_threshold(make_model, X, y, temporal=True):
 
 
 def chronological_holdout(X, y, frac: float = 0.7):
+    X, y = supervised_arrays(X, y)
+    if not 0 < frac < 1 or not 0 < int(frac * len(y)) < len(y):
+        raise ValueError('holdout fraction must produce nonempty training and test sets')
     cut = int(frac * len(y))
     return (X[:cut], y[:cut]), (X[cut:], y[cut:])

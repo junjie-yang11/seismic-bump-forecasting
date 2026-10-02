@@ -1,36 +1,27 @@
 """
 Probability calibration for rare-event classifiers.
 
-Why this matters here
----------------------
-The logistic classifier in this study is trained with class weights, so that the
-positive class carries weight ``n / (2 * n_pos)`` instead of 1. That weighting
-is what makes the model usable on a 6.6 %-positive dataset: it stops the fit
-from collapsing onto the majority class. But it has a side effect that is easy
-to miss -- **the output probabilities are no longer on the true prevalence
-scale.** The model is effectively trained as if the base rate were 50 %, so its
-predicted probabilities are far too high.
+Balanced class weights give the logistic fit an effective positive rate of
+50 percent. An analytical log-odds shift restores the outer training fold's
+unweighted prior under a prior-shift interpretation. It is assessed empirically
+and does not guarantee calibration after distribution shift or regularisation.
 
-A single monotone correction preserves rankings within one fold. Different
-fold-specific corrections may change pooled rankings, so the discrimination
-metrics in this study use raw scores. Any statement of the form
-"this shift has a 30 % chance of being hazardous", however, is wrong by a large
-factor. For an early-warning system that is the difference between a usable
-threshold rule and a useless one.
-
-The correction is a shift of the log-odds by
+The shift is
 
     delta = log(pi / (1 - pi)) - log(pi_train / (1 - pi_train))
 
-with ``pi`` the true prevalence and ``pi_train`` the effective prevalence seen
-by the weighted fit (0.5 for balanced weights). This is the standard prior
-correction for case-control style sampling.
+with ``pi`` the historical outer-training prevalence, never the test-label
+prevalence, and ``pi_train`` the effective weighted prevalence (0.5 for balanced
+weights). One monotone correction preserves rankings within a fold; different
+fold-specific corrections can change pooled rankings. Reported discrimination
+therefore uses raw scores. Unweighted CART and XGBoost are not corrected.
 
 All functions are plain NumPy.
 """
 from __future__ import annotations
 
 import numpy as np
+from input_checks import binary_vectors
 
 
 def reliability_curve(y, p, n_bins: int = 10, strategy: str = "quantile"):
@@ -76,14 +67,13 @@ def reliability_curve(y, p, n_bins: int = 10, strategy: str = "quantile"):
 
 def brier_score(y, p) -> float:
     """Mean squared error of the predicted probabilities. Lower is better."""
-    y = np.asarray(y, dtype=float)
-    p = np.asarray(p, dtype=float)
+    y, p = binary_vectors(y, p, probability=True)
     return float(np.mean((p - y) ** 2))
 
 
 def brier_skill_score(y, p) -> float:
     """1 - Brier / Brier(reference), reference = always predict the base rate."""
-    y = np.asarray(y, dtype=float)
+    y, p = binary_vectors(y, p, probability=True)
     base = float(y.mean())
     ref = brier_score(y, np.full_like(y, base))
     if ref == 0:

@@ -1,0 +1,193 @@
+{
+  "groups": {
+    "ratings": [
+      "seismic",
+      "seismoacoustic",
+      "ghazard"
+    ],
+    "geophone": [
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls"
+    ],
+    "seismic_activity": [
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "operation": [
+      "shift"
+    ]
+  },
+  "variants": {
+    "full": [
+      "seismic",
+      "seismoacoustic",
+      "shift",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "ghazard",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "ratings_only": [
+      "seismic",
+      "seismoacoustic",
+      "ghazard"
+    ],
+    "without_ratings": [
+      "shift",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "geophone_only": [
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls"
+    ],
+    "without_geophone": [
+      "seismic",
+      "seismoacoustic",
+      "shift",
+      "ghazard",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "seismic_activity_only": [
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ],
+    "without_seismic_activity": [
+      "seismic",
+      "seismoacoustic",
+      "shift",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "ghazard"
+    ],
+    "operation_only": [
+      "shift"
+    ],
+    "without_operation": [
+      "seismic",
+      "seismoacoustic",
+      "genergy",
+      "gpuls",
+      "gdenergy",
+      "gdpuls",
+      "ghazard",
+      "nbumps2",
+      "nbumps3",
+      "nbumps4",
+      "nbumps5",
+      "nbumps6",
+      "nbumps7",
+      "nbumps89",
+      "energy",
+      "maxenergy"
+    ]
+  },
+  "budgets": [
+    0.01,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "inner_fraction": 0.8,
+  "bootstrap_length": 32,
+  "bootstrap_replicates": 2000,
+  "bootstrap_seed": 20261002,
+  "data_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
+  "models": [
+    "logistic regression (L2, class-weighted)",
+    "bagged CART (60 trees, depth 6)"
+  ],
+  "forest_seed": 7,
+  "holdout_fraction": 0.7,
+  "interpretation": "Fixed comparisons; no test-based feature or budget selection. Holdout previously inspected.",
+  "xgboost_parameters": {
+    "objective": "binary:logistic",
+    "tree_method": "hist",
+    "eta": 0.05,
+    "min_child_weight": 10,
+    "reg_lambda": 5,
+    "subsample": 1,
+    "colsample_bytree": 1,
+    "seed": 7,
+    "nthread": 2,
+    "verbosity": 0,
+    "scale_pos_weight": 1
+  },
+  "candidates": [
+    [
+      2,
+      80
+    ],
+    [
+      2,
+      160
+    ],
+    [
+      3,
+      80
+    ],
+    [
+      3,
+      160
+    ]
+  ],
+  "selection": "Inner AP; negative Brier for zero-positive reference; first candidate on exact ties",
+  "explanation": "Native exact tree-path-dependent TreeSHAP; raw log-odds; training leaf covers",
+  "case_policy": "First row per TP, FP, FN category at the predeclared 10% reference budget",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "xgboost": "3.1.3",
+    "scipy": "1.18.1"
+  }
+}

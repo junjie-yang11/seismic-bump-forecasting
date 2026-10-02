@@ -13,7 +13,7 @@ Intervals use 2,000 phase-stratified paired moving-block replicates (length 32),
 
 **Calibration and warning consequences:** fold-local LR correction reduces ECE from 0.2904 to 0.0271 and Brier score from 0.1462 to 0.0439. Against a retrospective oracle constant reference, corrected Brier skill is -0.0751. In the final 774 shifts, a training-derived LR threshold produces 8 alerts, detects 2 hazardous shifts and misses 24. These results make probability assessment and threshold transfer explicit parts of the warning evaluation.
 
-Read the [paper-style Word report](report/technical_report.docx), [PDF](report/technical_report.pdf), or [Markdown](report/technical_note.md). The discussion links shift-level forecasts to inspection workload and missed-event consequences, and develops transferable validation principles for UAV and mine-image datasets. The experiments in this repository use tabular monitoring data.
+Read the [paper-style Word report](report/technical_report.docx), [PDF](report/technical_report.pdf), or [Markdown](report/technical_note.md). The discussion links shift-level forecasts to inspection workload and missed-event consequences. The experiments in this repository use tabular monitoring data.
 
 ## Data provenance
 
@@ -40,7 +40,26 @@ powershell -NoProfile -File export_report.ps1
 python verify_results.py --reports
 ```
 
-Word and Markdown share one result-driven source. PDF export requires Microsoft Word on Windows. The Word document uses a paper structure with title, affiliation, abstract, keywords, numbered sections, table titles, figure captions and numbered references. All PDF pages are inspected after export.
+Word and Markdown share one result-driven source. PDF export requires Microsoft Word on Windows. The Word document uses a paper structure with title, abstract, keywords, numbered sections, table titles, figure captions and numbered references. All PDF pages are inspected after export.
+
+### Extended paper experiments
+
+The current paper also includes nine engineering feature sets, native XGBoost TreeSHAP, phase stability and four frozen warning budgets. Reproduce the original LR/CART evidence with the verified Python 3.7 environment recorded in `results/environment.txt`; create a separate Python 3.12 environment for the extension using `requirements-research.txt`. With existing verified baseline outputs:
+
+```powershell
+# Run in the baseline environment first.
+python run_engineering.py
+# Run in the Python 3.12 research environment next.
+python run_research.py
+python -B -m unittest discover -s tests -v
+python verify_research.py --replay
+python -m pip install -r requirements-report.txt
+python generate_report.py --docx
+powershell -NoProfile -File export_report.ps1
+python verify_results.py --reports
+```
+
+Both experiment stages must finish before regenerating the extended paper. A baseline refresh replaces the combined feature/budget files; the research stage restores XGBoost rows and explanations. The README's original results above describe the earlier historical-prevalence policy; the paper's budget tables describe the separately evaluated 1/5/10/20 percent policies.
 
 ## Auditable outputs
 
@@ -62,6 +81,6 @@ All output names above refer to `results/`. The verifier recomputes every seed's
 
 Only LR uses balanced class weights; CART is unweighted and receives no balanced-prior correction. Scaling, thresholds and priors are estimated within training. Thresholds are fixed numerical cutoffs chosen using inner-reference scores; future alert rates can differ after refitting or drift. Calibration correction is monotone within a fold, while different fold corrections can change pooled rankings.
 
-The dataset lacks timestamps and longwall IDs. The block length is a transparent sensitivity choice rather than an identified dependence horizon. Confidence intervals condition on observed scores. Matched-cohort comparisons still use different training histories and sizes. No prospective field trial or UAV/image experiment is claimed.
+The dataset lacks timestamps and longwall IDs. The block length is a transparent sensitivity choice rather than an identified dependence horizon. Confidence intervals condition on observed scores. Matched-cohort comparisons still use different training histories and sizes. No prospective field trial is claimed.
 
 See `MODIFICATION_LOG.md`, `results/REPRODUCTION.md` and the paper references for details. Code license: MIT; source-data terms follow the cited providers.

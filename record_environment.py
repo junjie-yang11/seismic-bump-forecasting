@@ -47,7 +47,7 @@ def main() -> None:
         "Processor        : %s" % (platform.processor() or "(not reported)"),
         "",
         "Python           : %s" % sys.version.replace("\n", " "),
-        "Python executable: %s" % sys.executable,
+        "Python executable: %s" % os.path.basename(sys.executable),
         "Byte order       : %s" % sys.byteorder,
         "",
         "numpy            : %s" % numpy.__version__,

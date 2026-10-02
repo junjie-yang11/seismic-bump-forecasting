@@ -11,6 +11,35 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 
+def scrub_report_package(path):
+    """Remove unused template stores and revision identifiers from the report."""
+    from zipfile import ZipFile, ZIP_DEFLATED
+    from lxml import etree
+    temporary = path.with_suffix('.clean.docx')
+    with ZipFile(path) as source, ZipFile(temporary, 'w', ZIP_DEFLATED) as target:
+        for name in source.namelist():
+            if name.startswith('customXml/') or name == 'docProps/custom.xml':
+                continue
+            payload = source.read(name)
+            if name.endswith(('.xml', '.rels')):
+                tree = etree.fromstring(payload)
+                for element in list(tree.iter()):
+                    local = etree.QName(element).localname
+                    if local == 'Relationship' and 'customXml' in element.get('Type', ''):
+                        element.getparent().remove(element)
+                    elif local == 'Override' and (element.get('PartName', '').startswith('/customXml/')
+                                                 or element.get('PartName') == '/docProps/custom.xml'):
+                        element.getparent().remove(element)
+                    elif local == 'rsids' and element.getparent() is not None:
+                        element.getparent().remove(element)
+                    else:
+                        for key in list(element.attrib):
+                            if etree.QName(key).localname.startswith('rsid'):
+                                del element.attrib[key]
+                payload = etree.tostring(tree, xml_declaration=True, encoding='UTF-8', standalone=True)
+            target.writestr(name, payload)
+    temporary.replace(path)
+
 def rows(name):
     with (ROOT / 'results' / name).open(encoding='utf-8', newline='') as f:
         return list(csv.DictReader(f))
@@ -41,6 +70,12 @@ def write_word_report():
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
     doc = Document()
+    # Reports for external sharing contain project content only.
+    for field_name in ('author', 'last_modified_by', 'comments', 'keywords',
+                       'subject', 'identifier', 'category', 'content_status'):
+        setattr(doc.core_properties, field_name, '')
+    privacy = OxmlElement('w:removePersonalInformation')
+    doc.settings.element.append(privacy)
     section = doc.sections[0]
     section.page_width, section.page_height = Inches(8.5), Inches(11)
     section.top_margin = section.bottom_margin = Inches(.85)
@@ -90,7 +125,7 @@ def write_word_report():
             tbl.autofit = False
             tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
             weights = [max(1.,min(2.5,len(h)/12.)) for h in data[0]]
-            if data[0][0]=='Model': weights[0]=.7
+            if data[0][0]=='Model': weights[0]=1.15
             if data[0][-1]=='95% interval': weights[-1]=2.
             if data[0][0]=='Model / variant': weights[0]=2.2
             widths=[6.5*w/sum(weights) for w in weights]
@@ -113,7 +148,7 @@ def write_word_report():
                         p.paragraph_format.space_before = Pt(4)
                         p.paragraph_format.space_after = Pt(4)
                         p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                        p.paragraph_format.keep_with_next = ri < len(data)-1
+                        p.paragraph_format.keep_with_next = ri < (2 if len(data) > 10 else len(data)-1)
                         for r in p.runs: r.font.size = Pt(9.5); r.bold = ri == 0
                 trpr = tbl.rows[-1]._tr.get_or_add_trPr()
                 trpr.append(OxmlElement('w:cantSplit'))
@@ -125,7 +160,7 @@ def write_word_report():
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p.paragraph_format.keep_with_next = True
-            figure_width = 5.8 if 'reliability' in image.group(2) else 5.3
+            figure_width = 5.8 if 'reliability' in image.group(2) else (6.2 if 'shap_' in image.group(2) else 5.3)
             p.add_run().add_picture(str((ROOT / 'report' / image.group(2)).resolve()), width=Inches(figure_width))
             caption = doc.add_paragraph(image.group(1), style='Caption')
             caption.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -139,11 +174,14 @@ def write_word_report():
             p.paragraph_format.keep_with_next=True
         else:
             p=doc.add_paragraph(line)
+            # Only the byline block preceding Abstract is centered.
+            if '## Abstract' in lines and i < lines.index('## Abstract'):
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                for r in p.runs: r.font.size = Pt(10.5)
+            if line.startswith('The scatter distributions expose'):
+                p.paragraph_format.keep_together = True
             if line.startswith('Table 5 reports fixed-threshold holdout performance.'):
                 p.paragraph_format.keep_together = True
-            if i < 8:
-                p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-                for r in p.runs: r.font.size=Pt(10.5)
             if line.startswith('Most of the apparent'):
                 p.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY
             if line.startswith('Keywords:'):
@@ -158,7 +196,9 @@ def write_word_report():
     footer = section.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
     field = OxmlElement('w:fldSimple'); field.set(qn('w:instr'), 'PAGE'); footer._p.append(field)
-    doc.save(str(ROOT / 'report/technical_report.docx'))
+    output = ROOT / 'report/technical_report.docx'
+    doc.save(str(output))
+    scrub_report_package(output)
 
 if __name__ == '__main__':
     import argparse
