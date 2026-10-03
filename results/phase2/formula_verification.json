@@ -1,15 +1,15 @@
 {
   "passed": true,
   "checks": 8220,
-  "completed_at_utc": "2026-10-03T13:47:13.274928+00:00",
+  "completed_at_utc": "2026-10-03T14:24:57.972343+00:00",
   "sources": {
-    "results/predictions.csv": "f2c402fa9cc74c7bdfa69093900cad82a31216439bdc5ca46bac4958165ac2be",
-    "results/metrics_by_scheme.csv": "a191acb421ef2c235c43e98d85442d1b1bbaeee5e1b526c1b990de9b1efa2ec3",
-    "results/engineering_predictions.csv": "a82edfcc44e456543034c997c51e36f3db1eff22c6068e4190385e27c408f1c2",
-    "results/probability_reference_comparison.csv": "087dbb0b6cf1dc79d9b1e83be937411dda21553a2a7137792e18c8779b65c36b",
-    "results/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
-    "results/calibration_bins.csv": "58aac140a169b1ab2757912dcdc84ed8a6a9e1ce6b744dba2849c8b277b31050",
-    "results/shap_predictions.csv": "05ff39629689e56b6563b726dfc8910928c4dc60598a9247b36bf0dd6477b014",
+    "results/phase1/predictions.csv": "f2c402fa9cc74c7bdfa69093900cad82a31216439bdc5ca46bac4958165ac2be",
+    "results/phase1/metrics_by_scheme.csv": "a191acb421ef2c235c43e98d85442d1b1bbaeee5e1b526c1b990de9b1efa2ec3",
+    "results/phase1/engineering_predictions.csv": "a82edfcc44e456543034c997c51e36f3db1eff22c6068e4190385e27c408f1c2",
+    "results/phase1/probability_reference_comparison.csv": "087dbb0b6cf1dc79d9b1e83be937411dda21553a2a7137792e18c8779b65c36b",
+    "results/phase1/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
+    "results/phase1/calibration_bins.csv": "58aac140a169b1ab2757912dcdc84ed8a6a9e1ce6b744dba2849c8b277b31050",
+    "results/phase1/shap_predictions.csv": "05ff39629689e56b6563b726dfc8910928c4dc60598a9247b36bf0dd6477b014",
     "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
     "results/phase2/decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
     "results/phase2/evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
@@ -17,7 +17,7 @@
     "results/phase2/prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f",
     "results/phase2/threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011"
   },
-  "verifier_sha256": "f7bd05d52d441017de6d2a77076b83aba66fdeed69380d606df5bdfc85c8ca76",
+  "verifier_sha256": "3311b3c094e1d50ed00c8ff5dfe872f8b0be5b0d93b5f2d3c672c4d4043247ca",
   "shap_float32_rounding": {
     "maximum_margin_error": 2.4905893951654434e-06,
     "maximum_probability_error": 2.1130487459775082e-07,

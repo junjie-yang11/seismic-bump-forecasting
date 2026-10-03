@@ -33,7 +33,7 @@ def verify(replay=False):
     for name,digest in run['dependency_hashes'].items():
         check(hashlib.sha256((ROOT/'src'/name).read_bytes()).hexdigest()==digest,'imported first-stage dependency unchanged '+name)
     for name,digest in run['first_stage_hashes'].items():
-        check(hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,'first-stage evidence retained '+name)
+        check(hashlib.sha256((ROOT/name.replace('\\', '/')).read_bytes()).hexdigest()==digest,'first-stage evidence retained '+name)
     p,ref,c,a,d,e,tuning,tune_scores=[read(n) for n in ('predictions','references','candidates','audits','decisions','evaluations','tuning','tuning_predictions')]
     check(len(manifest)==15,'complete models/folds')
     check(len(p)==8511 and not p.duplicated(['model','scheme','row']).any(),'prediction coverage')

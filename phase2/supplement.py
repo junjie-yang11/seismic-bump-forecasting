@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from .plan import ROOT, OUT
+from .plan import OUT
 
 OUTPUTS = ('decision_value','decision_value_pooled','threshold_audit_enriched',
            'threshold_explanations','refit_transfer','capacity_tradeoffs','prevalence_decision_value')

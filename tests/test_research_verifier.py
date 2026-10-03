@@ -8,10 +8,10 @@ from unittest.mock import patch
 import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.verify_research import main
+from phase1.verify_research import main
 
 
-@unittest.skipUnless((ROOT / 'results/research_config.json').exists(), 'run extended experiments first')
+@unittest.skipUnless((ROOT / 'results/phase1/research_config.json').exists(), 'run extended experiments first')
 class ResearchVerifierTests(unittest.TestCase):
     def reject(self, name, column, value, message):
         original = pd.read_csv

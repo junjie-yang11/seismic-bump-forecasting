@@ -4363,6 +4363,6 @@
       "right_workflow": "fixed"
     }
   ],
-  "elapsed_seconds": 1.5707900000124937,
+  "elapsed_seconds": 1.5970025999995414,
   "pooled_capacity": "Sum phase-specific floor slots and phase-specific excess counts; no cross-phase cancellation"
 }

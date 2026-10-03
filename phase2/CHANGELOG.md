@@ -1,5 +1,13 @@
 # Second-stage change record
 
+Structure cleanup, 3 October 2026: Stage 1 commands now use phase1; final papers
+are centralized in reports/phase1 and reports/phase2, and experimental outputs
+are separated in results/phase1 and results/phase2. Historical reviews are
+archived under docs/audits. Removed verified dead helpers/imports and duplicate
+SVG exports; consolidated reporting dependencies. All 62 CSVs and 3,960,000
+bootstrap values remain unchanged. See docs/audits/STRUCTURE_REVIEW.md and
+STRUCTURE_VERIFICATION.json for this edition.
+
 Comprehensive release review, 3 October 2026: reproduced both stages from an
 empty results directory, compared 62 CSVs and 3,960,000 bootstrap values, and
 passed 54 behavioral tests. Fixed numeric binary alert evaluation and invalid

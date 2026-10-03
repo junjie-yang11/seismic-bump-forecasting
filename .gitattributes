@@ -24,7 +24,8 @@
 # recorded bytes on every platform, including the locked protocol and reports.
 # Git line-ending conversion would otherwise invalidate a clean checkout.
 src/**     -text whitespace=trailing-space,space-before-tab,cr-at-eol
-scripts/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+phase1/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 phase2/**  -text whitespace=trailing-space,space-before-tab,cr-at-eol
 results/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
-report/**  -text whitespace=trailing-space,space-before-tab,cr-at-eol
+reports/**  -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/audits/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

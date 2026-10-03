@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "reviewed_at_utc": "2026-10-03T14:32:52.559230+00:00",
+  "checks": 2314,
+  "csv_files_exactly_unchanged": 62,
+  "bootstrap_values_identical": 3960000,
+  "python_sources_parsed": 47,
+  "remaining_unused_module_imports": [],
+  "behavioral_tests": {
+    "shared_and_stage_one": 42,
+    "stage_two": 12,
+    "total": 54
+  },
+  "verification_counts": {
+    "stage_one": 8169,
+    "research_replay": 7460,
+    "stage_two_replay": 63854,
+    "supplement": 10902,
+    "formulae": 8220,
+    "stage_two_report": 582
+  },
+  "fresh_execution_record": "docs/audits/phase2/current_execution_review.json",
+  "papers": [
+    {
+      "stage": 1,
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "artifacts": {
+        "technical_note.md": "a12842f1709d2315d2e081bb31ff12ef9cbf4cb93dce1fe4fda84ede3f820074",
+        "technical_report.docx": "5b0e110239b7d6384b4087bc9ff6f1d5198db67c538813223a5890e0af6ec9e3",
+        "technical_report.pdf": "97d80b8ce1fc4ebda7cbe347e0af5bd13043037652670f528a4e383726d10706"
+      },
+      "visual_review": "All pages reviewed. After relocation, 25 page images match the reviewed release exactly; the two changed page 12 images were inspected again."
+    },
+    {
+      "stage": 2,
+      "pages": 12,
+      "tables": 17,
+      "figures": 3,
+      "artifacts": {
+        "phase2_threshold_transfer_report.docx": "503a407bf0edb1bcbaf85e87b0580aaa8aa0ca669bd07fa38866f08cabef8cb9",
+        "phase2_threshold_transfer_report.md": "aa058fb19f8067287b5973e9b6ba33f80833a0f9612a8e94f9c46eb6d7e52dc2",
+        "phase2_threshold_transfer_report.pdf": "1b6625e13b97556d18daa77aaf9b5d3149c2b08365e3a1b2d76879c422987d72"
+      },
+      "visual_review": "All pages reviewed. After relocation, 25 page images match the reviewed release exactly; the two changed page 12 images were inspected again."
+    }
+  ],
+  "cleanup_record": "docs/audits/STRUCTURE_CLEANUP.json",
+  "evidence_definitions": "Undefined values and infinite thresholds retain their declared meanings; hypothetical costs and prevalence scenarios are not observations. No model, feature or policy-setting changes.",
+  "public_checkout": {
+    "passed": true,
+    "provenance_hashes_checked": 115,
+    "uncached_mirror_download_and_official_source_audit": true,
+    "mirror_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
+    "verification_counts": {
+      "stage_one": 8169,
+      "stage_two_without_replay": 63809,
+      "supplement": 10902,
+      "formulae": 8220
+    },
+    "root_models_already_replayed": true
+  }
+}

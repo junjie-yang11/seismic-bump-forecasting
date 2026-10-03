@@ -15,8 +15,8 @@ from data import load, CSV_PATH
 from evaluation import time_ordered_folds
 
 def protected_hashes():
-    files = list((ROOT/'report').rglob('*')) + [p for p in (ROOT/'results').rglob('*') if OUT not in p.parents]
-    return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()}
+    files = list((ROOT/'reports/phase1').rglob('*')) + [p for p in (ROOT/'results').rglob('*') if OUT not in p.parents]
+    return {p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()}
 
 def declarations():
     rows = [dict(rule='none',mechanism='none',budget=None,cost=None)]

@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-$reportRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'results/phase2/report'
+$reportRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'reports/phase2'
 $temporaryPdf = Join-Path ([System.IO.Path]::GetTempPath()) ('seismic_phase2.' + [guid]::NewGuid().ToString('N') + '.pdf')
 $word = $null
 $document = $null

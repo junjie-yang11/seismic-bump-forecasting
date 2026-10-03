@@ -77,7 +77,7 @@ historically selected decisions.
 | `analysis_manifest.json` | Comparison ordering and bootstrap settings |
 | `prevalence_scenarios.csv` | 8,064 frozen-rule expectations, separate from observed losses |
 | `run_manifest.json`, `verification.json` | Execution provenance and independent checks |
-| `report/` | Independent manuscript, Word, PDF, figures and report provenance |
+| `../../reports/phase2/` | Independent manuscript, Word, PDF, figures and report provenance |
 | `decision_value.csv`, `decision_value_pooled.csv` | Complete evaluations with explicit no-alarm loss and relative-loss fields |
 | `threshold_explanations.csv`, `threshold_audit_enriched.csv` | Reference-only no-alarm causes, capacity flags, threshold types and normalized next-decision margins |
 | `refit_transfer.csv`, `capacity_tradeoffs.csv` | All A/B/C fixed/refitted contrasts and matched C-A loss, detection and workload contrasts |
@@ -105,7 +105,7 @@ Costs are relative hypothetical penalties, not money or avoided accidents.
 
 ## Regenerate the independent academic report
 
-Use a document environment with `phase2/requirements-report.txt` **separate from
+Use a document environment with `requirements/requirements-report.txt` **separate from
 the experimental environment**:
 
 ```powershell
@@ -143,3 +143,7 @@ capacity utilization. The prior-shift file retains absolute expected loss,
 relative expected loss and expected alert rate; none is a probability of future
 capacity excess. These are post hoc descriptive extensions, not changes to the
 locked protocol or a selection of a preferred strategy from test outcomes.
+
+## Project navigation
+
+[Final paper](../reports/phase2/phase2_threshold_transfer_report.pdf) · [Word](../reports/phase2/phase2_threshold_transfer_report.docx) · [Result-file guide](../results/phase2/README.md) · [Complete execution sequence](../docs/REPRODUCING.md) · [Stage 1](../phase1/README.md).

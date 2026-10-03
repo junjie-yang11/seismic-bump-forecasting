@@ -18,13 +18,12 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from .plan import ROOT, OUT, PLAN
 
-DEST=OUT/'report'
+DEST=ROOT/'reports/phase2'
 
 def build():
     DEST.mkdir(parents=True,exist_ok=True)
     read=lambda n:pd.read_csv(OUT/(n+'.csv'))
     e,a,c,p=map(read,['evaluations','audits','comparisons','predictions'])
-    scen=read('prevalence_scenarios')
     verification=json.loads((OUT/'verification.json').read_text())
     if not verification['passed'] or not verification['replay']:
         raise RuntimeError('Independent model replay is required before reporting results')
@@ -149,7 +148,6 @@ def build():
     author=para('Junjie Yang\nMining Engineering, Fuzhou University'); author.alignment=WD_ALIGN_PARAGRAPH.CENTER
     heading('Abstract')
     over=int((xa.excess>0).sum()); c_over=int((xc.excess>0).sum()); silent=int((xc.alerts==0).sum())
-    abstract_diff=cx[(cx.comparison=='C-A')&(cx.workflow=='fixed')].loss_delta100
     cause=explanations.query("model=='XGBoost' and scheme=='time' and reference_alerts==0")
     cause_counts=cause.no_alarm_reason.value_counts()
     pooled_c=value_pool.query("model=='XGBoost' and workflow=='fixed' and cost==10 and mechanism=='C'")
@@ -383,7 +381,7 @@ def build():
     heading('References')
     para('[1] Sikora M, Wrobel L. seismic-bumps. UCI Machine Learning Repository; 2010. doi:10.24432/C5W902. https://archive.ics.uci.edu/dataset/266/seismic+bumps.')
     para('[2] Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. KDD; 2016. doi:10.1145/2939672.2939785.')
-    para('[3] Yang J. Evaluating reliability and explainability in seismic hazard forecasting for underground mine monitoring. Technical report; 2026. Companion stage-one paper: report/technical_report.pdf in the project repository.')
+    para('[3] Yang J. Evaluating reliability and explainability in seismic hazard forecasting for underground mine monitoring. Technical report; 2026. Companion stage-one paper: reports/phase1/technical_report.pdf in the project repository.')
     para('[4] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics; 1989;17(3):1217–1241. doi:10.1214/aos/1176347265.')
     doc.core_properties.author=''; doc.core_properties.last_modified_by=''; doc.core_properties.title=PLAN['title']
     doc.core_properties.subject='Second-stage retrospective warning decision study'
@@ -391,7 +389,7 @@ def build():
     # Remove inherited Office properties using the existing pure package helper.
     import sys
     sys.path.insert(0,str(ROOT))
-    from scripts.generate_report import scrub_report_package
+    from phase1.generate_report import scrub_report_package
     scrub_report_package(DEST/'phase2_threshold_transfer_report.docx')
     (DEST/'phase2_threshold_transfer_report.md').write_text('\n'.join(md),encoding='utf-8')
     inputs={str(f.relative_to(OUT)):hashlib.sha256(f.read_bytes()).hexdigest() for f in OUT.glob('*.csv')}

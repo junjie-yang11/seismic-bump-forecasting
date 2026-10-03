@@ -9,9 +9,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.verify_results import verify
+from phase1.verify_results import verify
 
-@unittest.skipUnless((ROOT / 'results/predictions.csv').exists(), 'run experiments first')
+@unittest.skipUnless((ROOT / 'results/phase1/predictions.csv').exists(), 'run experiments first')
 class VerifierTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

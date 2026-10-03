@@ -10,7 +10,7 @@
 data/*
 !data/README.md
 *.csv
-!results/*.csv
+!results/phase1/*.csv
 !results/phase2/*.csv
 
 # ---------------------------------------------------------------------------
@@ -33,8 +33,6 @@ dist/
 .venv-research/
 .audit-work/
 pip-*/
-00_论文入口/
-99_本地归档/
 venv/
 env/
 ENV/

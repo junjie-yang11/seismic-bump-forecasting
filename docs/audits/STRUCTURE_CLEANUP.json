@@ -1,0 +1,479 @@
+{
+  "moves": [
+    {
+      "old": "scripts",
+      "new": "phase1"
+    },
+    {
+      "old": "report",
+      "new": "reports/phase1"
+    },
+    {
+      "old": "results/phase2/report",
+      "new": "reports/phase2"
+    },
+    {
+      "old": "results/bootstrap_replicates.csv",
+      "new": "results/phase1/bootstrap_replicates.csv"
+    },
+    {
+      "old": "results/calibration.csv",
+      "new": "results/phase1/calibration.csv"
+    },
+    {
+      "old": "results/calibration_bins.csv",
+      "new": "results/phase1/calibration_bins.csv"
+    },
+    {
+      "old": "results/engineering_config.json",
+      "new": "results/phase1/engineering_config.json"
+    },
+    {
+      "old": "results/engineering_execution_audit_log.txt",
+      "new": "results/phase1/engineering_execution_audit_log.txt"
+    },
+    {
+      "old": "results/engineering_fold_audit.csv",
+      "new": "results/phase1/engineering_fold_audit.csv"
+    },
+    {
+      "old": "results/engineering_predictions.csv",
+      "new": "results/phase1/engineering_predictions.csv"
+    },
+    {
+      "old": "results/engineering_references.csv",
+      "new": "results/phase1/engineering_references.csv"
+    },
+    {
+      "old": "results/enhancement_log.txt",
+      "new": "results/phase1/enhancement_log.txt"
+    },
+    {
+      "old": "results/environment.txt",
+      "new": "results/phase1/environment.txt"
+    },
+    {
+      "old": "results/execution_audit_comparison.json",
+      "new": "results/phase1/execution_audit_comparison.json"
+    },
+    {
+      "old": "results/feature_ablation.csv",
+      "new": "results/phase1/feature_ablation.csv"
+    },
+    {
+      "old": "results/feature_ablation_by_fold.csv",
+      "new": "results/phase1/feature_ablation_by_fold.csv"
+    },
+    {
+      "old": "results/feature_ablation_intervals.csv",
+      "new": "results/phase1/feature_ablation_intervals.csv"
+    },
+    {
+      "old": "results/feature_ablation_phase_contrasts.csv",
+      "new": "results/phase1/feature_ablation_phase_contrasts.csv"
+    },
+    {
+      "old": "results/feature_ablation_replicates.csv",
+      "new": "results/phase1/feature_ablation_replicates.csv"
+    },
+    {
+      "old": "results/figures",
+      "new": "results/phase1/figures"
+    },
+    {
+      "old": "results/fold_audit.csv",
+      "new": "results/phase1/fold_audit.csv"
+    },
+    {
+      "old": "results/gap_attenuation.csv",
+      "new": "results/phase1/gap_attenuation.csv"
+    },
+    {
+      "old": "results/holdout.csv",
+      "new": "results/phase1/holdout.csv"
+    },
+    {
+      "old": "results/importance.csv",
+      "new": "results/phase1/importance.csv"
+    },
+    {
+      "old": "results/integrity.json",
+      "new": "results/phase1/integrity.json"
+    },
+    {
+      "old": "results/leakage_probe.csv",
+      "new": "results/phase1/leakage_probe.csv"
+    },
+    {
+      "old": "results/metrics_by_scheme.csv",
+      "new": "results/phase1/metrics_by_scheme.csv"
+    },
+    {
+      "old": "results/operating_points.csv",
+      "new": "results/phase1/operating_points.csv"
+    },
+    {
+      "old": "results/paired_uncertainty.csv",
+      "new": "results/phase1/paired_uncertainty.csv"
+    },
+    {
+      "old": "results/predictions.csv",
+      "new": "results/phase1/predictions.csv"
+    },
+    {
+      "old": "results/probability_reference_comparison.csv",
+      "new": "results/phase1/probability_reference_comparison.csv"
+    },
+    {
+      "old": "results/random_metrics_by_seed.csv",
+      "new": "results/phase1/random_metrics_by_seed.csv"
+    },
+    {
+      "old": "results/random_predictions_by_seed.csv",
+      "new": "results/phase1/random_predictions_by_seed.csv"
+    },
+    {
+      "old": "results/REPRODUCTION.md",
+      "new": "results/phase1/REPRODUCTION.md"
+    },
+    {
+      "old": "results/research_config.json",
+      "new": "results/phase1/research_config.json"
+    },
+    {
+      "old": "results/research_execution_audit_log.txt",
+      "new": "results/phase1/research_execution_audit_log.txt"
+    },
+    {
+      "old": "results/research_model_intervals.csv",
+      "new": "results/phase1/research_model_intervals.csv"
+    },
+    {
+      "old": "results/research_model_replicates.csv",
+      "new": "results/phase1/research_model_replicates.csv"
+    },
+    {
+      "old": "results/research_models",
+      "new": "results/phase1/research_models"
+    },
+    {
+      "old": "results/review_analysis_config.json",
+      "new": "results/phase1/review_analysis_config.json"
+    },
+    {
+      "old": "results/run_log.txt",
+      "new": "results/phase1/run_log.txt"
+    },
+    {
+      "old": "results/shap_case_contributions.csv",
+      "new": "results/phase1/shap_case_contributions.csv"
+    },
+    {
+      "old": "results/shap_cases.csv",
+      "new": "results/phase1/shap_cases.csv"
+    },
+    {
+      "old": "results/shap_groups.csv",
+      "new": "results/phase1/shap_groups.csv"
+    },
+    {
+      "old": "results/shap_importance.csv",
+      "new": "results/phase1/shap_importance.csv"
+    },
+    {
+      "old": "results/shap_predictions.csv",
+      "new": "results/phase1/shap_predictions.csv"
+    },
+    {
+      "old": "results/shap_stability.csv",
+      "new": "results/phase1/shap_stability.csv"
+    },
+    {
+      "old": "results/shap_stability_sensitivity.csv",
+      "new": "results/phase1/shap_stability_sensitivity.csv"
+    },
+    {
+      "old": "results/shared_test_by_seed.csv",
+      "new": "results/phase1/shared_test_by_seed.csv"
+    },
+    {
+      "old": "results/shared_test_comparison.csv",
+      "new": "results/phase1/shared_test_comparison.csv"
+    },
+    {
+      "old": "results/source_audit.json",
+      "new": "results/phase1/source_audit.json"
+    },
+    {
+      "old": "results/source_duplicates.csv",
+      "new": "results/phase1/source_duplicates.csv"
+    },
+    {
+      "old": "results/source_row_mapping.csv",
+      "new": "results/phase1/source_row_mapping.csv"
+    },
+    {
+      "old": "results/summary.md",
+      "new": "results/phase1/summary.md"
+    },
+    {
+      "old": "results/test_log.txt",
+      "new": "results/phase1/test_log.txt"
+    },
+    {
+      "old": "results/verification_log.txt",
+      "new": "results/phase1/verification_log.txt"
+    },
+    {
+      "old": "results/warning_budgets.csv",
+      "new": "results/phase1/warning_budgets.csv"
+    },
+    {
+      "old": "results/warning_budgets_by_fold.csv",
+      "new": "results/phase1/warning_budgets_by_fold.csv"
+    },
+    {
+      "old": "results/xgboost_protocol_interval.csv",
+      "new": "results/phase1/xgboost_protocol_interval.csv"
+    },
+    {
+      "old": "results/xgboost_protocol_replicates.csv",
+      "new": "results/phase1/xgboost_protocol_replicates.csv"
+    },
+    {
+      "old": "results/xgboost_random_predictions.csv",
+      "new": "results/phase1/xgboost_random_predictions.csv"
+    },
+    {
+      "old": "results/xgboost_shared_by_seed.csv",
+      "new": "results/phase1/xgboost_shared_by_seed.csv"
+    },
+    {
+      "old": "results/xgboost_tuning.csv",
+      "new": "results/phase1/xgboost_tuning.csv"
+    },
+    {
+      "old": "results/xgboost_tuning_manifest.json",
+      "new": "results/phase1/xgboost_tuning_manifest.json"
+    },
+    {
+      "old": "results/xgboost_tuning_predictions.csv",
+      "new": "results/phase1/xgboost_tuning_predictions.csv"
+    },
+    {
+      "old": "results/phase2/cross_environment_review.json",
+      "new": "docs/audits/phase2/history/cross_environment_review.json"
+    },
+    {
+      "old": "results/phase2/current_document_review.json",
+      "new": "docs/audits/phase2/history/current_document_review.json"
+    },
+    {
+      "old": "results/phase2/current_execution_review.json",
+      "new": "docs/audits/phase2/history/current_execution_review.json"
+    },
+    {
+      "old": "results/phase2/DECISION_ACCOUNTING_REVIEW.md",
+      "new": "docs/audits/phase2/history/DECISION_ACCOUNTING_REVIEW.md"
+    },
+    {
+      "old": "results/phase2/document_logic_review.json",
+      "new": "docs/audits/phase2/history/document_logic_review.json"
+    },
+    {
+      "old": "results/phase2/editorial_verification.json",
+      "new": "docs/audits/phase2/history/editorial_verification.json"
+    },
+    {
+      "old": "results/phase2/final_integrity_review.json",
+      "new": "docs/audits/phase2/history/final_integrity_review.json"
+    },
+    {
+      "old": "results/phase2/first_stage_regression_tests.txt",
+      "new": "docs/audits/phase2/history/first_stage_regression_tests.txt"
+    },
+    {
+      "old": "results/phase2/full_reproduction_review.json",
+      "new": "docs/audits/phase2/history/full_reproduction_review.json"
+    },
+    {
+      "old": "results/phase2/independent_review_log.txt",
+      "new": "docs/audits/phase2/history/independent_review_log.txt"
+    },
+    {
+      "old": "results/phase2/official_source_review.txt",
+      "new": "docs/audits/phase2/history/official_source_review.txt"
+    },
+    {
+      "old": "results/phase2/phase2_tests.txt",
+      "new": "docs/audits/phase2/history/phase2_tests.txt"
+    },
+    {
+      "old": "results/phase2/post_document_rerun_comparison.json",
+      "new": "docs/audits/phase2/history/post_document_rerun_comparison.json"
+    },
+    {
+      "old": "results/phase2/PROJECT_REVIEW.md",
+      "new": "docs/audits/phase2/history/PROJECT_REVIEW.md"
+    },
+    {
+      "old": "results/phase2/release_verification.json",
+      "new": "docs/audits/phase2/history/release_verification.json"
+    },
+    {
+      "old": "results/phase2/reproduction_baseline.txt",
+      "new": "docs/audits/phase2/history/reproduction_baseline.txt"
+    },
+    {
+      "old": "results/phase2/reproduction_engineering.txt",
+      "new": "docs/audits/phase2/history/reproduction_engineering.txt"
+    },
+    {
+      "old": "results/phase2/reproduction_phase2.txt",
+      "new": "docs/audits/phase2/history/reproduction_phase2.txt"
+    },
+    {
+      "old": "results/phase2/reproduction_research.txt",
+      "new": "docs/audits/phase2/history/reproduction_research.txt"
+    },
+    {
+      "old": "results/phase2/review_runtime_timings.json",
+      "new": "docs/audits/phase2/history/review_runtime_timings.json"
+    },
+    {
+      "old": "results/phase2/undefined_field_review.json",
+      "new": "docs/audits/phase2/history/undefined_field_review.json"
+    },
+    {
+      "old": "docs/PROJECT_GUIDE.md",
+      "new": "docs/audits/structure/history/PROJECT_GUIDE.md"
+    },
+    {
+      "old": "docs/ORGANIZATION_LOG.md",
+      "new": "docs/audits/structure/history/ORGANIZATION_LOG.md"
+    },
+    {
+      "old": "00_论文入口",
+      "new": ".audit-work/local-history/00_论文入口"
+    },
+    {
+      "old": "99_本地归档",
+      "new": ".audit-work/local-history/99_本地归档"
+    },
+    {
+      "old": "results/phase1/engineering_execution_audit_log.txt",
+      "new": "docs/audits/phase1/history/engineering_execution_audit_log.txt"
+    },
+    {
+      "old": "results/phase1/enhancement_log.txt",
+      "new": "docs/audits/phase1/history/enhancement_log.txt"
+    },
+    {
+      "old": "results/phase1/execution_audit_comparison.json",
+      "new": "docs/audits/phase1/history/execution_audit_comparison.json"
+    },
+    {
+      "old": "results/phase1/REPRODUCTION.md",
+      "new": "docs/audits/phase1/history/REPRODUCTION.md"
+    },
+    {
+      "old": "results/phase1/research_execution_audit_log.txt",
+      "new": "docs/audits/phase1/history/research_execution_audit_log.txt"
+    },
+    {
+      "old": "results/phase1/run_log.txt",
+      "new": "docs/audits/phase1/history/run_log.txt"
+    },
+    {
+      "old": "results/phase1/test_log.txt",
+      "new": "docs/audits/phase1/history/test_log.txt"
+    },
+    {
+      "old": "results/phase1/verification_log.txt",
+      "new": "docs/audits/phase1/history/verification_log.txt"
+    },
+    {
+      "old": "results/phase2/current_execution_review.json",
+      "new": "docs/audits/phase2/current_execution_review.json"
+    },
+    {
+      "old": "phase2/implementation_log.md",
+      "new": "docs/audits/phase2/history/implementation_log.md"
+    }
+  ],
+  "removed_files": [
+    {
+      "file": "results/phase1/figures/roc_pr.svg",
+      "reason": "Unreferenced duplicate SVG export; matching PNG diagnostics retained.",
+      "sha256": "c5d67a0b4eedf20e0f1e7e46884ac3b5a4169587ad4924a2dff3e2ff27c6de65"
+    },
+    {
+      "file": "results/phase1/figures/pr_auc_by_scheme.svg",
+      "reason": "Unreferenced duplicate SVG export; matching PNG diagnostics retained.",
+      "sha256": "f0e68caa626f8e6cb0aa2969190fbc78bc3fcd464d0d4edce73a46fafa96f66f"
+    },
+    {
+      "file": "phase2/requirements-report.txt",
+      "reason": "Reporting dependencies consolidated under requirements/requirements-report.txt.",
+      "sha256": "93f3ef104b707a12e2be0b69268058d9625d4ba10195e830ea7399df92a1872f"
+    }
+  ],
+  "edited_sources": [
+    "phase1/audit_source.py",
+    "phase1/engineering_figures.py",
+    "phase1/export_report.ps1",
+    "phase1/generate_report.py",
+    "phase1/paper_content.py",
+    "phase1/record_environment.py",
+    "phase1/refresh_analysis.py",
+    "phase1/research_analysis.py",
+    "phase1/research_figures.py",
+    "phase1/research_paper.py",
+    "phase1/review_analysis.py",
+    "phase1/run_engineering.py",
+    "phase1/run_experiments.py",
+    "phase1/run_research.py",
+    "phase1/verify_additions.py",
+    "phase1/verify_formulae.py",
+    "phase1/verify_research.py",
+    "phase1/verify_results.py",
+    "phase1/verify_review.py",
+    "phase2/experiment.py",
+    "phase2/export_report.ps1",
+    "phase2/report.py",
+    "phase2/run.py",
+    "phase2/supplement.py",
+    "phase2/verify.py",
+    "tests/test_research_verifier.py",
+    "tests/test_result_verifier.py"
+  ],
+  "scope": "Directory migration and confirmed dead code only; models, features and locked selection rules retained.",
+  "removed_code": {
+    "unused_import_names": 10,
+    "unused_report_helpers": [
+      "rows",
+      "short",
+      "table",
+      "number"
+    ],
+    "obsolete_svg_helpers": [
+      "_svg_header",
+      "svg_curves",
+      "svg_bars"
+    ],
+    "unused_assignments": [
+      "paper_content.bins",
+      "paper_content.integrity",
+      "paper_content.lr",
+      "verify_research.schemes",
+      "phase2.report.scen",
+      "phase2.report.abstract_diff"
+    ]
+  },
+  "additional_fixes": [
+    "First-use source audit downloads a missing mirror cache.",
+    "Nested Stage 1 output directories are created explicitly.",
+    "Portable relative provenance paths and Git preservation of recorded bytes.",
+    "Removed obsolete SVG export console claim."
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "inputs": {
+    "audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+    "candidates.csv": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37",
+    "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+    "comparisons.csv": "72df72dfef505688e153979647998cbdd7790d0ec9a369223411721f75dab253",
+    "decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+    "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
+    "decision_value_pooled.csv": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
+    "evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+    "pooled_evaluations.csv": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd",
+    "predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+    "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f",
+    "prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
+    "references.csv": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+    "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+    "threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011",
+    "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+    "tuning.csv": "a1544aebd8e838c40b68388f6a06ae0d8880e3ce619c9e357cdde67b1d444aa9",
+    "tuning_predictions.csv": "11d931fea43f59379910aa61e4661f0b27867d1f5e86ea97377c3d238d9f40a1"
+  },
+  "verification": {
+    "checks": 63854,
+    "replay": true,
+    "passed": true,
+    "evidence_sha256": {
+      "predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+      "references.csv": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+      "candidates.csv": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37",
+      "audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+      "decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+      "evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+      "tuning.csv": "a1544aebd8e838c40b68388f6a06ae0d8880e3ce619c9e357cdde67b1d444aa9",
+      "tuning_predictions.csv": "11d931fea43f59379910aa61e4661f0b27867d1f5e86ea97377c3d238d9f40a1",
+      "pooled_evaluations.csv": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd",
+      "comparisons.csv": "72df72dfef505688e153979647998cbdd7790d0ec9a369223411721f75dab253",
+      "prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b"
+    },
+    "provenance_sha256": {
+      "run_manifest.json": "6875cf261040ae71f4c16b2a506efa79efee31f814a5ecc5f698516671c01690",
+      "fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
+      "analysis_manifest.json": "3714289c95d0147c324f52a0b43e3c79a1d90dea132644e86111d69dd103700b",
+      "bootstrap_replicates.npz": "e578bd552765d861f17f1475b8e2299fb8445c4af970421a5c52993ac68f4481"
+    },
+    "verifier_sha256": "6064083b0f11b7a8b75213a4d7ae9743a68a7c73ec8e16fbd4993c92e987c062"
+  },
+  "supplement_verification": {
+    "passed": true,
+    "checks": 10902,
+    "manifest_sha256": "d77a7241a8b9dea65a6b727f8c9fc3ceefc47a56513fda65103b26ffb88f0cb5",
+    "verifier_sha256": "de2ba4807ec3089794fa35a7dec2cdfa2ee610e62cfe7a72f213be933edd857f",
+    "outputs_sha256": {
+      "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
+      "decision_value_pooled.csv": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
+      "threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011",
+      "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+      "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+      "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+      "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+    }
+  },
+  "computed_claims": [
+    {
+      "claim": "fixed XGBoost A capacity violations",
+      "value": 13,
+      "source": "evaluations.csv; time/A/cost10/excess>0"
+    },
+    {
+      "claim": "fixed XGBoost C no alarms",
+      "value": 40,
+      "source": "evaluations.csv; time/C/alerts==0"
+    },
+    {
+      "claim": "fixed XGBoost C capacity violations",
+      "value": 2,
+      "source": "evaluations.csv; time/C/excess>0"
+    },
+    {
+      "claim": "historical cost optimum no alarms",
+      "value": 28,
+      "source": "threshold_explanations.csv; XGBoost/time/reference_alerts==0"
+    },
+    {
+      "claim": "historical capacity-induced no alarms",
+      "value": 12,
+      "source": "threshold_explanations.csv; XGBoost/time/reference_alerts==0"
+    },
+    {
+      "claim": "illustrative fixed XGBoost C-A interval",
+      "fold": 0,
+      "cost": 10,
+      "budget": 0.2,
+      "point": 1.3565891472868217,
+      "ci_low": -0.9689922480620154,
+      "ci_high": 5.426356589147287,
+      "source": "comparisons.csv"
+    },
+    {
+      "claim": "illustrative fixed XGBoost C-A interval",
+      "fold": 1,
+      "cost": 10,
+      "budget": 0.2,
+      "point": -36.50485436893204,
+      "ci_low": -49.12621359223301,
+      "ci_high": -27.184466019417474,
+      "source": "comparisons.csv"
+    }
+  ],
+  "plan_sha256": "85a1a16b30a5b9acc44469577781aca6d004106a501835153e409457e8ae3970",
+  "generator_sha256": "83278eb82862e999084bb037e7c60b2f5491cebcc86e544a1ca04093af8440dc"
+}

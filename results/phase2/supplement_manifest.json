@@ -9,9 +9,9 @@
     "predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
     "decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
     "prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
-    "run_manifest.json": "2edcdf0ef6b3cc669300b631d66e190dfca8718ff8b3d581dffc87cbe07fd908",
+    "run_manifest.json": "6875cf261040ae71f4c16b2a506efa79efee31f814a5ecc5f698516671c01690",
     "fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
-    "analysis_manifest.json": "80e32a5bd904a1f4256e9b7d4c67d9af23f4b7f22c6ff1f3105cc38da6ad5e47",
+    "analysis_manifest.json": "3714289c95d0147c324f52a0b43e3c79a1d90dea132644e86111d69dd103700b",
     "bootstrap_replicates.npz": "e578bd552765d861f17f1475b8e2299fb8445c4af970421a5c52993ac68f4481"
   },
   "outputs": {
@@ -23,7 +23,7 @@
     "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
     "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
   },
-  "source_sha256": "9525ecbaebdf7bf3854dc518dc815fa3d9d0fdd5b2d558f9523ecf2206feae39",
+  "source_sha256": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e",
   "rows": {
     "decision_value": 1680,
     "decision_value_pooled": 336,
