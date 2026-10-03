@@ -37,8 +37,9 @@ CATEGORICAL = {
     "ghazard": "abcd",
 }
 
-# `nbumps` is the total count; nbumps2..nbumps89 are the same bumps split into
-# energy bins, so the columns are linearly dependent. See integrity_report().
+# Retain the energy-band counts and omit the supplied total `nbumps` from the
+# established 17-column design. The mirror's total and band sum differ in two
+# rows; this feature choice does not assert exact linear dependence.
 REDUNDANT = ["nbumps"]
 
 

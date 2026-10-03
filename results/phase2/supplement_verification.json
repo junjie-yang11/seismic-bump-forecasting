@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": 10902,
+  "manifest_sha256": "4a5503e0171e73a37b31b78f716fbf745299f2c4ed35b7811a62140b518c0bbe",
+  "verifier_sha256": "de2ba4807ec3089794fa35a7dec2cdfa2ee610e62cfe7a72f213be933edd857f",
+  "outputs_sha256": {
+    "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
+    "decision_value_pooled.csv": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
+    "threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011",
+    "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+    "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+    "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+    "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+  }
+}

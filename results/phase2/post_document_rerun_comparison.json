@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "csv_files": 18,
+  "files": [
+    {
+      "file": "audits.csv",
+      "rows": 360,
+      "original_sha256": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+      "current_sha256": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85"
+    },
+    {
+      "file": "candidates.csv",
+      "rows": 3668,
+      "original_sha256": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37",
+      "current_sha256": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37"
+    },
+    {
+      "file": "capacity_tradeoffs.csv",
+      "rows": 576,
+      "original_sha256": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+      "current_sha256": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690"
+    },
+    {
+      "file": "comparisons.csv",
+      "rows": 1980,
+      "original_sha256": "72df72dfef505688e153979647998cbdd7790d0ec9a369223411721f75dab253",
+      "current_sha256": "72df72dfef505688e153979647998cbdd7790d0ec9a369223411721f75dab253"
+    },
+    {
+      "file": "decision_value.csv",
+      "rows": 1680,
+      "original_sha256": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
+      "current_sha256": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad"
+    },
+    {
+      "file": "decision_value_pooled.csv",
+      "rows": 336,
+      "original_sha256": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
+      "current_sha256": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322"
+    },
+    {
+      "file": "decisions.csv",
+      "rows": 17022,
+      "original_sha256": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+      "current_sha256": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8"
+    },
+    {
+      "file": "evaluations.csv",
+      "rows": 1680,
+      "original_sha256": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+      "current_sha256": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5"
+    },
+    {
+      "file": "pooled_evaluations.csv",
+      "rows": 336,
+      "original_sha256": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd",
+      "current_sha256": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd"
+    },
+    {
+      "file": "predictions.csv",
+      "rows": 8511,
+      "original_sha256": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+      "current_sha256": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6"
+    },
+    {
+      "file": "prevalence_decision_value.csv",
+      "rows": 8064,
+      "original_sha256": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f",
+      "current_sha256": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+    },
+    {
+      "file": "prevalence_scenarios.csv",
+      "rows": 8064,
+      "original_sha256": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
+      "current_sha256": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b"
+    },
+    {
+      "file": "references.csv",
+      "rows": 4182,
+      "original_sha256": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+      "current_sha256": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff"
+    },
+    {
+      "file": "refit_transfer.csv",
+      "rows": 540,
+      "original_sha256": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+      "current_sha256": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39"
+    },
+    {
+      "file": "threshold_audit_enriched.csv",
+      "rows": 360,
+      "original_sha256": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011",
+      "current_sha256": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011"
+    },
+    {
+      "file": "threshold_explanations.csv",
+      "rows": 240,
+      "original_sha256": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+      "current_sha256": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa"
+    },
+    {
+      "file": "tuning.csv",
+      "rows": 20,
+      "original_sha256": "a1544aebd8e838c40b68388f6a06ae0d8880e3ce619c9e357cdde67b1d444aa9",
+      "current_sha256": "a1544aebd8e838c40b68388f6a06ae0d8880e3ce619c9e357cdde67b1d444aa9"
+    },
+    {
+      "file": "tuning_predictions.csv",
+      "rows": 4460,
+      "original_sha256": "11d931fea43f59379910aa61e4661f0b27867d1f5e86ea97377c3d238d9f40a1",
+      "current_sha256": "11d931fea43f59379910aa61e4661f0b27867d1f5e86ea97377c3d238d9f40a1"
+    }
+  ],
+  "bootstrap_arrays_identical": true,
+  "reason": "Re-executed phase two after updating first-stage reproduction instructions; refreshed manifests capture the current first-stage paper hashes without manually rewriting historical experiment records."
+}

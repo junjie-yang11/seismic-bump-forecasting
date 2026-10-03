@@ -1,0 +1,17 @@
+[
+  {
+    "elapsed_seconds": 323.5240749,
+    "stage": "baseline",
+    "exit_code": 0
+  },
+  {
+    "elapsed_seconds": 81.7500952,
+    "stage": "engineering",
+    "exit_code": 0
+  },
+  {
+    "elapsed_seconds": 10.5340406,
+    "stage": "research",
+    "exit_code": 0
+  }
+]

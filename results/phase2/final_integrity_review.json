@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "completed_at_utc": "2026-10-03T11:27:43.640515+00:00",
+  "behavioral_tests": 52,
+  "source_and_fresh_execution": "current_execution_review.json",
+  "fresh_csv_files": 62,
+  "bootstrap_values": 3960000,
+  "maximum_csv_difference": 4.0245584642661925e-16,
+  "first_stage_checks": 8169,
+  "research_replay_checks": 7460,
+  "phase2_checks": 63863,
+  "supplement_checks": 10902,
+  "formula_checks": 8220,
+  "document_checks": 584,
+  "audit_sha256": {
+    "results/phase2/current_execution_review.json": "6a5f55c8783f9d1a66f73942e7ee61f307fdcf9d875064e04cd80f1e1463e72a",
+    "results/phase2/formula_verification.json": "cfd7600cc637ff84eb889c8c164f6cca773aa29545bc43d6dd8fbb252bacb65d",
+    "results/phase2/current_document_review.json": "3410531843abf2962ea6e7b45fddced1b7762b42df2d3585bc037c423a01966e",
+    "results/phase2/post_document_rerun_comparison.json": "ce89476367975dfef05aeca0c35186cdcc267de9c791d893633c7bf7dcee5d79",
+    "docs/audits/FINAL_PROJECT_REVIEW.md": "00b8f439a589c95bc14b66b9ac55de55086d2a087e72841a3bfbc236145d4091"
+  },
+  "scope": "Current code, saved evidence and both papers; full fresh computation plus final documentation-only correction and phase-two provenance refresh.",
+  "remaining_research_assumptions": [
+    "Record order is a temporal proxy",
+    "Relative costs and capacity are hypothetical",
+    "Prevalence scenarios freeze class-conditional rates",
+    "Bootstrap intervals condition on fitted models and thresholds"
+  ]
+}

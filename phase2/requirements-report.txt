@@ -1,0 +1,6 @@
+# Reporting environment only. Does not alter model fitting dependencies.
+python-docx>=1.1,<2
+lxml>=5,<7
+matplotlib==3.11.2
+pandas>=2.2,<4
+numpy>=2,<3

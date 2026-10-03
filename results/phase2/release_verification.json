@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "nbumps_audit": {
+    "rows": 2578,
+    "equal": 2576,
+    "different": 2,
+    "differences": [
+      {
+        "mirror_row": 435,
+        "nbumps": 2,
+        "band_sum": 1
+      },
+      {
+        "mirror_row": 436,
+        "nbumps": 1,
+        "band_sum": 0
+      }
+    ],
+    "csv_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a"
+  },
+  "reviewed_at_utc": "2026-10-03T13:51:15.695725+00:00",
+  "checks": 696,
+  "scope": "Complete fresh execution review, numeric-input boundary fix, source-comment correction and final paper polishing; research design and numerical tables retained.",
+  "unchanged_phase2_csvs": 18,
+  "identical_bootstrap_values": 3960000,
+  "unchanged_protected_first_stage_evidence_files": 0,
+  "verification_counts": {
+    "stage1": 8169,
+    "phase2_replay": 63863,
+    "supplement": 10902,
+    "formulae": 8220
+  },
+  "sources": {
+    "scripts\\research_paper.py": "331edd9600c5f284ba1cd74ed6ead2c5bd3d9b05332650d0eead0632b2211325",
+    "phase2\\report.py": "e16fbfe9b311302afde4db931ead2e08169977e9bd5cf2605c960215f551d213"
+  },
+  "papers": [
+    {
+      "paper": "technical_report",
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "visual_review": "Every rendered page inspected after the comprehensive review and paper polishing.",
+      "artifact_sha256": {
+        "technical_note.md": "3b5737325b00b6d787444203760745381449806d932c0870c941289867c1b9ab",
+        "technical_report.docx": "7b6d23f3c34c205fcd5c7bf3e8192d2fb4aa6063c3753daed5c2be9a602fa004",
+        "technical_report.pdf": "624e7ff1d77d52f2d5a3b10729641fc2adb9fda0d001a6ffcae4f0b453ce8fc4"
+      },
+      "distinct_decimal_values": 243
+    },
+    {
+      "paper": "phase2_threshold_transfer_report",
+      "pages": 12,
+      "tables": 17,
+      "figures": 3,
+      "visual_review": "Every rendered page inspected after the comprehensive review and paper polishing.",
+      "artifact_sha256": {
+        "phase2_threshold_transfer_report.docx": "e8202ced8e8b7898d6cc33d0c542c79565c625c63c0d7db346badd4a43c6e6a9",
+        "phase2_threshold_transfer_report.md": "f33cf7befac11226e652f3d656e396c51e40446521066e16d76dcbcf11d5173e",
+        "phase2_threshold_transfer_report.pdf": "e90c5fdce10396ea032e9349a2edc6f24f7eb6f01385c344dcaf7e7398c041a0"
+      },
+      "distinct_decimal_values": 200
+    }
+  ],
+  "backup_directory": ".audit-work\\full-review-polish-20261003",
+  "historical_audits": "Earlier review records describe the document versions and executions captured at their recorded timestamps.",
+  "behavioral_tests": {
+    "shared_and_stage_one": 42,
+    "phase_two": 12,
+    "total": 54,
+    "passed": true
+  },
+  "fresh_execution": {
+    "passed": true,
+    "csv_files": 62,
+    "bootstrap_values": 3960000,
+    "maximum_csv_difference": 4.0245584642661925e-16,
+    "plan_unchanged": true
+  },
+  "document_checks": 591,
+  "api_fixes": [
+    "Accept validated floating-point binary alert decisions by conversion to bool.",
+    "Reject non-finite or out-of-range evaluation capacity budgets."
+  ],
+  "source_description_correction": "nbumps differs from the energy-band sum in two mirror rows; omitted column design retained."
+}

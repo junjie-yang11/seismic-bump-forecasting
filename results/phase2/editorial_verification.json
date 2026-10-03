@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "nbumps_audit": {
+    "rows": 2578,
+    "equal": 2576,
+    "different": 2,
+    "differences": [
+      {
+        "mirror_row": 435,
+        "nbumps": 2,
+        "band_sum": 1
+      },
+      {
+        "mirror_row": 436,
+        "nbumps": 1,
+        "band_sum": 0
+      }
+    ],
+    "csv_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a"
+  },
+  "reviewed_at_utc": "2026-10-03T12:56:56.029589+00:00",
+  "checks": 700,
+  "scope": "Corrected nbumps description, cross-stage workflow link, integer Figure 3 count annotations and two references; research design retained.",
+  "unchanged_phase2_csvs": 18,
+  "identical_bootstrap_values": 3960000,
+  "unchanged_protected_first_stage_evidence_files": 0,
+  "verification_counts": {
+    "stage1": 8169,
+    "phase2_replay": 63863,
+    "supplement": 10902,
+    "formulae": 8220
+  },
+  "sources": {
+    "scripts\\research_paper.py": "6c7627695c486d1b8ea591214b4121dba5231d293c255d5d24b9fe59149ef832",
+    "phase2\\report.py": "4b1ed56fd2629622b0212c75fa04f6f6af60806d7f59cec1b4bd17a7f7b1672c"
+  },
+  "papers": [
+    {
+      "paper": "technical_report",
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "visual_review": "Every rendered page inspected after the final factual revision.",
+      "artifact_sha256": {
+        "technical_note.md": "ec535bc33352fc7245cf053858a8450cb430fbfe7dbce9c09082137bae03f815",
+        "technical_report.docx": "37c507d9bb76a6d3029a9fc8a23720f08dace2a9aafde19c6a570f790df8a800",
+        "technical_report.pdf": "16b5897eb04ddfcb3bd3d726676aa7ee8da02e7329573ddeaac7d66f19bb8c20"
+      },
+      "distinct_decimal_values": 247
+    },
+    {
+      "paper": "phase2_threshold_transfer_report",
+      "pages": 12,
+      "tables": 17,
+      "figures": 3,
+      "visual_review": "Every rendered page inspected after the final factual revision.",
+      "artifact_sha256": {
+        "phase2_threshold_transfer_report.docx": "3f89217e90ed3519af33ed14e3b830a589d136a9e92ec8dfe843834dbd5dd625",
+        "phase2_threshold_transfer_report.md": "0be014b3ca71efcd91b9eb4d2a8ac224de5157e10f6539df963625e9b85c5622",
+        "phase2_threshold_transfer_report.pdf": "65ee164a8bfb675b2078775a32c44b78e7d22b865ae30d6274e54e441e95b107"
+      },
+      "distinct_decimal_values": 200
+    }
+  ],
+  "backup_directory": ".audit-work\\final-facts-20261003",
+  "historical_audits": "Earlier review records describe the document versions and executions captured at their recorded timestamps."
+}

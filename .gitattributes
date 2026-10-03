@@ -19,3 +19,12 @@
 *.py   text eol=lf
 *.csv  text eol=lf
 *.json text eol=lf
+
+# These paths participate in SHA-256 provenance checks. Preserve their exact
+# recorded bytes on every platform, including the locked protocol and reports.
+# Git line-ending conversion would otherwise invalidate a clean checkout.
+src/**     -text whitespace=trailing-space,space-before-tab,cr-at-eol
+scripts/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+phase2/**  -text whitespace=trailing-space,space-before-tab,cr-at-eol
+results/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+report/**  -text whitespace=trailing-space,space-before-tab,cr-at-eol

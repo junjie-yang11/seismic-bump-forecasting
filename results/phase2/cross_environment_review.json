@@ -1,0 +1,79 @@
+{
+  "python_sources_parsed": 43,
+  "parsed_sources": [
+    "audit_source.py",
+    "engineering_figures.py",
+    "generate_report.py",
+    "paper_content.py",
+    "record_environment.py",
+    "refresh_analysis.py",
+    "research_analysis.py",
+    "research_figures.py",
+    "research_paper.py",
+    "review_analysis.py",
+    "run_engineering.py",
+    "run_experiments.py",
+    "run_research.py",
+    "verify_additions.py",
+    "verify_research.py",
+    "verify_results.py",
+    "verify_review.py",
+    "src\\boosting.py",
+    "src\\calibration.py",
+    "src\\data.py",
+    "src\\engineering.py",
+    "src\\evaluation.py",
+    "src\\figures.py",
+    "src\\input_checks.py",
+    "src\\metrics.py",
+    "src\\models.py",
+    "src\\uncertainty.py",
+    "phase2\\analysis.py",
+    "phase2\\decisions.py",
+    "phase2\\experiment.py",
+    "phase2\\plan.py",
+    "phase2\\report.py",
+    "phase2\\run.py",
+    "phase2\\tests.py",
+    "phase2\\verify.py",
+    "phase2\\__init__.py",
+    "tests\\test_boosting.py",
+    "tests\\test_engineering.py",
+    "tests\\test_evaluation.py",
+    "tests\\test_input_validation.py",
+    "tests\\test_research_verifier.py",
+    "tests\\test_result_verifier.py",
+    "tests\\test_uncertainty.py"
+  ],
+  "alternative_environment": "Python 3.12.14 / NumPy 2.3.5 for all first-stage fits; published baseline and engineering fits use Python 3.7.0 / NumPy 1.21.6",
+  "reference_count_changes": [
+    {
+      "model": "LR",
+      "variant": "without_geophone",
+      "fold": 2,
+      "budget": 0.2,
+      "saved_count": 39,
+      "alternative_count": 61,
+      "capacity": 62
+    }
+  ],
+  "roc_auc_changes": [
+    {
+      "model": "LR",
+      "variant": "without_geophone",
+      "file": "feature_ablation.csv",
+      "saved_roc_auc": 0.6733457997698504,
+      "alternative_roc_auc": 0.6733400460299195
+    },
+    {
+      "model": "LR",
+      "variant": "without_geophone",
+      "file": "feature_ablation_by_fold.csv",
+      "saved_roc_auc": 0.7327722772277228,
+      "alternative_roc_auc": 0.7325742574257426,
+      "fold": 1
+    }
+  ],
+  "importance": "Values match by feature; ordering among tied importance values differs.",
+  "interpretation": "Floating-point differences near ties. Both runs passed independent consistency checks. Main reported loss and warning results are unaffected."
+}

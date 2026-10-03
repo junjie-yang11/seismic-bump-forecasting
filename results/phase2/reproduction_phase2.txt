@@ -1,0 +1,21 @@
+XGBoost time phase 1: fit, choose historical rules, transfer, refit
+XGBoost time phase 2: fit, choose historical rules, transfer, refit
+XGBoost time phase 3: fit, choose historical rules, transfer, refit
+XGBoost time phase 4: fit, choose historical rules, transfer, refit
+XGBoost holdout phase 1: fit, choose historical rules, transfer, refit
+LR time phase 1: fit, choose historical rules, transfer, refit
+LR time phase 2: fit, choose historical rules, transfer, refit
+LR time phase 3: fit, choose historical rules, transfer, refit
+LR time phase 4: fit, choose historical rules, transfer, refit
+LR holdout phase 1: fit, choose historical rules, transfer, refit
+CART time phase 1: fit, choose historical rules, transfer, refit
+CART time phase 2: fit, choose historical rules, transfer, refit
+CART time phase 3: fit, choose historical rules, transfer, refit
+CART time phase 4: fit, choose historical rules, transfer, refit
+CART holdout phase 1: fit, choose historical rules, transfer, refit
+Paired loss intervals: phase 1
+Paired loss intervals: phase 2
+Paired loss intervals: phase 3
+Paired loss intervals: phase 4
+Paired loss intervals: phase pooled
+Phase-two evidence saved independently.

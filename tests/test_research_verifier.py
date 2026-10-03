@@ -8,7 +8,7 @@ from unittest.mock import patch
 import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from verify_research import main
+from scripts.verify_research import main
 
 
 @unittest.skipUnless((ROOT / 'results/research_config.json').exists(), 'run extended experiments first')

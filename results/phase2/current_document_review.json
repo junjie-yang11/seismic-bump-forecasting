@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "python_sources_parsed": 47,
+  "phase1_pages": 15,
+  "phase1_tables": 11,
+  "phase1_figures": 5,
+  "numeric_values_checked": 247,
+  "changed_phase1_paragraphs": 1,
+  "experimental_tables_unchanged": true,
+  "visual_review": "All fifteen updated first-stage pages inspected at rendered page scale.",
+  "report_sha256": {
+    "technical_note.md": "5d8d761807fee10b713b432eec4e1b40df68d7f51a754f3160a596fae3f45676",
+    "technical_report.docx": "af4e8b5af1034300462aa92a7c88c122178c4782f99cd6db9099f5682adb72ba",
+    "technical_report.pdf": "330892323395d37fa4ff129eab99faccc7870813414d3481b20973b2b8501024"
+  },
+  "phase2_document": {
+    "passed": true,
+    "checks": 584,
+    "pages": 12,
+    "tables": 17,
+    "figures": 3,
+    "visual_review": "All twelve final rendered pages inspected; complete tables and references, no blank pages or overflow.",
+    "rendering": "Microsoft Word invisible PDF export and Poppler page rendering; LibreOffice unavailable.",
+    "report_sha256": {
+      "phase2_threshold_transfer_report.docx": "920959a2d7687e21a7c8452897e5dab63ce32a62c8e3daf0e3c8171c8c945b89",
+      "phase2_threshold_transfer_report.md": "34c266a17280ff84a3ea2d94b70ae8789583818e48c2f8467dec362835e4c0d4",
+      "phase2_threshold_transfer_report.pdf": "fda7f70bef84689f7ab1b125b6725a685c68b9cab8438a5afd3f1991a90a36e0"
+    }
+  },
+  "phase2_manuscript_unchanged": true,
+  "all_27_pages_visually_inspected": true,
+  "completed_at_utc": "2026-10-03T11:27:43.639426+00:00"
+}

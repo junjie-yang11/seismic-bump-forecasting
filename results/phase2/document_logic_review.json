@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "python_sources_parsed": 43,
+  "first_stage_pdf_pages": 15,
+  "first_stage_report_numeric_values_checked": 207,
+  "first_stage_report": "Unchanged Word/PDF/Markdown; integrated verifier confirms paragraphs, table cells and result agreement.",
+  "second_stage_report": {
+    "passed": true,
+    "checks": 352,
+    "pages": 9,
+    "figures": 3,
+    "tables": 9,
+    "visual_review": "All nine final page images inspected; no clipping, overflow, orphan references or inherited title line.",
+    "rendering": "Microsoft Word invisible PDF export and Poppler page rendering; packaged LibreOffice renderer unavailable in this environment.",
+    "report_sha256": {
+      "phase2_threshold_transfer_report.docx": "835b4f1ba469609c42003d422523358bc6bff83ed23711f3d47dcaebb42621ac",
+      "phase2_threshold_transfer_report.md": "2af73bfbaa7ef7d31fa62a04a8b56b0483279aff0b5bb3b70e6b5b2d033b8589",
+      "phase2_threshold_transfer_report.pdf": "2c1c76454f2fb433eaf010c66df2d4ddb378ad678757f2fe45400354d2afd55d"
+    }
+  }
+}

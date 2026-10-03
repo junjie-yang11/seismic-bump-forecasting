@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": 591,
+  "pages": 12,
+  "tables": 17,
+  "figures": 3,
+  "visual_review": "All twelve final rendered pages inspected; complete tables and references, no blank pages or overflow.",
+  "rendering": "Microsoft Word invisible PDF export and Poppler page rendering; LibreOffice unavailable.",
+  "report_sha256": {
+    "phase2_threshold_transfer_report.docx": "e8202ced8e8b7898d6cc33d0c542c79565c625c63c0d7db346badd4a43c6e6a9",
+    "phase2_threshold_transfer_report.md": "f33cf7befac11226e652f3d656e396c51e40446521066e16d76dcbcf11d5173e",
+    "phase2_threshold_transfer_report.pdf": "e90c5fdce10396ea032e9349a2edc6f24f7eb6f01385c344dcaf7e7398c041a0"
+  }
+}

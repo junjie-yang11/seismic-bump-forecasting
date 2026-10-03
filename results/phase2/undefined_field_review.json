@@ -1,0 +1,111 @@
+{
+  "results": {
+    "total_empty_cells": 307,
+    "files": [
+      {
+        "file": "feature_ablation.csv",
+        "empty_cells": 27,
+        "by_column": {
+          "threshold": 27
+        }
+      },
+      {
+        "file": "feature_ablation_by_fold.csv",
+        "empty_cells": 108,
+        "by_column": {
+          "threshold": 108
+        }
+      },
+      {
+        "file": "operating_points.csv",
+        "empty_cells": 10,
+        "by_column": {
+          "threshold": 10
+        }
+      },
+      {
+        "file": "random_metrics_by_seed.csv",
+        "empty_cells": 10,
+        "by_column": {
+          "threshold": 10
+        }
+      },
+      {
+        "file": "shap_importance.csv",
+        "empty_cells": 46,
+        "by_column": {
+          "value_contribution_spearman": 46
+        }
+      },
+      {
+        "file": "warning_budgets.csv",
+        "empty_cells": 27,
+        "by_column": {
+          "threshold": 24,
+          "alerts_per_detection": 3
+        }
+      },
+      {
+        "file": "warning_budgets_by_fold.csv",
+        "empty_cells": 79,
+        "by_column": {
+          "threshold": 60,
+          "alerts_per_detection": 19
+        }
+      }
+    ]
+  },
+  "results/phase2": {
+    "total_empty_cells": 2952,
+    "files": [
+      {
+        "file": "audits.csv",
+        "empty_cells": 360,
+        "by_column": {
+          "budget": 60,
+          "cost": 60,
+          "reference_loss": 60,
+          "loss_gap": 60,
+          "slots": 60,
+          "capacity_binding": 60
+        }
+      },
+      {
+        "file": "comparisons.csv",
+        "empty_cells": 240,
+        "by_column": {
+          "budget": 60,
+          "left_excess": 60,
+          "right_excess": 60,
+          "excess_delta": 60
+        }
+      },
+      {
+        "file": "evaluations.csv",
+        "empty_cells": 720,
+        "by_column": {
+          "budget": 240,
+          "slots": 240,
+          "excess": 240
+        }
+      },
+      {
+        "file": "pooled_evaluations.csv",
+        "empty_cells": 480,
+        "by_column": {
+          "budget": 48,
+          "threshold": 336,
+          "slots": 48,
+          "excess": 48
+        }
+      },
+      {
+        "file": "prevalence_scenarios.csv",
+        "empty_cells": 1152,
+        "by_column": {
+          "budget": 1152
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "nature": "Post hoc descriptive accounting; frozen models and historically selected policies",
+  "inputs": {
+    "evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+    "pooled_evaluations.csv": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd",
+    "audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+    "candidates.csv": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37",
+    "references.csv": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+    "predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+    "decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+    "prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
+    "run_manifest.json": "2edcdf0ef6b3cc669300b631d66e190dfca8718ff8b3d581dffc87cbe07fd908",
+    "fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
+    "analysis_manifest.json": "80e32a5bd904a1f4256e9b7d4c67d9af23f4b7f22c6ff1f3105cc38da6ad5e47",
+    "bootstrap_replicates.npz": "e578bd552765d861f17f1475b8e2299fb8445c4af970421a5c52993ac68f4481"
+  },
+  "outputs": {
+    "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
+    "decision_value_pooled.csv": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
+    "threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011",
+    "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+    "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+    "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+    "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+  },
+  "source_sha256": "9525ecbaebdf7bf3854dc518dc815fa3d9d0fdd5b2d558f9523ecf2206feae39",
+  "rows": {
+    "decision_value": 1680,
+    "decision_value_pooled": 336,
+    "threshold_audit_enriched": 360,
+    "threshold_explanations": 240,
+    "refit_transfer": 540,
+    "capacity_tradeoffs": 576,
+    "prevalence_decision_value": 8064
+  },
+  "rule": "Negative delta_loss_vs_no_alarm_100 is lower loss under the specified hypothetical cost"
+}
