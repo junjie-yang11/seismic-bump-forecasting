@@ -33,6 +33,7 @@ The baseline run already refreshes paired analyses; the research run refreshes r
 | `review_analysis.py` | Probability-reference and constant-feature stability summaries |
 | `verify_results.py`, `verify_research.py`, `verify_additions.py`, `verify_review.py` | Independent evidence checks |
 | `verify_formulae.py` | Cross-stage equation audit; run after Stage 2 finishes |
+| `quick_check.py` | Cross-stage saved-evidence checks in a disposable copy; preserves published records |
 | `generate_report.py`, `paper_content.py`, `research_paper.py` | Shared package cleanup, baseline and extended paper content |
 | `record_environment.py` | Record the exact baseline execution environment |
 

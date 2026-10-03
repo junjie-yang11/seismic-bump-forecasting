@@ -3,9 +3,8 @@ Data loading, encoding and integrity checks for the UCI Seismic Bumps dataset.
 
 Dataset
 -------
-Sikora M., Wrobel L. (2010). Application of rule induction algorithms for analysis
-of data collected by seismic hazard monitoring systems in coal mines.
-Archives of Mining Sciences 55(1), 91-114.
+Sikora M., Wrobel L. (2010). seismic-bumps [Dataset].
+UCI Machine Learning Repository. DOI: 10.24432/C5W902.
 
 2,584 shift records (8 h each) from two longwalls of a Polish coal mine.
 Target `class = 1` means a seismic bump with energy > 1e4 J occurred during the

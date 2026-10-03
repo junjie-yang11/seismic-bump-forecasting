@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "checks": 215,
+  "completed_at_utc": "2026-10-03T15:55:23.135615+00:00",
+  "baseline_commit": "a54d4052e9155e270d00f6b6e994e3244012e0c8",
+  "python_sources_parsed": 48,
+  "protected_evidence_files_unchanged": 82,
+  "csv_files_unchanged": 62,
+  "documents": {
+    "phase1": {
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "references": 11,
+      "table_cells_equal_to_baseline": true,
+      "visual_review": "Every final rendered page inspected; no overflow, clipped tables or blank pages.",
+      "sha256": {
+        "technical_note.md": "a4c51d7025a9ac4fe0351f515b3eeaf12760f6a40918ab447ceaaa3607cbb814",
+        "technical_report.docx": "6190962cf76606ecb4b04178c606b2146dd7ba966f2f34aab01252e82644beb2",
+        "technical_report.pdf": "368f4515838947a5ade1ed793a48a32fe8d6e0d532d67b1840b7f829cc17bb2a"
+      }
+    },
+    "phase2": {
+      "pages": 12,
+      "tables": 17,
+      "figures": 3,
+      "references": 8,
+      "table_cells_equal_to_baseline": true,
+      "visual_review": "Every final rendered page inspected; no overflow, clipped tables or blank pages.",
+      "sha256": {
+        "phase2_threshold_transfer_report.docx": "d69a504cec66d048f144e0ba5ea1c9127bbb34209745c161d37a59e641649fc8",
+        "phase2_threshold_transfer_report.md": "2615397715b9f538841bf5c6161d5da65e26fa769b3242d1470550cf6af0bd4e",
+        "phase2_threshold_transfer_report.pdf": "749908624db662d408cd17a2ec201d4819cff363b3a6bcacb7ef6d9003b2d87b"
+      }
+    }
+  },
+  "rendering": "Existing invisible Microsoft Word export and Poppler rendering; LibreOffice render attempt unavailable (soffice.exe absent).",
+  "quick_check": {
+    "local_cache": true,
+    "exit_code": 0,
+    "navigation_links": 133,
+    "stage2_word_items": 239,
+    "elapsed_seconds": 50.35
+  },
+  "quantitative_headlines_reconstructed": true,
+  "clean_checkout_quick_check": {
+    "passed": true,
+    "exit_code": 0,
+    "elapsed_seconds": 52.19301919999998,
+    "cached_mirror_before": false,
+    "cached_mirror_after": false,
+    "environment": "Python 3.12 research environment; public files exported from Git index; no saved data cache.",
+    "scope": "Quick saved-evidence entry, including temporary mirror download and hash/behavior checks; no full model refit.",
+    "completed_at_utc": "2026-10-03T15:58:14.378772+00:00",
+    "summaries": [
+      "Ran 42 tests in 8.373s",
+      "Ran 12 tests in 0.357s",
+      "RESULT: all 8169 consistency checks passed.",
+      "RESULT: 63809 phase-two checks passed.",
+      "RESULT: 10902 independent supplementary checks passed.",
+      "RESULT: 8220 independent formula checks passed.",
+      "QUICK CHECK PASSED: 133 links and 239 Stage 2 Word items; 52.11 seconds."
+    ]
+  }
+}

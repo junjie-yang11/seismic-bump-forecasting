@@ -1,0 +1,104 @@
+{
+  "review_date": "2026-10-03",
+  "purpose": "Evidence for the focused related-work comparison and added manuscript citations; not an exhaustive novelty search.",
+  "sources": [
+    {
+      "title": "seismic-bumps",
+      "authors": ["Marek Sikora", "Lukasz Wrobel"],
+      "citation_year": 2010,
+      "doi": "10.24432/C5W902",
+      "url": "https://archive.ics.uci.edu/dataset/266/seismic+bumps",
+      "reviewed_material": "Official dataset information, variable descriptions and citation metadata.",
+      "supports": "Next-shift high-energy label, eight-hour summaries, source row/positive counts and feature meanings.",
+      "distinction": "The displayed 2013 donation date differs from the 2010 citation year; dataset DOI is not the mining article DOI."
+    },
+    {
+      "title": "Application of rule induction algorithms for analysis of data collected by seismic hazard monitoring systems in coal mines",
+      "authors": ["Marek Sikora", "Lukasz Wrobel"],
+      "year": 2010,
+      "publication": "Archives of Mining Sciences 55(1):91-114",
+      "doi": null,
+      "doi_status": "No DOI verified; none invented.",
+      "url": "https://www.researchgate.net/publication/281395657_Application_of_rule_induction_algorithms_for_analysis_of_data_collected_by_seismic_hazard_monitoring_systems_in_coal_mines",
+      "author_link": "https://github.com/ruleminer/ruleminer#publications",
+      "bibliography": "https://omega.polsl.pl/info/article/PSLa52fdf78c23940d99f66a621ab498fc8/",
+      "reviewed_material": "Original full paper exposed through the author-linked copy: sections 2, 3.5, 4.1 and Table 3.",
+      "supports": "Longwall-specific shift/hour forecasting, five-fold shift evaluation and cross-longwall transfer.",
+      "distinction": "Hazard definition and experimental cohorts differ from the public UCI next-shift task; no numerical performance ranking made."
+    },
+    {
+      "title": "The Foundations of Cost-Sensitive Learning",
+      "author": "Charles Elkan",
+      "year": 2001,
+      "publication": "IJCAI:973-978",
+      "url": "https://cseweb.ucsd.edu/~elkan/rescale.pdf",
+      "reviewed_material": "Full six-page author manuscript, section 1 decision threshold and section 4 empirical threshold adjustment.",
+      "supports": "Unequal error costs and probability-based decisions; distinction between calibrated decision thresholds and empirical score cutoffs.",
+      "distinction": "Project capacity is a hypothetical additional reference-set constraint; monetary costs and intervention value were not measured."
+    },
+    {
+      "title": "Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure",
+      "first_author": "David R. Roberts",
+      "year": 2017,
+      "publication": "Ecography 40:913-929",
+      "doi": "10.1111/ecog.02881",
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/10.1111/ecog.02881",
+      "reviewed_material": "Publisher full text, structured-data discussion and blocking/interpolation/extrapolation sections.",
+      "supports": "Evaluation design depends on prediction setting and dependence structure.",
+      "distinction": "The paper does not establish a causal explanation for this repository's AP gap."
+    },
+    {
+      "title": "Detecting and Correcting for Label Shift with Black Box Predictors",
+      "authors": ["Zachary C. Lipton", "Yu-Xiang Wang", "Alexander J. Smola"],
+      "year": 2018,
+      "publication": "ICML, PMLR 80:3122-3130",
+      "url": "https://proceedings.mlr.press/v80/lipton18a.html",
+      "full_text": "https://proceedings.mlr.press/v80/lipton18a/lipton18a.pdf",
+      "reviewed_material": "Proceedings metadata and full paper, section 1 factorization and section 3 shift estimation.",
+      "supports": "Label shift changes class prevalence while retaining class-conditional distributions.",
+      "distinction": "Frozen project scenarios do not implement BBSE, estimate actual shift or prove this assumption holds."
+    },
+    {
+      "title": "The Jackknife and the Bootstrap for General Stationary Observations",
+      "author": "Hans R. Kunsch",
+      "year": 1989,
+      "publication": "The Annals of Statistics 17(3):1217-1241",
+      "doi": "10.1214/aos/1176347265",
+      "url": "https://doi.org/10.1214/aos/1176347265",
+      "bibliography": "https://people.math.ethz.ch/~kuensch/papers/",
+      "author_deposit": "https://www.researchgate.net/publication/2355926_The_Jackknife_and_the_Bootstrap_for_General_Stationary_Observations",
+      "reviewed_material": "Author bibliography, author-deposited abstract and bibliographic metadata. Publisher full-text request was inaccessible.",
+      "supports": "Method attribution for resampling blocks of dependent observations.",
+      "distinction": "No new claim about the paper's detailed asymptotic theory or this study's interval coverage is made."
+    },
+    {
+      "title": "On the use of cross-validation for time series predictor evaluation",
+      "authors": ["Christoph Bergmeir", "Jose Manuel Benitez"],
+      "year": 2012,
+      "publication": "Information Sciences 191:192-213",
+      "doi": "10.1016/j.ins.2011.12.028",
+      "url": "https://cbergmeir.com/publications/",
+      "bibliography": "https://cbergmeir.com/bib/2012-01-01_Bergmeir2012use.bib",
+      "reviewed_material": "Author publication listing and BibTeX; retained general reference, no new performance or priority claim."
+    },
+    {
+      "title": "XGBoost: A Scalable Tree Boosting System",
+      "authors": ["Tianqi Chen", "Carlos Guestrin"],
+      "year": 2016,
+      "doi": "10.1145/2939672.2939785",
+      "url": "https://arxiv.org/pdf/1603.02754",
+      "reviewed_material": "Original full author paper; establishes adopted method origin rather than project novelty."
+    },
+    {
+      "title": "From local explanations to global understanding with explainable AI for trees",
+      "first_author": "Scott M. Lundberg",
+      "year": 2020,
+      "publication": "Nature Machine Intelligence 2:56-67",
+      "doi": "10.1038/s42256-019-0138-9",
+      "url": "https://doi.org/10.1038/s42256-019-0138-9",
+      "author_preprint": "https://arxiv.org/abs/1905.04610",
+      "reviewed_material": "Retained method reference and author preprint metadata; no additional quantitative claim.",
+      "distinction": "The author preprint has a different title; published title/year are retained."
+    }
+  ]
+}

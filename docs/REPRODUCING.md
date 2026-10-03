@@ -2,6 +2,8 @@
 
 Run commands from the repository root. Results are separated by stage and final papers are under `reports/`. The [home-page workflow](../README.md) maps every step to code; [Stage 1](../phase1/README.md) and [Stage 2](../phase2/README.md) explain the modules.
 
+For inspection before fitting, use the [quick verification entry](QUICK_CHECK.md): `python -B -m phase1.quick_check`. It checks saved evidence in a disposable copy and preserves the published replay records. The sequence below performs complete model reproduction and writes fresh experiment and verification outputs.
+
 ## Environments
 
 Keep three environments separate. Install from `requirements/requirements.txt` in the recorded baseline Python 3.7 environment, `requirements/requirements-research.txt` in Python 3.12 for XGBoost and complete checks, and `requirements/requirements-report.txt` for document authoring. The baseline environment record is `results/phase1/environment.txt`; the extended and Stage 2 manifests record their actual runtime versions. PDF export uses installed Microsoft Word on Windows.

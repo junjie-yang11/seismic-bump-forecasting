@@ -18,9 +18,11 @@ Underground mine monitoring records rock-mass activity to support the assessment
 
 The UCI Seismic Bumps data provide a defined next-shift forecasting task: each record summarizes an eight-hour shift, and the target indicates whether the following shift contains a seismic event above 10,000 J [1]. Existing seismic and seismoacoustic hazard ratings appear alongside energy, pulse and event-count measurements. Their coexistence makes the additional predictive information in measured signals testable against the recorded assessments. The target is next-shift high-energy seismic occurrence; confirmed rockburst accidents are outside its label definition.
 
+Rule-based mining-hazard prediction predates this study. Sikora and Wrobel [9] evaluated shift and hourly forecasts using longwall-specific monitoring data and also transferred rules between working faces. Their hazard definition and cohorts differ from the public UCI task, so their classification results provide engineering context rather than a numerical benchmark for our average precision.
+
 Validation protocols can change both the training history and the test population [3,4]. Comparing their scores on different shifts can therefore obscure the source of an apparent performance gap. A common test cohort makes that comparison interpretable, while probability assessment determines what the score scale conveys. Feature ablation, model explanations and frozen thresholds then connect the monitoring inputs to predictive contribution and warning workload.
 
-This study examines how evaluation-cohort composition changes the validation gap and how monitoring information translates into forecasts and warning decisions. The common cohort supports comparisons across three model families, and nine prespecified feature combinations test the contribution of each engineering group. Exact TreeSHAP traces how the fitted XGBoost models use these signals across four test phases; comparison with refitted ablations separates model reliance from observed predictive gains. Four training reference budgets quantify detections, missed shifts and inspection workload after threshold transfer. All comparisons use saved row-level predictions and explicit training-only selection rules.
+The contribution is an applied evaluation framework connecting comparable test records, probability assessment and engineering interpretation. Common test rows reveal how cohort composition changes the apparent protocol gap. Training-local correction and explicit probability references separate calibration improvement from baseline-relative skill. TreeSHAP and nine prespecified, refitted feature combinations distinguish the inputs used by a fitted model from their incremental predictive value. Frozen reference budgets then express the forecasts as detections, missed hazardous shifts and inspection workload. These empirical findings use established learning and explanation methods [6,7], saved row-level evidence and training-only selection.
 
 ## 2 Data and engineering feature hypotheses
 
@@ -223,6 +225,8 @@ The SHAP-ablation comparison provides an engineering reading of the monitoring s
 
 ### 7.2 Scope and prospective validation
 
+Changing a probability scale and changing a decision rule address different engineering questions. Cost-sensitive decision theory [11] links probabilities to error costs; here historical reference scores supply empirical cutoffs. Prior-only distribution change [10] is a specific assumption rather than a diagnosis of the observed protocol gap. The companion decision study evaluates loss, capacity and refitting at frozen thresholds; it builds on this forecast evidence without treating calibration gains as evidence of operational warning value.
+
 These results concern the audited mirror under a record-order forecasting assumption. Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. Repeated measurements can correspond to distinct shifts; the provenance audit establishes the mirror transformation rather than the operational validity of deduplication. Native TreeSHAP uses training leaf covers, and correlated inputs affect the allocation of contributions. Its signed values explain fitted associations rather than the causal effect of changing a monitoring variable. Phase stability is conditional on the fitted models and observed test distributions.
 
 The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. A maximum AP among these feature sets is not treated as a validated model-selection result. The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.
@@ -243,9 +247,9 @@ The extended analysis uses Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, XGBoost 3.
 
 [2] datasets/seismic-bumps. CSV mirror and preparation description. https://github.com/datasets/seismic-bumps
 
-[3] Bergmeir C, Benitez JM. On the use of cross-validation for time series predictor evaluation. Information Sciences, 2012, 191:192-213.
+[3] Bergmeir C, Benitez JM. On the use of cross-validation for time series predictor evaluation. Information Sciences, 2012, 191:192-213. DOI: 10.1016/j.ins.2011.12.028.
 
-[4] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography, 2017, 40:913-929.
+[4] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography, 2017, 40:913-929. DOI: 10.1111/ecog.02881.
 
 [5] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html
 
@@ -254,6 +258,12 @@ The extended analysis uses Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, XGBoost 3.
 [7] Lundberg SM et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence, 2020, 2:56-67. DOI: 10.1038/s42256-019-0138-9.
 
 [8] XGBoost documentation. Booster.predict and exact feature contributions. https://xgboost.readthedocs.io/en/stable/python/python_api.html
+
+[9] Sikora M, Wrobel L. Application of rule induction algorithms for analysis of data collected by seismic hazard monitoring systems in coal mines. Archives of Mining Sciences, 2010, 55(1):91-114. Author-linked full text: https://www.researchgate.net/publication/281395657
+
+[10] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. Proceedings of ICML, PMLR 80, 2018:3122-3130. https://proceedings.mlr.press/v80/lipton18a.html
+
+[11] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf
 
 ## Appendix A Feature definitions and phase evidence
 

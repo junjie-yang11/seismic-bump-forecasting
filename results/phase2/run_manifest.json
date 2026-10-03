@@ -1,6 +1,6 @@
 {
-  "started_at_utc": "2026-10-03T14:23:34.463806+00:00",
-  "elapsed_seconds": 19.81925700001011,
+  "started_at_utc": "2026-10-03T15:42:59.724972+00:00",
+  "elapsed_seconds": 17.70671049998782,
   "plan_sha256": "85a1a16b30a5b9acc44469577781aca6d004106a501835153e409457e8ae3970",
   "data_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
   "environment": {
@@ -14,7 +14,7 @@
     "decisions.py": "dff17588f3720fd83ef43faf169c42bd6476b1f9c07a625073b1c40d0a9118cb",
     "experiment.py": "f2d264ad7b2f414472322eb21a0b9ae786248ed8482598004ff73941bed27b47",
     "plan.py": "c0bd5260b6839036d40b6fbb700b7389fb783c0d7314726672a8767f028032cf",
-    "report.py": "83278eb82862e999084bb037e7c60b2f5491cebcc86e544a1ca04093af8440dc",
+    "report.py": "20ddcb4f58a6ee92cf16bdf5cbaef7f8d1c4abb8d824eb23fd7d961d9b84c82e",
     "run.py": "f494034af869bde62816c4706e58c9c32cd1cedcb78f8f2efea7305a3e69843d",
     "supplement.py": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e",
     "tests.py": "971ec04cc5436d2c7e6986c871d95e45f5058b54c6d3e7a5b1e65c4543de216e",
@@ -25,7 +25,7 @@
   "dependency_hashes": {
     "boosting.py": "d77fd02b4f38ec158be32852b99805977fc6e278c82116263bed3217256ef56c",
     "calibration.py": "5318a4f8f5ed06d90633137a54eb3fbb2a046d9046ee3d74a3c483e8e6555ea5",
-    "data.py": "21c673a9ba6281dd4b8e4a2a4fdc345438f092372110aed26cec3f0d1277103c",
+    "data.py": "0c9d81153b1f2aa948c683f49260a33d9ae439ce5e6c45526d9f31087c98b9a8",
     "engineering.py": "d0ed63fc1c781466983f50fe971276d91b351ec38e290abafb8fb629cf20869c",
     "evaluation.py": "30f983cb570bdb0b3202a6beba62879d25118cd840f7b3ccc64bcf64a77d99af",
     "figures.py": "a523b5ebf4a3d1a2adaf16f7bb0468df0f698d469c12f3fc15a03a030e310f5d",
@@ -36,9 +36,9 @@
   },
   "first_stage_unchanged": true,
   "first_stage_hashes": {
-    "reports/phase1/technical_note.md": "a12842f1709d2315d2e081bb31ff12ef9cbf4cb93dce1fe4fda84ede3f820074",
-    "reports/phase1/technical_report.docx": "5b0e110239b7d6384b4087bc9ff6f1d5198db67c538813223a5890e0af6ec9e3",
-    "reports/phase1/technical_report.pdf": "97d80b8ce1fc4ebda7cbe347e0af5bd13043037652670f528a4e383726d10706",
+    "reports/phase1/technical_note.md": "a4c51d7025a9ac4fe0351f515b3eeaf12760f6a40918ab447ceaaa3607cbb814",
+    "reports/phase1/technical_report.docx": "6190962cf76606ecb4b04178c606b2146dd7ba966f2f34aab01252e82644beb2",
+    "reports/phase1/technical_report.pdf": "368f4515838947a5ade1ed793a48a32fe8d6e0d532d67b1840b7f829cc17bb2a",
     "results/README.md": "0837b927734ffdff07447ef0fa0e3dbce6281d2705483d4fe32f04d578deb130",
     "results/phase1/bootstrap_replicates.csv": "a1866169ac1bc980ffc421585ae8fc1dfeb1042effc7e5d5881d56e8f1b18b70",
     "results/phase1/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
@@ -115,5 +115,5 @@
     "results/phase1/research_models/xgboost_time_fold3.json": "b5af6a50c5d64031cd726f3fe6f3a6683ddc19de6ed57be171556edf1e760c7e"
   },
   "status": "complete",
-  "total_elapsed_seconds": 21.43166500001098
+  "total_elapsed_seconds": 19.25071089999983
 }

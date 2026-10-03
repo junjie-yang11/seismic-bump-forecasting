@@ -13,6 +13,8 @@ Keywords: seismic hazard; warning threshold; relative cost; inspection capacity;
 
 A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents.
 
+Cost-sensitive classification supplies the established decision objective [5]; an inspection budget restricts the available alert sets. This study contributes a joint empirical account of transferred loss, workload and model-update effects. Historical audits explain why a rule selects no alarms, and matched fixed/refitted comparisons show what changes when the same numerical cutoff is retained. The contribution is the mining case analysis and its reproducible evidence, rather than a new optimization algorithm.
+
 UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.
 
 The analysis separates three questions: how cost and capacity determine historical selection, how the selected rules perform in later blocks, and how their decisions change after model refitting with the same cutoff. The protocol was locked before second-stage fitting. Because the cohort had already been inspected in stage one, the study is exploratory and retrospective. The previously viewed 774-row holdout provides supplementary evidence and overlaps part of the four-block cohort.
@@ -245,11 +247,11 @@ Table 12. Previously viewed holdout and all 16 C settings
 
 10 Discussion and conclusions
 
-Reference-to-test hazardous-shift prevalence changes were phase 1: 20.39% → 6.98%; phase 2: 0.48% → 1.94%; phase 3: 2.26% → 4.65%; phase 4: 4.84% → 3.49%. Phase 2 reference choices rest on 1 hazardous outcome among 207 records. This sparse reference and the prevalence differences provide plausible context for transfer behavior. Class-conditional score distributions may also change; the design does not identify prevalence shift as its sole cause. Section 9 assumes prevalence-only change without identifying it causally.
+Reference-to-test hazardous-shift prevalence changes were phase 1: 20.39% → 6.98%; phase 2: 0.48% → 1.94%; phase 3: 2.26% → 4.65%; phase 4: 4.84% → 3.49%. Phase 2 reference choices rest on 1 hazardous outcome among 207 records. This sparse reference and the prevalence differences provide plausible context for transfer behavior. Class-conditional score distributions may also change; the design does not identify prevalence shift as its sole cause. Section 9 uses the label-shift assumption [6] to vary prevalence while freezing class-conditional rates; it does not estimate or correct the actual shift.
 
-Decision value depends on the comparator as well as the assumed cost. At r=10, C can reduce loss relative to A while its pooled false-alert cost balances or exceeds its detection benefit relative to no alarms. Its 40 historical no-alarm choices comprise 28 unconstrained cost optima and 12 capacity-induced changes, despite positive reference outcomes. Lower capacity excess must also be read alongside detection: the matched C−A comparisons show the accompanying changes in TP, FN and loss. Refitting changes finite-cutoff decisions; the unchanged no-alarm rules reflect their definition and provide no evidence about finite-threshold transfer.
+At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 unconstrained cost optima and 12 capacity-induced changes, despite positive reference outcomes. Matched C−A results connect reduced capacity excess with changes in TP, FN and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability.
 
-Historical selection supplies a rule's rationale; later detections, misses and false alerts determine its transferred value. Joint evaluation reveals capacity excess and refitting differences alongside loss. Costs are hypothetical, and capacity counts shifts requiring inspection. Frozen scenarios hold class-conditional rates fixed. Operational validation requires dated monitoring and inspection outcomes.
+Joint evaluation links historical selection rationale to later loss, detection and workload. Costs and inspection capacity are hypothetical. Earlier mining studies tested cross-longwall transfer [7]; structured validation distinguishes interpolation from extrapolation [8]. Our row-block comparison addresses transfer without working-face identifiers. The next evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
 
 Appendix A Detection, capacity and pooled evidence
 
@@ -356,3 +358,11 @@ References
 [3] Yang J. Evaluating reliability and explainability in seismic hazard forecasting for underground mine monitoring. Technical report; 2026. Companion stage-one paper: reports/phase1/technical_report.pdf in the project repository.
 
 [4] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics; 1989;17(3):1217–1241. doi:10.1214/aos/1176347265.
+
+[5] Elkan C. The Foundations of Cost-Sensitive Learning. IJCAI; 2001:973–978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf.
+
+[6] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. ICML; PMLR 80; 2018:3122–3130. https://proceedings.mlr.press/v80/lipton18a.html.
+
+[7] Sikora M, Wrobel L. Application of rule induction algorithms for analysis of data collected by seismic hazard monitoring systems in coal mines. Archives of Mining Sciences; 2010;55(1):91–114. Author-linked full text: https://www.researchgate.net/publication/281395657.
+
+[8] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography; 2017;40:913–929. doi:10.1111/ecog.02881.
