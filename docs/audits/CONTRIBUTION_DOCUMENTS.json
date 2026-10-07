@@ -153,7 +153,7 @@
     "status": "PASS",
     "reports": [
       {
-        "path": "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\reports\\phase1\\technical_report.docx",
+        "path": "reports/phase1/technical_report.docx",
         "tracked_changes": 0,
         "counts": {
           "insertions": 0,
@@ -175,7 +175,7 @@
         "placeholders": []
       },
       {
-        "path": "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\reports\\phase2\\phase2_threshold_transfer_report.docx",
+        "path": "reports/phase2/phase2_threshold_transfer_report.docx",
         "tracked_changes": 0,
         "counts": {
           "insertions": 0,
