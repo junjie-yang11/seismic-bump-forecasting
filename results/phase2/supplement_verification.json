@@ -1,7 +1,7 @@
 {
   "passed": true,
   "checks": 10902,
-  "manifest_sha256": "5ce241c27d1f795d47e58ffe9b8f4c9bcacfcc8a6aeea636c8a76bcaa96234a4",
+  "manifest_sha256": "b92c06f3a26142ff96cdd196a0803a5dbe9871d212c994fbfd233d2b3bd4742a",
   "verifier_sha256": "de2ba4807ec3089794fa35a7dec2cdfa2ee610e62cfe7a72f213be933edd857f",
   "outputs_sha256": {
     "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",

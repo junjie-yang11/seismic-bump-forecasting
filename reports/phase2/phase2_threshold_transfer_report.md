@@ -13,7 +13,7 @@ Keywords: seismic hazard; warning threshold; relative cost; inspection capacity;
 
 A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents.
 
-Cost-sensitive classification supplies the decision objective [5]; an inspection budget restricts the available alert sets. We jointly evaluate transferred loss, workload and model-update differences. Historical audits identify why a rule selects no alarms, and matched fixed/refitted comparisons quantify changes at the same numerical cutoff. Together, these analyses connect a historical selection rationale to its later decision consequences in this mining case.
+Mining cold-start research addresses limited local history at new sites [10]; microseismic reviews distinguish waveform detection and location from forecasting [11]. Here, cost-sensitive loss [5] and inspection budgets connect shift forecasts to decisions. We jointly evaluate transferred loss, workload and refitting, with historical audits explaining no-alarm choices. This links the selection rationale to later outcomes on the same test records.
 
 UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.
 
@@ -251,7 +251,7 @@ Reference-to-test hazardous-shift prevalence changes were phase 1: 20.39% → 6.
 
 The decision-value comparison explains why lower workload alone is insufficient. At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 cost optima and 12 capacity-induced changes despite positive reference outcomes. Matched C−A results quantify the accompanying detections, misses and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability.
 
-Historical selection, later capacity and model updating therefore require separate evidence. Earlier mining studies tested cross-longwall transfer [7]; structured validation distinguishes interpolation from extrapolation [8]. Here, transferred thresholds are evaluated across record blocks, not identified working faces. Costs and inspection capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
+Historical selection, later capacity and model updating require separate evidence. Cross-longwall transfer [7] and new-site cold start [10] concern identified locations; our cutoff comparisons concern later record blocks. Structured validation distinguishes interpolation from extrapolation [8]. Costs and capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
 
 Appendix A Detection, capacity and pooled evidence
 
@@ -347,6 +347,8 @@ The protocol was locked on 2 October 2026 at 19:20:26 UTC; its hash starts 85a1a
 
 Manifests and checks establish provenance for generated tables and figures. Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting. Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [9].
 
+The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, verification and writing. CONTRIBUTIONS.md in the repository separates author review from computational checks and links project decisions to evidence.
+
 References
 
 [1] Sikora M, Wrobel L. seismic-bumps. UCI Machine Learning Repository; 2010. doi:10.24432/C5W902. https://archive.ics.uci.edu/dataset/266/seismic+bumps.
@@ -366,3 +368,7 @@ References
 [8] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography; 2017;40:913–929. doi:10.1111/ecog.02881.
 
 [9] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv; 2026. doi:10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065.
+
+[10] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence; 2017;64:83–94. doi:10.1016/j.engappai.2017.06.002.
+
+[11] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews; 2023;239:104371. doi:10.1016/j.earscirev.2023.104371.

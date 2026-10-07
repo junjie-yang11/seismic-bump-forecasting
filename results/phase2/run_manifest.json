@@ -1,6 +1,6 @@
 {
-  "started_at_utc": "2026-10-07T08:01:29.472038+00:00",
-  "elapsed_seconds": 17.796712500043213,
+  "started_at_utc": "2026-10-07T09:11:54.477552+00:00",
+  "elapsed_seconds": 18.036639700003434,
   "plan_sha256": "85a1a16b30a5b9acc44469577781aca6d004106a501835153e409457e8ae3970",
   "data_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
   "environment": {
@@ -14,7 +14,7 @@
     "decisions.py": "dff17588f3720fd83ef43faf169c42bd6476b1f9c07a625073b1c40d0a9118cb",
     "experiment.py": "f2d264ad7b2f414472322eb21a0b9ae786248ed8482598004ff73941bed27b47",
     "plan.py": "c0bd5260b6839036d40b6fbb700b7389fb783c0d7314726672a8767f028032cf",
-    "report.py": "5dd08ba72c9961e43bdf4d25111db98f0bbd33a1834c163555b8f4ea78f5ffae",
+    "report.py": "721af8eef290f4fd352a98e354602263b0e14afc9405d7372e90e7e7317fd62e",
     "run.py": "f494034af869bde62816c4706e58c9c32cd1cedcb78f8f2efea7305a3e69843d",
     "supplement.py": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e",
     "tests.py": "971ec04cc5436d2c7e6986c871d95e45f5058b54c6d3e7a5b1e65c4543de216e",
@@ -36,9 +36,9 @@
   },
   "first_stage_unchanged": true,
   "first_stage_hashes": {
-    "reports/phase1/technical_note.md": "77d9c7d1886c3bd8c0104b474c060e49c92662ada0d797ba321c455f56a0baed",
-    "reports/phase1/technical_report.docx": "94f557107f68acb4686c2d9db34d711630bdebab5143f4b6f303e6adae9a5bf6",
-    "reports/phase1/technical_report.pdf": "08f49df9c6beec4da5c765390720f1775223e29a958403e64345b519377ddb25",
+    "reports/phase1/technical_note.md": "6777a6c69ba461785b5bfcec653a0ba6b893c4413ec1fa506229b1e0fe060a7b",
+    "reports/phase1/technical_report.docx": "9f94e5e2bea941ada57e8c35df95fa848a7d79f6d88c15ccff79e74e86ee911f",
+    "reports/phase1/technical_report.pdf": "41891e0e51271481136d4d4fba7e64a471d78003ad0535ef1437dae779df2142",
     "results/README.md": "0837b927734ffdff07447ef0fa0e3dbce6281d2705483d4fe32f04d578deb130",
     "results/phase1/bootstrap_replicates.csv": "a1866169ac1bc980ffc421585ae8fc1dfeb1042effc7e5d5881d56e8f1b18b70",
     "results/phase1/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
@@ -115,5 +115,5 @@
     "results/phase1/research_models/xgboost_time_fold3.json": "b5af6a50c5d64031cd726f3fe6f3a6683ddc19de6ed57be171556edf1e760c7e"
   },
   "status": "complete",
-  "total_elapsed_seconds": 19.386321800004225
+  "total_elapsed_seconds": 19.69390310003655
 }

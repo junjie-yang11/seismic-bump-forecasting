@@ -1,0 +1,75 @@
+{
+  "review_date": "2026-10-07",
+  "baseline_commit": "f15d379cae95da31f6d72c2e561da4b2d4633b38",
+  "scope": "Focused claim checks, not an exhaustive novelty or systematic-review assessment.",
+  "doi_metadata_validation": {
+    "total_entries": 2,
+    "valid_entries": 2,
+    "errors": [],
+    "warnings": [],
+    "duplicates": [],
+    "venue_standard_checked": null,
+    "min_count_checked": null,
+    "manuscript_results": {
+      "checked": false,
+      "manuscript_filepath": null,
+      "cited_keys": [],
+      "missing_keys": [],
+      "unused_keys": []
+    }
+  },
+  "sources": [
+    {
+      "title": "Predicting seismic events in coal mines based on underground sensor measurements",
+      "authors": [
+        "Andrzej Janusz",
+        "Marek Grzegorowski",
+        "Marcin Michalak",
+        "Lukasz Wrobel",
+        "Marek Sikora",
+        "Dominik Slezak"
+      ],
+      "year": 2017,
+      "journal": "Engineering Applications of Artificial Intelligence",
+      "volume": 64,
+      "pages": "83-94",
+      "doi": "10.1016/j.engappai.2017.06.002",
+      "primary_materials": [
+        "https://www.sciencedirect.com/science/article/abs/pii/S0952197617301215",
+        "https://omega.polsl.pl/info/article/PSLa599830b6af347998ba6bc46f0952255",
+        "https://knowledgepit.ml/aaia16-data-mining-challenge/"
+      ],
+      "inspected": "Publisher abstract and introduction excerpt, institutional bibliography, and organizer task/evaluation description. DOI registration returned matching metadata.",
+      "claim_support": {
+        "publisher_introduction": "Expert/sensor comparisons and cold start at new sites with insufficient local history.",
+        "organizer_task": "24-hour histories; site identifiers; next-eight-hour total energy >5e4 J; additional training sets between initial history and test period; competition ROC-AUC."
+      },
+      "limits": "The author-deposited PDF request failed (403); the cached page exposed mostly equations/figures, not readable complete prose. Detailed journal evaluation/validation methods are not asserted. Challenge details are explicitly attributed to the organizer, not inferred from the article abstract. No priority or numerical performance claim is made."
+    },
+    {
+      "title": "Machine learning in microseismic monitoring",
+      "authors": [
+        "Denis Anikiev",
+        "Claire Birnie",
+        "Umair bin Waheed",
+        "Tariq Alkhalifah",
+        "Chen Gu",
+        "Dirk J. Verschuur",
+        "Leo Eisner"
+      ],
+      "year": 2023,
+      "journal": "Earth-Science Reviews",
+      "volume": 239,
+      "article": "104371",
+      "doi": "10.1016/j.earscirev.2023.104371",
+      "primary_materials": [
+        "https://research.tudelft.nl/en/publications/machine-learning-in-microseismic-monitoring/",
+        "https://gfzpublic.gfz.de/pubman/item/item_5015694_4/component/file_5015877/5015694.pdf"
+      ],
+      "inspected": "Institutional bibliography and published full-text PDF, sections 1 (pages 1-3), 2.3 (page 5) and 2.7 (page 12). DOI registration returned matching metadata.",
+      "claim_support": "Detection/picking, location and characterization are different monitoring tasks from forecasting subsequent seismicity. The review spans microseismic applications rather than a shared UCI warning-policy benchmark.",
+      "limits": "Not used for a cross-study performance ranking, a proof of project novelty or an inference of operational warning effectiveness."
+    }
+  ],
+  "author_role_authority": "Author-supplied contribution drafts and the approved conservative wording. Repository features/commit ownership are not evidence of independent personal implementation or manual verification."
+}

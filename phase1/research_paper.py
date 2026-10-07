@@ -86,6 +86,9 @@ def build_paper(root):
         'The target is next-shift high-energy seismic occurrence; confirmed rockburst accidents are outside its label definition.',
         'Rule-based mining-hazard prediction predates this study. Sikora and Wrobel [9] evaluated shift and hourly forecasts using longwall-specific monitoring data and also transferred rules between working faces. '
         'Their hazard definition and cohorts differ from the public UCI task, so their classification results provide engineering context rather than a numerical benchmark for our average precision.',
+        'Janusz et al. [13] compared expert and sensor information and investigated cold start at new mining sites. '
+        'Site adaptation requires identified locations and local histories; our common-row evaluation addresses protocol comparisons within an anonymous record sequence. '
+        'The microseismic review by Anikiev et al. [14] distinguishes detection and location tasks from forecasting. This study uses shift summaries, not waveform detection or event-location models.',
         'Validation protocols can change both the training history and the test population [3,4]. Comparing their scores on different shifts can therefore obscure the source of an apparent performance gap. '
         'A common test cohort makes that comparison interpretable, while probability assessment determines what the score scale conveys. '
         'Feature ablation, model explanations and frozen thresholds then connect the monitoring inputs to predictive contribution and warning workload.',
@@ -313,6 +316,7 @@ def build_paper(root):
         'The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. '
         'A maximum AP among these feature sets is not treated as a validated model-selection result. '
         'The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. '
+        'The cold-start question in [13] concerns adapting to a new site with limited local history. Our record blocks assess evaluation and cutoff transfer, without identifying site changes. '
         'A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.',
         '## 8 Conclusions',
         'This study evaluates seismic forecasts through matched test records, probability references and monitoring-feature comparisons. Matching rows reduces the apparent protocol gap without identifying a causal share of leakage or drift. '
@@ -334,6 +338,8 @@ def build_paper(root):
         'Use python -m phase1.verify_results --reports to check results and report agreement.'
         % tuple(config['environment'][k] for k in ('python', 'numpy', 'pandas', 'xgboost', 'scipy')),
         'Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [12].',
+        'The author directed the research scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, verification and writing. '
+        'The repository CONTRIBUTIONS.md separates author review from recorded computational checks and links project decisions to evidence.',
         '## References',
         '[1] Sikora M, Wrobel L. Seismic Bumps [Dataset]. UCI Machine Learning Repository, 2010. DOI: 10.24432/C5W902. https://archive.ics.uci.edu/dataset/266/seismic+bumps',
         '[2] datasets/seismic-bumps. CSV mirror and preparation description. https://github.com/datasets/seismic-bumps',
@@ -347,6 +353,8 @@ def build_paper(root):
         '[10] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. Proceedings of ICML, PMLR 80, 2018:3122-3130. https://proceedings.mlr.press/v80/lipton18a.html',
         '[11] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf',
         '[12] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv, 2026. DOI: 10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065',
+        '[13] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence, 2017, 64:83-94. DOI: 10.1016/j.engappai.2017.06.002.',
+        '[14] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews, 2023, 239:104371. DOI: 10.1016/j.earscirev.2023.104371.',
     ]
     definitions = {
         'seismic': ('Hazard ratings', 'Seismic-method shift hazard rating', 'Ordinal a-d'),

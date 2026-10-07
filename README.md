@@ -27,7 +27,7 @@ The existing Stage 2 figure compares **C minus A** and **C minus B** on the same
 
 ## Contribution and study scope
 
-The project contributes an audited data transformation, comparable-cohort evaluation, training-local probability and threshold handling, and joint accounting of transferred loss, detection, capacity and refitting. Established model and decision methods support these empirical findings. [Contribution and method origins](docs/RELATED_WORK.md) · [Study boundaries and next questions](docs/PROJECT_OVERVIEW.md#study-boundaries-and-next-questions).
+The project contributes an audited data transformation, comparable-cohort evaluation, training-local probability and threshold handling, and joint accounting of transferred loss, detection, capacity and refitting. Established model and decision methods support these empirical findings. [Author contributions and AI assistance](CONTRIBUTIONS.md) · [Related work and method origins](docs/RELATED_WORK.md) · [Study boundaries and next questions](docs/PROJECT_OVERVIEW.md#study-boundaries-and-next-questions).
 
 Recorded order is a temporal proxy, costs are hypothetical, and the labels describe hazardous shifts. These studies do not demonstrate prevented accidents or an operationally optimal warning system.
 
