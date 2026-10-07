@@ -90,12 +90,17 @@ def build():
     def heading(text): para(text,'Heading 1')
     def page(text):
         pr=para(text,'Heading 1'); pr.paragraph_format.page_break_before=True
-    def table(caption,headers,rows):
+    def table(caption,headers,rows,widths=None):
         para(caption,'Caption'); tab=doc.add_table(rows=1,cols=len(headers)); tab.autofit=True
         for cell,text in zip(tab.rows[0].cells,headers): cell.text=str(text)
         repeat=OxmlElement('w:tblHeader'); tab.rows[0]._tr.get_or_add_trPr().append(repeat)
         for row in rows:
             for cell,text in zip(tab.add_row().cells,row): cell.text=str(text)
+        if widths is not None:
+            tab.autofit=False
+            for column,width in zip(tab.columns,widths): column.width=Inches(width)
+            for row in tab.rows:
+                for cell,width in zip(row.cells,widths): cell.width=Inches(width)
         for i,row in enumerate(tab.rows):
             row._tr.get_or_add_trPr().append(OxmlElement('w:cantSplit'))
             for cell in row.cells:
@@ -197,6 +202,17 @@ def build():
     para('The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole-tie test-score set within floor(B Ntest), without test labels, and can underfill capacity. This retrospective ranking reference requires scores for the complete test batch; its capacity is enforced on that batch rather than inherited from a historical cutoff.')
     para('Primary loss is L100 = 100(r FN + FP)/N. Counts, recall, precision, alert rate and excess max(0, Alerts − floor(B N)) accompany it. Costs are hypothetical relative weights, not monetary estimates. Pooled slots and excess sum phase-specific quantities without offsetting excess in one phase against spare capacity in another.')
 
+    page('2.1 Decision assumptions and evaluation scope')
+    table('Table 2a. Decision assumptions and evaluation scope',['Item','Definition and evaluation scope'],[
+        ['Alert object','One dataset shift record flagged as hazardous for the next shift; recorded row order is a temporal proxy.'],
+        ['Capacity unit','One flagged record represents one assumed inspection slot. Historical slots are floor(B Nref); later slots are floor(B Ntest), separately for each block. Inspection duration and staffing are not measured.'],
+        ['TP / FP / FN','TP: flagged hazardous shift. FP: flagged non-hazardous shift. FN: unflagged hazardous shift. TP counts label coverage, not confirmed inspections or avoided accidents.'],
+        ['Relative loss','L = r FN + FP assigns missed hazardous shifts cost r and false alerts cost 1. It includes no separate TP inspection cost, accident-severity cost, delay cost or monetary estimate.'],
+        ['Excess alerts','Excess = max(0, Alerts − floor(B Ntest)). All score-based alerts remain in TP/FP/FN and loss. Excess is recorded as demand; alerts are not truncated, queued or assigned an additional loss penalty.'],
+        ['Pooled accounting','Sum counts, slots and excess over the four later blocks; divide total loss by total records to obtain loss per 100. Spare slots in one block do not offset excess in another.'],
+        ['Operational evidence','Actual inspection execution and accident prevention are not observed. Capacity and relative costs are explicit hypothetical decision settings.']],widths=[1.45,4.98])
+    para('These assumptions define how frozen warning rules create inspection demand. The evaluation connects hazardous-shift coverage to relative loss and workload; excess demand remains in the alert counts. Detections count hazardous shifts flagged, while dispatch, queueing and safety interventions are outside the evaluated process.')
+
     page('3 Decision value relative to no alarms')
     pooled_main=value_pool.query("model=='XGBoost' and workflow=='fixed' and cost==10")
     vrows=[]
@@ -267,7 +283,7 @@ def build():
     heatmap('refit_contrasts.png',[
         ('Refitted minus fixed loss per 100',matrix_from(rc,'loss_delta100'),True),
         ('Refitted minus fixed alerts',matrix_from(rc,'alert_delta'),True)],
-        'Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean fewer inspections. Alert-count changes in the second panel are labelled as integers.')
+        'Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean lower inspection demand. Alert-count changes in the second panel are labelled as integers.')
     para(f'For C, refitted-minus-fixed loss ranged from {rng(rc.loss_delta100)} per 100 shifts and alert changes from {int(rc.alert_delta.min())} to {int(rc.alert_delta.max())} per test block. Phase 2 and phase 3 C decisions remained no-alarm under both workflows. Phase 1 and phase 4 show that the same numerical cutoff can produce different workloads and loss after additional model fitting.')
     main_transfer=transfers.query("model=='XGBoost' and scheme=='time'")
     refit_rows=[]

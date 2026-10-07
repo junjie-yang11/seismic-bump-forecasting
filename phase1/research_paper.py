@@ -16,7 +16,7 @@ def build_paper(root):
     models = ('LR', 'CART', 'XGBoost')
     ab = read('feature_ablation.csv'); ci = read('feature_ablation_intervals.csv')
     budget = read('warning_budgets.csv'); stability = read('shap_stability.csv')
-    importance = read('shap_importance.csv'); cases = read('shap_cases.csv')
+    importance = read('shap_importance.csv')
     phase = read('feature_ablation_by_fold.csv'); cal = read('calibration.csv')
     config = json.loads((root / 'results/phase1/research_config.json').read_text(encoding='utf-8'))
     integrity = json.loads((root / 'results/phase1/integrity.json').read_text(encoding='utf-8'))

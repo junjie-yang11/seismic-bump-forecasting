@@ -1,0 +1,44 @@
+{
+  "scope": "Candidates reviewed for static references, comprehensions, pandas queries, test discovery, CLI/report and independent-reproduction use.",
+  "removed": [
+    {
+      "file": "phase1/research_analysis.py",
+      "item": "Unused local y binding; retain load and required design"
+    },
+    {
+      "file": "phase1/verify_results.py",
+      "item": "Unused X and features bindings; retain dataset/integrity checks"
+    },
+    {
+      "file": "phase1/research_paper.py",
+      "item": "Unused cases binding and redundant shap_cases CSV read; independent case checks retained"
+    },
+    {
+      "file": "phase2/verify_report.py",
+      "item": "Unused NumPy import and duplicate report-manifest read from former audit implementation"
+    }
+  ],
+  "reclassified": [
+    {
+      "from_file": "docs/audits/2026-10-07-full-review/check_report_tables.py",
+      "to_file": "phase2/verify_report.py",
+      "reason": "Current report verification belongs to Stage 2; keep thin old-command adapter rather than duplicate implementation"
+    }
+  ],
+  "retained": [
+    {
+      "items": "Duplicate stdout logs in distinct historical runs",
+      "reason": "Referenced execution histories describe different invocations; identical output is not evidence of a redundant run"
+    },
+    {
+      "items": "setUp/setUpClass, closures, comprehensions and pandas @variable names",
+      "reason": "Dynamic/framework or nested use; static candidate status does not establish dead code"
+    },
+    {
+      "items": "Baseline paper builder, standalone verifiers, all 62 CSVs/native models/bootstrap arrays/diagnostic figures",
+      "reason": "Staged reproduction, independent arithmetic and audit evidence"
+    }
+  ],
+  "whole_files_deleted": [],
+  "model_and_threshold_implementation_changed": false
+}

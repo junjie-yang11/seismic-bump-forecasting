@@ -1,0 +1,20 @@
+{
+  "passed": false,
+  "scope": "Final delivered-code Quick Check, active navigation, report/verifier hashes, output-log links and syntax; no new full baseline fit.",
+  "command": [
+    "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+    "-B",
+    "-u",
+    "-m",
+    "phase1.quick_check"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 54.35153879999416,
+  "log": "final-logs/final-quick-check.log",
+  "created_at_utc": "2026-10-07T13:45:53.196869+00:00",
+  "active_navigation_links": 151,
+  "release_links": 19,
+  "execution_log_references": 26,
+  "error_type": "AssertionError",
+  "error": "Missing recorded log: C:\\Users\\yjjjjjj\\Documents\\Codex\\2026-10-02\\referenced-chatgpt-conversation-this-is-an\\work\\full-review-20261007\\repository\\docs\\audits\\2026-10-07-stable-release\\attempts\\first-execution\\execution.json logs/06-docs-audits-2026-10-07-stable-release-check_threshold_replay.py.log"
+}

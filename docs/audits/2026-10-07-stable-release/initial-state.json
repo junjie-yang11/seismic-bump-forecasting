@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/junjie-yang11/seismic-bump-forecasting.git",
+  "branch": "main",
+  "commit": "8aa4230e3c8b491b9bcc3e38742e11bb8cce258b",
+  "worktree_status": "",
+  "review_base_commit": "325381871514d61a47054db014161f2a5ba47400",
+  "branch_under_review": "release/stable-20261007",
+  "started_at_utc": "2026-10-07T13:19:50.285405+00:00"
+}

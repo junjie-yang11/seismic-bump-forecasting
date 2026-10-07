@@ -37,6 +37,8 @@ historically selected decisions.
 
 ## Decision rules and conventions
 
+Current computation belongs to this stage directory: `run.py` fits the locked experiment, `supplement.py` accounts for its decision value, `verify.py` and `verify_supplement.py` independently check it, `report.py` builds the paper, `verify_report.py` checks the report, and `update_readme.py` presents the retained pooled counts on the homepage. Historical command aliases and execution records remain in `docs/audits/`.
+
 - A maximizes reference alerts within `floor(budget * reference_n)`.
 - B minimizes `cost * FN + FP`.
 - C minimizes the same loss subject to the reference capacity.
@@ -60,6 +62,14 @@ historically selected decisions.
   in one phase never offsets excess in another.
 
 ## Evidence in `results/phase2`
+
+### Decision assumptions
+
+An alert flags one dataset shift record; one flagged record represents one assumed inspection slot. TP is an alerted hazardous shift, FP an alerted non-hazardous shift and FN an unalerted hazardous shift. These counts describe label coverage. Actual inspection execution and accident prevention are not observed.
+
+Loss `r * FN + FP` includes the assumed missed-shift and false-alert penalties only. It contains no separate true-positive inspection cost, delay penalty, accident-severity estimate or monetary valuation. Capacity slots are `floor(budget * n)` in each reference/test block. All alerts, including excess alerts, enter confusion counts and loss; the study records excess demand without simulating truncation, queuing, dispatch or an additional excess penalty. Pooled counts and excess sum the four blocks, with no cross-block capacity offset. [Report Table 2a](../reports/phase2/phase2_threshold_transfer_report.md) states these assumptions together.
+
+The [release replay audit](../docs/audits/2026-10-07-stable-release/check_threshold_replay.py) separates numeric score comparisons from exact frozen-threshold decisions. [Environment support](../docs/REPRODUCING.md#environments) identifies the tested Windows setup and the unverified Linux/macOS scope.
 
 | File | Meaning |
 | --- | --- |

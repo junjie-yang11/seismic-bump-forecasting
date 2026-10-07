@@ -1,0 +1,139 @@
+{
+  "passed": false,
+  "scope": "Release regression tests, saved-evidence checks, independent model and frozen-decision replay; Stage 2 paper regeneration. No fresh full Stage 1 baseline fit.",
+  "started_at_utc": "2026-10-07T13:19:51.189348+00:00",
+  "planned_steps": 12,
+  "steps": [
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 8.084793200017884,
+      "log": "logs/00-unittest.log",
+      "summaries": [
+        "Ran 48 tests in 7.053s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "phase2.tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 1.2543889000080526,
+      "log": "logs/01-unittest.log",
+      "summaries": [
+        "Ran 12 tests in 0.488s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_research",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 3.1797125000157394,
+      "log": "logs/02-phase1.verify_research.log",
+      "summaries": [
+        "RESULT: 7460 extended consistency checks passed; full XGBoost refits and native TreeSHAP replay passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 54.03887680004118,
+      "log": "logs/03-phase2.verify.log",
+      "summaries": [
+        "RESULT: 63854 phase-two checks passed with all fixed/refitted models replayed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify_supplement"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 2.926222299982328,
+      "log": "logs/04-phase2.verify_supplement.log",
+      "summaries": [
+        "RESULT: 10902 independent supplementary checks passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_formulae"
+      ],
+      "exit_code": 0,
+      "error": null,
+      "elapsed_seconds": 1.0930999999982305,
+      "log": "logs/05-phase1.verify_formulae.log",
+      "summaries": [
+        "RESULT: 8220 independent formula checks passed."
+      ]
+    },
+    {
+      "runtime": "replay",
+      "command": [
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.venv-research\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "docs/audits/2026-10-07-stable-release/check_threshold_replay.py",
+        "--root",
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.audit-work\\stable-release-20261007\\checked-copy",
+        "--output",
+        "C:\\Users\\yjjjjjj\\Documents\\Codex\\2026-10-02\\referenced-chatgpt-conversation-this-is-an\\work\\stable-release-20261007\\threshold-replay.json"
+      ],
+      "exit_code": 1,
+      "error": null,
+      "elapsed_seconds": 0.08753329998580739,
+      "log": "logs/06-docs-audits-2026-10-07-stable-release-check_threshold_replay.py.log",
+      "summaries": [
+        "Traceback (most recent call last):"
+      ]
+    }
+  ],
+  "completed_steps": 7
+}

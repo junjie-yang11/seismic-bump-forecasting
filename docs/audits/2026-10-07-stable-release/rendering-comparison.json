@@ -1,0 +1,23 @@
+{
+  "pages": 14,
+  "unchanged_images": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "changed_images": [
+    3,
+    8
+  ],
+  "pdf_sha256": "50cde79180b3fbe2511f0799946b4c1c518854517f332f621936adb4742dba94",
+  "scope": "Bytewise rendered-page comparison with the already inspected first layout; changed pages require inspection."
+}

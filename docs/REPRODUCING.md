@@ -8,6 +8,19 @@ For inspection before fitting, use the [quick verification entry](QUICK_CHECK.md
 
 Keep three environments separate. Install from `requirements/requirements.txt` in the recorded baseline Python 3.7 environment, `requirements/requirements-research.txt` in Python 3.12 for XGBoost and complete checks, and `requirements/requirements-report.txt` for document authoring. The baseline environment record is `results/phase1/environment.txt`; the extended and Stage 2 manifests record their actual runtime versions. PDF export uses installed Microsoft Word on Windows.
 
+The supported and actually exercised release environment is Windows x64, Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, SciPy 1.18.1 and XGBoost 3.1.3, with the recorded baseline environment for Stage 1 LR/CART fitting. Word export uses PowerShell 7. Complete installed packages, numerical-library configuration, XGBoost build information and locked run settings are captured by the [separate threshold replay](audits/2026-10-07-stable-release/check_threshold_replay.py). Dependency versions alone do not establish identical compiled numerical backends.
+
+Linux/macOS model replay and PDF export are not certified by this release. The Linux feedback came from a separate AI inspection environment; its dependency/build details and replay logs are not retained in this checkout. The local WSL query failed because WSL was not installed. Consequently this review does not establish the cause or magnitude of any external Linux difference. Retain the external replay record and compare its build information, inputs and settings with the Windows record before attributing differences to a platform. Do not change the locked threshold or relax score tolerances to obtain a pass.
+
+For an available second environment, run the existing replay and the separate score/decision audit:
+
+```text
+python -B -m phase2.verify --replay
+python -B docs/audits/2026-10-07-stable-release/check_threshold_replay.py --root . --output threshold-replay.json
+```
+
+The audit refits all 15 model pairs, compares reference and test scores using the existing verifier's criterion, and compares transferred A/B/C alerts by exact Boolean equality. It preserves failed output, reports maximum score differences separately from changed alerts, and never reselects a threshold from test scores. The supported-environment result and remaining checks are recorded in the [stable release review](audits/2026-10-07-stable-release/RELEASE.md).
+
 ## 1 · Audit and fit Stage 1
 
 In the baseline environment:
@@ -68,9 +81,14 @@ In the reporting environment:
 ```powershell
 python -B -m phase2.report
 pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/export_report.ps1
+python -B -m phase2.update_readme
+python -B -m phase2.update_readme --check
+python -B -m phase2.verify_report --root . --baseline PATH_TO_PREVIOUS_EDITION --output reports/phase2/report_verification.json
 ```
 
 The report requires a completed verified experiment, full replay and verified supplementary accounting. Its saved manifest identifies all CSV inputs and its generator. Inspect the exported pages for layout as well as numeric agreement.
+
+The homepage updater reads the saved pooled fixed-XGBoost C results at r=10, independently reconstructs relative loss from TP/FP counts, and replaces only the marked table. It does not fit models or modify results. The Stage 2 report-table implementation is `phase2/verify_report.py`; the dated `docs/audits/2026-10-07-full-review/check_report_tables.py` command delegates to it for compatibility. It invalidates a previous success before reading inputs and saves an error on failure; its regression corrupts the current manifest after a saved success. The previous-edition path is a preserved checkout used to confirm that the interval overview (Table 9) is unchanged; it supplies no replacement results.
 
 ## Reading the records
 

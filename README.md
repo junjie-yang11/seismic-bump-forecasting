@@ -21,9 +21,22 @@ Read Stage 1 for predictive evidence and Stage 2 for decision value, capacity ex
 
 ## Read the decision tradeoff
 
-![Fixed XGBoost C-minus-A and C-minus-B loss differences by phase, historical budget and assumed missed-event cost](reports/phase2/loss_contrasts.png)
+<!-- BEGIN GENERATED DECISION TABLE -->
+**Fixed XGBoost · rule C · r=10 · four later blocks pooled (2,063 shifts; 88 hazardous labels).**
 
-The existing Stage 2 figure compares **C minus A** and **C minus B** on the same later records. Every cell is relative loss per 100 shifts at its labelled cost ratio `r` and historical budget; false-alert cost is 1. **Negative values favor C; positive values favor the comparator.** Panels have separate color scales, so compare the numbers rather than color intensity between panels. This figure compares warning rules; the [no-alarm table](results/phase2/decision_value_pooled.csv) supplies the separate decision-value baseline at `r=10`.
+| Historical budget | Δ loss / 100 vs no alarms | TP | FN | Alerts |
+| --- | --- | --- | --- | --- |
+| 1% | 0.00 | 0 | 88 | 0 |
+| 5% | +0.68 | 1 | 87 | 25 |
+| 10% | +0.82 | 1 | 87 | 28 |
+| 20% | +0.58 | 2 | 86 | 34 |
+
+**Negative differences mean lower assumed loss; positive differences mean higher loss.** False-alert cost is 1 and missed hazardous-shift cost is 10. Budgets constrain historical selection, not later workload. TP counts hazardous shifts flagged, not inspections completed or accidents prevented.
+
+Generated from [saved pooled results](results/phase2/decision_value_pooled.csv) by [the table updater](phase2/update_readme.py); Δ loss is independently reconstructed as `100(FP − 10TP)/N`.
+<!-- END GENERATED DECISION TABLE -->
+
+The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A and C−B comparisons by phase, budget and cost. Negative differences favor C; panels use separate color scales. The compact table above uses the separate no-alarm baseline.
 
 ## Contribution and study scope
 
@@ -76,6 +89,7 @@ docs/                Reproduction guide and dated audit history
 
 ## Reproduce or inspect
 
+- [Stable-version checks and environment support](docs/audits/2026-10-07-stable-release/RELEASE.md)
 - [Complete execution sequence and environment requirements](docs/REPRODUCING.md)
 - [Research overview](docs/PROJECT_OVERVIEW.md) · [Related work and contribution](docs/RELATED_WORK.md)
 - [Quick verification of saved evidence](docs/QUICK_CHECK.md)

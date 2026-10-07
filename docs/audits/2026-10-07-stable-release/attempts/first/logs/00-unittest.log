@@ -1,0 +1,54 @@
+test_future_labels_cannot_change_nested_parameters_or_cutoffs (test_boosting.BoostingTests.test_future_labels_cannot_change_nested_parameters_or_cutoffs) ... ok
+test_native_contributions_reconstruct_margin_and_probability (test_boosting.BoostingTests.test_native_contributions_reconstruct_margin_and_probability) ... ok
+test_zero_positive_reference_uses_defined_fallback (test_boosting.BoostingTests.test_zero_positive_reference_uses_defined_fallback) ... ok
+test_boundary_ties_respect_every_reference_budget (test_engineering.EngineeringTests.test_boundary_ties_respect_every_reference_budget) ... ok
+test_future_features_do_not_change_reference_or_thresholds (test_engineering.EngineeringTests.test_future_features_do_not_change_reference_or_thresholds) ... ok
+test_future_labels_do_not_change_any_budget_threshold (test_engineering.EngineeringTests.test_future_labels_do_not_change_any_budget_threshold) ... ok
+test_groups_partition_design_and_removal_excludes_group (test_engineering.EngineeringTests.test_groups_partition_design_and_removal_excludes_group) ... ok
+test_invalid_budget_or_overlapping_tests_rejected (test_engineering.EngineeringTests.test_invalid_budget_or_overlapping_tests_rejected) ... ok
+test_larger_budgets_produce_nested_alerts (test_engineering.EngineeringTests.test_larger_budgets_produce_nested_alerts) ... ok
+test_all_negative_test_block_is_retained (test_evaluation.EvaluationTests.test_all_negative_test_block_is_retained) ... ok
+test_ap_is_invariant_to_tie_order (test_evaluation.EvaluationTests.test_ap_is_invariant_to_tie_order) ... ok
+test_boundary_ties_do_not_exceed_reference_budget (test_evaluation.EvaluationTests.test_boundary_ties_do_not_exceed_reference_budget) ... ok
+test_constant_calibration_bins_conserve_samples (test_evaluation.EvaluationTests.test_constant_calibration_bins_conserve_samples) ... ok
+test_curve_endpoints (test_evaluation.EvaluationTests.test_curve_endpoints) ... ok
+test_fold_correction_uses_training_prior (test_evaluation.EvaluationTests.test_fold_correction_uses_training_prior) ... ok
+test_future_features_cannot_affect_threshold_or_prior (test_evaluation.EvaluationTests.test_future_features_cannot_affect_threshold_or_prior) ... ok
+test_future_labels_cannot_affect_scores_threshold_or_prior (test_evaluation.EvaluationTests.test_future_labels_cannot_affect_scores_threshold_or_prior) ... ok
+test_invalid_prior_rejected (test_evaluation.EvaluationTests.test_invalid_prior_rejected) ... ok
+test_overlapping_training_and_test_rejected (test_evaluation.EvaluationTests.test_overlapping_training_and_test_rejected) ... ok
+test_summary_requires_fixed_threshold (test_evaluation.EvaluationTests.test_summary_requires_fixed_threshold) ... ok
+test_unweighted_model_is_not_corrected (test_evaluation.EvaluationTests.test_unweighted_model_is_not_corrected) ... ok
+test_generated_table_and_five_percent_rounding (test_homepage_table.HomepageEvidence.test_generated_table_and_five_percent_rounding) ... Homepage decision table matches saved counts.
+ok
+test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) ... ok
+test_fold_builders_reject_invalid_classes_or_counts (test_input_validation.InputValidationTests.test_fold_builders_reject_invalid_classes_or_counts) ... ok
+test_invalid_labels_and_empty_inputs_are_rejected (test_input_validation.InputValidationTests.test_invalid_labels_and_empty_inputs_are_rejected) ... ok
+test_invalid_temporal_indices_rejected_before_model_fit (test_input_validation.InputValidationTests.test_invalid_temporal_indices_rejected_before_model_fit) ... ok
+test_probability_metrics_reject_out_of_range_values (test_input_validation.InputValidationTests.test_probability_metrics_reject_out_of_range_values) ... ok
+test_scores_cannot_broadcast_across_labels (test_input_validation.InputValidationTests.test_scores_cannot_broadcast_across_labels) ... ok
+test_threshold_vectors_cannot_broadcast (test_input_validation.InputValidationTests.test_threshold_vectors_cannot_broadcast) ... ok
+test_alert_transfer_sentence_uses_computed_rates (test_report_content.CohortPaperTests.test_alert_transfer_sentence_uses_computed_rates) ... ok
+test_old_success_is_revoked_when_current_manifest_is_corrupt (test_report_verification.ReportVerificationLifecycle.test_old_success_is_revoked_when_current_manifest_is_corrupt) ... ok
+test_historical_reference_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_historical_reference_corruption_rejected) ... ok
+test_inner_selection_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_inner_selection_corruption_rejected) ... ok
+test_phase_contrast_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_phase_contrast_corruption_rejected) ... ok
+test_reference_threshold_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_reference_threshold_corruption_rejected) ... ok
+test_shap_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_shap_corruption_rejected) ... ok
+test_stability_sensitivity_corruption_rejected (test_research_verifier.ResearchVerifierTests.test_stability_sensitivity_corruption_rejected) ... ok
+test_changed_calibration_metric (test_result_verifier.VerifierTests.test_changed_calibration_metric) ... ok
+test_changed_prior (test_result_verifier.VerifierTests.test_changed_prior) ... ok
+test_changed_random_mean (test_result_verifier.VerifierTests.test_changed_random_mean) ... ok
+test_changed_threshold (test_result_verifier.VerifierTests.test_changed_threshold) ... ok
+test_missing_test_row (test_result_verifier.VerifierTests.test_missing_test_row) ... ok
+test_blocks_keep_phase_size_and_adjacency (test_uncertainty.UncertaintyTests.test_blocks_keep_phase_size_and_adjacency) ... ok
+test_deterministic_bootstrap (test_uncertainty.UncertaintyTests.test_deterministic_bootstrap) ... ok
+test_identical_paired_predictions_have_zero_gap (test_uncertainty.UncertaintyTests.test_identical_paired_predictions_have_zero_gap) ... ok
+test_weighted_tied_ap_equals_explicit_resampling (test_uncertainty.UncertaintyTests.test_weighted_tied_ap_equals_explicit_resampling) ... ok
+test_core_failure_invalidates_previous_replay (test_verification_lifecycle.VerificationLifecycleTests.test_core_failure_invalidates_previous_replay) ... ok
+test_supplement_failure_invalidates_previous_certificate (test_verification_lifecycle.VerificationLifecycleTests.test_supplement_failure_invalidates_previous_certificate) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 7.053s
+
+OK

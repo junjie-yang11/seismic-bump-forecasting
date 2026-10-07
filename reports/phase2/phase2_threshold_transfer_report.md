@@ -50,6 +50,22 @@ The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole
 
 Primary loss is L100 = 100(r FN + FP)/N. Counts, recall, precision, alert rate and excess max(0, Alerts − floor(B N)) accompany it. Costs are hypothetical relative weights, not monetary estimates. Pooled slots and excess sum phase-specific quantities without offsetting excess in one phase against spare capacity in another.
 
+2.1 Decision assumptions and evaluation scope
+
+Table 2a. Decision assumptions and evaluation scope
+
+| Item | Definition and evaluation scope |
+| --- | --- |
+| Alert object | One dataset shift record flagged as hazardous for the next shift; recorded row order is a temporal proxy. |
+| Capacity unit | One flagged record represents one assumed inspection slot. Historical slots are floor(B Nref); later slots are floor(B Ntest), separately for each block. Inspection duration and staffing are not measured. |
+| TP / FP / FN | TP: flagged hazardous shift. FP: flagged non-hazardous shift. FN: unflagged hazardous shift. TP counts label coverage, not confirmed inspections or avoided accidents. |
+| Relative loss | L = r FN + FP assigns missed hazardous shifts cost r and false alerts cost 1. It includes no separate TP inspection cost, accident-severity cost, delay cost or monetary estimate. |
+| Excess alerts | Excess = max(0, Alerts − floor(B Ntest)). All score-based alerts remain in TP/FP/FN and loss. Excess is recorded as demand; alerts are not truncated, queued or assigned an additional loss penalty. |
+| Pooled accounting | Sum counts, slots and excess over the four later blocks; divide total loss by total records to obtain loss per 100. Spare slots in one block do not offset excess in another. |
+| Operational evidence | Actual inspection execution and accident prevention are not observed. Capacity and relative costs are explicit hypothetical decision settings. |
+
+These assumptions define how frozen warning rules create inspection demand. The evaluation connects hazardous-shift coverage to relative loss and workload; excess demand remains in the alert counts. Detections count hazardous shifts flagged, while dispatch, queueing and safety interventions are outside the evaluated process.
+
 3 Decision value relative to no alarms
 
 Table 3. Pooled fixed XGBoost decision value at r=10
@@ -159,9 +175,9 @@ The capacity column counts infeasible B optima; C utilization is stored separate
 
 7 Transferring the same cutoff to a refitted model
 
-Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean fewer inspections. Alert-count changes in the second panel are labelled as integers.
+Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean lower inspection demand. Alert-count changes in the second panel are labelled as integers.
 
-![Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean fewer inspections. Alert-count changes in the second panel are labelled as integers.](refit_contrasts.png)
+![Figure 3. C policy changes after fitting on all outer history, with parameters and numerical thresholds held fixed. Negative loss differences favor refitting; negative alert differences mean lower inspection demand. Alert-count changes in the second panel are labelled as integers.](refit_contrasts.png)
 
 For C, refitted-minus-fixed loss ranged from -11.05 to 7.75 per 100 shifts and alert changes from -11 to 2 per test block. Phase 2 and phase 3 C decisions remained no-alarm under both workflows. Phase 1 and phase 4 show that the same numerical cutoff can produce different workloads and loss after additional model fitting.
 

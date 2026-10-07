@@ -9,4 +9,6 @@ Stage 1 assesses predictions and monitoring signals. Stage 2 measures how histor
 
 Both papers are generated from verified saved evidence. Their authoring code is [Stage 1](../phase1/generate_report.py), with [result-driven paper content](../phase1/research_paper.py), and [Stage 2](../phase2/report.py). Stage 2 report figures and its report manifest accompany the manuscript; Stage 1 figure sources remain under `results/phase1/figures/`.
 
+The [Stage 2 report checker](../phase2/verify_report.py) compares the manuscript, Word tables, PDF numbers and input/generator hashes. Its record describes those computational checks; page rendering and visual inspection are recorded separately in the release review. Use [the homepage table updater](../phase2/update_readme.py) after rebuilding the second paper's presentation.
+
 See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The current structure places all final papers here; older review editions record their original paths.

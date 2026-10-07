@@ -1,0 +1,107 @@
+[
+  {
+    "sha256": "3d5f4ad642743c709e074f79dba37e7e13548f2ae1cb2010584f4b09bacc4a2c",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/continuation-logs/01-phase2.run.log",
+      "docs/audits/2026-10-07-full-review/logs/final-logs/01-phase2.run.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/00-phase2.run.log",
+      "docs/audits/phase2/history/reproduction_phase2.txt"
+    ]
+  },
+  {
+    "sha256": "cf9d34f5566d254795b8ac1a51436282d80a1b607895f90162293ad95a105449",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/continuation-logs/03-phase2.supplement.log",
+      "docs/audits/2026-10-07-full-review/logs/final-logs/03-phase2.supplement.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/02-phase2.supplement.log"
+    ]
+  },
+  {
+    "sha256": "fd7615313d52940a96429051baa7c9c5adabb5206b1b2827f7f54101c346e3c3",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/continuation-logs/04-phase2.verify_supplement.log",
+      "docs/audits/2026-10-07-full-review/logs/final-logs/04-phase2.verify_supplement.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/03-phase2.verify_supplement.log",
+      "docs/audits/2026-10-07-full-review/logs/saved-logs/05-phase2.verify_supplement.log"
+    ]
+  },
+  {
+    "sha256": "612000cc35eccf82d8a8c48f3c8c1ccfa53ef79476c15a1aa0fed4980cde1b46",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/continuation-logs/05-phase1.verify_formulae.log",
+      "docs/audits/2026-10-07-full-review/logs/final-logs/05-phase1.verify_formulae.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/04-phase1.verify_formulae.log",
+      "docs/audits/2026-10-07-full-review/logs/saved-logs/06-phase1.verify_formulae.log"
+    ]
+  },
+  {
+    "sha256": "5589751230d17b28adf688d229627a9f8c16b731b9b7de352566b52ce6455f1d",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/continuation-logs/06-phase2.report.log",
+      "docs/audits/2026-10-07-full-review/logs/final-logs/06-phase2.report.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/05-phase2.report.log"
+    ]
+  },
+  {
+    "sha256": "96756c101e1d63d06a865e81df2ae36ea3c2487c86dd1c397d19076f0ba60d2c",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/final-logs/00-phase1.record_environment.log",
+      "docs/audits/2026-10-07-full-review/logs/full-logs/00-phase1.record_environment.log"
+    ]
+  },
+  {
+    "sha256": "12a5032beb4d92c20c090c72416e417aa10a7fc50d2839918c88ce4a83c7806e",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/final-logs/02-phase2.verify.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/01-phase2.verify.log",
+      "docs/audits/2026-10-07-full-review/logs/saved-logs/04-phase2.verify.log"
+    ]
+  },
+  {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/final-logs/07-phase2-export_report.ps1.log",
+      "docs/audits/2026-10-07-full-review/logs/full-logs/08-phase1.generate_report.log",
+      "docs/audits/2026-10-07-full-review/logs/full-logs/09-phase1-export_report.ps1.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/06-phase2-export_report.ps1.log"
+    ]
+  },
+  {
+    "sha256": "3873d86df0edc45463655079a4c55e1beb1fc4fd4427a2f5f3779511224c7e83",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/final-logs/10-phase1.verify_results.log",
+      "docs/audits/2026-10-07-full-review/logs/pre-env-fix-logs/09-phase1.verify_results.log"
+    ]
+  },
+  {
+    "sha256": "5ee7d48bb439eff53df4c61c1b2cbb4bad9c94b0be4eb38ec55ecfc3baa25d68",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/full-logs/01-phase1.audit_source.log",
+      "docs/audits/phase2/history/official_source_review.txt",
+      "results/phase1/source_audit.json"
+    ]
+  },
+  {
+    "sha256": "fa43529bf5db4df6e3d60145f65ffac4891bc9dca63ebf6eb15074e5954900ff",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/full-logs/03-phase1.run_engineering.log",
+      "docs/audits/phase1/history/engineering_execution_audit_log.txt",
+      "docs/audits/phase2/history/reproduction_engineering.txt"
+    ]
+  },
+  {
+    "sha256": "55a343f91ab0d5b63655514417a696c99fb7d5ac1a60ca35731d42c23df31731",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/full-logs/04-phase1.run_research.log",
+      "docs/audits/phase1/history/research_execution_audit_log.txt",
+      "docs/audits/phase2/history/reproduction_research.txt"
+    ]
+  },
+  {
+    "sha256": "ab19b3c2de8eef412191ab067acc83e5b241ba961284ad0fc9298349495ff30e",
+    "files": [
+      "docs/audits/2026-10-07-full-review/logs/full-logs/05-phase1.verify_research.log",
+      "docs/audits/2026-10-07-full-review/logs/saved-logs/03-phase1.verify_research.log"
+    ]
+  }
+]

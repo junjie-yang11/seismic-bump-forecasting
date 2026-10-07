@@ -27,7 +27,7 @@ def verify(reports=False):
     def close(a,b,label):
         check(np.allclose(a,b,rtol=1e-9,atol=1e-10,equal_nan=True),label)
     def read(name): return pd.read_csv(ROOT/'results/phase1'/name)
-    X,y,features,df=load()
+    _,y,_,df=load()
     check(len(y)==2578 and y.sum()==170,'dataset size / labels')
     stored=json.loads((ROOT/'results/phase1/integrity.json').read_text(encoding='utf-8'))
     check(stored==json.loads(json.dumps(integrity_report(df))),'raw data vs integrity.json')

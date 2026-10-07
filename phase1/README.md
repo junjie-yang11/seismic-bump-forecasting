@@ -37,6 +37,6 @@ The baseline run already refreshes paired analyses; the research run refreshes r
 | `generate_report.py`, `paper_content.py`, `research_paper.py` | Shared package cleanup, baseline and extended paper content |
 | `record_environment.py` | Record the exact baseline execution environment |
 
-The baseline manuscript is needed when reproducing Stage 1 before the XGBoost extension exists. It is retained as part of the executable sequence rather than as a second final paper. All nine shared and Stage 1 test modules remain under `tests/`; they also check verification-record failure handling and result-driven baseline text.
+The baseline manuscript is needed when reproducing Stage 1 before the XGBoost extension exists. It is retained as part of the executable sequence rather than as a second final paper. Shared, Stage 1 and repository regression tests live under `tests/`; they also check verification-record failure handling, result-driven report text and the homepage evidence table. Stage 2 decision tests live in `phase2/tests.py`.
 
 [Stage 1 results](../results/phase1/README.md) · [Stage 2](../phase2/README.md) · [Project home](../README.md)

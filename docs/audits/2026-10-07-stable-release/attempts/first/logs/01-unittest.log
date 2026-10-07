@@ -1,0 +1,17 @@
+test_batch_topk_does_not_split_boundary_ties (phase2.tests.DecisionTests.test_batch_topk_does_not_split_boundary_ties) ... ok
+test_canonical_groups_and_extremes (phase2.tests.DecisionTests.test_canonical_groups_and_extremes) ... ok
+test_capacity_and_unconstrained_loss_order (phase2.tests.DecisionTests.test_capacity_and_unconstrained_loss_order) ... ok
+test_cost_ties_choose_fewer_alerts_and_zero_gap (phase2.tests.DecisionTests.test_cost_ties_choose_fewer_alerts_and_zero_gap) ... ok
+test_evaluation_accepts_binary_numeric_decisions (phase2.tests.DecisionTests.test_evaluation_accepts_binary_numeric_decisions) ... ok
+test_evaluation_rejects_invalid_capacity_budgets (phase2.tests.DecisionTests.test_evaluation_rejects_invalid_capacity_budgets) ... ok
+test_failed_rerun_invalidates_previous_verification (phase2.tests.DecisionTests.test_failed_rerun_invalidates_previous_verification) ... ok
+test_future_capacity_can_exceed_reference_capacity (phase2.tests.DecisionTests.test_future_capacity_can_exceed_reference_capacity) ... ok
+test_imported_settings_cannot_silently_change_locked_protocol (phase2.tests.DecisionTests.test_imported_settings_cannot_silently_change_locked_protocol) ... ok
+test_no_positive_reference_and_zero_slots (phase2.tests.DecisionTests.test_no_positive_reference_and_zero_slots) ... ok
+test_policy_reference_labels_do_not_fit_or_tune_fixed_model (phase2.tests.DecisionTests.test_policy_reference_labels_do_not_fit_or_tune_fixed_model) ... ok
+test_test_labels_cannot_change_parameters_scores_or_rules (phase2.tests.DecisionTests.test_test_labels_cannot_change_parameters_scores_or_rules) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.488s
+
+OK

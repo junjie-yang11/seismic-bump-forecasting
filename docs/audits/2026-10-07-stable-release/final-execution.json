@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "scope": "Final report formatting/wording, formal report checks and all-page PDF rendering; no refitting or new policy selection.",
+  "steps": [
+    {
+      "name": "generate-paper",
+      "command": [
+        "C:\\Users\\yjjjjjj\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "phase2.report"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.3813699000165798,
+      "log": "final-logs/generate-paper.log"
+    },
+    {
+      "name": "export-pdf",
+      "command": [
+        "C:\\Users\\yjjjjjj\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "phase2/export_report.ps1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 31.53048449999187,
+      "log": "final-logs/export-pdf.log"
+    },
+    {
+      "name": "verify-paper",
+      "command": [
+        "C:\\Users\\yjjjjjj\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "phase2.verify_report",
+        "--root",
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.audit-work\\stable-release-20261007\\checked-copy",
+        "--baseline",
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.audit-work\\stable-release-20261007\\baseline",
+        "--output",
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.audit-work\\stable-release-20261007\\checked-copy\\reports\\phase2\\report_verification.json"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.2612695000134408,
+      "log": "final-logs/verify-paper.log"
+    },
+    {
+      "name": "render-final-pdf",
+      "command": [
+        "C:\\Users\\yjjjjjj\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin\\pdftoppm.exe",
+        "-r",
+        "110",
+        "-png",
+        "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\.audit-work\\stable-release-20261007\\checked-copy\\reports\\phase2\\phase2_threshold_transfer_report.pdf",
+        "C:\\Users\\yjjjjjj\\Documents\\Codex\\2026-10-02\\referenced-chatgpt-conversation-this-is-an\\work\\stable-release-20261007\\rendered-final\\phase2"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.116262600000482,
+      "log": "final-logs/render-final-pdf.log"
+    }
+  ],
+  "completed_at_utc": "2026-10-07T13:36:10.458296+00:00"
+}

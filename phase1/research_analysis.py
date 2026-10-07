@@ -23,7 +23,7 @@ def explanation_summary(part, X, names):
 
 
 def analyse(root):
-    results = root / 'results/phase1'; X, y, names, _ = load()
+    results = root / 'results/phase1'; X, _, names, _ = load()
     shap = pd.read_csv(results / 'shap_predictions.csv')
     summary, group_summary = [], []
     for scheme, part in shap.groupby('validation'):

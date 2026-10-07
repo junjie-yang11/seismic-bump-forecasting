@@ -93,6 +93,7 @@ def run(proxy=None):
     started = time.perf_counter()
     files = [p for folder in FOLDERS for p in (ROOT / folder).rglob('*')
              if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc']
+    files.append(ROOT / 'README.md')
     original = {p: sha(p) for p in files}
     steps = (
         ('Behavior tests', ['-m', 'unittest', 'discover', '-s', 'tests']),
@@ -107,6 +108,7 @@ def run(proxy=None):
         for folder in FOLDERS:
             shutil.copytree(ROOT / folder, snapshot / folder,
                             ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+        shutil.copy2(ROOT / 'README.md', snapshot / 'README.md')
         (snapshot / 'data').mkdir()
         mirror = ROOT / 'data/seismic-bumps.csv'
         if mirror.exists():

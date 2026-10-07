@@ -1,0 +1,42 @@
+{
+  "scope": "All 14 final Stage 2 pages visually checked via actual Word export and Poppler rendering.",
+  "stage2_pages": 14,
+  "stage2_pdf_sha256": "50cde79180b3fbe2511f0799946b4c1c518854517f332f621936adb4742dba94",
+  "initially_inspected_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "final_changed_pages_reinspected": [
+    3,
+    8
+  ],
+  "unchanged_final_pages": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "observations": "Readable table widths, intact symbols, captions and footers; no observed clipping, blank pages or split table rows.",
+  "fallback": "Bundled LibreOffice renderer failed; Word PDF export and all-page Poppler rasterization completed.",
+  "stage1": "Paper content and artifacts unchanged; manuscript/Word agreement rechecked by Quick Check, no new PDF export or visual review this round."
+}

@@ -1,0 +1,36 @@
+
+CHECK: Behavior tests
+.....................Homepage decision table matches saved counts.
+...........................
+----------------------------------------------------------------------
+Ran 48 tests in 8.017s
+
+OK
+Completed in 8.99 seconds
+
+CHECK: Decision tests
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.536s
+
+OK
+Completed in 1.33 seconds
+
+CHECK: Stage 1 evidence and Word agreement
+RESULT: all 8169 consistency checks passed.
+Completed in 3.09 seconds
+
+CHECK: Stage 2 saved decisions and block arithmetic
+RESULT: 63809 phase-two checks passed.
+Completed in 36.30 seconds
+
+CHECK: Supplementary decision accounting
+RESULT: 10902 independent supplementary checks passed.
+Completed in 2.87 seconds
+
+CHECK: Independent formula reconstruction
+RESULT: 8220 independent formula checks passed.
+Completed in 1.09 seconds
+
+QUICK CHECK PASSED: 151 links and 253 Stage 2 Word items; 54.23 seconds.
+Published sources/results/reports preserved. No full research-model replay or PDF layout check was performed.
