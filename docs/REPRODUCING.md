@@ -38,10 +38,9 @@ In the research environment:
 ```powershell
 python -m phase1.run_research
 python -m phase1.verify_research --replay
-python -B -m unittest discover -s tests -v
 ```
 
-These commands save row-level scores, training priors, engineering comparisons, SHAP contributions and conditional uncertainty. Baseline fitting refreshes matched-cohort summaries; the research run updates review supplements. Do not rebuild the final extended paper before the extension finishes.
+These commands save row-level scores, training priors, engineering comparisons, SHAP contributions and conditional uncertainty. Baseline fitting refreshes matched-cohort summaries; the research run updates review supplements. Do not rebuild the final extended paper before the extension finishes. Run the complete behavior-test suite in Step 4 after both stages have produced their evidence; its homepage test requires `results/phase2/decision_value_pooled.csv`.
 
 ## 2 · Finish the Stage 1 paper
 
@@ -83,12 +82,17 @@ python -B -m phase2.report
 pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/export_report.ps1
 python -B -m phase2.update_readme
 python -B -m phase2.update_readme --check
+python -B -m unittest discover -s tests -v
 python -B -m phase2.verify_report --root . --baseline PATH_TO_PREVIOUS_EDITION --output reports/phase2/report_verification.json
 ```
 
 The report requires a completed verified experiment, full replay and verified supplementary accounting. Its saved manifest identifies all CSV inputs and its generator. Inspect the exported pages for layout as well as numeric agreement.
 
+For a fresh reproduction with no saved results, the complete behavior-test suite follows `phase2.supplement` and the homepage update above. The Stage 2 decision tests in Step 3 can run before fitting. Once both papers are finished, run `python -B -m phase1.quick_check` for the combined saved-evidence, document and navigation checks.
+
 The homepage updater reads the saved pooled fixed-XGBoost C results at r=10, independently reconstructs relative loss from TP/FP counts, and replaces only the marked table. It does not fit models or modify results. The Stage 2 report-table implementation is `phase2/verify_report.py`; the dated `docs/audits/2026-10-07-full-review/check_report_tables.py` command delegates to it for compatibility. It invalidates a previous success before reading inputs and saves an error on failure; its regression corrupts the current manifest after a saved success. The previous-edition path is a preserved checkout used to confirm that the interval overview (Table 9) is unchanged; it supplies no replacement results.
+
+Table 9 is located by its unique column headers in both editions, so a baseline with or without the decision-assumption table is supported. Its cell values must still match exactly; a missing or duplicate interval overview fails verification. Retained certificates describe the verifier hash recorded in them. Rerun the report check after changing its implementation.
 
 ## Reading the records
 

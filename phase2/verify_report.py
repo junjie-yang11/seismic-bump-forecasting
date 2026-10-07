@@ -8,6 +8,17 @@ from pathlib import Path
 from zipfile import ZipFile
 
 
+def _interval_overview_rows(document):
+    """Locate the interval overview across editions with different table counts."""
+    headers = ['Contrast', 'Phase', 'Point range', 'CI below 0',
+               'CI above 0', 'CI contains 0']
+    matches = [table for table in document.tables
+               if table.rows and [cell.text for cell in table.rows[0].cells] == headers]
+    if len(matches) != 1:
+        raise AssertionError('Expected exactly one interval-overview table')
+    return [[cell.text for cell in row.cells] for row in matches[0].rows]
+
+
 def _run_checks(root, baseline):
     root=root.resolve();out=root/'results/phase2';dest=root/'reports/phase2'
     # Parse current input before optional document imports, including in failure tests.
@@ -69,7 +80,7 @@ def _run_checks(root, baseline):
             '%.2f%%'%(100*test.y.mean()),'%d / %d'%(m['depth'],m['rounds'])])
     check(getrows(0)==rows,'Table 1 reference/test counts and prevalence')
     old=Document(baseline/'reports/phase2/phase2_threshold_transfer_report.docx')
-    check([[cell.text for cell in row.cells] for row in evidence_tables[8].rows]==[[cell.text for cell in row.cells] for row in old.tables[8].rows],'Table 9 preserved exactly')
+    check(_interval_overview_rows(doc)==_interval_overview_rows(old),'Table 9 preserved exactly')
     comparisons=read('comparisons')
     examples=comparisons.query("model=='XGBoost' and comparison=='C-A' and workflow=='fixed' and cost==10 and budget==0.2 and fold in [0,1]").sort_values('fold')
     check(len(examples)==2,'two existing matched illustrative intervals')
