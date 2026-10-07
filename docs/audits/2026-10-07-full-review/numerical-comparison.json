@@ -1,6 +1,6 @@
 {
   "scope": "Numerical replication, report agreement, source parsing and current navigation; no claim of field validity",
-  "created_at_utc": "2026-10-07T10:30:59.313773+00:00",
+  "created_at_utc": "2026-10-07T10:36:00.110845+00:00",
   "rtol": 1e-09,
   "atol": 1e-10,
   "csv": [
@@ -762,7 +762,7 @@
       "sha256": "e8479b72b5bdd1128a8810cabd3cd3802d4768446d1be72e5879e7787e13de2b"
     }
   ],
-  "links_checked": 165,
+  "links_checked": 166,
   "passed": true,
   "source_audit": {
     "source_url": "https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip",

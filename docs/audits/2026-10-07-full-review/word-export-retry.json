@@ -1,0 +1,12 @@
+{
+  "scope": "Actual completion of Stage 1 PowerShell 7 retry, after the Windows PowerShell invocation stalled; this record does not replace the failed invocation.",
+  "command": "PowerShell 7 shell: & './phase1/export_report.ps1'",
+  "cwd": "Independent fresh reproduction directory",
+  "exit_code": 0,
+  "completion_tool_session_id": 12176,
+  "script_reported_elapsed_seconds": 3.8592442,
+  "timing_source": "Timer output from the actual initial tool call: Stage 1 PDF elapsed seconds: 3.8592442",
+  "whole_process_elapsed_seconds": null,
+  "timing_limit": "The surrounding COM child-process completion duration was not captured by that timer.",
+  "artifact_verification": "Stage 1 PDF hash, 15 pages and regenerated manuscript/table comparison in numerical-comparison.json; all final pages rendered and inspected."
+}

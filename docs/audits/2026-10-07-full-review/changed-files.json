@@ -128,6 +128,7 @@
     "docs/audits/2026-10-07-full-review/saved-execution.json",
     "docs/audits/2026-10-07-full-review/skills.json",
     "docs/audits/2026-10-07-full-review/source_inventory.json",
+    "docs/audits/2026-10-07-full-review/word-export-retry.json",
     "tests/test_report_content.py",
     "tests/test_verification_lifecycle.py"
   ],
@@ -135,7 +136,7 @@
   "moved": [],
   "counts": {
     "modified": 33,
-    "added": 94,
+    "added": 95,
     "deleted": 0,
     "moved": 0
   },

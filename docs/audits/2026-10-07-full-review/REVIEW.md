@@ -35,7 +35,7 @@ The fresh reproduction started without saved numeric results, models, bootstrap 
 | Supplement generation and independent checking | 0; 10,902 checks | Same final record |
 | Independent cross-stage formulas | 0; 8,220 checks | Same final record |
 | Stage 1 results and Word agreement | 0; 8,169 checks | Same final record |
-| Both Markdown/Word papers and both actual Word PDF exports | Completed; 15 and 13 PDF pages | [Report comparison](numerical-comparison.json), [rendering](rendering.json), [visual review](additional-execution.json) |
+| Both Markdown/Word papers and both actual Word PDF exports | Completed; 15 and 13 PDF pages | [Stage 1 retry completion](word-export-retry.json), [report comparison](numerical-comparison.json), [rendering](rendering.json), [visual review](additional-execution.json) |
 | Stage 2 independent report tables | 0; 591 checks | [Generated report certificate](../../../reports/phase2/report_verification.json) and `check_report_tables.py` |
 | Final fresh-directory quick check | 0; 58 tests, 137 links, 242 Word items; actual duration in the linked record | Same final execution; final branch navigation is additionally checked in the release snapshot |
 
