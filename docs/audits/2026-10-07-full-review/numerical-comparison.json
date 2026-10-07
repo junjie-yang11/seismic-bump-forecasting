@@ -1,0 +1,786 @@
+{
+  "scope": "Numerical replication, report agreement, source parsing and current navigation; no claim of field validity",
+  "created_at_utc": "2026-10-07T10:30:59.313773+00:00",
+  "rtol": 1e-09,
+  "atol": 1e-10,
+  "csv": [
+    {
+      "file": "results/phase1/bootstrap_replicates.csv",
+      "rows": 16000,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/calibration.csv",
+      "rows": 3,
+      "columns": 8,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/calibration_bins.csv",
+      "rows": 20,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_fold_audit.csv",
+      "rows": 555,
+      "columns": 21,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_predictions.csv",
+      "rows": 58023,
+      "columns": 10,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_references.csv",
+      "rows": 28974,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation.csv",
+      "rows": 27,
+      "columns": 22,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_by_fold.csv",
+      "rows": 108,
+      "columns": 20,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_intervals.csv",
+      "rows": 27,
+      "columns": 11,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_phase_contrasts.csv",
+      "rows": 12,
+      "columns": 7,
+      "byte_identical": false,
+      "max_absolute_numeric_difference": 1.0061396160665481e-16,
+      "differing_numeric_cells": 1
+    },
+    {
+      "file": "results/phase1/feature_ablation_replicates.csv",
+      "rows": 54000,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/fold_audit.csv",
+      "rows": 30,
+      "columns": 14,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/gap_attenuation.csv",
+      "rows": 2,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/holdout.csv",
+      "rows": 2,
+      "columns": 11,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/importance.csv",
+      "rows": 17,
+      "columns": 3,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/leakage_probe.csv",
+      "rows": 4,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/metrics_by_scheme.csv",
+      "rows": 4,
+      "columns": 12,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/operating_points.csv",
+      "rows": 10,
+      "columns": 21,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/paired_uncertainty.csv",
+      "rows": 8,
+      "columns": 13,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/predictions.csv",
+      "rows": 10830,
+      "columns": 9,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/probability_reference_comparison.csv",
+      "rows": 21,
+      "columns": 12,
+      "byte_identical": false,
+      "max_absolute_numeric_difference": 4.0245584642661925e-16,
+      "differing_numeric_cells": 12
+    },
+    {
+      "file": "results/phase1/random_metrics_by_seed.csv",
+      "rows": 10,
+      "columns": 19,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/random_predictions_by_seed.csv",
+      "rows": 25780,
+      "columns": 5,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/research_model_intervals.csv",
+      "rows": 2,
+      "columns": 9,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/research_model_replicates.csv",
+      "rows": 4000,
+      "columns": 3,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_case_contributions.csv",
+      "rows": 102,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_cases.csv",
+      "rows": 6,
+      "columns": 11,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_groups.csv",
+      "rows": 28,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_importance.csv",
+      "rows": 119,
+      "columns": 8,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_predictions.csv",
+      "rows": 2837,
+      "columns": 25,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_stability.csv",
+      "rows": 6,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shap_stability_sensitivity.csv",
+      "rows": 12,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shared_test_by_seed.csv",
+      "rows": 10,
+      "columns": 8,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/shared_test_comparison.csv",
+      "rows": 2,
+      "columns": 7,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/source_duplicates.csv",
+      "rows": 6,
+      "columns": 21,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/source_row_mapping.csv",
+      "rows": 2578,
+      "columns": 2,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/warning_budgets.csv",
+      "rows": 24,
+      "columns": 22,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/warning_budgets_by_fold.csv",
+      "rows": 60,
+      "columns": 23,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_protocol_interval.csv",
+      "rows": 1,
+      "columns": 9,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_protocol_replicates.csv",
+      "rows": 2000,
+      "columns": 2,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_random_predictions.csv",
+      "rows": 12890,
+      "columns": 5,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_shared_by_seed.csv",
+      "rows": 5,
+      "columns": 5,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_tuning.csv",
+      "rows": 240,
+      "columns": 7,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/xgboost_tuning_predictions.csv",
+      "rows": 103036,
+      "columns": 5,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/audits.csv",
+      "rows": 360,
+      "columns": 23,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/candidates.csv",
+      "rows": 3668,
+      "columns": 14,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/capacity_tradeoffs.csv",
+      "rows": 576,
+      "columns": 26,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/comparisons.csv",
+      "rows": 1980,
+      "columns": 22,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/decision_value.csv",
+      "rows": 1680,
+      "columns": 28,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/decision_value_pooled.csv",
+      "rows": 336,
+      "columns": 28,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/decisions.csv",
+      "rows": 17022,
+      "columns": 34,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/evaluations.csv",
+      "rows": 1680,
+      "columns": 26,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/pooled_evaluations.csv",
+      "rows": 336,
+      "columns": 26,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/predictions.csv",
+      "rows": 8511,
+      "columns": 7,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/prevalence_decision_value.csv",
+      "rows": 8064,
+      "columns": 14,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/prevalence_scenarios.csv",
+      "rows": 8064,
+      "columns": 12,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/references.csv",
+      "rows": 4182,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/refit_transfer.csv",
+      "rows": 540,
+      "columns": 53,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/threshold_audit_enriched.csv",
+      "rows": 360,
+      "columns": 32,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/threshold_explanations.csv",
+      "rows": 240,
+      "columns": 32,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/tuning.csv",
+      "rows": 20,
+      "columns": 9,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase2/tuning_predictions.csv",
+      "rows": 4460,
+      "columns": 7,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    }
+  ],
+  "npz": [
+    {
+      "file": "results/phase2/bootstrap_replicates.npz",
+      "arrays": 5,
+      "all_arrays_exact": true
+    }
+  ],
+  "native_models": [
+    {
+      "file": "results/phase1/research_models/xgboost_holdout_fold0.json",
+      "byte_identical": true
+    },
+    {
+      "file": "results/phase1/research_models/xgboost_time_fold0.json",
+      "byte_identical": true
+    },
+    {
+      "file": "results/phase1/research_models/xgboost_time_fold1.json",
+      "byte_identical": true
+    },
+    {
+      "file": "results/phase1/research_models/xgboost_time_fold2.json",
+      "byte_identical": true
+    },
+    {
+      "file": "results/phase1/research_models/xgboost_time_fold3.json",
+      "byte_identical": true
+    }
+  ],
+  "reports": [
+    {
+      "stage": "phase1",
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "manuscript_unchanged": true,
+      "tables_exact": true,
+      "pdf_table_decimals_present": 189,
+      "sha256": {
+        "technical_note.md": "6777a6c69ba461785b5bfcec653a0ba6b893c4413ec1fa506229b1e0fe060a7b",
+        "technical_report.docx": "6f88fb4b86739cb12520b26d754d48ed997e5c4672ea9d31afaa5c7b2f62a0b2",
+        "technical_report.pdf": "d6854422dee1e7a8845c800e757346ef0c1fa26cccf3241444faff7b47bb8925"
+      }
+    },
+    {
+      "stage": "phase2",
+      "pages": 13,
+      "tables": 17,
+      "figures": 3,
+      "manuscript_unchanged": true,
+      "tables_exact": true,
+      "pdf_table_decimals_present": 191,
+      "sha256": {
+        "phase2_threshold_transfer_report.md": "0966e0240e69f3293bc7a21c0795810d07d7788a3ab4965416b6160fe6b9ad48",
+        "phase2_threshold_transfer_report.docx": "205ff306e55eb286ac56365001bec2a62abd9d56dff461642fad6ddae4361f3f",
+        "phase2_threshold_transfer_report.pdf": "0626b1242a53079e1780b05720f457983ef46effe3f0bffa36651ce05e363b45"
+      }
+    }
+  ],
+  "source_inventory": [
+    {
+      "file": "phase1/__init__.py",
+      "sha256": "f4a93c32ee39bbe9e4e23f63be736fd1e6749ed3a6486201489d0773c8535fc7"
+    },
+    {
+      "file": "phase1/audit_source.py",
+      "sha256": "f41608f1787d32aaf4e9a0ae676bb1bbbed9a614d03a827943dada4382698717"
+    },
+    {
+      "file": "phase1/engineering_figures.py",
+      "sha256": "0129eef7745c1d4646ae0bcf59eb6c44e8a20cff646f7b3224d5f23922cfd368"
+    },
+    {
+      "file": "phase1/generate_report.py",
+      "sha256": "9506da7c3e9d3fa39434dab362ee0b054022d7c01b904709c9da18cbbc7ebc38"
+    },
+    {
+      "file": "phase1/paper_content.py",
+      "sha256": "1272c2093a09fc52757bc8128c4e6b7dc822618673f292881fd4e39fcf2c8efb"
+    },
+    {
+      "file": "phase1/quick_check.py",
+      "sha256": "4b163bdff8bdd9260243be7de4883c629da46b9a145f1677c15bd99fbf08e55f"
+    },
+    {
+      "file": "phase1/record_environment.py",
+      "sha256": "0b809494a3d0677b3f843537d50cd1ae196344da04088f8ac56e1faf9bf78781"
+    },
+    {
+      "file": "phase1/refresh_analysis.py",
+      "sha256": "0b4118f1beb0ad5d3063e57c7adc2b4f7954cff2c970b84f29a320935139172a"
+    },
+    {
+      "file": "phase1/research_analysis.py",
+      "sha256": "5db726180986493879340c886610e7db66a73e7badabd43e8330aae41fedd082"
+    },
+    {
+      "file": "phase1/research_figures.py",
+      "sha256": "cd0d57c20806e690dd0e273ed32d06ed9cdf2b038d8900f59df74493324a224d"
+    },
+    {
+      "file": "phase1/research_paper.py",
+      "sha256": "000c851323c48db162bc7802446046e85164ff9a636e8eef510b06ea8867fb55"
+    },
+    {
+      "file": "phase1/review_analysis.py",
+      "sha256": "536b7b9b43e5f4fb544217f0faa5a1cef5cf2c253aad3737f36e8b34322ea1d3"
+    },
+    {
+      "file": "phase1/run_engineering.py",
+      "sha256": "a6269a2267753980f7fdad2724de05a1a815287b589a1bf85e95be8da7788bb1"
+    },
+    {
+      "file": "phase1/run_experiments.py",
+      "sha256": "932175e3b4c150d94f30416f118930900235eb9af3241bf51b6a4dbdd0f3b6f0"
+    },
+    {
+      "file": "phase1/run_research.py",
+      "sha256": "4b046d2a8f3c1a6b956f95463f60a0a4f1cff06e8ffea146fd61936ad3c7922a"
+    },
+    {
+      "file": "phase1/verify_additions.py",
+      "sha256": "4de572168e5ada5f089b458e52a72d96e65a05ea47b2d0cf66c9957c8ce74245"
+    },
+    {
+      "file": "phase1/verify_formulae.py",
+      "sha256": "3311b3c094e1d50ed00c8ff5dfe872f8b0be5b0d93b5f2d3c672c4d4043247ca"
+    },
+    {
+      "file": "phase1/verify_research.py",
+      "sha256": "1ef0f6aeb7dce3aa82fccdce2f53a6355654589e8a893f84b178c7300f34bfa3"
+    },
+    {
+      "file": "phase1/verify_results.py",
+      "sha256": "4fd7eaf7ee92f3d43bdd6e3eac17737485bff34535c809050930286188e16573"
+    },
+    {
+      "file": "phase1/verify_review.py",
+      "sha256": "56dbfa910525d97683432747b678f1ea04aaab083a121f7d3523e8b7593ef2cc"
+    },
+    {
+      "file": "phase2/__init__.py",
+      "sha256": "8a6c270357937b91b7e67855d4fd0a4f74036e6bf350eab1d07ec01da86fe117"
+    },
+    {
+      "file": "phase2/analysis.py",
+      "sha256": "51be4e2108624f75602c11838e6ea8d7880078fed19213f2054715e5c4225259"
+    },
+    {
+      "file": "phase2/decisions.py",
+      "sha256": "dff17588f3720fd83ef43faf169c42bd6476b1f9c07a625073b1c40d0a9118cb"
+    },
+    {
+      "file": "phase2/experiment.py",
+      "sha256": "f2d264ad7b2f414472322eb21a0b9ae786248ed8482598004ff73941bed27b47"
+    },
+    {
+      "file": "phase2/plan.py",
+      "sha256": "c0bd5260b6839036d40b6fbb700b7389fb783c0d7314726672a8767f028032cf"
+    },
+    {
+      "file": "phase2/report.py",
+      "sha256": "4669d1d5d946b4fab73013c94c521d59c4eb68d4339ad2b3fdf1e4f3c2c45b16"
+    },
+    {
+      "file": "phase2/run.py",
+      "sha256": "f494034af869bde62816c4706e58c9c32cd1cedcb78f8f2efea7305a3e69843d"
+    },
+    {
+      "file": "phase2/supplement.py",
+      "sha256": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e"
+    },
+    {
+      "file": "phase2/tests.py",
+      "sha256": "e968cb5e96a9172f0c8da40958a852346a4a1749b3539c7df4396095f3bece41"
+    },
+    {
+      "file": "phase2/verify.py",
+      "sha256": "418ae3d42de33483f3f73700583767e2fc6c029a5a3f6985e7d63755553f2d91"
+    },
+    {
+      "file": "phase2/verify_supplement.py",
+      "sha256": "d8d821d248d1772152dd294eb62c2f9440b9f8d7576be4f73bab800143198b38"
+    },
+    {
+      "file": "src/boosting.py",
+      "sha256": "d77fd02b4f38ec158be32852b99805977fc6e278c82116263bed3217256ef56c"
+    },
+    {
+      "file": "src/calibration.py",
+      "sha256": "5318a4f8f5ed06d90633137a54eb3fbb2a046d9046ee3d74a3c483e8e6555ea5"
+    },
+    {
+      "file": "src/data.py",
+      "sha256": "0c9d81153b1f2aa948c683f49260a33d9ae439ce5e6c45526d9f31087c98b9a8"
+    },
+    {
+      "file": "src/engineering.py",
+      "sha256": "d0ed63fc1c781466983f50fe971276d91b351ec38e290abafb8fb629cf20869c"
+    },
+    {
+      "file": "src/evaluation.py",
+      "sha256": "d8e12821297e382cf4708591d581f6f09e90c665de8c50f56f3ed6979887c186"
+    },
+    {
+      "file": "src/figures.py",
+      "sha256": "a523b5ebf4a3d1a2adaf16f7bb0468df0f698d469c12f3fc15a03a030e310f5d"
+    },
+    {
+      "file": "src/input_checks.py",
+      "sha256": "1775240b43ef0922304cb3364dd713d1081e7531c546ad574abbb715a47cb31b"
+    },
+    {
+      "file": "src/metrics.py",
+      "sha256": "c059b10e23be687fa96f84fbe06931350ef24ad44a3fa70a192c5667bb0879f4"
+    },
+    {
+      "file": "src/models.py",
+      "sha256": "fa29c9b0ce9052ee6897178a4308808674bf9e1ee2ab40a9c23b96cdc31155ad"
+    },
+    {
+      "file": "src/uncertainty.py",
+      "sha256": "4498fe6a712ade626182e077e2021f41b50a501d3ce4f5a4f3287b9441fad948"
+    },
+    {
+      "file": "tests/test_boosting.py",
+      "sha256": "3ad23a7773b331d6c2427b79b979bd133743e354961d1da94fe65e2f8e437108"
+    },
+    {
+      "file": "tests/test_engineering.py",
+      "sha256": "7d7d8219e05b333ce7a6ffb8b62114dd29e6fbdbfe657cdcf274eb30b4a40f33"
+    },
+    {
+      "file": "tests/test_evaluation.py",
+      "sha256": "e1c812f402860264e15064be5f3192d8b9e9b09f33a5cb20263d823470a365b1"
+    },
+    {
+      "file": "tests/test_input_validation.py",
+      "sha256": "2d1c1ad6c11807bcbbeac9bed0d57cb385b033422e0648f12024f8895964a98a"
+    },
+    {
+      "file": "tests/test_report_content.py",
+      "sha256": "d515137326d269fec50815a173d334232446226bfa67ec05d9787b10be634bac"
+    },
+    {
+      "file": "tests/test_research_verifier.py",
+      "sha256": "80a27dede6b9d0e61cafddf689aaf2c7c9833faf93c0cd7e0e8cf7fa6daf59ff"
+    },
+    {
+      "file": "tests/test_result_verifier.py",
+      "sha256": "fdd380d38467de7a342d0b8b6456438907b021ef70ccd896d050febcbb93df4a"
+    },
+    {
+      "file": "tests/test_uncertainty.py",
+      "sha256": "66fbe5a657b6b3df9eb4384dece82094653bc847735ea2271f3bb7547c0589cb"
+    },
+    {
+      "file": "tests/test_verification_lifecycle.py",
+      "sha256": "e8479b72b5bdd1128a8810cabd3cd3802d4768446d1be72e5879e7787e13de2b"
+    }
+  ],
+  "links_checked": 165,
+  "passed": true,
+  "source_audit": {
+    "source_url": "https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip",
+    "mirror_url": "https://raw.githubusercontent.com/datasets/seismic-bumps/main/data/seismic-bumps.csv",
+    "original_rows": 2584,
+    "mirror_rows": 2578,
+    "removed_rows": 6,
+    "original_positives": 170,
+    "removed_positives": 0,
+    "order_preserving_dedup_matches": true,
+    "arff_sha256": "aabe512fab65b36d1dfb462650b75cfd8d99d8cc2723e8ecb4e6f5e1caccd5a7",
+    "mirror_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a"
+  },
+  "locked_plan_unchanged": true,
+  "first_stage_snapshot_keys": {
+    "old_count": 77,
+    "fresh_count": 77,
+    "omitted": [],
+    "added": []
+  }
+}

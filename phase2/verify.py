@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import sys
+from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 from .plan import ROOT, OUT, PLAN, canonical
@@ -11,7 +12,7 @@ from data import load, CSV_PATH
 from metrics import average_precision
 from evaluation import time_ordered_folds
 
-def verify(replay=False):
+def _verify(replay=False):
     count=0
     def check(value,label):
         nonlocal count
@@ -204,6 +205,22 @@ def verify(replay=False):
     (OUT/'verification.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
     print('RESULT: %d phase-two checks passed%s.'%(count,' with all fixed/refitted models replayed' if replay else ''))
     return count
+
+def verify(replay=False):
+    """Record this invocation; failed reruns cannot retain an old certificate."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / 'verification.json'
+    started = datetime.now(timezone.utc).isoformat()
+    path.write_text(json.dumps(dict(passed=False, replay=False, status='running',
+        requested_replay=replay, started_at_utc=started)), encoding='utf-8')
+    try:
+        return _verify(replay)
+    except (Exception, KeyboardInterrupt) as error:
+        path.write_text(json.dumps(dict(passed=False, replay=False, status='failed',
+            requested_replay=replay, started_at_utc=started,
+            failed_at_utc=datetime.now(timezone.utc).isoformat(),
+            error_type=type(error).__name__, error=str(error)), indent=2), encoding='utf-8')
+        raise
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(); parser.add_argument('--replay',action='store_true')

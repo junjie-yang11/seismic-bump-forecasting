@@ -19,7 +19,7 @@ from figures import save_curves_png,save_reliability_png,save_intervals_png
 from phase1.run_experiments import MODELS
 
 def refresh(rebuild=False):
-    X,y,features,df=load()
+    X,y,_,_=load()
     path=ROOT/'results/phase1/random_predictions_by_seed.csv'
     if rebuild or not path.exists():
         frames=[]
@@ -31,7 +31,6 @@ def refresh(rebuild=False):
         pd.concat(frames,ignore_index=True).to_csv(path,index=False)
     random=pd.read_csv(path)
     predictions=pd.read_csv(ROOT/'results/phase1/predictions.csv')
-    shared=pd.read_csv(ROOT/'results/phase1/shared_test_comparison.csv')
     met=pd.read_csv(ROOT/'results/phase1/metrics_by_scheme.csv')
     intervals,replicates,attenuation,operating,bins=[],[],[],[],[]
     rocs,prs=[],[]

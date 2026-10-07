@@ -1,0 +1,103 @@
+{
+  "scope": "Numerical replication, report agreement, source parsing and current navigation; no claim of field validity",
+  "created_at_utc": "2026-10-07T10:03:09.554306+00:00",
+  "rtol": 1e-09,
+  "atol": 1e-10,
+  "csv": [
+    {
+      "file": "results/phase1/bootstrap_replicates.csv",
+      "rows": 16000,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/calibration.csv",
+      "rows": 3,
+      "columns": 8,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/calibration_bins.csv",
+      "rows": 20,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_fold_audit.csv",
+      "rows": 555,
+      "columns": 21,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_predictions.csv",
+      "rows": 58023,
+      "columns": 10,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/engineering_references.csv",
+      "rows": 28974,
+      "columns": 6,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation.csv",
+      "rows": 27,
+      "columns": 22,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_by_fold.csv",
+      "rows": 108,
+      "columns": 20,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_intervals.csv",
+      "rows": 27,
+      "columns": 11,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    },
+    {
+      "file": "results/phase1/feature_ablation_phase_contrasts.csv",
+      "rows": 12,
+      "columns": 7,
+      "byte_identical": false,
+      "max_absolute_numeric_difference": 1.0061396160665481e-16,
+      "differing_numeric_cells": 1
+    },
+    {
+      "file": "results/phase1/feature_ablation_replicates.csv",
+      "rows": 54000,
+      "columns": 4,
+      "byte_identical": true,
+      "max_absolute_numeric_difference": 0.0,
+      "differing_numeric_cells": 0
+    }
+  ],
+  "npz": [],
+  "reports": [],
+  "source_inventory": [],
+  "links_checked": 0,
+  "passed": false,
+  "error_type": "TypeError",
+  "error": "numpy boolean subtract, the `-` operator, is not supported, use the bitwise_xor, the `^` operator, or the logical_xor function instead."
+}

@@ -1,0 +1,543 @@
+{
+  "scope": "All 50 core/test Python sources parsed; both PowerShell exporters, requirements, entry commands, generators and current guides inspected separately",
+  "python_sources": [
+    {
+      "file": "phase1/__init__.py",
+      "sha256": "f4a93c32ee39bbe9e4e23f63be736fd1e6749ed3a6486201489d0773c8535fc7",
+      "functions": []
+    },
+    {
+      "file": "phase1/audit_source.py",
+      "sha256": "f41608f1787d32aaf4e9a0ae676bb1bbbed9a614d03a827943dada4382698717",
+      "functions": [
+        "audit"
+      ]
+    },
+    {
+      "file": "phase1/engineering_figures.py",
+      "sha256": "0129eef7745c1d4646ae0bcf59eb6c44e8a20cff646f7b3224d5f23922cfd368",
+      "functions": [
+        "render"
+      ]
+    },
+    {
+      "file": "phase1/generate_report.py",
+      "sha256": "9506da7c3e9d3fa39434dab362ee0b054022d7c01b904709c9da18cbbc7ebc38",
+      "functions": [
+        "scrub_report_package",
+        "report_markdown",
+        "write_markdown_report",
+        "write_word_report"
+      ]
+    },
+    {
+      "file": "phase1/paper_content.py",
+      "sha256": "1272c2093a09fc52757bc8128c4e6b7dc822618673f292881fd4e39fcf2c8efb",
+      "functions": [
+        "build_cohort_paper",
+        "build_paper",
+        "rows",
+        "num",
+        "table",
+        "short"
+      ]
+    },
+    {
+      "file": "phase1/quick_check.py",
+      "sha256": "4b163bdff8bdd9260243be7de4883c629da46b9a145f1677c15bd99fbf08e55f",
+      "functions": [
+        "sha",
+        "check_navigation",
+        "check_stage2_document",
+        "run"
+      ]
+    },
+    {
+      "file": "phase1/record_environment.py",
+      "sha256": "0b809494a3d0677b3f843537d50cd1ae196344da04088f8ac56e1faf9bf78781",
+      "functions": [
+        "pip_freeze",
+        "main"
+      ]
+    },
+    {
+      "file": "phase1/refresh_analysis.py",
+      "sha256": "0b4118f1beb0ad5d3063e57c7adc2b4f7954cff2c970b84f29a320935139172a",
+      "functions": [
+        "refresh"
+      ]
+    },
+    {
+      "file": "phase1/research_analysis.py",
+      "sha256": "5db726180986493879340c886610e7db66a73e7badabd43e8330aae41fedd082",
+      "functions": [
+        "explanation_summary",
+        "analyse"
+      ]
+    },
+    {
+      "file": "phase1/research_figures.py",
+      "sha256": "cd0d57c20806e690dd0e273ed32d06ed9cdf2b038d8900f59df74493324a224d",
+      "functions": [
+        "render"
+      ]
+    },
+    {
+      "file": "phase1/research_paper.py",
+      "sha256": "000c851323c48db162bc7802446046e85164ff9a636e8eef510b06ea8867fb55",
+      "functions": [
+        "build_paper",
+        "read",
+        "number",
+        "integer",
+        "interval",
+        "table"
+      ]
+    },
+    {
+      "file": "phase1/review_analysis.py",
+      "sha256": "536b7b9b43e5f4fb544217f0faa5a1cef5cf2c253aad3737f36e8b34322ea1d3",
+      "functions": [
+        "stability_sensitivity",
+        "reference_comparison",
+        "phase_contrasts",
+        "analyse"
+      ]
+    },
+    {
+      "file": "phase1/run_engineering.py",
+      "sha256": "a6269a2267753980f7fdad2724de05a1a815287b589a1bf85e95be8da7788bb1",
+      "functions": [
+        "run"
+      ]
+    },
+    {
+      "file": "phase1/run_experiments.py",
+      "sha256": "932175e3b4c150d94f30416f118930900235eb9af3241bf51b6a4dbdd0f3b6f0",
+      "functions": [
+        "main",
+        "record_details",
+        "md"
+      ]
+    },
+    {
+      "file": "phase1/run_research.py",
+      "sha256": "4b046d2a8f3c1a6b956f95463f60a0a4f1cff06e8ffea146fd61936ad3c7922a",
+      "functions": [
+        "run",
+        "tune",
+        "append",
+        "factory",
+        "explain"
+      ]
+    },
+    {
+      "file": "phase1/verify_additions.py",
+      "sha256": "4de572168e5ada5f089b458e52a72d96e65a05ea47b2d0cf66c9957c8ce74245",
+      "functions": [
+        "verify_additions",
+        "read"
+      ]
+    },
+    {
+      "file": "phase1/verify_formulae.py",
+      "sha256": "3311b3c094e1d50ed00c8ff5dfe872f8b0be5b0d93b5f2d3c672c4d4043247ca",
+      "functions": [
+        "verify",
+        "read",
+        "check",
+        "close"
+      ]
+    },
+    {
+      "file": "phase1/verify_research.py",
+      "sha256": "1ef0f6aeb7dce3aa82fccdce2f53a6355654589e8a893f84b178c7300f34bfa3",
+      "functions": [
+        "verify_research",
+        "_verify_explanations",
+        "_verify_tuning",
+        "main",
+        "read",
+        "check",
+        "close"
+      ]
+    },
+    {
+      "file": "phase1/verify_results.py",
+      "sha256": "4fd7eaf7ee92f3d43bdd6e3eac17737485bff34535c809050930286188e16573",
+      "functions": [
+        "verify",
+        "check",
+        "close",
+        "read"
+      ]
+    },
+    {
+      "file": "phase1/verify_review.py",
+      "sha256": "56dbfa910525d97683432747b678f1ea04aaab083a121f7d3523e8b7593ef2cc",
+      "functions": [
+        "verify_review"
+      ]
+    },
+    {
+      "file": "phase2/__init__.py",
+      "sha256": "8a6c270357937b91b7e67855d4fd0a4f74036e6bf350eab1d07ec01da86fe117",
+      "functions": []
+    },
+    {
+      "file": "phase2/analysis.py",
+      "sha256": "51be4e2108624f75602c11838e6ea8d7880078fed19213f2054715e5c4225259",
+      "functions": [
+        "pooled_evaluations",
+        "comparison_specs",
+        "analyse"
+      ]
+    },
+    {
+      "file": "phase2/decisions.py",
+      "sha256": "dff17588f3720fd83ef43faf169c42bd6476b1f9c07a625073b1c40d0a9118cb",
+      "functions": [
+        "vectors",
+        "candidates",
+        "select",
+        "batch_topk",
+        "evaluate",
+        "row_loss"
+      ]
+    },
+    {
+      "file": "phase2/experiment.py",
+      "sha256": "f2d264ad7b2f414472322eb21a0b9ae786248ed8482598004ff73941bed27b47",
+      "functions": [
+        "validate_model_settings",
+        "fit_fold"
+      ]
+    },
+    {
+      "file": "phase2/plan.py",
+      "sha256": "c0bd5260b6839036d40b6fbb700b7389fb783c0d7314726672a8767f028032cf",
+      "functions": [
+        "canonical",
+        "lock_plan"
+      ]
+    },
+    {
+      "file": "phase2/report.py",
+      "sha256": "4669d1d5d946b4fab73013c94c521d59c4eb68d4339ad2b3fdf1e4f3c2c45b16",
+      "functions": [
+        "build",
+        "para",
+        "heading",
+        "page",
+        "table",
+        "rng",
+        "heatmap",
+        "matrix_from"
+      ]
+    },
+    {
+      "file": "phase2/run.py",
+      "sha256": "f494034af869bde62816c4706e58c9c32cd1cedcb78f8f2efea7305a3e69843d",
+      "functions": [
+        "protected_hashes",
+        "declarations",
+        "_run",
+        "run"
+      ]
+    },
+    {
+      "file": "phase2/supplement.py",
+      "sha256": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e",
+      "functions": [
+        "digest",
+        "no_alarm_reason",
+        "threshold_kind",
+        "build"
+      ]
+    },
+    {
+      "file": "phase2/tests.py",
+      "sha256": "e968cb5e96a9172f0c8da40958a852346a4a1749b3539c7df4396095f3bece41",
+      "functions": [
+        "test_evaluation_accepts_binary_numeric_decisions",
+        "test_evaluation_rejects_invalid_capacity_budgets",
+        "test_imported_settings_cannot_silently_change_locked_protocol",
+        "test_failed_rerun_invalidates_previous_verification",
+        "test_canonical_groups_and_extremes",
+        "test_cost_ties_choose_fewer_alerts_and_zero_gap",
+        "test_capacity_and_unconstrained_loss_order",
+        "test_no_positive_reference_and_zero_slots",
+        "test_batch_topk_does_not_split_boundary_ties",
+        "test_future_capacity_can_exceed_reference_capacity",
+        "test_test_labels_cannot_change_parameters_scores_or_rules",
+        "test_policy_reference_labels_do_not_fit_or_tune_fixed_model"
+      ]
+    },
+    {
+      "file": "phase2/verify.py",
+      "sha256": "418ae3d42de33483f3f73700583767e2fc6c029a5a3f6985e7d63755553f2d91",
+      "functions": [
+        "_verify",
+        "verify",
+        "check",
+        "close"
+      ]
+    },
+    {
+      "file": "phase2/verify_supplement.py",
+      "sha256": "d8d821d248d1772152dd294eb62c2f9440b9f8d7576be4f73bab800143198b38",
+      "functions": [
+        "_verify",
+        "verify",
+        "check",
+        "close"
+      ]
+    },
+    {
+      "file": "src/boosting.py",
+      "sha256": "d77fd02b4f38ec158be32852b99805977fc6e278c82116263bed3217256ef56c",
+      "functions": [
+        "inner_indices",
+        "select_parameters",
+        "__init__",
+        "matrix",
+        "fit",
+        "predict_proba",
+        "contributions",
+        "margin"
+      ]
+    },
+    {
+      "file": "src/calibration.py",
+      "sha256": "5318a4f8f5ed06d90633137a54eb3fbb2a046d9046ee3d74a3c483e8e6555ea5",
+      "functions": [
+        "reliability_curve",
+        "brier_score",
+        "brier_skill_score",
+        "expected_calibration_error",
+        "maximum_calibration_error",
+        "logit",
+        "sigmoid",
+        "prior_correction",
+        "calibration_summary"
+      ]
+    },
+    {
+      "file": "src/data.py",
+      "sha256": "0c9d81153b1f2aa948c683f49260a33d9ae439ce5e6c45526d9f31087c98b9a8",
+      "functions": [
+        "download",
+        "integrity_report",
+        "load"
+      ]
+    },
+    {
+      "file": "src/engineering.py",
+      "sha256": "d0ed63fc1c781466983f50fe971276d91b351ec38e290abafb8fb629cf20869c",
+      "functions": [
+        "feature_variants",
+        "evaluate_splits",
+        "warning_summary"
+      ]
+    },
+    {
+      "file": "src/evaluation.py",
+      "sha256": "d8e12821297e382cf4708591d581f6f09e90c665de8c50f56f3ed6979887c186",
+      "functions": [
+        "stratified_random_folds",
+        "time_ordered_folds",
+        "cross_validate",
+        "cross_validate_splits",
+        "select_training_threshold",
+        "chronological_holdout"
+      ]
+    },
+    {
+      "file": "src/figures.py",
+      "sha256": "a523b5ebf4a3d1a2adaf16f7bb0468df0f698d469c12f3fc15a03a030e310f5d",
+      "functions": [
+        "_font",
+        "_rotated_label",
+        "_frame",
+        "save_curves_png",
+        "save_reliability_png",
+        "save_intervals_png",
+        "save_bars_png",
+        "px"
+      ]
+    },
+    {
+      "file": "src/input_checks.py",
+      "sha256": "1775240b43ef0922304cb3364dd713d1081e7531c546ad574abbb715a47cb31b",
+      "functions": [
+        "binary_vectors",
+        "supervised_arrays",
+        "split_indices"
+      ]
+    },
+    {
+      "file": "src/metrics.py",
+      "sha256": "c059b10e23be687fa96f84fbe06931350ef24ad44a3fa70a192c5667bb0879f4",
+      "functions": [
+        "confusion",
+        "threshold_metrics",
+        "roc_auc",
+        "average_precision",
+        "prior_threshold",
+        "summarise",
+        "curve_points"
+      ]
+    },
+    {
+      "file": "src/models.py",
+      "sha256": "fa29c9b0ce9052ee6897178a4308808674bf9e1ee2ab40a9c23b96cdc31155ad",
+      "functions": [
+        "permutation_importance",
+        "fit",
+        "transform",
+        "__init__",
+        "fit",
+        "decision_function",
+        "predict_proba",
+        "predict",
+        "__init__",
+        "__init__",
+        "_gini",
+        "_best_split",
+        "fit",
+        "_build",
+        "predict_proba",
+        "__init__",
+        "fit",
+        "predict_proba"
+      ]
+    },
+    {
+      "file": "src/uncertainty.py",
+      "sha256": "4498fe6a712ade626182e077e2021f41b50a501d3ce4f5a4f3287b9441fad948",
+      "functions": [
+        "resample_indices",
+        "_ap_groups",
+        "_weighted_ap",
+        "paired_ap_interval"
+      ]
+    },
+    {
+      "file": "tests/test_boosting.py",
+      "sha256": "3ad23a7773b331d6c2427b79b979bd133743e354961d1da94fe65e2f8e437108",
+      "functions": [
+        "test_native_contributions_reconstruct_margin_and_probability",
+        "test_zero_positive_reference_uses_defined_fallback",
+        "test_future_labels_cannot_change_nested_parameters_or_cutoffs",
+        "evaluate",
+        "factory"
+      ]
+    },
+    {
+      "file": "tests/test_engineering.py",
+      "sha256": "7d7d8219e05b333ce7a6ffb8b62114dd29e6fbdbfe657cdcf274eb30b4a40f33",
+      "functions": [
+        "fit",
+        "predict_proba",
+        "setUp",
+        "test_future_labels_do_not_change_any_budget_threshold",
+        "test_future_features_do_not_change_reference_or_thresholds",
+        "test_boundary_ties_respect_every_reference_budget",
+        "test_larger_budgets_produce_nested_alerts",
+        "test_groups_partition_design_and_removal_excludes_group",
+        "test_invalid_budget_or_overlapping_tests_rejected"
+      ]
+    },
+    {
+      "file": "tests/test_evaluation.py",
+      "sha256": "e1c812f402860264e15064be5f3192d8b9e9b09f33a5cb20263d823470a365b1",
+      "functions": [
+        "fit",
+        "predict_proba",
+        "setUp",
+        "evaluate",
+        "test_future_labels_cannot_affect_scores_threshold_or_prior",
+        "test_future_features_cannot_affect_threshold_or_prior",
+        "test_all_negative_test_block_is_retained",
+        "test_fold_correction_uses_training_prior",
+        "test_unweighted_model_is_not_corrected",
+        "test_overlapping_training_and_test_rejected",
+        "test_summary_requires_fixed_threshold",
+        "test_boundary_ties_do_not_exceed_reference_budget",
+        "test_ap_is_invariant_to_tie_order",
+        "test_curve_endpoints",
+        "test_constant_calibration_bins_conserve_samples",
+        "test_invalid_prior_rejected"
+      ]
+    },
+    {
+      "file": "tests/test_input_validation.py",
+      "sha256": "2d1c1ad6c11807bcbbeac9bed0d57cb385b033422e0648f12024f8895964a98a",
+      "functions": [
+        "test_fold_assignments_cannot_silently_omit_rows",
+        "test_scores_cannot_broadcast_across_labels",
+        "test_invalid_labels_and_empty_inputs_are_rejected",
+        "test_threshold_vectors_cannot_broadcast",
+        "test_probability_metrics_reject_out_of_range_values",
+        "test_invalid_temporal_indices_rejected_before_model_fit",
+        "test_fold_builders_reject_invalid_classes_or_counts",
+        "forbidden_factory",
+        "forbidden_factory"
+      ]
+    },
+    {
+      "file": "tests/test_report_content.py",
+      "sha256": "d515137326d269fec50815a173d334232446226bfa67ec05d9787b10be634bac",
+      "functions": [
+        "test_alert_transfer_sentence_uses_computed_rates"
+      ]
+    },
+    {
+      "file": "tests/test_research_verifier.py",
+      "sha256": "80a27dede6b9d0e61cafddf689aaf2c7c9833faf93c0cd7e0e8cf7fa6daf59ff",
+      "functions": [
+        "reject",
+        "test_shap_corruption_rejected",
+        "test_reference_threshold_corruption_rejected",
+        "test_inner_selection_corruption_rejected",
+        "test_stability_sensitivity_corruption_rejected",
+        "test_historical_reference_corruption_rejected",
+        "test_phase_contrast_corruption_rejected",
+        "read"
+      ]
+    },
+    {
+      "file": "tests/test_result_verifier.py",
+      "sha256": "fdd380d38467de7a342d0b8b6456438907b021ef70ccd896d050febcbb93df4a",
+      "functions": [
+        "setUpClass",
+        "rejected",
+        "test_missing_test_row",
+        "test_changed_prior",
+        "test_changed_threshold",
+        "test_changed_calibration_metric",
+        "test_changed_random_mean",
+        "read"
+      ]
+    },
+    {
+      "file": "tests/test_uncertainty.py",
+      "sha256": "66fbe5a657b6b3df9eb4384dece82094653bc847735ea2271f3bb7547c0589cb",
+      "functions": [
+        "test_blocks_keep_phase_size_and_adjacency",
+        "test_identical_paired_predictions_have_zero_gap",
+        "test_weighted_tied_ap_equals_explicit_resampling",
+        "test_deterministic_bootstrap"
+      ]
+    },
+    {
+      "file": "tests/test_verification_lifecycle.py",
+      "sha256": "e8479b72b5bdd1128a8810cabd3cd3802d4768446d1be72e5879e7787e13de2b",
+      "functions": [
+        "test_core_failure_invalidates_previous_replay",
+        "test_supplement_failure_invalidates_previous_certificate"
+      ]
+    }
+  ],
+  "unused_import_candidates": []
+}

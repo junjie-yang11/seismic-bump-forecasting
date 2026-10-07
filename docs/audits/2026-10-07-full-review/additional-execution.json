@@ -1,0 +1,33 @@
+{
+  "scope": "Report refusal test, packaged renderer availability, and actual audited report artifacts",
+  "created_at_utc": "2026-10-07T10:24:14.712581+00:00",
+  "steps": [
+    {
+      "name": "stale-certificate-refusal",
+      "exit_code": 1,
+      "elapsed_seconds": 0.7366455000010319,
+      "observed_expected_message": true,
+      "log": "logs/stale-certificate-refusal.log",
+      "classification": "Expected negative behavior check"
+    },
+    {
+      "name": "packaged-renderer",
+      "exit_code": 1,
+      "elapsed_seconds": 0.10883330000797287,
+      "observed_expected_message": true,
+      "log": "logs/packaged-renderer.log",
+      "classification": "Unavailable renderer; actual Word PDF and Poppler fallback completed"
+    }
+  ],
+  "visual_review": {
+    "scope": "All final pages visually inspected after actual Microsoft Word export and Poppler rendering",
+    "stage1_pages": 15,
+    "stage2_pages": 13,
+    "reviewed_by": "Codex visual inspection in this audit",
+    "pdf_sha256": {
+      "reports\\phase1\\technical_report.pdf": "d6854422dee1e7a8845c800e757346ef0c1fa26cccf3241444faff7b47bb8925",
+      "reports\\phase2\\phase2_threshold_transfer_report.pdf": "0626b1242a53079e1780b05720f457983ef46effe3f0bffa36651ce05e363b45"
+    },
+    "observations": "Readable tables and figures, intact mathematical symbols and captions, no visible clipping, blank pages or overflow."
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "scope": "Final complete Stage 2 rerun after Stage 1 PDF completion; final source tests and quick check",
+  "reason": "Earlier Stage 2 snapshot preceded successful Stage 1 PDF export; rebuild rather than manually inserting a source hash.",
+  "started_at_utc": "2026-10-07T10:04:50.013775+00:00",
+  "steps": [
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.run"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 19.969254900002852,
+      "log": "00-phase2.run.log",
+      "summaries": []
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 52.033322100003716,
+      "log": "01-phase2.verify.log",
+      "summaries": [
+        "RESULT: 63854 phase-two checks passed with all fixed/refitted models replayed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.supplement"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.4910071999765933,
+      "log": "02-phase2.supplement.log",
+      "summaries": []
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify_supplement"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.711045700008981,
+      "log": "03-phase2.verify_supplement.log",
+      "summaries": [
+        "RESULT: 10902 independent supplementary checks passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_formulae"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.125573199999053,
+      "log": "04-phase1.verify_formulae.log",
+      "summaries": [
+        "RESULT: 8220 independent formula checks passed."
+      ]
+    },
+    {
+      "runtime": "document",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.report"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.22569479997037,
+      "log": "05-phase2.report.log",
+      "summaries": []
+    },
+    {
+      "runtime": "word",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "phase2/export_report.ps1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 41.67591150000226,
+      "log": "06-phase2-export_report.ps1.log",
+      "summaries": []
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.157323900028132,
+      "log": "07-unittest.log",
+      "summaries": [
+        "Ran 46 tests in 6.547s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "phase2.tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.3373570999829099,
+      "log": "08-unittest.log",
+      "summaries": [
+        "Ran 12 tests in 0.608s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_results",
+        "--reports"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.821697600011248,
+      "log": "09-phase1.verify_results.log",
+      "summaries": [
+        "RESULT: all 8169 consistency checks passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.quick_check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 52.21818379999604,
+      "log": "10-phase1.quick_check.log",
+      "summaries": [
+        "Ran 46 tests in 6.530s",
+        "Ran 12 tests in 0.575s",
+        "RESULT: all 8169 consistency checks passed.",
+        "RESULT: 63809 phase-two checks passed.",
+        "RESULT: 10902 independent supplementary checks passed.",
+        "RESULT: 8220 independent formula checks passed.",
+        "QUICK CHECK PASSED: 137 links and 242 Stage 2 Word items; 52.13 seconds."
+      ]
+    }
+  ],
+  "planned_steps": 11,
+  "completed_steps": 11,
+  "passed": true,
+  "completed_at_utc": "2026-10-07T10:07:55.789919+00:00"
+}

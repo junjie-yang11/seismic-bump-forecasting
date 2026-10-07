@@ -1,0 +1,12 @@
+{
+  "source_url": "https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip",
+  "mirror_url": "https://raw.githubusercontent.com/datasets/seismic-bumps/main/data/seismic-bumps.csv",
+  "original_rows": 2584,
+  "mirror_rows": 2578,
+  "removed_rows": 6,
+  "original_positives": 170,
+  "removed_positives": 0,
+  "order_preserving_dedup_matches": true,
+  "arff_sha256": "aabe512fab65b36d1dfb462650b75cfd8d99d8cc2723e8ecb4e6f5e1caccd5a7",
+  "mirror_sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a"
+}

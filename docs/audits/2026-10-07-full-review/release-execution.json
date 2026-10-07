@@ -1,0 +1,75 @@
+{
+  "scope": "Final branch snapshot, independent comparison/table verification and disposable quick check",
+  "started_at_utc": "2026-10-07T10:24:08.799697+00:00",
+  "steps": [
+    {
+      "step": "prepare-delivery",
+      "exit_code": 0,
+      "elapsed_seconds": 0.20813660003477708,
+      "log": "logs/release/prepare-delivery.log",
+      "summaries": []
+    },
+    {
+      "step": "render-final-pages",
+      "exit_code": 0,
+      "elapsed_seconds": 5.63282389997039,
+      "log": "logs/release/render-final-pages.log",
+      "summaries": [
+        "phase1 15 pages rendered",
+        "phase2 13 pages rendered"
+      ]
+    },
+    {
+      "step": "additional-behavior-renderer-and-visual-record",
+      "exit_code": 0,
+      "elapsed_seconds": 0.9133315000217408,
+      "log": "logs/release/additional-behavior-renderer-and-visual-record.log",
+      "summaries": []
+    },
+    {
+      "step": "source-and-worktree-inventory",
+      "exit_code": 0,
+      "elapsed_seconds": 0.9010791000328027,
+      "log": "logs/release/source-and-worktree-inventory.log",
+      "summaries": [
+        "Audit inventory: 50 Python sources; 0 unused import candidates; 235 initial tracked files preserved"
+      ]
+    },
+    {
+      "step": "compare-release-evidence",
+      "exit_code": 0,
+      "elapsed_seconds": 3.026314100017771,
+      "log": "logs/release/compare-release-evidence.log",
+      "summaries": [
+        "Release comparison passed: 62 CSV files; 1 NPZ files; 50 Python sources; 163 current links"
+      ]
+    },
+    {
+      "step": "independent-report-tables",
+      "exit_code": 0,
+      "elapsed_seconds": 1.252479000017047,
+      "log": "logs/release/independent-report-tables.log",
+      "summaries": [
+        "Report checks passed: 591 pages 13"
+      ]
+    },
+    {
+      "step": "final-branch-quick-check",
+      "exit_code": 0,
+      "elapsed_seconds": 49.686821799958125,
+      "log": "logs/release/final-branch-quick-check.log",
+      "summaries": [
+        "Ran 46 tests in 6.455s",
+        "Ran 12 tests in 0.592s",
+        "RESULT: all 8169 consistency checks passed.",
+        "RESULT: 63809 phase-two checks passed.",
+        "RESULT: 10902 independent supplementary checks passed.",
+        "RESULT: 8220 independent formula checks passed.",
+        "QUICK CHECK PASSED: 140 links and 242 Stage 2 Word items; 49.60 seconds."
+      ]
+    }
+  ],
+  "planned_steps": 7,
+  "passed": true,
+  "completed_at_utc": "2026-10-07T10:25:11.022589+00:00"
+}

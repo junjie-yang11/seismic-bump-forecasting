@@ -1,0 +1,100 @@
+========================================================================================================
+1. DATASET INTEGRITY
+========================================================================================================
+  records              : 2578
+  features used        : 17  (excluded from the design: ['nbumps'])
+  positive (class 1)   : 170   prevalence 0.0659
+  duplicate rows       : 0
+  constant columns     : ['nbumps6', 'nbumps7', 'nbumps89']  <- zero information
+  rank(nbumps2..89)    : 4 of 7  <- exact linear dependencies
+  prevalence by quintile of record order: {0: 0.1609, 1: 0.068, 2: 0.0213, 3: 0.0447, 4: 0.0349}
+
+========================================================================================================
+2. WHY ACCURACY IS THE WRONG METRIC HERE
+========================================================================================================
+  accuracy of 'always predict 0' : 0.9341
+  high accuracy alone does not demonstrate hazard detection; inspect ranking and warning metrics.
+
+========================================================================================================
+3. MODEL x VALIDATION SCHEME
+========================================================================================================
+  fitting logistic regression (L2, class-weighted): random CV seed 0
+  fitting logistic regression (L2, class-weighted): random CV seed 1
+  fitting logistic regression (L2, class-weighted): random CV seed 2
+  fitting logistic regression (L2, class-weighted): random CV seed 3
+  fitting logistic regression (L2, class-weighted): random CV seed 4
+  fitting bagged CART (60 trees, depth 6): random CV seed 0
+  fitting bagged CART (60 trees, depth 6): random CV seed 1
+  fitting bagged CART (60 trees, depth 6): random CV seed 2
+  fitting bagged CART (60 trees, depth 6): random CV seed 3
+  fitting bagged CART (60 trees, depth 6): random CV seed 4
+                                    model                     validation  roc_auc  roc_auc_sd  pr_auc  pr_auc_sd  accuracy  balanced_accuracy  recall  precision    f1  alert_rate
+ logistic regression (L2, class-weighted)      random stratified 10-fold    0.755       0.004   0.195      0.003     0.903              0.606   0.264      0.266 0.264       0.065
+ logistic regression (L2, class-weighted)  time-ordered expanding window    0.668       0.000   0.084      0.000     0.791              0.505   0.193      0.045 0.073       0.183
+          bagged CART (60 trees, depth 6)      random stratified 10-fold    0.774       0.003   0.222      0.008     0.898              0.621   0.302      0.262 0.280       0.076
+          bagged CART (60 trees, depth 6)  time-ordered expanding window    0.640       0.000   0.078      0.000     0.874              0.500   0.091      0.043 0.058       0.091
+
+========================================================================================================
+4. DESCRIPTIVE INDEX PROBE: add record position as a feature
+========================================================================================================
+                                    model                     validation  roc_auc  pr_auc
+ logistic regression (L2, class-weighted)      random stratified 10-fold    0.762   0.206
+ logistic regression (L2, class-weighted)  time-ordered expanding window    0.609   0.063
+          bagged CART (60 trees, depth 6)      random stratified 10-fold    0.804   0.281
+          bagged CART (60 trees, depth 6)  time-ordered expanding window    0.669   0.085
+
+  univariate signal of the record index alone: ROC-AUC = 0.670 (using -index, since risk falls over the record)
+  This full-cohort index association is descriptive; it does not confirm calendar time or isolate leakage.
+
+========================================================================================================
+5. CHRONOLOGICAL HOLDOUT (train on first 70 %, test on last 30 %)
+========================================================================================================
+                                    model  n_test  roc_auc  pr_auc  accuracy  balanced_accuracy  recall  precision    f1  alert_rate  threshold
+ logistic regression (L2, class-weighted)     774    0.568   0.090     0.961              0.534   0.077      0.250 0.118       0.010      0.662
+          bagged CART (60 trees, depth 6)     774    0.612   0.087     0.961              0.516   0.038      0.167 0.062       0.008      0.179
+
+========================================================================================================
+6. PERMUTATION IMPORTANCE (drop in ROC-AUC when a column is shuffled)
+========================================================================================================
+  in-sample ROC-AUC of the fitted forest: 0.899
+        feature  auc_drop     sd
+        nbumps2    0.0645 0.0051
+          gpuls    0.0562 0.0040
+         energy    0.0522 0.0043
+        genergy    0.0431 0.0027
+       gdenergy    0.0291 0.0021
+         gdpuls    0.0219 0.0031
+          shift    0.0099 0.0018
+        nbumps3    0.0094 0.0018
+      maxenergy    0.0088 0.0007
+ seismoacoustic    0.0041 0.0008
+
+========================================================================================================
+7. PROBABILITY CALIBRATION
+========================================================================================================
+  The logistic model uses balanced class weights, so its output
+  probabilities need a prior correction estimated from historical data.
+  CART is unweighted and is reported as fitted.
+  Calibration priors come exclusively from each fold's training labels.
+model                            variant  brier  brier_skill    ece    mce  mean_predicted  observed_rate
+   LR         as fitted (class-weighted) 0.1462      -2.5793 0.2904 0.5701          0.3331         0.0427
+   LR  after fold-local prior correction 0.0439      -0.0751 0.0271 0.1178          0.0694         0.0427
+ CART        as fitted (unweighted CART) 0.0433      -0.0607 0.0374 0.1219          0.0662         0.0427
+
+========================================================================================================
+8. FIGURES
+========================================================================================================
+  wrote figures/roc_curves.png, figures/pr_curves.png, figures/pr_auc_by_scheme.png, figures/prevalence_drift.png, figures/reliability.png (report)
+  wrote results/phase1/summary.md
+LR L=1: delta 0.0114, CI [-0.0092, 0.0258]
+LR L=16: delta 0.0114, CI [-0.0083, 0.0224]
+LR L=32: delta 0.0114, CI [-0.0110, 0.0243]
+LR L=64: delta 0.0114, CI [-0.0113, 0.0261]
+CART L=1: delta 0.0188, CI [0.0035, 0.0433]
+CART L=16: delta 0.0188, CI [0.0049, 0.0366]
+CART L=32: delta 0.0188, CI [0.0064, 0.0323]
+CART L=64: delta 0.0188, CI [0.0082, 0.0302]
+Refreshed paired intervals, same-test curves and operating diagnostics.
+  wrote reports/phase1/technical_note.md from the generated results
+
+done.

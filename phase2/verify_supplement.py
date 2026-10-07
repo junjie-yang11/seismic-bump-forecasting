@@ -1,12 +1,13 @@
 """Independent checks of descriptive extensions against original saved rows."""
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from .plan import ROOT, OUT
 
-def verify():
+def _verify():
     count=0
     def check(value,label):
         nonlocal count
@@ -94,5 +95,20 @@ def verify():
     (OUT/'supplement_verification.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
     print('RESULT: %d independent supplementary checks passed.'%count)
     return count
+
+def verify():
+    """Invalidate a previous certificate before checking current evidence."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / 'supplement_verification.json'
+    started = datetime.now(timezone.utc).isoformat()
+    path.write_text(json.dumps(dict(passed=False, status='running',
+        started_at_utc=started)), encoding='utf-8')
+    try:
+        return _verify()
+    except (Exception, KeyboardInterrupt) as error:
+        path.write_text(json.dumps(dict(passed=False, status='failed',
+            started_at_utc=started, failed_at_utc=datetime.now(timezone.utc).isoformat(),
+            error_type=type(error).__name__, error=str(error)), indent=2), encoding='utf-8')
+        raise
 
 if __name__=='__main__': verify()

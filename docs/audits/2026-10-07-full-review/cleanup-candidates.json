@@ -1,0 +1,30 @@
+{
+  "record_type": "Human review decisions, not a computational certificate",
+  "process": "Candidates announced in progress before removal; direct use, CLI, public API, document and reproduction roles checked. This file consolidates those decisions.",
+  "candidates": [
+    {
+      "item": "phase1/refresh_analysis.py: unused shared CSV read",
+      "decision": "Remove the read, retain shared_test_comparison.csv",
+      "basis": "Assigned local shared is never read; common-cohort evidence is independently retained and verified. Fresh fitting and all CSV comparisons agree."
+    },
+    {
+      "item": "phase1/refresh_analysis.py: unused features and df bindings",
+      "decision": "Replace bindings with ignored slots; retain loader outputs/API",
+      "basis": "Neither local binding is referenced by refresh; loader return contract unchanged."
+    },
+    {
+      "item": "Baseline manuscript generator and summary-only CLI modules",
+      "decision": "Retain",
+      "basis": "Needed before the XGBoost extension exists and for documented rebuilding from saved evidence."
+    },
+    {
+      "item": "Independent verifiers, historical audits, diagnostic figures, public model/metric methods",
+      "decision": "Retain",
+      "basis": "Independent verification, historical provenance, report/navigation or public API roles; absence of an internal caller is insufficient for deletion."
+    }
+  ],
+  "deleted_files": [],
+  "moved_files": [],
+  "deleted_functions": [],
+  "unused_import_scan": []
+}

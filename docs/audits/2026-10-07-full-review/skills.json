@@ -1,0 +1,49 @@
+{
+  "read_and_used": [
+    {
+      "name": "paper-review",
+      "task": "Computational research review and claim/display/provenance alignment; not a substitute for running verifiers"
+    },
+    {
+      "name": "academic-writing-skills",
+      "task": "Cross-report design/claim/terminology and generator/document agreement review"
+    },
+    {
+      "name": "documents:documents",
+      "task": "Word regeneration and visual QA workflow; packaged LibreOffice renderer unavailable, actual Word export plus Poppler used"
+    },
+    {
+      "name": "pdf:pdf",
+      "task": "PDF extraction, numeric agreement and all-page rendering/inspection"
+    }
+  ],
+  "read_with_limited_use": [
+    {
+      "name": "citation-management",
+      "task": "Limited primary-source existence/access recheck; no new references or comprehensive bibliography rerun",
+      "access": "arXiv 2609.00065 opened; two publisher/DOI requests unavailable through browser"
+    },
+    {
+      "name": "anti-defensive-writing",
+      "task": "Read for wording review; no additional final-manuscript prose revision was needed; evidence limits and negative results retained"
+    }
+  ],
+  "not_available_or_not_used": [
+    {
+      "name": "literature-review-skills",
+      "status": "Not installed; existing comparison and academic review used"
+    },
+    {
+      "name": "sciwrite",
+      "status": "Not installed; academic-writing-skills used"
+    },
+    {
+      "name": "ml-paper-writing",
+      "status": "Not installed; no new drafting task requiring it"
+    },
+    {
+      "name": "manuscript-writing-review",
+      "status": "Available but not read or invoked; no extra prose rewrite needed"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Data — NOT committed on purpose.
 # `src/data.py` downloads the CSV on first run, so anyone who clones this repo
-# can reproduce everything with one command. Committing the file would only
+# can follow the staged reproduction commands. Committing the file would only
 # bloat the repository and hide whether the download step actually works.
 #
 # Note the `data/*` form rather than `data/`: ignoring the directory itself
@@ -51,6 +51,6 @@ desktop.ini
 # ---------------------------------------------------------------------------
 # Notes on what IS committed:
 #   results/          -> committed: this is the evidence for the write-up
-#   results/figures/  -> committed: the figures referenced in the note
-#   report/           -> committed: the technical note
+#   results/phase1/figures/ -> committed: Stage 1 diagnostic figures
+#   reports/          -> committed: both final papers and Stage 2 figures
 # ---------------------------------------------------------------------------

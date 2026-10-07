@@ -57,6 +57,8 @@ python -B -m phase1.verify_formulae
 
 The locked protocol is checked before fitting. Historical reference data select thresholds; test labels enter evaluation. Refitting retains parameters and the same numerical cutoff. `verify --replay` independently reconstructs all fitted model pairs and the paired resampling. The supplement accounts for no-alarm value, selection reasons, refitting and frozen scenarios without choosing another policy.
 
+Main and supplementary verifiers invalidate any previous certificate when an invocation starts, and retain a failed status if it raises an error. The Stage 2 report also requires the current verifier identity. After changing verification code, rerun verification and replay before rebuilding the report; an older successful record does not certify the new code.
+
 `verify_formulae` independently reconstructs ranking metrics, prior correction, probability references, calibration, SHAP additivity, decision loss, capacity excess and prevalence expectations from actual saved evidence.
 
 ## 4 · Finish the Stage 2 paper
@@ -73,3 +75,5 @@ The report requires a completed verified experiment, full replay and verified su
 ## Reading the records
 
 Current experiment manifests belong to `results/phase1/` and `results/phase2/`. Final manuscript provenance accompanies the paper. Dated review editions are kept in `docs/audits/`; historical paths and hashes describe their original editions. The final reports retain the study boundaries: record order is a temporal proxy, holdout results are supplementary, costs and capacity are hypothetical, and intervals condition on fixed predictions or fitted rules.
+
+The [complete October 7 review](audits/2026-10-07-full-review/REVIEW.md) records fresh fitting, replay, result comparison, report checks and failed platform attempts. Run full reproduction in a separate clone or worktree with its own output folders: the experiment commands overwrite that checkout's `results/` and `reports/`. Complete Stage 1, including its PDF export, before fitting Stage 2 so its source snapshot includes the finished paper. On Windows use the `pwsh` command shown above; the review's Windows PowerShell export stalled, while PowerShell 7 completed.

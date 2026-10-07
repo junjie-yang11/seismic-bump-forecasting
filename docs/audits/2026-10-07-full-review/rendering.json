@@ -1,0 +1,48 @@
+{
+  "scope": "Actual PDF rasterization; visual inspection recorded separately",
+  "reports": [
+    {
+      "stage": "phase1",
+      "pdf_sha256": "d6854422dee1e7a8845c800e757346ef0c1fa26cccf3241444faff7b47bb8925",
+      "pages": 15,
+      "images": [
+        "phase1-01.png",
+        "phase1-02.png",
+        "phase1-03.png",
+        "phase1-04.png",
+        "phase1-05.png",
+        "phase1-06.png",
+        "phase1-07.png",
+        "phase1-08.png",
+        "phase1-09.png",
+        "phase1-10.png",
+        "phase1-11.png",
+        "phase1-12.png",
+        "phase1-13.png",
+        "phase1-14.png",
+        "phase1-15.png"
+      ]
+    },
+    {
+      "stage": "phase2",
+      "pdf_sha256": "0626b1242a53079e1780b05720f457983ef46effe3f0bffa36651ce05e363b45",
+      "pages": 13,
+      "images": [
+        "phase2-01.png",
+        "phase2-02.png",
+        "phase2-03.png",
+        "phase2-04.png",
+        "phase2-05.png",
+        "phase2-06.png",
+        "phase2-07.png",
+        "phase2-08.png",
+        "phase2-09.png",
+        "phase2-10.png",
+        "phase2-11.png",
+        "phase2-12.png",
+        "phase2-13.png"
+      ]
+    }
+  ],
+  "passed": true
+}

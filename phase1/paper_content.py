@@ -23,6 +23,10 @@ def build_cohort_paper(root):
     corrected=next(r for r in cal if r['model']=='LR' and r['variant'].startswith('after'))
     h=next(r for r in hold if short(r['model'])=='LR')
     hg=next(r for r in operating if r['model']=='LR' and r['validation']=='holdout')
+    temporal_lr=[r for r in operating if r['model']=='LR' and r['validation']=='time']
+    temporal_n=sum(int(r['n']) for r in temporal_lr)
+    temporal_alert_rate=sum(int(r['tp'])+int(r['fp']) for r in temporal_lr)/temporal_n
+    temporal_prevalence=sum(int(r['positives']) for r in temporal_lr)/temporal_n
     lr_gap=next(r for r in gaps if r['model']=='LR'); ct_gap=next(r for r in gaps if r['model']=='CART')
     original_random=170/2578; test_rate=88/2063
     ci=lambda r:'[%s, %s]'%(num(r['ci_low']),num(r['ci_high']))
@@ -149,9 +153,10 @@ def build_cohort_paper(root):
       'Table 5. Record-order holdout warning outcomes, using frozen numerical thresholds selected inside training.',
       table(['Model','Hazardous shifts','Alerts','Detected','Missed','Recall'],[[r['model'],int(r['positives']),int(r['tp'])+int(r['fp']),int(r['tp']),int(r['fn']),num(r['recall'])] for r in operating if r['validation']=='holdout']),
       'The historical reference budget becomes a fixed score cutoff, whose later alert rate depends on the score distribution. '
-      'The holdout produces an LR alert rate of 0.0103, whereas pooled record-order testing produces 0.1832 at prevalence 0.0427. '
+      'The holdout produces an LR alert rate of %s, whereas pooled record-order testing produces %s at prevalence %s. '
       'This variation establishes threshold transfer as an evaluation target in its own right. Lower event prevalence, feature shifts and refitting are candidate '
-      'contributors to the change; the warning-count analysis measures the operating outcome without assigning it to a single mechanism.',
+      'contributors to the change; the warning-count analysis measures the operating outcome without assigning it to a single mechanism.'
+      %(num(hg['alert_rate']),num(temporal_alert_rate),num(temporal_prevalence)),
       '## 5 Discussion',
       '### 5.1 Implications for mine monitoring',
       'The common-cohort analysis makes a large evaluation-population effect visible before interpreting protocol differences. '

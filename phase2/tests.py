@@ -78,25 +78,35 @@ class DecisionTests(unittest.TestCase):
     def test_test_labels_cannot_change_parameters_scores_or_rules(self):
         rng=np.random.default_rng(23); X=rng.normal(size=(160,2)); y=(X[:,0]>.3).astype(float)
         tr=np.arange(120); te=np.arange(120,160)
-        original=fit_fold('XGBoost',X,y,tr,te,['a','b']); changed=y.copy(); changed[te]=1-changed[te]
-        future=fit_fold('XGBoost',X,changed,tr,te,['a','b'])
-        self.assertEqual(original['manifest'],future['manifest'])
-        for k in ('reference_score','fixed_score','refitted_score'): np.testing.assert_array_equal(original[k],future[k])
-        reference=np.array(original['manifest']['reference_rows'])
-        for mechanism in ('A','B','C'):
-            a=select(candidates(original['reference_score'],y[reference]),mechanism,.1 if mechanism!='B' else None,10 if mechanism!='A' else None)
-            b=select(candidates(future['reference_score'],changed[reference]),mechanism,.1 if mechanism!='B' else None,10 if mechanism!='A' else None)
-            self.assertEqual(a['threshold'],b['threshold'])
-            np.testing.assert_array_equal(original['fixed_score']>=a['threshold'],future['fixed_score']>=b['threshold'])
+        changed=y.copy(); changed[te]=1-changed[te]
+        for model in ('LR','CART','XGBoost'):
+            with self.subTest(model=model):
+                original=fit_fold(model,X,y,tr,te,['a','b'])
+                future=fit_fold(model,X,changed,tr,te,['a','b'])
+                self.assertEqual(original['manifest'],future['manifest'])
+                self.assertEqual(original['tuning'],future['tuning'])
+                for k in ('reference_score','fixed_score','refitted_score'): np.testing.assert_array_equal(original[k],future[k])
+                reference=np.array(original['manifest']['reference_rows'])
+                for mechanism in ('A','B','C'):
+                    a=select(candidates(original['reference_score'],y[reference]),mechanism,.1 if mechanism!='B' else None,10 if mechanism!='A' else None)
+                    b=select(candidates(future['reference_score'],changed[reference]),mechanism,.1 if mechanism!='B' else None,10 if mechanism!='A' else None)
+                    self.assertEqual(a['threshold'],b['threshold'])
+                    for workflow in ('fixed_score','refitted_score'):
+                        np.testing.assert_array_equal(original[workflow]>=a['threshold'],future[workflow]>=b['threshold'])
 
     def test_policy_reference_labels_do_not_fit_or_tune_fixed_model(self):
         rng=np.random.default_rng(3); X=rng.normal(size=(160,2)); y=(X[:,0]>.1).astype(float)
-        original=fit_fold('XGBoost',X,y,np.arange(120),np.arange(120,160),['a','b'])
-        changed=y.copy(); reference=original['manifest']['reference_rows']; changed[reference]=1-changed[reference]
-        other=fit_fold('XGBoost',X,changed,np.arange(120),np.arange(120,160),['a','b'])
-        self.assertEqual(original['tuning'],other['tuning'])
-        np.testing.assert_array_equal(original['fixed_score'],other['fixed_score'])
-        self.assertTrue(set(original['manifest']['tuning_fit_rows']).isdisjoint(reference))
-        self.assertTrue(set(original['manifest']['tuning_reference_rows']).isdisjoint(reference))
+        for model in ('LR','CART','XGBoost'):
+            with self.subTest(model=model):
+                original=fit_fold(model,X,y,np.arange(120),np.arange(120,160),['a','b'])
+                changed=y.copy(); reference=original['manifest']['reference_rows']; changed[reference]=1-changed[reference]
+                other=fit_fold(model,X,changed,np.arange(120),np.arange(120,160),['a','b'])
+                self.assertEqual(original['tuning'],other['tuning'])
+                for key in ('fixed_score','reference_score'):
+                    np.testing.assert_array_equal(original[key],other[key])
+                self.assertTrue(set(original['manifest']['fit_rows']).isdisjoint(reference))
+                if model == 'XGBoost':
+                    self.assertTrue(set(original['manifest']['tuning_fit_rows']).isdisjoint(reference))
+                    self.assertTrue(set(original['manifest']['tuning_reference_rows']).isdisjoint(reference))
 
 if __name__=='__main__': unittest.main()

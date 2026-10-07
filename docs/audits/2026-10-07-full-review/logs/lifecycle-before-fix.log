@@ -1,0 +1,23 @@
+test_core_failure_invalidates_previous_replay (test_verification_lifecycle.VerificationLifecycleTests.test_core_failure_invalidates_previous_replay) ... FAIL
+test_supplement_failure_invalidates_previous_certificate (test_verification_lifecycle.VerificationLifecycleTests.test_supplement_failure_invalidates_previous_certificate) ... FAIL
+
+======================================================================
+FAIL: test_core_failure_invalidates_previous_replay (test_verification_lifecycle.VerificationLifecycleTests.test_core_failure_invalidates_previous_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_verification_lifecycle.py", line 23, in test_core_failure_invalidates_previous_replay
+    self.assertFalse(record['passed'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_supplement_failure_invalidates_previous_certificate (test_verification_lifecycle.VerificationLifecycleTests.test_supplement_failure_invalidates_previous_certificate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_verification_lifecycle.py", line 39, in test_supplement_failure_invalidates_previous_certificate
+    self.assertFalse(record['passed'])
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.129s
+
+FAILED (failures=2)

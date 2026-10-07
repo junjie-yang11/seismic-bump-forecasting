@@ -1,0 +1,166 @@
+{
+  "scope": "full",
+  "started_at_utc": "2026-10-07T09:39:17.787482+00:00",
+  "steps": [
+    {
+      "runtime": "baseline",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.record_environment"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.148890600015875,
+      "log": "00-phase1.record_environment.log",
+      "summaries": []
+    },
+    {
+      "runtime": "baseline",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.audit_source",
+        "--source",
+        "data/original-seismic-bumps.arff"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6136784999980591,
+      "log": "01-phase1.audit_source.log",
+      "summaries": []
+    },
+    {
+      "runtime": "baseline",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.run_experiments"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 329.4262438999722,
+      "log": "02-phase1.run_experiments.log",
+      "summaries": []
+    },
+    {
+      "runtime": "baseline",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.run_engineering"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 83.84811129997252,
+      "log": "03-phase1.run_engineering.log",
+      "summaries": []
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.run_research"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.659003900014795,
+      "log": "04-phase1.run_research.log",
+      "summaries": []
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_research",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.2658735000295565,
+      "log": "05-phase1.verify_research.log",
+      "summaries": [
+        "RESULT: 7460 extended consistency checks passed; full XGBoost refits and native TreeSHAP replay passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.080820899980608,
+      "log": "06-unittest.log",
+      "summaries": [
+        "Ran 45 tests in 6.494s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "phase2.tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.0757876999559812,
+      "log": "07-unittest.log",
+      "summaries": [
+        "Ran 12 tests in 0.342s"
+      ]
+    },
+    {
+      "runtime": "document",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.generate_report",
+        "--docx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6017057999852113,
+      "log": "08-phase1.generate_report.log",
+      "summaries": []
+    },
+    {
+      "runtime": "word",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "phase1/export_report.ps1"
+      ],
+      "exit_code": 4294967295,
+      "elapsed_seconds": 483.5301210999605,
+      "log": "09-phase1-export_report.ps1.log",
+      "summaries": []
+    }
+  ],
+  "passed": false,
+  "completed_steps": 10,
+  "planned_steps": 18
+}

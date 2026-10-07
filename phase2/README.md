@@ -87,7 +87,7 @@ historically selected decisions.
 `fold` and `row` are zero-based **mirror** indices. Displayed report phases are
 `fold + 1`; pooled supplementary rows have `fold = -1`. The 774-row previously
 viewed holdout is descriptive and overlaps the primary test cohort; it is not
-additional independent evidence. First-stage `results/source_row_mapping.csv`
+additional independent evidence. First-stage `results/phase1/source_row_mapping.csv`
 maps mirror rows to the official source.
 
 ## Conditional intervals and scenarios

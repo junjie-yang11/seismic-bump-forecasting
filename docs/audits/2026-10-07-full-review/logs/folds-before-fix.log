@@ -1,0 +1,80 @@
+test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) ...
+  test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(4,), dtype=dtype('int64')) ... FAIL
+  test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(5, 2), dtype=dtype('int64')) ... FAIL
+  test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(10,), dtype=dtype('float64')) ... FAIL
+  test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(10,), dtype=dtype('int64')) ... FAIL
+test_fold_builders_reject_invalid_classes_or_counts (test_input_validation.InputValidationTests.test_fold_builders_reject_invalid_classes_or_counts) ... ok
+test_invalid_labels_and_empty_inputs_are_rejected (test_input_validation.InputValidationTests.test_invalid_labels_and_empty_inputs_are_rejected) ... ok
+test_invalid_temporal_indices_rejected_before_model_fit (test_input_validation.InputValidationTests.test_invalid_temporal_indices_rejected_before_model_fit) ... ok
+test_probability_metrics_reject_out_of_range_values (test_input_validation.InputValidationTests.test_probability_metrics_reject_out_of_range_values) ... ok
+test_scores_cannot_broadcast_across_labels (test_input_validation.InputValidationTests.test_scores_cannot_broadcast_across_labels) ... ok
+test_threshold_vectors_cannot_broadcast (test_input_validation.InputValidationTests.test_threshold_vectors_cannot_broadcast) ... ok
+
+======================================================================
+FAIL: test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(4,), dtype=dtype('int64'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 22, in test_fold_assignments_cannot_silently_omit_rows
+    cross_validate(forbidden_factory, X, y, fold)
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 56, in cross_validate
+    return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 74, in cross_validate_splits
+    model = make_model().fit(X[train], y[train])
+            ^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 16, in forbidden_factory
+    self.fail('invalid fold assignment reached a model fit')
+AssertionError: invalid fold assignment reached a model fit
+
+======================================================================
+FAIL: test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(5, 2), dtype=dtype('int64'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 22, in test_fold_assignments_cannot_silently_omit_rows
+    cross_validate(forbidden_factory, X, y, fold)
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 56, in cross_validate
+    return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 74, in cross_validate_splits
+    model = make_model().fit(X[train], y[train])
+            ^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 16, in forbidden_factory
+    self.fail('invalid fold assignment reached a model fit')
+AssertionError: invalid fold assignment reached a model fit
+
+======================================================================
+FAIL: test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(10,), dtype=dtype('float64'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 22, in test_fold_assignments_cannot_silently_omit_rows
+    cross_validate(forbidden_factory, X, y, fold)
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 56, in cross_validate
+    return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 74, in cross_validate_splits
+    model = make_model().fit(X[train], y[train])
+            ^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 16, in forbidden_factory
+    self.fail('invalid fold assignment reached a model fit')
+AssertionError: invalid fold assignment reached a model fit
+
+======================================================================
+FAIL: test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) (shape=(10,), dtype=dtype('int64'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 22, in test_fold_assignments_cannot_silently_omit_rows
+    cross_validate(forbidden_factory, X, y, fold)
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 56, in cross_validate
+    return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\src\evaluation.py", line 74, in cross_validate_splits
+    model = make_model().fit(X[train], y[train])
+            ^^^^^^^^^^^^
+  File "[original checkout]\.audit-work\full-review-20261007\saved-review\tests\test_input_validation.py", line 16, in forbidden_factory
+    self.fail('invalid fold assignment reached a model fit')
+AssertionError: invalid fold assignment reached a model fit
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.003s
+
+FAILED (failures=4)

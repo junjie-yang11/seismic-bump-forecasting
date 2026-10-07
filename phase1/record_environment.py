@@ -4,7 +4,7 @@ Record the exact environment a run was made in.
 Writes results/phase1/environment.txt, which is committed alongside the results so that
 anyone can see what produced them.
 
-    python record_environment.py
+    python -m phase1.record_environment
 """
 from __future__ import annotations
 
@@ -22,7 +22,9 @@ def pip_freeze(python_exe: str) -> str:
     try:
         out = subprocess.run([python_exe, "-m", "pip", "freeze"],
                              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        return out.stdout.decode("utf-8", "replace").strip() or "(no packages reported)"
+        if out.returncode:
+            return "(pip freeze failed: exit %d)" % out.returncode
+        return "\n".join(out.stdout.decode("utf-8", "replace").splitlines()).strip() or "(no packages reported)"
     except Exception as exc:                       # pragma: no cover
         return f"(pip freeze failed: {exc})"
 
@@ -53,7 +55,7 @@ def main() -> None:
         "numpy            : %s" % numpy.__version__,
         "pandas           : %s" % pandas.__version__,
         "",
-        "Command used     : python run_experiments.py",
+        "Experiment entry : python -m phase1.run_experiments",
         "",
         "-" * 60,
         "pip freeze",
@@ -61,7 +63,7 @@ def main() -> None:
         pip_freeze(sys.executable),
         "",
     ]
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines))
     print("wrote", OUT)
 

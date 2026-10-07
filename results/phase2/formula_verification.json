@@ -1,12 +1,12 @@
 {
   "passed": true,
   "checks": 8220,
-  "completed_at_utc": "2026-10-07T09:13:11.664209+00:00",
+  "completed_at_utc": "2026-10-07T10:21:36.123083+00:00",
   "sources": {
     "results/phase1/predictions.csv": "f2c402fa9cc74c7bdfa69093900cad82a31216439bdc5ca46bac4958165ac2be",
     "results/phase1/metrics_by_scheme.csv": "a191acb421ef2c235c43e98d85442d1b1bbaeee5e1b526c1b990de9b1efa2ec3",
     "results/phase1/engineering_predictions.csv": "a82edfcc44e456543034c997c51e36f3db1eff22c6068e4190385e27c408f1c2",
-    "results/phase1/probability_reference_comparison.csv": "087dbb0b6cf1dc79d9b1e83be937411dda21553a2a7137792e18c8779b65c36b",
+    "results/phase1/probability_reference_comparison.csv": "faa65daf771f89cf898108d5a94b4b68bcee652bccca94aa7e873dcce50b717b",
     "results/phase1/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
     "results/phase1/calibration_bins.csv": "58aac140a169b1ab2757912dcdc84ed8a6a9e1ce6b744dba2849c8b277b31050",
     "results/phase1/shap_predictions.csv": "05ff39629689e56b6563b726dfc8910928c4dc60598a9247b36bf0dd6477b014",

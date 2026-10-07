@@ -1,8 +1,8 @@
 Environment record for this run
 ============================================================
 
-Recorded (local) : 2026-10-01 19:38:40
-Recorded (UTC)   : 2026-10-01 11:38:40 UTC
+Recorded (local) : 2026-10-07 18:20:17
+Recorded (UTC)   : 2026-10-07 10:20:17 UTC
 
 Operating system : Windows 10
 Machine          : AMD64
@@ -15,17 +15,14 @@ Byte order       : little
 numpy            : 1.21.6
 pandas           : 1.1.5
 
-Command used     : python run_experiments.py
+Experiment entry : python -m phase1.run_experiments
 
 ------------------------------------------------------------
 pip freeze
 ------------------------------------------------------------
 numpy==1.21.6
-
 pandas==1.1.5
-
+Pillow==9.5.0
 python-dateutil==2.9.0.post0
-
 pytz==2026.4
-
 six==1.17.0

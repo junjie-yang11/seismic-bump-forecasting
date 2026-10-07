@@ -1,0 +1,25 @@
+{
+  "scope": "Fresh independent download compared to the actual audited cached inputs",
+  "checked_at_utc": "2026-10-07T10:05:54.516632+00:00",
+  "sources": [
+    {
+      "source": "official_arff",
+      "url": "https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip",
+      "http_status": 200,
+      "sha256": "aabe512fab65b36d1dfb462650b75cfd8d99d8cc2723e8ecb4e6f5e1caccd5a7",
+      "bytes": 141669,
+      "matches_audited_input": true,
+      "elapsed_seconds": 1.3671087000402622
+    },
+    {
+      "source": "mirror",
+      "url": "https://raw.githubusercontent.com/datasets/seismic-bumps/main/data/seismic-bumps.csv",
+      "http_status": 200,
+      "sha256": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
+      "bytes": 127523,
+      "matches_audited_input": true,
+      "elapsed_seconds": 1.394703300029505
+    }
+  ],
+  "passed": true
+}

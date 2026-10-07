@@ -52,6 +52,11 @@ def time_ordered_folds(n: int, k: int = 5) -> list[tuple[np.ndarray, np.ndarray]
 
 def cross_validate(make_model, X, y, fold, return_details=False):
     """Out-of-fold predictions under an explicit fold assignment."""
+    fold = np.asarray(fold)
+    if (fold.ndim != 1 or fold.shape != np.asarray(y).shape
+            or fold.dtype.kind not in 'iu' or np.any(fold < 0)
+            or np.unique(fold).size < 2):
+        raise ValueError('one nonnegative integer fold ID per row and at least two folds required')
     splits = [(np.flatnonzero(fold != f), np.flatnonzero(fold == f)) for f in np.unique(fold)]
     return cross_validate_splits(make_model, X, y, splits, return_details, temporal=False)
 

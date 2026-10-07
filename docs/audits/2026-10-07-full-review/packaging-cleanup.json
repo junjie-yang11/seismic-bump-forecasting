@@ -1,0 +1,62 @@
+[
+  {
+    "Candidate": "logs/final-logs/00-phase2.run.log",
+    "Retained": "logs/pre-env-fix-logs/00-phase2.run.log",
+    "SHA256": "3D5F4AD642743C709E074F79DBA37E7E13548F2AE1CB2010584F4B09BACC4A2C",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/01-phase2.verify.log",
+    "Retained": "logs/pre-env-fix-logs/01-phase2.verify.log",
+    "SHA256": "12A5032BEB4D92C20C090C72416E417AA10A7FC50D2839918C88CE4A83C7806E",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/02-phase2.supplement.log",
+    "Retained": "logs/pre-env-fix-logs/02-phase2.supplement.log",
+    "SHA256": "CF9D34F5566D254795B8AC1A51436282D80A1B607895F90162293AD95A105449",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/03-phase2.verify_supplement.log",
+    "Retained": "logs/pre-env-fix-logs/03-phase2.verify_supplement.log",
+    "SHA256": "FD7615313D52940A96429051BAA7C9C5ADABB5206B1B2827F7F54101C346E3C3",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/04-phase1.verify_formulae.log",
+    "Retained": "logs/pre-env-fix-logs/04-phase1.verify_formulae.log",
+    "SHA256": "612000CC35ECCF82D8A8C48F3C8C1CCFA53EF79476C15A1AA0FED4980CDE1B46",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/05-phase2.report.log",
+    "Retained": "logs/pre-env-fix-logs/05-phase2.report.log",
+    "SHA256": "5589751230D17B28ADF688D229627A9F8C16B731B9B7DE352566B52CE6455F1D",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/06-phase2-export_report.ps1.log",
+    "Retained": "logs/pre-env-fix-logs/06-phase2-export_report.ps1.log",
+    "SHA256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/07-unittest.log",
+    "Retained": "logs/pre-env-fix-logs/07-unittest.log",
+    "SHA256": "52270D683383F52175D167630CDF607D0E282E6D915F53BBA031834C5EA3291C",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/09-phase1.verify_results.log",
+    "Retained": "logs/pre-env-fix-logs/09-phase1.verify_results.log",
+    "SHA256": "3873D86DF0EDC45463655079A4C55E1BEB1FC4FD4427A2F5F3779511224C7E83",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  },
+  {
+    "Candidate": "logs/final-logs/10-phase1.quick_check.log",
+    "Retained": "logs/pre-env-fix-logs/10-phase1.quick_check.log",
+    "SHA256": "0480B4FFB8F7E70D9EDADCC3BA2A8E52EE7D08715121D420044ED1DC66083B48",
+    "Basis": "Exact duplicate, absent from final invocation log set; prior invocation copy retained"
+  }
+]

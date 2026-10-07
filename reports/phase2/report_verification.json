@@ -4,11 +4,10 @@
   "pages": 13,
   "tables": 17,
   "figures": 3,
-  "visual_review": "All thirteen final rendered pages inspected; complete tables and references, no blank pages or overflow.",
-  "rendering": "Microsoft Word invisible PDF export and Poppler page rendering; LibreOffice unavailable.",
+  "scope": "Computed report tables, paragraphs, hashes, PDF decimals and package metadata; visual inspection is recorded separately.",
   "report_sha256": {
-    "phase2_threshold_transfer_report.docx": "1b44e2dec4f7f4f5a43c3401dbb64614079b8aaa2106be4b6f353aebaf4163a5",
+    "phase2_threshold_transfer_report.docx": "205ff306e55eb286ac56365001bec2a62abd9d56dff461642fad6ddae4361f3f",
     "phase2_threshold_transfer_report.md": "0966e0240e69f3293bc7a21c0795810d07d7788a3ab4965416b6160fe6b9ad48",
-    "phase2_threshold_transfer_report.pdf": "ffa78e58670e5ab6515e85eff52f154da219d832b407ff17dd05c209436ee69a"
+    "phase2_threshold_transfer_report.pdf": "0626b1242a53079e1780b05720f457983ef46effe3f0bffa36651ce05e363b45"
   }
 }

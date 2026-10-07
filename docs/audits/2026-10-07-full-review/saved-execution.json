@@ -1,0 +1,136 @@
+{
+  "scope": "saved",
+  "started_at_utc": "2026-10-07T09:39:53.423607+00:00",
+  "steps": [
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.809345599962398,
+      "log": "00-unittest.log",
+      "summaries": [
+        "Ran 42 tests in 6.863s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "phase2.tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.1542328000068665,
+      "log": "01-unittest.log",
+      "summaries": [
+        "Ran 12 tests in 0.370s"
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.quick_check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 51.93298490002053,
+      "log": "02-phase1.quick_check.log",
+      "summaries": [
+        "Ran 42 tests in 6.587s",
+        "Ran 12 tests in 0.373s",
+        "RESULT: all 8169 consistency checks passed.",
+        "RESULT: 63809 phase-two checks passed.",
+        "RESULT: 10902 independent supplementary checks passed.",
+        "RESULT: 8220 independent formula checks passed.",
+        "QUICK CHECK PASSED: 137 links and 242 Stage 2 Word items; 51.83 seconds."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_research",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.344775000005029,
+      "log": "03-phase1.verify_research.log",
+      "summaries": [
+        "RESULT: 7460 extended consistency checks passed; full XGBoost refits and native TreeSHAP replay passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify",
+        "--replay"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 54.414456200029235,
+      "log": "04-phase2.verify.log",
+      "summaries": [
+        "RESULT: 63854 phase-two checks passed with all fixed/refitted models replayed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase2.verify_supplement"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.8438780999858864,
+      "log": "05-phase2.verify_supplement.log",
+      "summaries": [
+        "RESULT: 10902 independent supplementary checks passed."
+      ]
+    },
+    {
+      "runtime": "research",
+      "command": [
+        "python",
+        "-B",
+        "-u",
+        "-m",
+        "phase1.verify_formulae"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.1194373000180349,
+      "log": "06-phase1.verify_formulae.log",
+      "summaries": [
+        "RESULT: 8220 independent formula checks passed."
+      ]
+    }
+  ],
+  "passed": true,
+  "completed_steps": 7,
+  "planned_steps": 7,
+  "completed_at_utc": "2026-10-07T09:41:56.050774+00:00"
+}

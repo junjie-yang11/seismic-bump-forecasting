@@ -1,0 +1,12 @@
+test_fold_assignments_cannot_silently_omit_rows (test_input_validation.InputValidationTests.test_fold_assignments_cannot_silently_omit_rows) ... ok
+test_fold_builders_reject_invalid_classes_or_counts (test_input_validation.InputValidationTests.test_fold_builders_reject_invalid_classes_or_counts) ... ok
+test_invalid_labels_and_empty_inputs_are_rejected (test_input_validation.InputValidationTests.test_invalid_labels_and_empty_inputs_are_rejected) ... ok
+test_invalid_temporal_indices_rejected_before_model_fit (test_input_validation.InputValidationTests.test_invalid_temporal_indices_rejected_before_model_fit) ... ok
+test_probability_metrics_reject_out_of_range_values (test_input_validation.InputValidationTests.test_probability_metrics_reject_out_of_range_values) ... ok
+test_scores_cannot_broadcast_across_labels (test_input_validation.InputValidationTests.test_scores_cannot_broadcast_across_labels) ... ok
+test_threshold_vectors_cannot_broadcast (test_input_validation.InputValidationTests.test_threshold_vectors_cannot_broadcast) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK

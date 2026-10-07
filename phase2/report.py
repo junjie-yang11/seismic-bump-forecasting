@@ -27,6 +27,8 @@ def build():
     verification=json.loads((OUT/'verification.json').read_text())
     if not verification['passed'] or not verification['replay']:
         raise RuntimeError('Independent model replay is required before reporting results')
+    if hashlib.sha256((ROOT/'phase2/verify.py').read_bytes()).hexdigest()!=verification['verifier_sha256']:
+        raise RuntimeError('Main verifier changed: rerun independent model replay before reporting')
     for name,digest in {**verification['evidence_sha256'],**verification['provenance_sha256']}.items():
         if hashlib.sha256((OUT/name).read_bytes()).hexdigest()!=digest:
             raise RuntimeError('Verified evidence changed before report authoring: '+name)

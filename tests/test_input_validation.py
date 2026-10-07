@@ -5,11 +5,22 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from metrics import average_precision, roc_auc, summarise, threshold_metrics
 from calibration import brier_score, brier_skill_score
-from evaluation import cross_validate_splits, stratified_random_folds, time_ordered_folds
+from evaluation import cross_validate, cross_validate_splits, stratified_random_folds, time_ordered_folds
 from engineering import evaluate_splits
 
 
 class InputValidationTests(unittest.TestCase):
+    def test_fold_assignments_cannot_silently_omit_rows(self):
+        X, y = np.ones((10, 1)), np.arange(10) % 2
+        def forbidden_factory():
+            self.fail('invalid fold assignment reached a model fit')
+        for fold in (np.array([0, 0, 1, 1]), np.arange(10).reshape(5, 2),
+                     np.arange(10, dtype=float), np.array([0, 1] * 4 + [-1, -1]),
+                     np.zeros(10, dtype=int)):
+            with self.subTest(shape=fold.shape, dtype=fold.dtype):
+                with self.assertRaises(ValueError):
+                    cross_validate(forbidden_factory, X, y, fold)
+
     def test_scores_cannot_broadcast_across_labels(self):
         y = np.array([0., 1.])
         for function in (average_precision, roc_auc, brier_score, brier_skill_score):

@@ -1,0 +1,21 @@
+{
+  "scope": "Raw mirror consistency, not an assertion that discrepant original records are incorrect",
+  "records": 2578,
+  "positives": 170,
+  "nbumps_equal_band_sum": 2576,
+  "nbumps_differences": [
+    {
+      "mirror_row_1based": 435,
+      "nbumps": 2,
+      "band_sum": 1
+    },
+    {
+      "mirror_row_1based": 436,
+      "nbumps": 1,
+      "band_sum": 0
+    }
+  ],
+  "fixed_settings": "Budgets/costs/seeds/grid/splits are protocol settings, not observed results.",
+  "undefined_values": "Infinite thresholds are defined no/all-alarm sentinels; NA denotes mathematically undefined quantities, not invented measurements.",
+  "synthetic_fixtures": "Synthetic arrays and mocked failures are confined to behavioral tests and are not experimental evidence."
+}
