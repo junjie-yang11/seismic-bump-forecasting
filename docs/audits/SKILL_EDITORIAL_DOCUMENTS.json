@@ -1,0 +1,229 @@
+{
+  "passed": true,
+  "checks": 217,
+  "completed_at_utc": "2026-10-07T08:06:03.357326+00:00",
+  "baseline_commit": "1d9e256ef01c67a9f7c9516dcc3efb0812e062e3",
+  "python_sources_parsed": 48,
+  "protected_evidence_files_unchanged": 82,
+  "csv_files_unchanged": 62,
+  "documents": {
+    "phase1": {
+      "pages": 15,
+      "tables": 11,
+      "figures": 5,
+      "references": 12,
+      "table_cells_equal_to_baseline": true,
+      "visual_review": "Every final rendered page inspected; no overflow, clipped tables or blank pages.",
+      "sha256": {
+        "technical_note.md": "77d9c7d1886c3bd8c0104b474c060e49c92662ada0d797ba321c455f56a0baed",
+        "technical_report.docx": "94f557107f68acb4686c2d9db34d711630bdebab5143f4b6f303e6adae9a5bf6",
+        "technical_report.pdf": "08f49df9c6beec4da5c765390720f1775223e29a958403e64345b519377ddb25"
+      }
+    },
+    "phase2": {
+      "pages": 12,
+      "tables": 17,
+      "figures": 3,
+      "references": 9,
+      "table_cells_equal_to_baseline": true,
+      "visual_review": "Every final rendered page inspected; no overflow, clipped tables or blank pages.",
+      "sha256": {
+        "phase2_threshold_transfer_report.docx": "bb41e389e70e91aeae0d320dc6615b03b4a61c7e9f303fa6e385a810be1a026f",
+        "phase2_threshold_transfer_report.md": "34cad26e3234b81e4ccb864b5e2305f9f1c348b84d6c38254b460dba4867c1f9",
+        "phase2_threshold_transfer_report.pdf": "26235e32a047460d3814902237a2b2b9421c761acf3ba9753a2626cb7a45d54f"
+      }
+    }
+  },
+  "rendering": "Existing invisible Microsoft Word export and Poppler rendering; LibreOffice render attempt unavailable (soffice.exe absent).",
+  "quick_check": {
+    "local_cache": true,
+    "exit_code": 0,
+    "navigation_links": 134,
+    "stage2_word_items": 239,
+    "elapsed_seconds": 51.18
+  },
+  "quantitative_headlines_reconstructed": true,
+  "writing_audits": {
+    "phase1": {
+      "raw_prose_audit_status": "FINDINGS",
+      "raw_findings": [
+        {
+          "code": "PROSE010",
+          "artifact": "phase1",
+          "match": "Seismic-method, a-d, a-d, a-d, Previous-shift, Previous-shift, eight-shift, Pulse-count, eight-shift, Coal-getting, Previous-shift, Previous-shift, Previous-shift, Previous-shift, Previous-shift, Previous-shift, Previous-shift, Previous-shift, Previous-shift, energy-band",
+          "count": 20,
+          "message": "dense lexical hyphenation in one sentence; inspect clarity and field convention"
+        },
+        {
+          "code": "PROSE004",
+          "artifact": "phase1",
+          "match": "on the common test cohort",
+          "count": 3,
+          "message": "repeated multiword phrase across sentences"
+        }
+      ],
+      "abstract_words_before": 247,
+      "abstract_words_after": 207
+    },
+    "phase2": {
+      "raw_prose_audit_status": "FINDINGS",
+      "raw_findings": [
+        {
+          "code": "PROSE007",
+          "artifact": "phase2",
+          "match": "syntactic dash punctuation",
+          "count": 10,
+          "message": "review em/en dash punctuation in context; retain when functional, not by default"
+        },
+        {
+          "code": "PROSE008",
+          "artifact": "phase2",
+          "match": "Cost- and Capacity-Sensitive",
+          "count": 1,
+          "message": "suspended compound; consider a clearer open phrase"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "fixed xgboost loss contrasts for every phase cost and capacity budget",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "negative values favor c on the stated relative loss",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "workload and capacity excess for the same fixed xgboost c policies shown in figure",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "zero alerts and zero excess are distinct outcomes",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "c policy changes after fitting on all outer history with parameters and numerical thresholds held fixed",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        },
+        {
+          "code": "PROSE001",
+          "artifact": "phase2",
+          "match": "negative loss differences favor refitting negative alert differences mean fewer inspections",
+          "count": 2,
+          "message": "exact or punctuation-only sentence repetition"
+        }
+      ],
+      "abstract_words_before": null,
+      "abstract_words_after": null
+    },
+    "manual_disposition": {
+      "phase1": "Two retained diagnostics: feature-definition table flattened into one sentence, and technical common-cohort wording in methods/table/figure contexts. Two dense prose hyphenation diagnostics were resolved before this final audit.",
+      "phase2": "Eight retained diagnostics: functional mathematical/range/phase-rule punctuation, locked suspended-compound title, and six image-alternative/visible-caption duplicate sentences for accessibility. No repeated body paragraphs were found.",
+      "scope": "Manual review covered argument, evidence, prose and delivered artifacts; automatic diagnostics were not falsely reported as a zero-finding pass."
+    }
+  },
+  "word_package_audit": {
+    "status": "PASS",
+    "reports": [
+      {
+        "path": "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\reports\\phase1\\technical_report.docx",
+        "tracked_changes": 0,
+        "counts": {
+          "insertions": 0,
+          "deletions": 0,
+          "moves_from": 0,
+          "moves_to": 0,
+          "comment_ranges": 0,
+          "comment_references": 0,
+          "field_instructions": 0,
+          "simple_fields": 1,
+          "comments": 0
+        },
+        "revision_authors": {},
+        "comment_authors": {},
+        "parent_linked_replies": 0,
+        "reply_authors": {},
+        "orphan_reply_para_ids": [],
+        "orphan_parent_para_ids": [],
+        "placeholders": []
+      },
+      {
+        "path": "D:\\yjjjjjj\\Documents\\mining\\seismic-bump-forecasting\\reports\\phase2\\phase2_threshold_transfer_report.docx",
+        "tracked_changes": 0,
+        "counts": {
+          "insertions": 0,
+          "deletions": 0,
+          "moves_from": 0,
+          "moves_to": 0,
+          "comment_ranges": 0,
+          "comment_references": 0,
+          "field_instructions": 0,
+          "simple_fields": 1,
+          "comments": 0
+        },
+        "revision_authors": {},
+        "comment_authors": {},
+        "parent_linked_replies": 0,
+        "reply_authors": {},
+        "orphan_reply_para_ids": [],
+        "orphan_parent_para_ids": [],
+        "placeholders": []
+      }
+    ],
+    "errors": []
+  },
+  "citation_metadata": {
+    "total_entries": 7,
+    "valid_entries": 7,
+    "errors": [],
+    "warnings": [
+      {
+        "type": "missing_recommended_field",
+        "field": "pages",
+        "severity": "medium",
+        "message": "Entry Kunsch1989jackknife: Missing recommended field \"pages\"",
+        "entry": "Kunsch1989jackknife"
+      }
+    ],
+    "duplicates": [],
+    "venue_standard_checked": null,
+    "min_count_checked": null,
+    "manuscript_results": {
+      "checked": false,
+      "manuscript_filepath": null,
+      "cited_keys": [],
+      "missing_keys": [],
+      "unused_keys": []
+    },
+    "bibtex_sha256": "bc18abd5e388bd8d02de21402a3cf0c2aa6f3363e4329390bdad09ec54a6db90",
+    "verified_dois": [
+      "10.1016/j.ins.2011.12.028",
+      "10.1111/ecog.02881",
+      "10.1145/2939672.2939785",
+      "10.1038/s42256-019-0138-9",
+      "10.1214/aos/1176347265",
+      "10.24432/C5W902",
+      "10.48550/arXiv.2609.00065"
+    ],
+    "warning_disposition": "The DOI response omitted Kunsch pages. Existing manuscript pages 1217-1241 retain the verified source value; no missing metadata was invented.",
+    "support_scope": "Metadata identity, required fields and duplicates checked; not a new full-text review of all sources. Unchanged scientific claims retain the separately recorded primary-source review and access limits. New software attribution verified at https://arxiv.org/abs/2609.00065."
+  },
+  "skill_instructions_sha256": {
+    "academic-writing-skills": "3d895b84464a082a7915a329b7bb65047cca3d2145f65ad84b6eb9f80e91c1d4",
+    "paper-review": "6432e3140c697a9e5e82fe8b5db3ab08739f9c1876b6666c66ae233023c7ae4b",
+    "citation-management": "ca1b473108c4b49843538f49ea1219668472a9ddec9624d1da41383a8aab2a05",
+    "manuscript-writing-review": "8000635f38e1b977d156fd1b416aa8d493db4a60ab7e083433653d60a0467e2a"
+  }
+}

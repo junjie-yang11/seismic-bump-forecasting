@@ -84,6 +84,7 @@ docs/                Reproduction guide and dated audit history
 - [Code and structure cleanup record](docs/audits/STRUCTURE_CLEANUP.json)
 - [Current structure and verification review](docs/audits/STRUCTURE_REVIEW.md)
 - [Research presentation release review](docs/audits/RESEARCH_PRESENTATION_REVIEW.md)
+- [Current manuscript review and verification](docs/audits/SKILL_EDITORIAL_REVIEW.md)
 
 Run commands from the repository root. Stage 1 uses `python -m phase1.<command>`; Stage 2 uses `python -m phase2.<command>`. Older dated audit records retain the paths used in their original editions.
 

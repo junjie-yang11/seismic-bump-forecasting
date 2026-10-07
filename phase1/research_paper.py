@@ -63,15 +63,13 @@ def build_paper(root):
         'Research code: https://github.com/junjie-yang11/seismic-bump-forecasting',
         '## Abstract',
         'Test-cohort composition materially changes the apparent validation gap in seismic hazard forecasting. '
-        'We evaluate logistic regression (LR), bagged CART and training-tuned XGBoost on 2,063 common test rows from the 2,578-row UCI Seismic Bumps mirror. Record order serves as a temporal proxy because timestamps and longwall identifiers are absent. '
-        'Matching test rows reduces the apparent random-versus-record-order average-precision gap by %.1f percent for LR and %.1f percent for CART. Residual differences are %s (95 percent interval %s) and %s (%s), respectively. These changes quantify sensitivity to evaluation-cohort composition. '
+        'We compare logistic regression (LR), bagged CART and training-tuned XGBoost on 2,063 common test rows from the 2,578-row UCI Seismic Bumps mirror. Record order is a temporal proxy because timestamps and longwall identifiers are absent. '
+        'Matching rows reduces the apparent random-versus-record-order average-precision gap by %.1f percent for LR and %.1f percent for CART. Residual differences are %s (95 percent interval %s) and %s (%s); the comparison does not isolate leakage or drift. '
         'Training-prior correction improves LR expected calibration error from %s to %s and Brier score from %s to %s. '
         'Corrected LR Brier skill is %s against the historical training-prior reference and %s against the retrospective test-prevalence reference. '
-        'Nine prespecified feature combinations assess the predictive information in hazard ratings, geophone signals, seismic activity and shift type. '
-        'Exact TreeSHAP identifies total seismic energy, low-energy event counts and pulse activity as recurring contributors to XGBoost predictions; '
-        'comparison with refitted feature ablations distinguishes model reliance from incremental predictive value. '
-        'At training reference budgets of 10 and 20 percent, supplementary holdout XGBoost produces %s and %s alerts and detects %s and %s of 26 hazardous shifts. '
-        'The results distinguish three properties needed for engineering interpretation: performance on comparable shifts, the probability scale of the forecasts and the detection workload of a warning rule. Paired intervals describe uncertainty conditional on fixed predictions.'
+        'Nine prespecified feature combinations and exact TreeSHAP distinguish fitted-model feature use from incremental predictive value. Energy, low-energy event counts and pulse activity repeatedly contribute to XGBoost predictions. '
+        'At 10 and 20 percent training reference budgets, supplementary holdout XGBoost produces %s and %s alerts, detecting %s and %s of 26 hazardous shifts. '
+        'Together, matched cohorts, explicit probability references and detection counts connect forecast evaluation to inspection workload. Intervals condition on fixed predictions.'
         % (100 * float(gaps[0]['gap_reduction_fraction']), 100 * float(gaps[1]['gap_reduction_fraction']),
            protocol_rows[0][3], protocol_rows[0][4], protocol_rows[1][3], protocol_rows[1][4],
            number(raw['ece']), number(corrected['ece']), number(raw['brier']), number(corrected['brier']),
@@ -84,14 +82,14 @@ def build_paper(root):
         'These questions connect model evaluation to detected hazards, missed hazardous shifts and false-alert workload.',
         'The UCI Seismic Bumps data provide a defined next-shift forecasting task: each record summarizes an eight-hour shift, '
         'and the target indicates whether the following shift contains a seismic event above 10,000 J [1]. Existing seismic and seismoacoustic hazard ratings '
-        'appear alongside energy, pulse and event-count measurements. Their coexistence makes the additional predictive information in measured signals testable against the recorded assessments. '
+        'appear alongside energy, pulse and event-count measurements. The data therefore support comparisons of recorded assessments with measured signals. '
         'The target is next-shift high-energy seismic occurrence; confirmed rockburst accidents are outside its label definition.',
         'Rule-based mining-hazard prediction predates this study. Sikora and Wrobel [9] evaluated shift and hourly forecasts using longwall-specific monitoring data and also transferred rules between working faces. '
         'Their hazard definition and cohorts differ from the public UCI task, so their classification results provide engineering context rather than a numerical benchmark for our average precision.',
         'Validation protocols can change both the training history and the test population [3,4]. Comparing their scores on different shifts can therefore obscure the source of an apparent performance gap. '
         'A common test cohort makes that comparison interpretable, while probability assessment determines what the score scale conveys. '
         'Feature ablation, model explanations and frozen thresholds then connect the monitoring inputs to predictive contribution and warning workload.',
-        'The contribution is an applied evaluation framework connecting comparable test records, probability assessment and engineering interpretation. '
+        'This study connects three engineering questions: how cohort composition changes the validation comparison, whether probability correction improves assessment, and how monitoring signals contribute to predictions and warning workload. '
         'Common test rows reveal how cohort composition changes the apparent protocol gap. Training-local correction and explicit probability references separate calibration improvement from baseline-relative skill. '
         'TreeSHAP and nine prespecified, refitted feature combinations distinguish the inputs used by a fitted model from their incremental predictive value. '
         'Frozen reference budgets then express the forecasts as detections, missed hazardous shifts and inspection workload. These empirical findings use established learning and explanation methods [6,7], saved row-level evidence and training-only selection.',
@@ -155,8 +153,8 @@ def build_paper(root):
         'Random-protocol differences average the five seed-specific AP values within each replicate. The earlier LR/CART protocol analysis also checks lengths 16 and 64. '
         'The intervals are descriptive, unadjusted for multiple feature contrasts, and exclude model-refit and parameter-selection uncertainty [5].',
         '### 3.3 Explanations and phase stability',
-        'Full-feature XGBoost models explain their own outer-test predictions through native exact TreeSHAP, using the training-derived leaf covers '
-        'as the tree-path-dependent reference [7,8]. Each row has 17 feature contributions and a bias term. '
+        'XGBoost models with all features explain their own outer test predictions through native exact TreeSHAP. Training leaf covers '
+        'provide its tree-path-dependent reference [7,8]. Each row has 17 feature contributions and a bias term. '
         'Their sum reconstructs the raw log-odds margin; applying the logistic function reconstructs the predicted probability. '
         'Contributions are additive on the model\'s log-odds scale and describe fitted predictive associations.',
         'Global importance is mean absolute contribution on the common test cohort. Each phase also has its own importance ranks. '
@@ -171,7 +169,7 @@ def build_paper(root):
         'After outer refitting, the numerical threshold is frozen and evaluated on future test records. All budgets use the same model scores; no test labels enter threshold selection.',
         'For LR, both threshold selection and alert classification use raw weighted-model scores. Prior-corrected probabilities are used separately for probability assessment. '
         'The inner and outer models are distinct fits, so refitting can alter raw-score distributions and the transferred alert rate even though the probability scales are not mixed. '
-        'A frozen-inner-model comparison would isolate this refitting contribution from temporal distribution changes.',
+        'A fixed-inner-model comparison at the same cutoff would quantify the difference between these workflows on identical test rows; it would not identify a causal effect of refitting.',
         'Reference budgets are experimental workload scenarios, not established operating limits for a mine. '
         'The future actual alert rate is measured separately because refitting and changing score distributions can alter it. '
         'Warning outcomes include true detections, false alerts, missed hazardous shifts, precision and recall. '
@@ -299,7 +297,7 @@ def build_paper(root):
         '### 7.1 Connecting monitoring evidence to warning decisions',
         'Matching test rows sharply reduces the LR and CART validation gaps, showing that the evaluation cohort materially affects their apparent size. The residual gaps compare workflows that still differ in training history and size; they do not isolate a leakage effect. '
         'Probability assessment adds a second distinction. Training-prior correction improves LR calibration, but corrected probabilities have positive Brier skill against the historical reference and negative skill against the retrospective test-prevalence reference. Improvement over the raw model and advantage over a reference are separate findings.',
-        'The SHAP-ablation comparison provides an engineering reading of the monitoring signals. Energy and low-energy event counts strongly influence the fitted XGBoost predictions, '
+        'SHAP and ablation answer different engineering questions. Energy and low-energy event counts strongly influence the fitted XGBoost predictions, '
         'while refitting without their group yields a positive pooled AP difference whose interval includes zero. Their influence describes the fitted prediction mechanism; the ablation tests the performance of a different fitted model. Reading these results together prevents global importance from becoming a claim of incremental value. '
         'The warning-budget results extend this interpretation to decisions: additional detections come with additional false alerts, and a historical reference budget can produce a different alert rate on later records.',
         '### 7.2 Scope and prospective validation',
@@ -310,21 +308,20 @@ def build_paper(root):
         'Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. '
         'Repeated measurements can correspond to distinct shifts; the provenance audit establishes the mirror transformation rather than the operational validity of deduplication. '
         'Native TreeSHAP uses training leaf covers, and correlated inputs affect the allocation of contributions. '
-        'Its signed values explain fitted associations rather than the causal effect of changing a monitoring variable. '
+        'Signed contributions explain how the fitted model uses a variable, not the causal effect of changing that variable. '
         'Phase stability is conditional on the fitted models and observed test distributions.',
         'The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. '
         'A maximum AP among these feature sets is not treated as a validated model-selection result. '
         'The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. '
         'A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.',
         '## 8 Conclusions',
-        'Recalculating performance on common test rows substantially reduces the apparent random-versus-record-order gap. The paired residual differences and their intervals measure the remaining protocol contrast; they do not identify a causal share of leakage or drift. '
-        'Training-prior correction improves LR probability assessment, while its reference-dependent Brier skill shows why calibration gains need an explicit comparator. '
-        'TreeSHAP and refitted ablations distinguish the signals used by a model from their observed incremental predictive value. Frozen-budget outcomes quantify the detections, missed shifts and false alerts associated with those forecasts. '
-        'The engineering contribution is an auditable connection from monitoring signals to forecasts and inspection demand: matched shifts define the performance comparison, explicit probability references define calibration value, and detected, missed and falsely alerted shifts define warning workload.',
+        'This study evaluates seismic forecasts through matched test records, probability references and monitoring-feature comparisons. Matching rows reduces the apparent protocol gap without identifying a causal share of leakage or drift. '
+        'Training-prior correction improves LR calibration, while baseline-relative Brier skill depends on the stated reference. TreeSHAP describes fitted-model feature use; refitted ablations assess incremental predictive value. '
+        'Frozen-budget outcomes connect these forecasts to detected, missed and falsely alerted shifts. The resulting evidence supports engineering review of prediction and inspection demand under the stated retrospective design.',
         '## Data and computational reproducibility',
-        'Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence includes all feature-set predictions, inner-reference scores, '
-        'fold audits, candidate-selection predictions and row-index manifests, bootstrap replicates, five random seeds, native XGBoost models, '
-        'row-level TreeSHAP contributions and the predetermined case records. '
+        'Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence includes predictions for every feature set, scores from inner reference sets, '
+        'fold audits, predictions for candidate selection and manifests of row indices. It also retains bootstrap replicates, five random seeds, native XGBoost models, '
+        'TreeSHAP contributions for each row and the predetermined case records. '
         'Result tables are generated from saved evidence. Source hashes and duplicate row mappings preserve the data version. '
         'Appendix Table A1 maps feature names to UCI definitions and the implemented engineering groups.',
         'The extended analysis uses Python %s, NumPy %s, pandas %s, XGBoost %s and SciPy %s. '
@@ -336,6 +333,7 @@ def build_paper(root):
         'pwsh -NoProfile -ExecutionPolicy Bypass -File phase1/export_report.ps1 exports PDF. '
         'Use python -m phase1.verify_results --reports to check results and report agreement.'
         % tuple(config['environment'][k] for k in ('python', 'numpy', 'pandas', 'xgboost', 'scipy')),
+        'Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [12].',
         '## References',
         '[1] Sikora M, Wrobel L. Seismic Bumps [Dataset]. UCI Machine Learning Repository, 2010. DOI: 10.24432/C5W902. https://archive.ics.uci.edu/dataset/266/seismic+bumps',
         '[2] datasets/seismic-bumps. CSV mirror and preparation description. https://github.com/datasets/seismic-bumps',
@@ -348,6 +346,7 @@ def build_paper(root):
         '[9] Sikora M, Wrobel L. Application of rule induction algorithms for analysis of data collected by seismic hazard monitoring systems in coal mines. Archives of Mining Sciences, 2010, 55(1):91-114. Author-linked full text: https://www.researchgate.net/publication/281395657',
         '[10] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. Proceedings of ICML, PMLR 80, 2018:3122-3130. https://proceedings.mlr.press/v80/lipton18a.html',
         '[11] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf',
+        '[12] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv, 2026. DOI: 10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065',
     ]
     definitions = {
         'seismic': ('Hazard ratings', 'Seismic-method shift hazard rating', 'Ordinal a-d'),

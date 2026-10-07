@@ -5,7 +5,7 @@ Mining Engineering, Fuzhou University
 
 Abstract
 
-Historical capacity feasibility does not ensure that a seismic warning rule retains its workload or decision value on later records. This study separates model fitting, policy selection and testing to evaluate budget-only, cost-only and cost-plus-capacity rules on the UCI Seismic Bumps data. Four subsequent record blocks provide 2,063 test records. XGBoost is the prespecified main model; logistic regression and bagged CART provide robustness checks. At missed-event cost r=10, pooled cost-plus-capacity loss exceeded or equaled the no-alarm reference by 0.00 to 0.82 units per 100 shifts. Despite all reference areas containing positive outcomes, its 40 no-alarm selections comprise 28 unconstrained cost optima and 12 capacity-induced changes. The budget rule exceeded later capacity in 13 of 16 phase–budget settings; cost-plus-capacity exceeded it in 2 of 64 phase–budget–cost settings. Matched-setting comparisons connect reduced capacity excess to changes in detections, missed events and loss. Refitting changes finite-cutoff decisions, while no-alarm rules remain invariant by construction. Paired block intervals and frozen-rule prevalence scenarios characterize decision value and workload under hypothetical costs. Recorded row order is a temporal proxy; the study is retrospective.
+Historical capacity feasibility does not ensure that a seismic warning rule retains its workload or decision value on later records. This study separates model fitting, policy selection and testing to evaluate budget-only, cost-only and cost-plus-capacity rules on the UCI Seismic Bumps data. Four subsequent record blocks provide 2,063 test records. XGBoost is the prespecified main model; logistic regression and bagged CART provide robustness checks. At relative missed-shift cost r=10, pooled cost-plus-capacity loss equaled or exceeded the no-alarm reference by 0.00 to 0.82 units per 100 shifts. Despite all reference areas containing positive outcomes, its 40 no-alarm selections comprise 28 unconstrained cost optima and 12 capacity-induced changes. The budget rule exceeded later capacity in 13 of 16 phase–budget settings; cost-plus-capacity exceeded it in 2 of 64 phase–budget–cost settings. These dependent settings use different denominators. Matched-setting comparisons connect reduced capacity excess to changes in detections, missed events and loss. Refitting changes finite-cutoff decisions, while no-alarm rules remain invariant by construction. Paired block intervals and frozen-rule prevalence scenarios characterize decision value and workload under hypothetical costs. Recorded row order is a temporal proxy; the study is retrospective.
 
 Keywords: seismic hazard; warning threshold; relative cost; inspection capacity; record-order validation.
 
@@ -13,7 +13,7 @@ Keywords: seismic hazard; warning threshold; relative cost; inspection capacity;
 
 A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents.
 
-Cost-sensitive classification supplies the established decision objective [5]; an inspection budget restricts the available alert sets. This study contributes a joint empirical account of transferred loss, workload and model-update effects. Historical audits explain why a rule selects no alarms, and matched fixed/refitted comparisons show what changes when the same numerical cutoff is retained. The contribution is the mining case analysis and its reproducible evidence, rather than a new optimization algorithm.
+Cost-sensitive classification supplies the decision objective [5]; an inspection budget restricts the available alert sets. We jointly evaluate transferred loss, workload and model-update differences. Historical audits identify why a rule selects no alarms, and matched fixed/refitted comparisons quantify changes at the same numerical cutoff. Together, these analyses connect a historical selection rationale to its later decision consequences in this mining case.
 
 UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.
 
@@ -44,7 +44,7 @@ Table 2. Rules on the historical reference area
 | B cost | Minimum r FN + FP | None |
 | C cost plus capacity | Minimum r FN + FP | Alerts ≤ floor(B Nref) |
 
-Budgets are 1%, 5%, 10% and 20%; relative missed-event costs r are 5, 10, 20 and 50, with false-alarm cost 1. A is selected once per budget, B once per cost, and C once per combination. Alerts satisfy s ≥ τ. Tied scores move together. The cutoff is the minimum included reference score, except +∞ for no alarms and −∞ for all alarms. Equal-loss B/C decisions select fewer alerts. Zero capacity slots force A/C to +∞; without reference positives B/C select no alarms, while A remains budget-only.
+Budgets are 1%, 5%, 10% and 20%; relative penalties r for missing a hazardous shift are 5, 10, 20 and 50, with false-alarm cost 1. A is selected once per budget, B once per cost, and C once per combination. Alerts satisfy s ≥ τ. Tied scores move together. The cutoff is the minimum included reference score, except +∞ for no alarms and −∞ for all alarms. Equal-loss B/C decisions select fewer alerts. Zero capacity slots force A/C to +∞; without reference positives B/C select no alarms, while A remains budget-only.
 
 The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole-tie test-score set within floor(B Ntest), without test labels, and can underfill capacity. This retrospective ranking reference requires scores for the complete test batch; its capacity is enforced on that batch rather than inherited from a historical cutoff.
 
@@ -80,7 +80,7 @@ Table 4. Phase-specific loss relative to no alarms at r=10
 
 At this cost, pooled C loss equals the no-alarm loss at the 1% budget and is higher at the remaining budgets. Historical optimization is compatible with this outcome: reference labels determine the optimum, whereas later false alarms and detected hazards determine transferred value. At the 5%, 10% and 20% budgets, pooled C produces 24, 27 and 32 false alarms for 1, 1 and 2 detections, respectively; each exceeds the corresponding rTP benefit at r=10. Phase-specific results show where these contributions arise rather than attributing the pooled result to every stage.
 
-This comparison separates relative advantage over another warning rule from value over no alarms. A capacity constraint can reduce inspection demand and improve loss relative to A while still producing positive ΔLnone,100. The complete decision-value files retain all costs, models, workflows and the descriptive holdout; r=10 is the common display scale used throughout the report.
+A lower loss than another warning rule does not establish value over no alarms. C can reduce workload and loss relative to A while retaining positive ΔLnone,100. No alarms incur the cost of every missed hazardous shift and detect none; their role here is a loss reference, not an operational recommendation. Complete files retain all costs, models, workflows and the descriptive holdout; r=10 is the common display scale.
 
 4 Budget thresholds and future capacity
 
@@ -249,9 +249,9 @@ Table 12. Previously viewed holdout and all 16 C settings
 
 Reference-to-test hazardous-shift prevalence changes were phase 1: 20.39% → 6.98%; phase 2: 0.48% → 1.94%; phase 3: 2.26% → 4.65%; phase 4: 4.84% → 3.49%. Phase 2 reference choices rest on 1 hazardous outcome among 207 records. This sparse reference and the prevalence differences provide plausible context for transfer behavior. Class-conditional score distributions may also change; the design does not identify prevalence shift as its sole cause. Section 9 uses the label-shift assumption [6] to vary prevalence while freezing class-conditional rates; it does not estimate or correct the actual shift.
 
-At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 unconstrained cost optima and 12 capacity-induced changes, despite positive reference outcomes. Matched C−A results connect reduced capacity excess with changes in TP, FN and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability.
+The decision-value comparison explains why lower workload alone is insufficient. At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 cost optima and 12 capacity-induced changes despite positive reference outcomes. Matched C−A results quantify the accompanying detections, misses and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability.
 
-Joint evaluation links historical selection rationale to later loss, detection and workload. Costs and inspection capacity are hypothetical. Earlier mining studies tested cross-longwall transfer [7]; structured validation distinguishes interpolation from extrapolation [8]. Our row-block comparison addresses transfer without working-face identifiers. The next evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
+Historical selection, later capacity and model updating therefore require separate evidence. Earlier mining studies tested cross-longwall transfer [7]; structured validation distinguishes interpolation from extrapolation [8]. Here, transferred thresholds are evaluated across record blocks, not identified working faces. Costs and inspection capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
 
 Appendix A Detection, capacity and pooled evidence
 
@@ -339,15 +339,13 @@ Table A5. Budget-specific pooled fixed XGBoost C prior-shift results at r=10
 | 10% | 1.11<br>1.36% | 0.73<br>1.36% | 0.09<br>1.34% | -0.54<br>1.33% |
 | 20% | 1.13<br>1.63% | 0.40<br>1.65% | -0.81<br>1.69% | -2.03<br>1.72% |
 
-Each cell pairs relative loss per 100 shifts (first line) with expected alert percentage (second line) for the same historical budget and scenario. Negative loss differences favor the policy over no alarms under r=10. All sixteen entries use frozen class-conditional error rates and historical rules; no scenario selects a new threshold. The complete electronic file retains every model, cost, workflow and phase.
+Each cell pairs relative loss per 100 shifts with expected alert percentage for one budget and scenario. Negative differences favor C over no alarms at r=10. All sixteen entries freeze historical rules and class-conditional rates; full files retain every model, cost, workflow and phase.
 
 Reproducibility and electronic appendix
 
-The protocol was locked on 2 October 2026 at 19:20:26 UTC; its hash starts 85a1a16b30a5b9ac. Independent reproduction replayed all 15 model pairs and paired resampling. The results/phase2 appendix retains predictions, references, candidates, audits, evaluations, comparisons, bootstrap arrays and row manifests. Infinite thresholds are sentinels; empty cells denote undefined quantities.
+The protocol was locked on 2 October 2026 at 19:20:26 UTC; its hash starts 85a1a16b30a5b9ac. Independent reproduction replayed 15 model pairs and paired resampling. The results/phase2 directory retains row evidence, threshold candidates, audits, evaluations, contrasts and bootstrap arrays. Infinite thresholds are sentinels; empty cells denote undefined quantities.
 
-Frozen-rule descriptive outputs include decision_value files for no-alarm references, threshold_explanations and threshold_audit_enriched for causes and margins, refit_transfer and capacity_tradeoffs for complete contrasts, and prevalence_decision_value for scenario loss and workload. Separate manifests and checks establish provenance.
-
-Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting. Tables and figures are generated from verified result files.
+Manifests and checks establish provenance for generated tables and figures. Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting. Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [9].
 
 References
 
@@ -366,3 +364,5 @@ References
 [7] Sikora M, Wrobel L. Application of rule induction algorithms for analysis of data collected by seismic hazard monitoring systems in coal mines. Archives of Mining Sciences; 2010;55(1):91–114. Author-linked full text: https://www.researchgate.net/publication/281395657.
 
 [8] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography; 2017;40:913–929. doi:10.1111/ecog.02881.
+
+[9] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv; 2026. doi:10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065.

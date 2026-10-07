@@ -7,8 +7,8 @@
   "visual_review": "All twelve final rendered pages inspected; complete tables and references, no blank pages or overflow.",
   "rendering": "Microsoft Word invisible PDF export and Poppler page rendering; LibreOffice unavailable.",
   "report_sha256": {
-    "phase2_threshold_transfer_report.docx": "d69a504cec66d048f144e0ba5ea1c9127bbb34209745c161d37a59e641649fc8",
-    "phase2_threshold_transfer_report.md": "2615397715b9f538841bf5c6161d5da65e26fa769b3242d1470550cf6af0bd4e",
-    "phase2_threshold_transfer_report.pdf": "749908624db662d408cd17a2ec201d4819cff363b3a6bcacb7ef6d9003b2d87b"
+    "phase2_threshold_transfer_report.docx": "bb41e389e70e91aeae0d320dc6615b03b4a61c7e9f303fa6e385a810be1a026f",
+    "phase2_threshold_transfer_report.md": "34cad26e3234b81e4ccb864b5e2305f9f1c348b84d6c38254b460dba4867c1f9",
+    "phase2_threshold_transfer_report.pdf": "26235e32a047460d3814902237a2b2b9421c761acf3ba9753a2626cb7a45d54f"
   }
 }
