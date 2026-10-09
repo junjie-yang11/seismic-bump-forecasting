@@ -2,7 +2,7 @@
 
 ## The engineering question
 
-How should mine-monitoring forecasts be evaluated before their scores become inspection decisions? This project connects two retrospective studies: Stage 1 examines the evidence behind a forecast; Stage 2 examines the value and workload of the rule used to act on it.
+What evidence supports using mine-monitoring forecasts to select later shifts for inspection? This project connects two retrospective studies. Stage 1 separates ranking performance, probability accuracy and fitted-model feature use on comparable test records. Stage 2 links historical threshold choices to later loss, hazardous-shift coverage and inspection demand under stated costs and capacity. The engineering objective is to make these decisions auditable: each claim has a defined comparator, a saved calculation and a stated scope of application.
 
 | Study | Question | Main evidence | Paper |
 | --- | --- | --- | --- |
@@ -27,7 +27,7 @@ Stage 1 compares random and record-order predictions on the same test rows, eval
 
 ## Project contribution
 
-The work contributed in this repository is the data-source audit, the implementation of comparable-cohort evaluation, training-local probability and threshold handling, the engineering feature comparisons, and the reproducible accounting of loss, capacity and refitting. Saved scores, candidate decisions and independent checks connect each reported result to its calculation.
+The work contributed in this repository is the data-source audit, the implementation of comparable-cohort evaluation, training-local probability and threshold handling, the engineering feature comparisons, and the reproducible accounting of loss, capacity and refitting. Saved scores, candidate decisions and independent checks connect each reported result to its calculation. This supplies a reproducible evaluation workflow for examining which forecast properties and historical decision rules carry into later records. Calibration gains, uncertain feature-removal contrasts and transferred decision tradeoffs each inform that assessment.
 
 LR, CART, XGBoost, TreeSHAP, cost-sensitive loss and block resampling are established methods. The contribution is their implementation and joint empirical evaluation in this mining case. [Related-work comparison](RELATED_WORK.md) separates method origins from the project's findings.
 
