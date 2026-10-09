@@ -13,7 +13,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 URL = 'https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip'
 
-def audit(source):
+def _audit(source):
     if not (ROOT / 'data/seismic-bumps.csv').exists():
         sys.path.insert(0, str(ROOT / 'src'))
         from data import download
@@ -46,13 +46,26 @@ def audit(source):
         removed.append(dict(removed_uci_row_1based=int(i+1),kept_uci_row_1based=int(first+1),
                             **{k:(str(v) if k in ('seismic','seismoacoustic','shift','ghazard') else int(v)) for k,v in row.items()}))
     pd.DataFrame(removed).to_csv(ROOT/'results/phase1/source_duplicates.csv',index=False)
-    result=dict(source_url=URL,mirror_url='https://raw.githubusercontent.com/datasets/seismic-bumps/main/data/seismic-bumps.csv',
+    result=dict(status='passed',source_url=URL,mirror_url='https://raw.githubusercontent.com/datasets/seismic-bumps/main/data/seismic-bumps.csv',
                 original_rows=len(original),mirror_rows=len(mirror),removed_rows=int(duplicate.sum()),
                 original_positives=int(original['class'].sum()),removed_positives=int(original.loc[duplicate,'class'].sum()),
                 order_preserving_dedup_matches=matched,arff_sha256=hashlib.sha256(payload).hexdigest(),
                 mirror_sha256=hashlib.sha256((ROOT/'data/seismic-bumps.csv').read_bytes()).hexdigest())
     (ROOT/'results/phase1/source_audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2))
+
+def audit(source):
+    """Invalidate an earlier match before parsing the current source inputs."""
+    output = ROOT / 'results/phase1/source_audit.json'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    record = dict(status='running', order_preserving_dedup_matches=False)
+    output.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+    try:
+        _audit(source)
+    except (Exception, KeyboardInterrupt) as error:
+        record.update(status='failed', error_type=type(error).__name__, error=str(error))
+        output.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+        raise
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser(); ap.add_argument('--source'); ap.add_argument('--proxy')

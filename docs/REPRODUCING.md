@@ -6,7 +6,7 @@ For inspection before fitting, use the [quick verification entry](QUICK_CHECK.md
 
 ## Environments
 
-Keep three environments separate. Install from `requirements/requirements.txt` in the recorded baseline Python 3.7 environment, `requirements/requirements-research.txt` in Python 3.12 for XGBoost and complete checks, and `requirements/requirements-report.txt` for document authoring. The baseline environment record is `results/phase1/environment.txt`; the extended and Stage 2 manifests record their actual runtime versions. PDF export uses installed Microsoft Word on Windows.
+Keep three environments separate. Install from `requirements/requirements.txt` in the recorded baseline Python 3.7 environment, `requirements/requirements-research.txt` in Python 3.12 for XGBoost and complete checks, and `requirements/requirements-report.txt` for document authoring. The baseline environment record is `results/phase1/environment.txt`; the extended and Stage 2 manifests record their actual runtime versions. Install the reporting requirements before generating or checking complete papers; they include pypdf for PDF content verification. PDF export uses installed Microsoft Word on Windows.
 
 The supported and actually exercised release environment is Windows x64, Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, SciPy 1.18.1 and XGBoost 3.1.3, with the recorded baseline environment for Stage 1 LR/CART fitting. Word export uses PowerShell 7. Complete installed packages, numerical-library configuration, XGBoost build information and locked run settings are captured by the [separate threshold replay](audits/2026-10-07-stable-release/check_threshold_replay.py). Dependency versions alone do not establish identical compiled numerical backends.
 
@@ -31,7 +31,7 @@ python -m phase1.run_experiments
 python -m phase1.run_engineering
 ```
 
-`audit_source --source PATH_TO_ARFF` uses an existing official file; `--proxy URL` explicitly supplies a download proxy. Data loading downloads the mirror when the local cache is absent. No cached source file is committed.
+`audit_source --source PATH_TO_ARFF` uses an existing official file; `--proxy URL` explicitly supplies a download proxy. Data loading downloads the mirror when the local cache is absent. No cached source file is committed. Before parsing current source inputs, the audit invalidates the previous match claim; a failed check records its error. This verifies the official-to-mirror transformation and row mapping, rather than independently validating the original field measurements.
 
 In the research environment:
 

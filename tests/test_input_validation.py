@@ -4,12 +4,20 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from metrics import average_precision, roc_auc, summarise, threshold_metrics
-from calibration import brier_score, brier_skill_score
+from calibration import brier_score, brier_skill_score, reliability_curve
 from evaluation import cross_validate, cross_validate_splits, stratified_random_folds, time_ordered_folds
 from engineering import evaluate_splits
 
 
 class InputValidationTests(unittest.TestCase):
+    def test_calibration_bin_count_requires_a_positive_integer(self):
+        for bins in (0, -1, True, 1.5, np.nan, np.inf, None):
+            with self.subTest(bins=bins):
+                with self.assertRaises(ValueError):
+                    reliability_curve([0, 1], [.2, .8], n_bins=bins)
+        self.assertEqual(reliability_curve([0, 1], [.2, .8],
+                         n_bins=np.int64(2))["count"].sum(), 2)
+
     def test_fold_assignments_cannot_silently_omit_rows(self):
         X, y = np.ones((10, 1)), np.arange(10) % 2
         def forbidden_factory():

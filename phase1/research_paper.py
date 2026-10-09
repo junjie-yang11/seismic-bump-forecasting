@@ -69,7 +69,7 @@ def build_paper(root):
         'Corrected LR Brier skill is %s against the historical training-prior reference and %s against the retrospective test-prevalence reference. '
         'Nine prespecified feature combinations and exact TreeSHAP distinguish fitted-model feature use from incremental predictive value. Energy, low-energy event counts and pulse activity repeatedly contribute to XGBoost predictions. '
         'At 10 and 20 percent training reference budgets, supplementary holdout XGBoost produces %s and %s alerts, detecting %s and %s of 26 hazardous shifts. '
-        'Together, matched cohorts, explicit probability references and detection counts connect forecast evaluation to inspection workload. Intervals condition on fixed predictions.'
+        'Matched cohorts, explicit probability references and detection counts provide a traceable basis for interpreting forecast performance and inspection demand. Intervals condition on fixed predictions.'
         % (100 * float(gaps[0]['gap_reduction_fraction']), 100 * float(gaps[1]['gap_reduction_fraction']),
            protocol_rows[0][3], protocol_rows[0][4], protocol_rows[1][3], protocol_rows[1][4],
            number(raw['ece']), number(corrected['ece']), number(raw['brier']), number(corrected['brier']),
@@ -130,7 +130,7 @@ def build_paper(root):
         'A supplementary holdout trains on the first 70 percent and evaluates the last 774 records, containing 26 positive targets. '
         'This holdout was inspected in the earlier project, so it is reported as descriptive supplementary evidence and is not used to select a feature set, model or budget.',
         'LR retains L2 penalty 1.0, an unpenalized intercept and balanced class weights. Bagged CART retains 60 ordinary bootstrap trees, maximum depth 6, '
-        'minimum leaf size 20, unweighted Gini and forest seed 7. XGBoost uses unweighted binary logistic loss and histogram trees, learning rate 0.05, '
+        'minimum leaf size 20, unweighted Gini and forest seed 7. Every bootstrap draw is retained; single-class draws form constant leaf trees. Each feature supplies up to 12 split thresholds at quantiles 0.05 to 0.95. XGBoost uses unweighted binary logistic loss and histogram trees, learning rate 0.05, '
         'minimum child weight 10 and L2 penalty 5.0, with full row and column sampling, seed 7 and two CPU threads [6]. '
         'Its fixed candidate grid combines depth 2 or 3 with 80 or 160 boosting rounds.',
         'Each XGBoost search uses only its supplied training rows: the final 20 percent forms an inner reference, '
@@ -321,7 +321,7 @@ def build_paper(root):
         '## 8 Conclusions',
         'This study evaluates seismic forecasts through matched test records, probability references and monitoring-feature comparisons. Matching rows reduces the apparent protocol gap without identifying a causal share of leakage or drift. '
         'Training-prior correction improves LR calibration, while baseline-relative Brier skill depends on the stated reference. TreeSHAP describes fitted-model feature use; refitted ablations assess incremental predictive value. '
-        'Frozen-budget outcomes connect these forecasts to detected, missed and falsely alerted shifts. The resulting evidence supports engineering review of prediction and inspection demand under the stated retrospective design.',
+        'Frozen-budget outcomes connect these forecasts to detected, missed and falsely alerted shifts. The workflow links saved predictions to probability assessment, feature comparisons and inspection demand, making the scope of each engineering claim explicit.',
         '## Data and computational reproducibility',
         'Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence includes predictions for every feature set, scores from inner reference sets, '
         'fold audits, predictions for candidate selection and manifests of row indices. It also retains bootstrap replicates, five random seeds, native XGBoost models, '

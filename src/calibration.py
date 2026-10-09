@@ -39,8 +39,9 @@ def reliability_curve(y, p, n_bins: int = 10, strategy: str = "quantile"):
         raise ValueError("labels must be binary vectors and probabilities in [0, 1]")
     if not np.all(np.isfinite(p)):
         raise ValueError("predicted probabilities must be finite")
-    if n_bins < 1:
-        raise ValueError("n_bins must be positive")
+    if (not isinstance(n_bins, (int, np.integer))
+            or isinstance(n_bins, (bool, np.bool_)) or n_bins < 1):
+        raise ValueError("n_bins must be a positive integer")
     if strategy == "quantile":
         edges = np.unique(np.quantile(p, np.linspace(0.0, 1.0, n_bins + 1)))
     elif strategy == "uniform":

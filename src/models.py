@@ -174,8 +174,7 @@ class BaggedForest:
         self.trees = []
         for _ in range(self.n_trees):
             idx = rng.integers(0, n, n)
-            if y[idx].sum() < 2:            # need both classes to grow a split
-                continue
+            # Every draw contributes; a single-class draw yields a leaf.
             tree = DecisionTree(self.max_depth, self.min_samples_leaf,
                                 self.n_features, rng)
             self.trees.append(tree.fit(X[idx], y[idx]))
