@@ -120,13 +120,13 @@ the experimental environment**:
 
 ```powershell
 python -B -m phase2.report
-./phase2/export_report.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/export_report.ps1
 ```
 
 Reporting requires completed `verify --replay` evidence; the builder validates
 verified CSVs, manifests, bootstrap arrays and experimental source hashes,
 and reads saved data only. PDF export uses installed
-Microsoft Word invisibly on Windows. Inspect the rendered document after any
+Microsoft Word invisibly on Windows through PowerShell 7. Inspect the rendered document after any
 layout change. The full combination tables are the electronic appendix above;
 the report displays all cost/budget cells for the main comparisons and keeps
 pooled and previously viewed holdout results supplementary.

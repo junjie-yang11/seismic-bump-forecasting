@@ -89,6 +89,7 @@ docs/                Reproduction guide and dated audit history
 
 ## Reproduce or inspect
 
+- [Current execution manifest](results/phase2/run_manifest.json) · [Model and decision replay](results/phase2/verification.json) · [Formula checks](results/phase2/formula_verification.json) · [Report checks](reports/phase2/report_verification.json)
 - [Stable-version checks and environment support](docs/audits/2026-10-07-stable-release/RELEASE.md)
 - [Complete execution sequence and environment requirements](docs/REPRODUCING.md)
 - [Research overview](docs/PROJECT_OVERVIEW.md) · [Related work and contribution](docs/RELATED_WORK.md)
@@ -96,12 +97,12 @@ docs/                Reproduction guide and dated audit history
 - [Stage 1 commands](phase1/README.md) · [Stage 2 protocol and commands](phase2/README.md)
 - [Saved evidence](results/README.md) · [Final reports](reports/README.md)
 - [Code and structure cleanup record](docs/audits/STRUCTURE_CLEANUP.json)
-- [Current structure and verification review](docs/audits/STRUCTURE_REVIEW.md)
+- [Structure and verification review](docs/audits/STRUCTURE_REVIEW.md)
 - [Research presentation release review](docs/audits/RESEARCH_PRESENTATION_REVIEW.md)
-- [Current manuscript review and verification](docs/audits/SKILL_EDITORIAL_REVIEW.md)
+- [Manuscript review and verification](docs/audits/SKILL_EDITORIAL_REVIEW.md)
 - [Complete code, workflow and fresh-reproduction review](docs/audits/2026-10-07-full-review/REVIEW.md)
 
-Run commands from the repository root. Stage 1 uses `python -m phase1.<command>`; Stage 2 uses `python -m phase2.<command>`. Older dated audit records retain the paths used in their original editions.
+Run commands from the repository root. Stage 1 uses `python -m phase1.<command>`; Stage 2 uses `python -m phase2.<command>`. Dated audit records describe their original editions and retain the paths used then. The current manifests and verification records above identify the inputs and verifier versions checked for this checkout.
 
 ## Data and license
 
