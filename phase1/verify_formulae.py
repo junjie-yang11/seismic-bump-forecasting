@@ -118,6 +118,23 @@ def verify():
     close(scenarios.expected_loss100, expected_loss, 'frozen prevalence scenario expectation')
     close(scenarios.expected_alert_rate, expected_alerts, 'frozen prevalence workload expectation')
     close(scenario_value.delta_loss_vs_no_alarm_100, expected_loss - 100 * scenarios.cost * scenarios.scenario_prevalence, 'scenario no-alarm difference')
+    true_alert_mass=scenarios.scenario_prevalence*(1-scenarios.empirical_fnr)
+    precision=np.full(len(scenarios),np.nan)
+    nonzero=expected_alerts.to_numpy()>0
+    precision[nonzero]=(true_alert_mass/expected_alerts).to_numpy()[nonzero]
+    close(scenario_value.expected_precision,precision,'scenario precision from class-conditional masses')
+    boundaries=read('phase2/frozen_policy_cost_boundaries')
+    for _,row in boundaries.iterrows():
+        if row.tp>0:
+            close(row.break_even_cost,row.fp/row.tp,'frozen-policy no-alarm equality cost')
+            no_alarm=row.break_even_cost*(row.tp+row.fn)
+            policy=row.break_even_cost*row.fn+row.fp
+            close(policy,no_alarm,'policy and no-alarm losses equal at cost boundary')
+            check(row.boundary_status=='finite','finite boundary status')
+        else:
+            check(pd.isna(row.break_even_cost),'zero-TP cost equality is undefined')
+            check(row.boundary_status==('no_alarm_equivalent' if row.fp==0 else 'never_improves'),
+                  'zero-TP decision value status')
     check(np.all((expected_alerts >= 0) & (expected_alerts <= 1)), 'scenario workload probability bounds')
     enriched = read('phase2/threshold_audit_enriched')
     close(enriched.loss_gap_100, 100 * enriched.loss_gap / enriched.reference_n, 'normalized next-decision margin')

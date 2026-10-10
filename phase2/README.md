@@ -92,6 +92,7 @@ The [release replay audit](../docs/audits/2026-10-07-stable-release/check_thresh
 | `threshold_explanations.csv`, `threshold_audit_enriched.csv` | Reference-only no-alarm causes, capacity flags, threshold types and normalized next-decision margins |
 | `refit_transfer.csv`, `capacity_tradeoffs.csv` | All A/B/C fixed/refitted contrasts and matched C-A loss, detection and workload contrasts |
 | `prevalence_decision_value.csv` | Frozen prior-shift relative loss and expected workload, separate from observed results |
+| `frozen_policy_cost_boundaries.csv` | FP/TP equality costs for distinct retained A/B/C policies; historical selection cost and zero-detection cases are explicit |
 | `supplement_manifest.json`, `supplement_verification.json` | Original-input hashes and independent descriptive-accounting checks |
 
 `fold` and `row` are zero-based **mirror** indices. Displayed report phases are
@@ -153,6 +154,25 @@ capacity utilization. The prior-shift file retains absolute expected loss,
 relative expected loss and expected alert rate; none is a probability of future
 capacity excess. These are post hoc descriptive extensions, not changes to the
 locked protocol or a selection of a preferred strategy from test outcomes.
+
+## Evaluation cost and frozen prevalence precision
+
+Historical `selection_cost` belongs to B/C selection; A does not use costs.
+For unchanged alerts, `delta_loss_vs_no_alarm_100(r_eval) = 100 * (FP - r_eval * TP) / N`.
+If TP is positive, `break_even_cost = FP / TP`: equality occurs at that value,
+and a larger evaluation cost gives lower assumed loss than no alarms. This
+does not reselect a cutoff. The output retains per-phase, descriptive holdout
+and supplementary pooled records, and deduplicates A across evaluation costs.
+`no_alarm_equivalent` means TP=FP=0; `never_improves` means TP=0 and FP>0.
+Both have an empty equality field. These are observed-cohort descriptions,
+not estimated operational costs or deployment recommendations.
+
+Frozen prevalence expectations additionally save
+`expected_precision = pi * (1 - FNR) / expected_alert_rate`.
+Zero expected alert mass gives an undefined value (empty CSV field and NA in
+the paper), whereas observed zero-alert precision retains its existing zero
+convention. The scenario calculation uses frozen empirical class rates and
+cannot establish inspection effectiveness or the cause of observed transfer.
 
 ## Project navigation
 

@@ -7,6 +7,7 @@
 | Fixed/refitted transfer | `predictions.csv`, `decisions.csv`, `evaluations.csv`, `pooled_evaluations.csv` |
 | Paired uncertainty | `comparisons.csv`, `bootstrap_replicates.npz`, `analysis_manifest.json` |
 | No-alarm value | `decision_value.csv`, `decision_value_pooled.csv` |
+| Evaluation-cost equality for frozen policies | `frozen_policy_cost_boundaries.csv` |
 | Selection reasons and margins | `threshold_explanations.csv`, `threshold_audit_enriched.csv` |
 | Workload/detection comparison | `capacity_tradeoffs.csv`, `refit_transfer.csv` |
 | Frozen prevalence scenarios | `prevalence_scenarios.csv`, `prevalence_decision_value.csv` |
@@ -15,3 +16,10 @@
 [Protocol and execution](../../phase2/README.md) · [Final paper](../../reports/phase2/phase2_threshold_transfer_report.pdf) · [Historical review editions](../../docs/audits/phase2/history/).
 
 Manifests record the actual run, implementation and evidence hashes. Git preserves audited file bytes so downloads retain those hashes. Observed loss uses the actual labels and alert decisions; scenario loss uses explicitly frozen class-conditional rates and hypothetical prevalence. Neither is measured economic loss or a count of prevented accidents.
+
+The cost-boundary file distinguishes historical `selection_cost` from the
+evaluation weight: it reports FP/TP without changing alerts. With no detections,
+the equality field is undefined, and its status distinguishes no-alarm
+equivalence from false alerts without detections. The scenario decision-value
+file adds `expected_precision`; zero expected alerts yield an empty value,
+not a precision measurement. Both extensions are descriptive.

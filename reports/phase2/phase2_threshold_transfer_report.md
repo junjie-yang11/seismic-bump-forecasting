@@ -5,7 +5,7 @@ Mining Engineering, Fuzhou University
 
 Abstract
 
-Historical capacity feasibility does not ensure that a seismic warning rule retains its workload or decision value on later records. This study separates model fitting, policy selection and testing to evaluate budget-only, cost-only and cost-plus-capacity rules on the UCI Seismic Bumps data. Four subsequent record blocks provide 2,063 test records. XGBoost is the prespecified main model; logistic regression and bagged CART provide robustness checks. At relative missed-shift cost r=10, pooled cost-plus-capacity loss equaled or exceeded the no-alarm reference by 0.00 to 0.82 units per 100 shifts. Despite all reference areas containing positive outcomes, its 40 no-alarm selections comprise 28 unconstrained cost optima and 12 capacity-induced changes. The budget rule exceeded later capacity in 13 of 16 phase–budget settings; cost-plus-capacity exceeded it in 2 of 64 phase–budget–cost settings. These dependent settings use different denominators. Matched-setting comparisons connect reduced capacity excess to changes in detections, missed events and loss. Refitting changes finite-cutoff decisions, while no-alarm rules remain invariant by construction. Paired block intervals and frozen-rule prevalence scenarios characterize decision value and workload under hypothetical costs. The workflow links historical selection audits to later decision value. Recorded row order is a temporal proxy; the study is retrospective.
+Historical capacity feasibility does not ensure that a seismic warning rule retains its workload or decision value on later records. This study separates model fitting, policy selection and testing to evaluate budget-only, cost-only and cost-plus-capacity rules on the UCI Seismic Bumps data. Four subsequent record blocks provide 2,063 test records. XGBoost is the prespecified main model; logistic regression and bagged CART provide robustness checks. At relative missed-shift cost r=10, pooled cost-plus-capacity loss equaled or exceeded the no-alarm reference by 0.00 to 0.82 units per 100 shifts. Despite all reference areas containing positive outcomes, its 40 no-alarm selections comprise 28 unconstrained cost optima and 12 capacity-induced changes. The budget rule exceeded later capacity in 13 of 16 phase–budget settings; cost-plus-capacity exceeded it in 2 of 64 phase–budget–cost settings. These dependent settings use different denominators. Matched-setting comparisons connect reduced capacity excess to changes in detections, missed events and loss. Refitting changes finite-cutoff decisions, while no-alarm rules remain invariant by construction. Paired block intervals characterize transferred loss. Frozen-rule cost boundaries separate selection costs from evaluation costs, while prevalence scenarios pair expected precision with workload. The workflow links historical selection audits to later decision value. Recorded row order is a temporal proxy; the study is retrospective.
 
 Keywords: seismic hazard; warning threshold; relative cost; inspection capacity; record-order validation.
 
@@ -13,7 +13,7 @@ Keywords: seismic hazard; warning threshold; relative cost; inspection capacity;
 
 A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents. The contribution is auditable decision analysis that links historical selection reasons to later loss, hazardous-shift coverage and capacity excess, and evaluates refitting at the same numerical cutoff.
 
-Mining cold-start research addresses limited local history at new sites [10]; microseismic reviews distinguish waveform detection and location from forecasting [11]. Here, cost-sensitive loss [5] and inspection budgets connect shift forecasts to decisions. We jointly evaluate transferred loss, workload and refitting, with historical audits explaining no-alarm choices. This links the selection rationale to later outcomes on the same test records.
+Mining cold-start research examines limited local history at new sites [10], while microseismic reviews distinguish waveform tasks from forecasting [11]. Threshold-choice theory connects scores, rules and operating conditions [12]. Risk-informed warning identification compares anomalies with three hazard assessments [13]; our outcome remains the subsequent hazardous-shift label. Cost-sensitive loss [5] and historical budgets connect selection audits to later loss, coverage, workload and refitting.
 
 UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.
 
@@ -46,6 +46,8 @@ Table 2. Rules on the historical reference area
 
 Budgets are 1%, 5%, 10% and 20%; relative penalties r for missing a hazardous shift are 5, 10, 20 and 50, with false-alarm cost 1. A is selected once per budget, B once per cost, and C once per combination. Alerts satisfy s ≥ τ. Tied scores move together. The cutoff is the minimum included reference score, except +∞ for no alarms and −∞ for all alarms. Equal-loss B/C decisions select fewer alerts. Zero capacity slots force A/C to +∞; without reference positives B/C select no alarms, while A remains budget-only.
 
+A uses a reference alert-rate constraint to choose a numerical cutoff, then applies that fixed cutoff to later scores. It does not maintain a prescribed test alert rate. B and C are empirical reference-loss choices, with C restricting the candidate set. Their historical optima are not test-optimal rules. This selection/application distinction connects the workflows to threshold-choice theory [12].
+
 The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole-tie test-score set within floor(B Ntest), without test labels, and can underfill capacity. This retrospective ranking reference requires scores for the complete test batch; its capacity is enforced on that batch rather than inherited from a historical cutoff.
 
 Primary loss is L100 = 100(r FN + FP)/N. Counts, recall, precision, alert rate and excess max(0, Alerts − floor(B N)) accompany it. Costs are hypothetical relative weights, not monetary estimates. Pooled slots and excess sum phase-specific quantities without offsetting excess in one phase against spare capacity in another.
@@ -65,6 +67,14 @@ Table 2a. Decision assumptions and evaluation scope
 | Operational evidence | Actual inspection execution and accident prevention are not observed. Capacity and relative costs are explicit hypothetical decision settings. |
 
 These assumptions define how frozen warning rules create inspection demand. The evaluation connects hazardous-shift coverage to relative loss and workload; excess demand remains in the alert counts. Detections count hazardous shifts flagged, while dispatch, queueing and safety interventions are outside the evaluated process.
+
+Table 2b. How forecast evidence connects to decision evaluation
+
+| Evidence | Stage 1 assessment | Stage 2 assessment |
+| --- | --- | --- |
+| Ranking | AP on common test records | Hazardous-shift coverage of selected alerts |
+| Probabilities | Calibration and baseline-relative Brier skill | Assumed costs evaluated on frozen raw-score rules |
+| Threshold transfer | Reference cutoff applied after outer refitting | Fixed model primary; refitting at the same cutoff as a comparison |
 
 3 Decision value relative to no alarms
 
@@ -97,6 +107,12 @@ Table 4. Phase-specific loss relative to no alarms at r=10
 At this cost, pooled C loss equals the no-alarm loss at the 1% budget and is higher at the remaining budgets. Historical optimization is compatible with this outcome: reference labels determine the optimum, whereas later false alarms and detected hazards determine transferred value. At the 5%, 10% and 20% budgets, pooled C produces 24, 27 and 32 false alarms for 1, 1 and 2 detections, respectively; each exceeds the corresponding rTP benefit at r=10. Phase-specific results show where these contributions arise rather than attributing the pooled result to every stage.
 
 A lower loss than another warning rule does not establish value over no alarms. C can reduce workload and loss relative to A while retaining positive ΔLnone,100. No alarms incur the cost of every missed hazardous shift and detect none; their role here is a loss reference, not an operational recommendation. Complete files retain all costs, models, workflows and the descriptive holdout; r=10 is the common display scale.
+
+3.1 Evaluation cost for an unchanged warning rule
+
+Historical selection uses rselect; evaluation at reval retains the model, cutoff and alerts. For TP > 0, ΔLnone,100(reval) = 100(FP − reval TP)/N equals zero at r* = FP/TP and is negative above that cost. TP=FP=0 gives no-alarm equivalence at every cost; TP=0 with FP>0 never improves this loss at finite cost. These identities follow directly from the loss definition.
+
+At the 20% budget, C selected at rselect=10 flags 2 hazardous shifts with 32 false alerts, giving pooled r*=16.00. The unchanged rule improves this loss above that evaluation cost on the observed cohort. Table A6 covers all four budgets; saved files retain every phase and A/B/C rule. These descriptive boundaries do not estimate operational costs or reselect a strategy.
 
 4 Budget thresholds and future capacity
 
@@ -239,6 +255,8 @@ LR and CART extend the policy comparison across retained baseline models using i
 
 The scenario changes hazardous-shift prevalence π to 2%, 5%, 10% or 15%, holding policies and empirical class-conditional error rates fixed. Expected loss is L100(π) = 100[r π FNR + (1 − π) FPR]; expected alert rate is π(1 − FNR) + (1 − π)FPR. Cutoffs remain frozen. These prevalence-only expectations exclude within-class changes and do not estimate capacity-exceedance probability.
 
+Expected precision is π TPR / [π TPR + (1 − π)FPR], with TPR = 1 − FNR. It is undefined when expected alert mass is zero; the descriptive scenario output leaves that field empty. This differs from the zero convention used for observed zero-alert precision. Precision depends on prevalence even at fixed class-conditional rates [14], so Table A5 pairs it with workload and relative loss for each budget rather than interpreting a PR change as a model change.
+
 Table 11. Pooled prior-shift sensitivity: relative C loss and expected workload
 
 | Cost r | π 2% | π 5% | π 10% | π 15% |
@@ -266,6 +284,8 @@ Table 12. Previously viewed holdout and all 16 C settings
 Reference-to-test hazardous-shift prevalence changes were phase 1: 20.39% → 6.98%; phase 2: 0.48% → 1.94%; phase 3: 2.26% → 4.65%; phase 4: 4.84% → 3.49%. Phase 2 reference choices rest on 1 hazardous outcome among 207 records. This sparse reference and the prevalence differences provide plausible context for transfer behavior. Class-conditional score distributions may also change; the design does not identify prevalence shift as its sole cause. Section 9 uses the label-shift assumption [6] to vary prevalence while freezing class-conditional rates; it does not estimate or correct the actual shift.
 
 Later decision value is assessed jointly through loss, hazardous-shift coverage and workload. At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 cost optima and 12 capacity-induced changes despite positive reference outcomes. Matched C−A results quantify the accompanying detections, misses and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability. Selection audits and paired transfer comparisons connect the historical reason for each cutoff to its later loss and inspection demand.
+
+The frozen-rule cost boundary adds an interpretable condition to this decision evidence: the false-alert count must be outweighed by the assumed value of detected hazardous shifts. Changing that evaluation weight changes relative loss without changing workload or detections. Frozen prevalence scenarios complement this accounting by changing expected class proportions and thus expected precision and demand. Both calculations characterize specified conditions; neither selects a deployment rule from the test outcomes.
 
 Historical selection, later capacity and model updating require separate evidence. Cross-longwall transfer [7] and new-site cold start [10] concern identified locations; our cutoff comparisons concern later record blocks. Structured validation distinguishes interpolation from extrapolation [8]. Costs and capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
 
@@ -350,12 +370,23 @@ Table A5. Budget-specific pooled fixed XGBoost C prior-shift results at r=10
 
 | Historical budget | π 2% | π 5% | π 10% | π 15% |
 | --- | --- | --- | --- | --- |
-| 1% | 0.00<br>0.00% | 0.00<br>0.00% | 0.00<br>0.00% | 0.00<br>0.00% |
-| 5% | 0.96<br>1.21% | 0.59<br>1.21% | -0.04<br>1.21% | -0.67<br>1.20% |
-| 10% | 1.11<br>1.36% | 0.73<br>1.36% | 0.09<br>1.34% | -0.54<br>1.33% |
-| 20% | 1.13<br>1.63% | 0.40<br>1.65% | -0.81<br>1.69% | -2.03<br>1.72% |
+| 1% | 0.00<br>0.00%<br>NA | 0.00<br>0.00%<br>NA | 0.00<br>0.00%<br>NA | 0.00<br>0.00%<br>NA |
+| 5% | 0.96<br>1.21%<br>1.87% | 0.59<br>1.21%<br>4.69% | -0.04<br>1.21%<br>9.41% | -0.67<br>1.20%<br>14.16% |
+| 10% | 1.11<br>1.36%<br>1.67% | 0.73<br>1.36%<br>4.19% | 0.09<br>1.34%<br>8.45% | -0.54<br>1.33%<br>12.79% |
+| 20% | 1.13<br>1.63%<br>2.78% | 0.40<br>1.65%<br>6.88% | -0.81<br>1.69%<br>13.48% | -2.03<br>1.72%<br>19.84% |
 
-Each cell pairs relative loss per 100 shifts with expected alert percentage for one budget and scenario. Negative differences favor C over no alarms at r=10. All sixteen entries freeze historical rules and class-conditional rates; full files retain every model, cost, workflow and phase.
+Each cell lists relative loss per 100 shifts, expected alert percentage, then expected precision for one budget and scenario. NA means zero expected alerts, so precision is undefined. Negative differences favor C over no alarms at r=10. All sixteen entries freeze historical rules selected at r=10 and class-conditional rates; full files retain every model, cost, workflow and phase.
+
+Table A6. Cost equality for pooled C alerts selected historically at rselect=10
+
+| Historical budget | TP | FP | Alerts | Equality cost r* |
+| --- | --- | --- | --- | --- |
+| 1% | 0 | 0 | 0 | — |
+| 5% | 1 | 24 | 25 | 24.00 |
+| 10% | 1 | 27 | 28 | 27.00 |
+| 20% | 2 | 32 | 34 | 16.00 |
+
+The dash denotes a no-alarm-equivalent rule, not a missing calculation. Other equality costs are FP/TP for unchanged pooled alerts; a larger evaluation cost gives negative relative loss on this cohort. Selection still used rselect=10. Per-phase and other-model boundaries remain in frozen_policy_cost_boundaries.csv.
 
 Reproducibility and electronic appendix
 
@@ -388,3 +419,9 @@ References
 [10] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence; 2017;64:83–94. doi:10.1016/j.engappai.2017.06.002.
 
 [11] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews; 2023;239:104371. doi:10.1016/j.earscirev.2023.104371.
+
+[12] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research; 2012;13:2813–2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html.
+
+[13] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems; 2023;108:17. doi:10.1007/s10846-023-01887-2.
+
+[14] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE; 2015;10(3):e0118432. doi:10.1371/journal.pone.0118432.

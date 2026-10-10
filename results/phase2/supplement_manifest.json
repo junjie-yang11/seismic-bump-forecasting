@@ -9,9 +9,9 @@
     "predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
     "decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
     "prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
-    "run_manifest.json": "d5359a5d431aa88b3e9404097ba4c16eeb001e36fbff54783700955d06530f54",
+    "run_manifest.json": "4002201783f5e970fbcb8a8f0da5a5c7d4cabbf6a5b7547be2866da738b3152f",
     "fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
-    "analysis_manifest.json": "76d509eb1a0cc3f16c798df27fbde93ded30c0c8ed0a8a8d8db378d486d2e6af",
+    "analysis_manifest.json": "b83c7162b83257694b093ce6826beaddb6f464e489cb41fd6d4ac76561f4ba09",
     "bootstrap_replicates.npz": "e578bd552765d861f17f1475b8e2299fb8445c4af970421a5c52993ac68f4481"
   },
   "outputs": {
@@ -21,9 +21,10 @@
     "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
     "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
     "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
-    "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+    "prevalence_decision_value.csv": "7f5e9f9230115562c434fb17c5389fc100493517b2cd79c5a40717cb7df3dcd4",
+    "frozen_policy_cost_boundaries.csv": "5287eeb89e5d7509c62ae2cef12451b033a9da09ff1d8e2524c4cac331958d12"
   },
-  "source_sha256": "c5cd8dc29a50fedb0e0cd94386830aac693b1fa8104161602478e481d1ed518e",
+  "source_sha256": "cbb925dc5cacdb0018cb36000d73798c213f2344e82918713f14682d0f23d27c",
   "rows": {
     "decision_value": 1680,
     "decision_value_pooled": 336,
@@ -31,7 +32,12 @@
     "threshold_explanations": 240,
     "refit_transfer": 540,
     "capacity_tradeoffs": 576,
-    "prevalence_decision_value": 8064
+    "prevalence_decision_value": 8064,
+    "frozen_policy_cost_boundaries": 864
   },
-  "rule": "Negative delta_loss_vs_no_alarm_100 is lower loss under the specified hypothetical cost"
+  "rule": "Negative delta_loss_vs_no_alarm_100 is lower loss under the specified hypothetical cost",
+  "extensions": {
+    "cost_boundary": "Post hoc FP/TP equality for unchanged alerts; selection_cost is historical, evaluation cost varies without reselection",
+    "expected_precision": "Frozen prevalence scenario TP mass / alert mass; undefined when expected alert mass is zero"
+  }
 }

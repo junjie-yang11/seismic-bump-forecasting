@@ -36,7 +36,7 @@ Read Stage 1 for predictive evidence and Stage 2 for decision value, capacity ex
 Generated from [saved pooled results](results/phase2/decision_value_pooled.csv) by [the table updater](phase2/update_readme.py); Δ loss is independently reconstructed as `100(FP − 10TP)/N`.
 <!-- END GENERATED DECISION TABLE -->
 
-The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A and C−B comparisons by phase, budget and cost. Negative differences favor C; panels use separate color scales. The compact table above uses the separate no-alarm baseline.
+The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A and C−B comparisons by phase, budget and cost. Negative differences favor C; panels use separate color scales. The compact table above uses the separate no-alarm baseline. [Cost equality for frozen policies](results/phase2/frozen_policy_cost_boundaries.csv) distinguishes historical selection cost from evaluation cost. [Frozen prevalence scenarios](results/phase2/prevalence_decision_value.csv) also report expected precision alongside loss and workload; neither extension reselects a threshold.
 
 ## Contribution and study scope
 

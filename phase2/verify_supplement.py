@@ -90,6 +90,33 @@ def _verify():
     expected=100*(scen.cost*pi*scen.empirical_fnr+(1-pi)*scen.empirical_fpr)
     close(scen.delta_loss_vs_no_alarm_100,expected-100*scen.cost*pi,'scenario relative loss')
     close(scen.expected_alert_rate,pi*(1-scen.empirical_fnr)+(1-pi)*scen.empirical_fpr,'scenario expected workload')
+    true_mass=pi*(1-scen.empirical_fnr)
+    alert_mass=true_mass+(1-pi)*scen.empirical_fpr
+    expected_precision=np.full(len(scen),np.nan)
+    positive_mass=alert_mass.to_numpy()>0
+    expected_precision[positive_mass]=(true_mass/alert_mass).to_numpy()[positive_mass]
+    close(scen.expected_precision,expected_precision,'scenario precision by expected true/total alert mass')
+    check(scen.loc[~positive_mass,'expected_precision'].isna().all(),'undefined precision for zero expected alerts')
+    boundaries=read('frozen_policy_cost_boundaries')
+    keys=['cohort','model','scheme','fold','workflow','rule']
+    originals=pd.concat([e.assign(cohort='phase_or_holdout'),pooled.assign(cohort='pooled')],ignore_index=True)
+    frozen=originals[originals.mechanism.isin(['A','B','C'])].drop_duplicates(keys)
+    check(len(boundaries)==len(frozen)==864,'all distinct frozen policies, without replicated A cost rows')
+    check(not boundaries.duplicated(keys).any(),'one cost boundary per frozen policy')
+    merged=boundaries.merge(frozen,on=keys,suffixes=('_boundary','_original'),validate='one_to_one')
+    for field in ('n','positives','tp','fp','fn','tn','alerts'):
+        close(merged[field+'_boundary'],merged[field+'_original'],'cost-boundary source count '+field)
+    selection=np.where(merged.mechanism_original.isin(['B','C']),merged.cost,np.nan)
+    close(merged.selection_cost,selection,'historical selection cost distinct from evaluation cost')
+    for _,row in boundaries.iterrows():
+        if row.tp>0:
+            close(row.break_even_cost,row.fp/row.tp,'fixed-decision cost equality')
+            close(100*(row.fp-row.break_even_cost*row.tp)/row.n,0,'zero loss difference at equality')
+            check(row.boundary_status=='finite','finite boundary classification')
+        else:
+            check(pd.isna(row.break_even_cost),'no fabricated equality with zero detections')
+            check(row.boundary_status==('no_alarm_equivalent' if row.fp==0 else 'never_improves'),
+                'empty-rule equivalence distinguished from false alerts without detections')
     record=dict(passed=True,checks=count,manifest_sha256=digest(OUT/'supplement_manifest.json'),
                 verifier_sha256=digest(Path(__file__)),outputs_sha256=manifest['outputs'])
     (OUT/'supplement_verification.json').write_text(json.dumps(record,indent=2),encoding='utf-8')

@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "checks": 10902,
-  "manifest_sha256": "7f994eb3ba26ae8b9e7bd404e906e48b2910da5a48ccdd37a528404b3ec61bf5",
-  "verifier_sha256": "d8d821d248d1772152dd294eb62c2f9440b9f8d7576be4f73bab800143198b38",
+  "checks": 13036,
+  "manifest_sha256": "058d4364e994b609f34b7fbf9cc9c24c36efca3ecaba303d5e47c657872783d4",
+  "verifier_sha256": "073b6b52ca5e450b57205f0469498f47f4bb6c9ad5c03f5f0ebf78b59acb7e2c",
   "outputs_sha256": {
     "decision_value.csv": "912a204f97e1503a01d4bf2daf26a0c8c35cc3e13ab2a1222dd1a5d9c7159aad",
     "decision_value_pooled.csv": "7e972575234e6345061106568fcfb138434905bf26aafb730859eb7137dbf322",
@@ -10,6 +10,7 @@
     "threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
     "refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
     "capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
-    "prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f"
+    "prevalence_decision_value.csv": "7f5e9f9230115562c434fb17c5389fc100493517b2cd79c5a40717cb7df3dcd4",
+    "frozen_policy_cost_boundaries.csv": "5287eeb89e5d7509c62ae2cef12451b033a9da09ff1d8e2524c4cac331958d12"
   }
 }

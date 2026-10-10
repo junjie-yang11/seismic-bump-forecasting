@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "checks": 8220,
-  "completed_at_utc": "2026-10-10T07:11:17.643698+00:00",
+  "checks": 10342,
+  "completed_at_utc": "2026-10-10T13:09:51.924358+00:00",
   "sources": {
     "results/phase1/predictions.csv": "f2c402fa9cc74c7bdfa69093900cad82a31216439bdc5ca46bac4958165ac2be",
     "results/phase1/metrics_by_scheme.csv": "a191acb421ef2c235c43e98d85442d1b1bbaeee5e1b526c1b990de9b1efa2ec3",
@@ -14,10 +14,11 @@
     "results/phase2/decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
     "results/phase2/evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
     "results/phase2/prevalence_scenarios.csv": "37416f46b10d78ff6b62faf9dc2ae1e00d80d5a9c054230e0814bc5762a02a9b",
-    "results/phase2/prevalence_decision_value.csv": "3f7d4ef2b5526e3f09a3d3f24b0225efca149039d4b29175bc2fa881daac3b9f",
+    "results/phase2/prevalence_decision_value.csv": "7f5e9f9230115562c434fb17c5389fc100493517b2cd79c5a40717cb7df3dcd4",
+    "results/phase2/frozen_policy_cost_boundaries.csv": "5287eeb89e5d7509c62ae2cef12451b033a9da09ff1d8e2524c4cac331958d12",
     "results/phase2/threshold_audit_enriched.csv": "4810e6f3bf69872e7444456ec1b2be950177b284f3938842998577d5952bd011"
   },
-  "verifier_sha256": "3311b3c094e1d50ed00c8ff5dfe872f8b0be5b0d93b5f2d3c672c4d4043247ca",
+  "verifier_sha256": "e6cffb2ef465337b7948d954e9481723be9052aeb2620f731706bc8f9655056c",
   "shap_float32_rounding": {
     "maximum_margin_error": 2.4905893951654434e-06,
     "maximum_probability_error": 2.1130487459775082e-07,

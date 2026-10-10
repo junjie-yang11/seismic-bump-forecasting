@@ -1,17 +1,17 @@
 {
   "passed": true,
-  "checks": 605,
-  "pages": 14,
-  "tables": 18,
+  "checks": 649,
+  "pages": 15,
+  "tables": 20,
   "figures": 3,
   "scope": "Computed report tables, paragraphs, hashes, PDF decimals and package metadata; visual inspection is recorded separately.",
   "report_sha256": {
-    "phase2_threshold_transfer_report.docx": "92d8e35254ef85ebad16e4378a54f8b9199bbeaacc87c962f892aef4cbbf0269",
-    "phase2_threshold_transfer_report.md": "6058c2c389c006e839b6cfb14a1734c3f8196d7c788261136f1e25ab40af6be4",
-    "phase2_threshold_transfer_report.pdf": "b34cb89f4c36e68478e242d99404407154aff24eac4a94c45b288fdb935a3113"
+    "phase2_threshold_transfer_report.docx": "00b6fbe6e0f0a15c1a031b3077fc2151465e9889da9e8a8fe3cc3f69aa9ab6f2",
+    "phase2_threshold_transfer_report.md": "b36cb01e7a9c8a5d69ebe01e353724ce83d31d2f461bb709cfd4b658afd22074",
+    "phase2_threshold_transfer_report.pdf": "6aa9d837a2fc03d7f0d35154c30a7d37e64dbdba0314b572392ba260f0eedebb"
   },
   "status": "passed",
-  "started_at_utc": "2026-10-10T07:28:48.868890+00:00",
-  "completed_at_utc": "2026-10-10T07:28:51.437991+00:00",
-  "verifier_sha256": "f552ff4f552182999a79105d8d8f0963f16b7bc5ffb69d066f58dade3d7409c8"
+  "started_at_utc": "2026-10-10T13:10:57.472984+00:00",
+  "completed_at_utc": "2026-10-10T13:10:59.268271+00:00",
+  "verifier_sha256": "e96c6c83b8ac93a387eba304cc20a1045304c58d4fd3d785e873b832ee12a040"
 }

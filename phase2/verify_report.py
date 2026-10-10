@@ -41,7 +41,7 @@ def _run_checks(root, baseline):
     for file,digest in run['first_stage_hashes'].items():check(sha(root/file)==digest,'first stage unchanged '+file)
     for file in ['analysis.py','decisions.py','experiment.py','plan.py','run.py']:
         check(sha(root/'phase2'/file)==run['source_hashes'][file],'model/selection implementation unchanged')
-    check(13 <= len(pdf.pages) <= 16,'expected report page range');check(len(doc.tables)==18,'eighteen complete tables');check(len(doc.inline_shapes)==3,'three figures')
+    check(13 <= len(pdf.pages) <= 18,'expected report page range');check(len(doc.tables)==20,'twenty complete tables');check(len(doc.inline_shapes)==3,'three figures')
     check(not doc.core_properties.author and not doc.core_properties.last_modified_by,'clean Word metadata')
     check('/Author' not in (pdf.metadata or {}),'clean PDF metadata')
     for para in doc.paragraphs:
@@ -65,7 +65,10 @@ def _run_checks(root, baseline):
     assumption_tables=[t for t in doc.tables if [c.text for c in t.rows[0].cells]==['Item','Definition and evaluation scope']]
     check(len(assumption_tables)==1,'one decision-assumption table')
     check('Actual inspection execution and accident prevention are not observed.' in md,'operational scope explicit')
-    evidence_tables=[t for t in doc.tables if [c.text for c in t.rows[0].cells]!=['Item','Definition and evaluation scope']]
+    new_headers=[['Evidence','Stage 1 assessment','Stage 2 assessment'],
+                 ['Historical budget','TP','FP','Alerts','Equality cost r*']]
+    evidence_tables=[t for t in doc.tables if [c.text for c in t.rows[0].cells] not in
+                     [['Item','Definition and evaluation scope']]+new_headers]
     getrows=lambda index:[[cell.text for cell in row.cells] for row in evidence_tables[index].rows][1:]
     def rng(values):
         lo,hi=min(values),max(values);return '%.2f'%lo if lo==hi else '%.2f to %.2f'%(lo,hi)
@@ -137,9 +140,25 @@ def _run_checks(root, baseline):
             # Reconstruct from empirical class-conditional rates rather than the derived difference column.
             loss=100*(10*pi*r.empirical_fnr+(1-pi)*r.empirical_fpr)-100*10*pi
             alerts=pi*(1-r.empirical_fnr)+(1-pi)*r.empirical_fpr
-            row.append('%.2f\n%.2f%%'%(loss,100*alerts))
+            true_mass=pi*(1-r.empirical_fnr)
+            precision='NA' if alerts==0 else '%.2f%%'%(100*true_mass/alerts)
+            row.append('%.2f\n%.2f%%\n%s'%(loss,100*alerts,precision))
         rows.append(row)
     check(getrows(16)==rows,'Table A5 paired values reconstructed independently')
+    boundary_tables=[t for t in doc.tables if [c.text for c in t.rows[0].cells]==new_headers[1]]
+    check(len(boundary_tables)==1,'one frozen-policy cost-boundary table')
+    q=pooled.query("model=='XGBoost' and workflow=='fixed' and cost==10 and mechanism=='C'").sort_values('budget')
+    rows=[]
+    for _,r in q.iterrows():
+        equality='—' if r.tp==0 else '%.2f'%(r.fp/r.tp)
+        rows.append(['%d%%'%round(100*r.budget),str(int(r.tp)),str(int(r.fp)),str(int(r.alerts)),equality])
+    check([[c.text for c in r.cells] for r in boundary_tables[0].rows][1:]==rows,
+          'cost equality reconstructed from original pooled counts')
+    links=[t for t in doc.tables if [c.text for c in t.rows[0].cells]==new_headers[0]]
+    check(len(links)==1 and len(links[0].rows)==4,'one cross-stage evidence table')
+    check('does not maintain a prescribed test alert rate' in md,'historical budget versus future fixed cutoff')
+    check('historical selection uses rselect' in md.lower(),'selection cost distinct from evaluation cost')
+    check('It is undefined when expected alert mass is zero' in md,'scenario precision zero-alert convention')
     check('Stage one [3] transfers a reference cutoff' in md,'cross-stage workflow link')
     check('budget cutoffs exclude boundary ties' in md,'cross-stage threshold distinction')
     check('Alert-count changes in the second panel are labelled as integers.' in md,'integer count caption')

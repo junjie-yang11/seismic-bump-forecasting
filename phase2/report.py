@@ -54,6 +54,7 @@ def build():
     value=read('decision_value'); value_pool=read('decision_value_pooled')
     explanations=read('threshold_explanations'); enriched=read('threshold_audit_enriched')
     transfers=read('refit_transfer'); capacity=read('capacity_tradeoffs'); scenario_value=read('prevalence_decision_value')
+    boundaries=read('frozen_policy_cost_boundaries')
     locked=json.loads((ROOT/'phase2/locked_plan.json').read_text())
     manifests=json.loads((OUT/'fold_manifest.json').read_text())
     x=e.query("model=='XGBoost' and scheme=='time' and workflow=='fixed'")
@@ -118,7 +119,8 @@ def build():
             for ci,cell in enumerate(row.cells):
                 cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
                 for pr in cell.paragraphs:
-                    text_column=headers[ci] in ('Rule','Model','Workflow','Contrast','Item','Objective','Constraint','Definition and evaluation scope')
+                    text_column=headers[ci] in ('Rule','Model','Workflow','Contrast','Item','Objective','Constraint','Definition and evaluation scope',
+                                               'Evidence','Stage 1 assessment','Stage 2 assessment')
                     pr.alignment=(WD_ALIGN_PARAGRAPH.CENTER if i==0 else
                                   WD_ALIGN_PARAGRAPH.LEFT if text_column else WD_ALIGN_PARAGRAPH.RIGHT)
                     pr.paragraph_format.keep_with_next=i<(len(rows) if len(rows)<=6 else 2)
@@ -195,7 +197,7 @@ def build():
         f'Despite all reference areas containing positive outcomes, its {silent} no-alarm selections comprise {int(cause_counts.get("cost_selects_no_alarm",0))} unconstrained cost optima and {int(cause_counts.get("capacity_changes_to_no_alarm",0))} capacity-induced changes. '
         f'The budget rule exceeded later capacity in {over} of 16 phase–budget settings; cost-plus-capacity exceeded it in {c_over} of 64 phase–budget–cost settings. These dependent settings use different denominators. '
         'Matched-setting comparisons connect reduced capacity excess to changes in detections, missed events and loss. Refitting changes finite-cutoff decisions, while no-alarm rules remain invariant by construction. '
-        'Paired block intervals and frozen-rule prevalence scenarios characterize decision value and workload under hypothetical costs. The workflow links historical selection audits to later decision value. Recorded row order is a temporal proxy; the study is retrospective.')
+        'Paired block intervals characterize transferred loss. Frozen-rule cost boundaries separate selection costs from evaluation costs, while prevalence scenarios pair expected precision with workload. The workflow links historical selection audits to later decision value. Recorded row order is a temporal proxy; the study is retrospective.')
     # Avoid any manuscript number without a matching computed claim source.
     claims.extend([dict(claim='fixed XGBoost A capacity violations',value=over,source='evaluations.csv; time/A/cost10/excess>0'),
                    dict(claim='fixed XGBoost C no alarms',value=silent,source='evaluations.csv; time/C/alerts==0'),
@@ -206,7 +208,7 @@ def build():
     para('Keywords: seismic hazard; warning threshold; relative cost; inspection capacity; record-order validation.')
     heading('1 Research question and data')
     para('A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents. The contribution is auditable decision analysis that links historical selection reasons to later loss, hazardous-shift coverage and capacity excess, and evaluates refitting at the same numerical cutoff.')
-    para('Mining cold-start research addresses limited local history at new sites [10]; microseismic reviews distinguish waveform detection and location from forecasting [11]. Here, cost-sensitive loss [5] and inspection budgets connect shift forecasts to decisions. We jointly evaluate transferred loss, workload and refitting, with historical audits explaining no-alarm choices. This links the selection rationale to later outcomes on the same test records.')
+    para('Mining cold-start research examines limited local history at new sites [10], while microseismic reviews distinguish waveform tasks from forecasting [11]. Threshold-choice theory connects scores, rules and operating conditions [12]. Risk-informed warning identification compares anomalies with three hazard assessments [13]; our outcome remains the subsequent hazardous-shift label. Cost-sensitive loss [5] and historical budgets connect selection audits to later loss, coverage, workload and refitting.')
     para('UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.')
     para('The analysis separates three questions: how cost and capacity determine historical selection, how the selected rules perform in later blocks, and how their decisions change after model refitting with the same cutoff. The protocol was locked before second-stage fitting. Because the cohort had already been inspected in stage one, the study is exploratory and retrospective. The previously viewed 774-row holdout provides supplementary evidence and overlaps part of the four-block cohort.')
 
@@ -229,6 +231,7 @@ def build():
         ['B cost','Minimum r FN + FP','None'],
         ['C cost plus capacity','Minimum r FN + FP','Alerts ≤ floor(B Nref)']])
     para('Budgets are 1%, 5%, 10% and 20%; relative penalties r for missing a hazardous shift are 5, 10, 20 and 50, with false-alarm cost 1. A is selected once per budget, B once per cost, and C once per combination. Alerts satisfy s ≥ τ. Tied scores move together. The cutoff is the minimum included reference score, except +∞ for no alarms and −∞ for all alarms. Equal-loss B/C decisions select fewer alerts. Zero capacity slots force A/C to +∞; without reference positives B/C select no alarms, while A remains budget-only.')
+    para('A uses a reference alert-rate constraint to choose a numerical cutoff, then applies that fixed cutoff to later scores. It does not maintain a prescribed test alert rate. B and C are empirical reference-loss choices, with C restricting the candidate set. Their historical optima are not test-optimal rules. This selection/application distinction connects the workflows to threshold-choice theory [12].')
     para('The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole-tie test-score set within floor(B Ntest), without test labels, and can underfill capacity. This retrospective ranking reference requires scores for the complete test batch; its capacity is enforced on that batch rather than inherited from a historical cutoff.')
     para('Primary loss is L100 = 100(r FN + FP)/N. Counts, recall, precision, alert rate and excess max(0, Alerts − floor(B N)) accompany it. Costs are hypothetical relative weights, not monetary estimates. Pooled slots and excess sum phase-specific quantities without offsetting excess in one phase against spare capacity in another.')
 
@@ -242,6 +245,11 @@ def build():
         ['Pooled accounting','Sum counts, slots and excess over the four later blocks; divide total loss by total records to obtain loss per 100. Spare slots in one block do not offset excess in another.'],
         ['Operational evidence','Actual inspection execution and accident prevention are not observed. Capacity and relative costs are explicit hypothetical decision settings.']],widths=[1.45,4.98])
     para('These assumptions define how frozen warning rules create inspection demand. The evaluation connects hazardous-shift coverage to relative loss and workload; excess demand remains in the alert counts. Detections count hazardous shifts flagged, while dispatch, queueing and safety interventions are outside the evaluated process.')
+
+    table('Table 2b. How forecast evidence connects to decision evaluation',['Evidence','Stage 1 assessment','Stage 2 assessment'],[
+        ['Ranking','AP on common test records','Hazardous-shift coverage of selected alerts'],
+        ['Probabilities','Calibration and baseline-relative Brier skill','Assumed costs evaluated on frozen raw-score rules'],
+        ['Threshold transfer','Reference cutoff applied after outer refitting','Fixed model primary; refitting at the same cutoff as a comparison']],widths=[1.05,2.45,2.93])
 
     page('3 Decision value relative to no alarms')
     pooled_main=value_pool.query("model=='XGBoost' and workflow=='fixed' and cost==10")
@@ -262,6 +270,15 @@ def build():
     table('Table 4. Phase-specific loss relative to no alarms at r=10',['Phase','No-alarm L100','A Δ range','B Δ','C Δ range'],stage_rows)
     para('At this cost, pooled C loss equals the no-alarm loss at the 1% budget and is higher at the remaining budgets. Historical optimization is compatible with this outcome: reference labels determine the optimum, whereas later false alarms and detected hazards determine transferred value. At the 5%, 10% and 20% budgets, pooled C produces 24, 27 and 32 false alarms for 1, 1 and 2 detections, respectively; each exceeds the corresponding rTP benefit at r=10. Phase-specific results show where these contributions arise rather than attributing the pooled result to every stage.')
     para('A lower loss than another warning rule does not establish value over no alarms. C can reduce workload and loss relative to A while retaining positive ΔLnone,100. No alarms incur the cost of every missed hazardous shift and detect none; their role here is a loss reference, not an operational recommendation. Complete files retain all costs, models, workflows and the descriptive holdout; r=10 is the common display scale.')
+    heading('3.1 Evaluation cost for an unchanged warning rule')
+    para('Historical selection uses rselect; evaluation at reval retains the model, cutoff and alerts. For TP > 0, ΔLnone,100(reval) = 100(FP − reval TP)/N equals zero at r* = FP/TP and is negative above that cost. TP=FP=0 gives no-alarm equivalence at every cost; TP=0 with FP>0 never improves this loss at finite cost. These identities follow directly from the loss definition.')
+    bmain=boundaries.query("model=='XGBoost' and scheme=='time' and cohort=='pooled' and workflow=='fixed' and mechanism=='C' and selection_cost==10").sort_values('budget')
+    boundary_rows=[]
+    for _,row in bmain.iterrows():
+        boundary_rows.append(['%d%%'%round(100*row.budget),int(row.tp),int(row.fp),int(row.alerts),
+            '—' if pd.isna(row.break_even_cost) else '%.2f'%row.break_even_cost])
+    row20=bmain[bmain.budget==.2].iloc[0]
+    para(f'At the 20% budget, C selected at rselect=10 flags {int(row20.tp)} hazardous shifts with {int(row20.fp)} false alerts, giving pooled r*={row20.break_even_cost:.2f}. The unchanged rule improves this loss above that evaluation cost on the observed cohort. Table A6 covers all four budgets; saved files retain every phase and A/B/C rule. These descriptive boundaries do not estimate operational costs or reselect a strategy.')
 
     page('4 Budget thresholds and future capacity')
     arows=[]
@@ -356,6 +373,7 @@ def build():
 
     page('9 Frozen prevalence scenarios and decision implications')
     para('The scenario changes hazardous-shift prevalence π to 2%, 5%, 10% or 15%, holding policies and empirical class-conditional error rates fixed. Expected loss is L100(π) = 100[r π FNR + (1 − π) FPR]; expected alert rate is π(1 − FNR) + (1 − π)FPR. Cutoffs remain frozen. These prevalence-only expectations exclude within-class changes and do not estimate capacity-exceedance probability.')
+    para('Expected precision is π TPR / [π TPR + (1 − π)FPR], with TPR = 1 − FNR. It is undefined when expected alert mass is zero; the descriptive scenario output leaves that field empty. This differs from the zero convention used for observed zero-alert precision. Precision depends on prevalence even at fixed class-conditional rates [14], so Table A5 pairs it with workload and relative loss for each budget rather than interpreting a PR change as a model change.')
     s=scenario_value.query("model=='XGBoost' and scheme=='time' and fold==-1 and workflow=='fixed' and rule.str.startswith('C')")
     srows=[]
     for r in PLAN['costs']:
@@ -371,13 +389,14 @@ def build():
     for (model,w),q in hold.groupby(['model','workflow'],sort=False):
         hrows.append([model,w,rng(q.loss_delta_no_alarm100),'%d–%d'%(q.alerts.min(),q.alerts.max()),int((q.excess>0).sum())])
     table('Table 12. Previously viewed holdout and all 16 C settings',['Model','Workflow','L100 minus no alarm range','Alert range','Excess policies'],hrows)
-    heading('10 Discussion and conclusions')
+    page('10 Discussion and conclusions')
     sparse=enriched.query("model=='XGBoost' and scheme=='time' and fold==1").iloc[0]
     para('Reference-to-test hazardous-shift prevalence changes were '+ '; '.join(prevalence_changes)+'. '
          f'Phase 2 reference choices rest on {int(sparse.reference_positives)} hazardous outcome among {int(sparse.reference_n)} records. '
          'This sparse reference and the prevalence differences provide plausible context for transfer behavior. Class-conditional score distributions may also change; '
          'the design does not identify prevalence shift as its sole cause. Section 9 uses the label-shift assumption [6] to vary prevalence while freezing class-conditional rates; it does not estimate or correct the actual shift.')
     para('Later decision value is assessed jointly through loss, hazardous-shift coverage and workload. At r=10, C can reduce loss relative to A without improving pooled loss relative to no alarms. Its 40 historical no-alarm choices comprise 28 cost optima and 12 capacity-induced changes despite positive reference outcomes. Matched C−A results quantify the accompanying detections, misses and loss. Refitting changes finite-cutoff decisions; invariant no-alarm rules do not establish finite-threshold stability. Selection audits and paired transfer comparisons connect the historical reason for each cutoff to its later loss and inspection demand.')
+    para('The frozen-rule cost boundary adds an interpretable condition to this decision evidence: the false-alert count must be outweighed by the assumed value of detected hazardous shifts. Changing that evaluation weight changes relative loss without changing workload or detections. Frozen prevalence scenarios complement this accounting by changing expected class proportions and thus expected precision and demand. Both calculations characterize specified conditions; neither selects a deployment rule from the test outcomes.')
     para('Historical selection, later capacity and model updating require separate evidence. Cross-longwall transfer [7] and new-site cold start [10] concern identified locations; our cutoff comparisons concern later record blocks. Structured validation distinguishes interpolation from extrapolation [8]. Costs and capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.')
     page('Appendix A Detection, capacity and pooled evidence')
     capacity_rows=[]
@@ -419,10 +438,13 @@ def build():
             part=s[(s.cost==10)&(s.budget==budget)&(s.scenario_prevalence==pi)]
             if len(part)!=1: raise RuntimeError('Budget-specific prior-shift record is not unique')
             result=part.iloc[0]
-            row.append('%.2f\n%.2f%%'%(result.delta_loss_vs_no_alarm_100,100*result.expected_alert_rate))
+            precision='NA' if pd.isna(result.expected_precision) else '%.2f%%'%(100*result.expected_precision)
+            row.append('%.2f\n%.2f%%\n%s'%(result.delta_loss_vs_no_alarm_100,100*result.expected_alert_rate,precision))
         paired_scenarios.append(row)
     table('Table A5. Budget-specific pooled fixed XGBoost C prior-shift results at r=10',['Historical budget','π 2%','π 5%','π 10%','π 15%'],paired_scenarios)
-    para('Each cell pairs relative loss per 100 shifts with expected alert percentage for one budget and scenario. Negative differences favor C over no alarms at r=10. All sixteen entries freeze historical rules and class-conditional rates; full files retain every model, cost, workflow and phase.')
+    para('Each cell lists relative loss per 100 shifts, expected alert percentage, then expected precision for one budget and scenario. NA means zero expected alerts, so precision is undefined. Negative differences favor C over no alarms at r=10. All sixteen entries freeze historical rules selected at r=10 and class-conditional rates; full files retain every model, cost, workflow and phase.')
+    table('Table A6. Cost equality for pooled C alerts selected historically at rselect=10',['Historical budget','TP','FP','Alerts','Equality cost r*'],boundary_rows,widths=[1.65,.7,.7,.85,2.53])
+    para('The dash denotes a no-alarm-equivalent rule, not a missing calculation. Other equality costs are FP/TP for unchanged pooled alerts; a larger evaluation cost gives negative relative loss on this cohort. Selection still used rselect=10. Per-phase and other-model boundaries remain in frozen_policy_cost_boundaries.csv.')
     heading('Reproducibility and electronic appendix')
     para(f'The protocol was locked on 2 October 2026 at 19:20:26 UTC; its hash starts {locked["plan_sha256"][:16]}. Independent reproduction replayed 15 model pairs and paired resampling. The results/phase2 directory retains row evidence, threshold candidates, audits, evaluations, contrasts and bootstrap arrays. Infinite thresholds are sentinels; empty cells denote undefined quantities.')
     para('Manifests and checks establish provenance for generated tables and figures. Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting. Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [9].')
@@ -439,6 +461,9 @@ def build():
     para('[9] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv; 2026. doi:10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065.')
     para('[10] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence; 2017;64:83–94. doi:10.1016/j.engappai.2017.06.002.')
     para('[11] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews; 2023;239:104371. doi:10.1016/j.earscirev.2023.104371.')
+    para('[12] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research; 2012;13:2813–2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html.')
+    para('[13] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems; 2023;108:17. doi:10.1007/s10846-023-01887-2.')
+    para('[14] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE; 2015;10(3):e0118432. doi:10.1371/journal.pone.0118432.')
     doc.core_properties.author=''; doc.core_properties.last_modified_by=''; doc.core_properties.title=PLAN['title']
     doc.core_properties.subject='Second-stage retrospective warning decision study'
     doc.save(DEST/'phase2_threshold_transfer_report.docx')

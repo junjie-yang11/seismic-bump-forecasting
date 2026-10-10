@@ -229,6 +229,8 @@ SHAP and ablation answer different engineering questions. Energy and low-energy 
 
 Changing a probability scale and changing a decision rule address different engineering questions. Cost-sensitive decision theory [11] links probabilities to error costs; here historical reference scores supply empirical cutoffs. Prior-only distribution change [10] is a specific assumption rather than a diagnosis of the observed protocol gap. The companion decision study evaluates loss, capacity and refitting at frozen thresholds; it builds on this forecast evidence without treating calibration gains as evidence of operational warning value.
 
+Threshold-choice theory [15] places the scoring model, decision rule and operating conditions in the same loss framework. A reference budget selects a historical score cutoff; carrying that number forward does not enforce a future alert rate. Stage two makes fixed-model transfer its primary workflow and compares refitting separately. Its frozen-rule cost boundaries retain the historical selection cost while varying evaluation cost, and its prevalence scenarios retain class-conditional rates while varying class proportions. Precision changes under the latter assumption need not indicate changed ranking [16]. These decision calculations complement the present AP, probability-reference and feature-use evidence.
+
 These results concern the audited mirror under a record-order forecasting assumption. Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. Repeated measurements can correspond to distinct shifts; the provenance audit establishes the mirror transformation rather than the operational validity of deduplication. Native TreeSHAP uses training leaf covers, and correlated inputs affect the allocation of contributions. Signed contributions explain how the fitted model uses a variable, not the causal effect of changing that variable. Phase stability is conditional on the fitted models and observed test distributions.
 
 The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. A maximum AP among these feature sets is not treated as a validated model-selection result. The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. The cold-start question in [13] concerns adapting to a new site with limited local history. Our record blocks assess evaluation and cutoff transfer, without identifying site changes. A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.
@@ -276,6 +278,10 @@ The author directed the research scope, protocol refinement and review prioritie
 [13] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence, 2017, 64:83-94. DOI: 10.1016/j.engappai.2017.06.002.
 
 [14] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews, 2023, 239:104371. DOI: 10.1016/j.earscirev.2023.104371.
+
+[15] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research, 2012, 13:2813-2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html
+
+[16] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE, 2015, 10(3):e0118432. DOI: 10.1371/journal.pone.0118432.
 
 ## Appendix A Feature definitions and phase evidence
 
