@@ -61,9 +61,9 @@ def write_word_report():
     privacy = OxmlElement('w:removePersonalInformation')
     doc.settings.element.append(privacy)
     section = doc.sections[0]
-    section.page_width, section.page_height = Inches(8.5), Inches(11)
-    section.top_margin = section.bottom_margin = Inches(.85)
-    section.left_margin = section.right_margin = Inches(1)
+    section.page_width, section.page_height = Inches(8.27), Inches(11.69)
+    section.top_margin = section.bottom_margin = Inches(.82)
+    section.left_margin = section.right_margin = Inches(.92)
     for name in ('Normal', 'Title', 'Heading 1', 'Heading 2', 'Caption'):
         s = doc.styles[name]
         s.font.name = 'Times New Roman'
@@ -93,6 +93,8 @@ def write_word_report():
         doc.styles[name].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
     doc.styles['Caption'].font.size = Pt(9.5)
     doc.styles['Caption'].font.bold = False
+    doc.styles['Caption'].font.italic = False
+    doc.styles['Caption'].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
     source = report_markdown()
     lines = source.splitlines()
     i = 0
@@ -113,12 +115,14 @@ def write_word_report():
             if data[0][-1]=='95% interval': weights[-1]=2.
             if data[0][0]=='Model / variant': weights[0]=2.2
             if data[0][:2]==['Model', 'Feature set']: weights=[.9, 2.4, 1., 1., 1., 1.]
+            if data[0]==['Feature set', 'Columns', 'LR', 'CART', 'XGBoost']: weights=[2.3, .65, 1., 1., 1.]
             if data[0]==['Feature', 'Group', 'Definition', 'Encoding']: weights=[1.1, 1.1, 3.4, .9]
-            widths=[6.5*w/sum(weights) for w in weights]
+            if data[0]==['Group', 'Variables', 'Question']: weights=[1., 1.6, 2.2]
+            widths=[6.43*w/sum(weights) for w in weights]
             for col,width in zip(tbl.columns,widths): col.width=Inches(width)
             for ri, values in enumerate(data):
                 cells = tbl.add_row().cells
-                for cell, value, width in zip(cells, values, widths):
+                for ci, (cell, value, width) in enumerate(zip(cells, values, widths)):
                     cell.text = value
                     cell.width = Inches(width)
                     cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
@@ -131,9 +135,11 @@ def write_word_report():
                     if ri == 0:
                         shading = OxmlElement('w:shd'); shading.set(qn('w:fill'), 'F2F2F2'); pr.append(shading)
                     for p in cell.paragraphs:
-                        p.paragraph_format.space_before = Pt(4)
-                        p.paragraph_format.space_after = Pt(4)
-                        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                        p.paragraph_format.space_before = Pt(2.5)
+                        p.paragraph_format.space_after = Pt(2.5)
+                        text_column = data[0][ci] in ('Group', 'Variables', 'Question', 'Feature', 'Feature set', 'Definition', 'Encoding', 'Model')
+                        p.paragraph_format.alignment = (WD_ALIGN_PARAGRAPH.CENTER if ri == 0 else
+                            WD_ALIGN_PARAGRAPH.LEFT if text_column else WD_ALIGN_PARAGRAPH.RIGHT)
                         p.paragraph_format.keep_with_next = ri < (2 if len(data) > 10 else len(data)-1)
                         for r in p.runs: r.font.size = Pt(9.5); r.bold = ri == 0
                 trpr = tbl.rows[-1]._tr.get_or_add_trPr()
@@ -146,10 +152,10 @@ def write_word_report():
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p.paragraph_format.keep_with_next = True
-            figure_width = 5.8 if 'reliability' in image.group(2) else (6.2 if 'shap_' in image.group(2) else 5.3)
+            figure_width = 6.2 if 'reliability' in image.group(2) else 6.4
             p.add_run().add_picture(str((ROOT / 'reports/phase1' / image.group(2)).resolve()), width=Inches(figure_width))
             caption = doc.add_paragraph(image.group(1), style='Caption')
-            caption.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            caption.alignment = WD_ALIGN_PARAGRAPH.LEFT
         elif line.startswith('# '): doc.add_paragraph(line[2:], style='Title')
         elif line.startswith('## '):
             p=doc.add_paragraph(line[3:],style='Heading 1')

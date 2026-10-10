@@ -131,9 +131,9 @@ The electronic evaluation table reports recall, precision and alert rate for eve
 
 5 Cost and capacity change the selected decision
 
-Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to one decimal.
+Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to two decimals. P1 to P4 identify test phases, r is the assumed missed-shift cost, and panel letters identify the compared rules.
 
-![Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to one decimal.](loss_contrasts.png)
+![Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to two decimals. P1 to P4 identify test phases, r is the assumed missed-shift cost, and panel letters identify the compared rules.](loss_contrasts.png)
 
 Across the 64 phase–budget–cost combinations, C−A ranged from -42.33 to 65.89 relative loss units per 100 shifts and C−B from -19.19 to 261.24. Strategy preference depends on the record stage and assumed missed-event cost: the same capacity-constrained rule can reduce loss in one setting and increase it in another.
 

@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from figures import _font, PALETTE, FG, MUTED, GRID, AXIS
+from figures import _font, _rotated_label, PALETTE, FG, MUTED, GRID, AXIS
 
 
 def render(root):
@@ -92,7 +92,8 @@ def render(root):
             d.text((ox - 8, y), '%.1f' % value, font=_font(22), fill=MUTED, anchor='rm')
         for value, x in ((xmin, ox), (xmax, ox + w)):
             d.text((x, oy + h + 8), '%.1f' % value, font=_font(22), fill=MUTED, anchor='ma')
-        d.text((ox + w / 2, 435), 'Signed log1p of observed feature value', font=_font(21), fill=FG, anchor='mm')
+        d.text((ox + w / 2, 435), 'Signed log1p(feature value)', font=_font(26), fill=FG, anchor='mm')
+    _rotated_label(img, 'SHAP contribution (log-odds)', _font(24), FG, (18, 250))
     for f in range(4):
         d.text((65 + f * 285, 484), 'Phase %d' % (f + 1), font=_font(24), fill=PALETTE[f])
     img.save(out / 'shap_dependence.png')
@@ -101,13 +102,19 @@ def render(root):
     values = pd.read_csv(root / 'results/phase1/shap_case_contributions.csv')
     img = Image.new('RGB', (1400, 530), 'white'); d = ImageDraw.Draw(img)
     d.text((35, 22), 'Holdout warning cases at the 10% training reference budget', font=_font(29, True), fill=FG)
+    scale_values = []
+    for category in cases.category:
+        part = values[(values.validation == 'holdout') & (values.category == category)].copy()
+        part = part.iloc[np.argsort(-part.contribution.abs().to_numpy(), kind='stable')]
+        scale_values.extend(part.contribution.head(5).tolist() + [part.contribution.iloc[5:].sum()])
+    shared_limit = max([abs(value) for value in scale_values] + [1e-12]) * 1.15
     for panel, (_, case) in enumerate(cases.iterrows()):
         part = values[(values.validation == 'holdout') & (values.category == case.category)].copy()
-        part['absolute'] = part.contribution.abs(); part = part.sort_values('absolute', ascending=False)
+        part['absolute'] = part.contribution.abs(); part = part.sort_values('absolute', ascending=False, kind='stable')
         top = list(zip(part.feature.head(5), part.contribution.head(5))) + [('Other features', part.contribution.iloc[5:].sum())]
         left = 35 + panel * 460
         oy = 165; ox = left + 320; half = 100
-        maximum = max(abs(v) for _, v in top) * 1.15
+        maximum = shared_limit
         d.text((left, 88), '%s | mirror row %d' % (case.category, int(case.row) + 1), font=_font(27, True), fill=FG)
         d.text((left, 124), 'p=%.4f | cutoff=%.4f' % (case.score, case.threshold), font=_font(24), fill=FG)
         d.line((ox, oy - 8, ox, oy + 6 * 39), fill=AXIS, width=2)

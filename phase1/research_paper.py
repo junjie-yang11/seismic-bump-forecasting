@@ -276,7 +276,7 @@ def build_paper(root):
         'The three outcomes show how combinations of measured signals place different records above or below the same frozen cutoff. '
         'Signed contributions locate each model adjustment relative to its baseline.',
         'The TP, FP and FN categories depend on predicted alerts and observed labels. The first row in each category supplies a deterministic illustration with limited discretionary case selection.',
-        '![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin.](../../results/phase1/figures/shap_warning_cases.png)',
+        '![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin. Bars use a common symmetric scale.](../../results/phase1/figures/shap_warning_cases.png)',
         '## 6 Warning budgets and inspection workload',
         'Changing the reference budget changes the frozen threshold while leaving fitted scores unchanged. '
         'In the common record-order cohort, LR, CART and XGBoost actual alert rates at the 10 percent reference budget are %s, %s and %s. '

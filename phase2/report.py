@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
+from matplotlib.ticker import MaxNLocator
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from .plan import ROOT, OUT, PLAN
@@ -73,6 +75,9 @@ def build():
         for script in ['ascii','hAnsi','cs','eastAsia']: fonts.set(qn('w:'+script),'Times New Roman')
         st.font.size=Pt(11 if name=='Normal' else (16 if name=='Title' else 10 if name=='Caption' else 12))
         st.paragraph_format.space_after=Pt(6)
+    doc.styles['Caption'].font.bold=False
+    doc.styles['Caption'].font.italic=False
+    doc.styles['Caption'].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.LEFT
     normal=doc.styles['Normal']; normal.paragraph_format.line_spacing=1.08
     normal.paragraph_format.widow_control=True
     for name in ['Heading 1','Heading 2']:
@@ -91,7 +96,14 @@ def build():
     def page(text):
         pr=para(text,'Heading 1'); pr.paragraph_format.page_break_before=True
     def table(caption,headers,rows,widths=None):
-        para(caption,'Caption'); tab=doc.add_table(rows=1,cols=len(headers)); tab.autofit=True
+        title=para(caption,'Caption'); title.paragraph_format.keep_with_next=True
+        tab=doc.add_table(rows=1,cols=len(headers)); tab.autofit=False
+        tab.alignment=WD_TABLE_ALIGNMENT.CENTER
+        if widths is None:
+            weights=[max(.65,min(2.5,len(header)/14.)) for header in headers]
+            if headers[0]=='Contrast': weights=[1.8,.55,1.6,1.,1.,1.15]
+            if headers==['Rule','Objective','Constraint']: weights=[.9,2.5,2.]
+            widths=[6.43*weight/sum(weights) for weight in weights]
         for cell,text in zip(tab.rows[0].cells,headers): cell.text=str(text)
         repeat=OxmlElement('w:tblHeader'); tab.rows[0]._tr.get_or_add_trPr().append(repeat)
         for row in rows:
@@ -103,17 +115,22 @@ def build():
                 for cell,width in zip(row.cells,widths): cell.width=Inches(width)
         for i,row in enumerate(tab.rows):
             row._tr.get_or_add_trPr().append(OxmlElement('w:cantSplit'))
-            for cell in row.cells:
+            for ci,cell in enumerate(row.cells):
+                cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
                 for pr in cell.paragraphs:
-                    pr.paragraph_format.space_after=Pt(3); pr.paragraph_format.space_before=Pt(3)
+                    text_column=headers[ci] in ('Rule','Model','Workflow','Contrast','Item','Objective','Constraint','Definition and evaluation scope')
+                    pr.alignment=(WD_ALIGN_PARAGRAPH.CENTER if i==0 else
+                                  WD_ALIGN_PARAGRAPH.LEFT if text_column else WD_ALIGN_PARAGRAPH.RIGHT)
+                    pr.paragraph_format.keep_with_next=i<(len(rows) if len(rows)<=6 else 2)
+                    pr.paragraph_format.space_after=Pt(2); pr.paragraph_format.space_before=Pt(2)
                     pr.paragraph_format.line_spacing=1
-                    for run in pr.runs: run.font.size=Pt(9); run.bold=(i==0)
+                    for run in pr.runs: run.font.size=Pt(9.5); run.bold=(i==0)
                 if i==0:
                     sh=OxmlElement('w:shd'); sh.set(qn('w:fill'),'EEEEEE'); cell._tc.get_or_add_tcPr().append(sh)
-        # Academic horizontal rules, without a heavy table grid.
+        # Match the first-stage report with light, consistent table boundaries.
         borders=OxmlElement('w:tblBorders')
-        for edge in ['top','bottom','insideH']:
-            el=OxmlElement('w:'+edge); el.set(qn('w:val'),'single'); el.set(qn('w:sz'),'4'); el.set(qn('w:color'),'AAAAAA'); borders.append(el)
+        for edge in ['top','bottom','left','right','insideH','insideV']:
+            el=OxmlElement('w:'+edge); el.set(qn('w:val'),'single'); el.set(qn('w:sz'),'4'); el.set(qn('w:color'),'D9D9D9'); borders.append(el)
         tab._tbl.tblPr.append(borders)
         md.extend(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |'])
         md.extend('| '+' | '.join(str(cell).replace('\n','<br>') for cell in row)+' |' for row in rows); md.append('')
@@ -121,31 +138,44 @@ def build():
         lo,hi=min(values),max(values)
         return '%.2f'%lo if lo==hi else '%.2f to %.2f'%(lo,hi)
     def heatmap(filename,panels,caption):
-        plt.rcParams.update({'font.family':'DejaVu Sans','font.size':16})
-        fig,axes=plt.subplots(1,len(panels),figsize=(11.8,7.7),layout='constrained')
+        plt.rcParams.update({'font.family':'DejaVu Sans','font.size':9})
+        fig,axes=plt.subplots(1,len(panels),figsize=(6.4,4.1),layout='constrained')
         axes=np.atleast_1d(axes)
         labels=['P%d  r=%d'%(f+1,r) for f in range(4) for r in PLAN['costs']]
-        for ax,(title,values,diverging) in zip(axes,panels):
+        for panel,(ax,(title,values,diverging)) in enumerate(zip(axes,panels)):
             mat=np.asarray(values).reshape(16,4)
             if diverging:
                 limit=max(float(np.abs(mat).max()),1)
                 im=ax.imshow(mat,cmap='RdBu_r',vmin=-limit,vmax=limit,aspect='auto')
             else: im=ax.imshow(mat,cmap='Blues',vmin=0,vmax=max(float(mat.max()),1),aspect='auto')
-            ax.set_title(title,fontsize=17,pad=12)
-            ax.set_xticks(range(4),['1%','5%','10%','20%']); ax.set_xlabel('Reference capacity budget')
-            ax.set_yticks(range(16),labels,fontsize=14)
+            display_titles={
+                'C minus A loss per 100':'C minus A\nLoss difference per 100',
+                'C minus B loss per 100':'C minus B\nLoss difference per 100',
+                'C test alerts':'C test alerts',
+                'C alerts beyond capacity':'C alerts beyond\ncapacity',
+                'Refitted minus fixed loss per 100':'Refitted minus fixed\nLoss difference per 100',
+                'Refitted minus fixed alerts':'Refitted minus fixed\nAlerts',
+            }
+            ax.set_title('(%s) '%chr(97+panel)+display_titles[title],fontsize=10,pad=8)
+            ax.set_xticks(range(4),['1%','5%','10%','20%']); ax.set_xlabel('Reference budget',fontsize=9)
+            ax.set_yticks(range(16),labels,fontsize=8.5)
+            ax.tick_params(length=0,pad=3)
             for row in range(16):
                 for col in range(4):
                     v=mat[row,col]; norm=im.norm(v)
                     color='white' if (norm<.16 or norm>.84) and diverging else ('white' if norm>.65 and not diverging else 'black')
                     counts = not diverging or title == 'Refitted minus fixed alerts'
-                    text=str(int(v)) if counts else '%.1f'%v
-                    ax.text(col,row,text,ha='center',va='center',fontsize=14,color=color)
+                    text=str(int(v)) if counts else '%.2f'%v
+                    ax.text(col,row,text,ha='center',va='center',fontsize=8.5 if counts else 8,color=color)
             for sep in [3.5,7.5,11.5]: ax.axhline(sep,color='black',lw=1.2)
-            fig.colorbar(im,ax=ax,shrink=.6,pad=.02)
-        fig.savefig(DEST/filename,dpi=220); plt.close(fig)
+            bar=fig.colorbar(im,ax=ax,shrink=.65,pad=.02,fraction=.045)
+            bar.ax.tick_params(labelsize=8,length=2)
+            if not diverging or title=='Refitted minus fixed alerts':
+                bar.locator=MaxNLocator(nbins=4,integer=True); bar.update_ticks()
+        fig.savefig(DEST/filename,dpi=300); plt.close(fig)
         pr=doc.add_paragraph(); pr.alignment=WD_ALIGN_PARAGRAPH.CENTER
-        pr.add_run().add_picture(str(DEST/filename),width=Inches(5.9))
+        pr.paragraph_format.keep_with_next=True
+        pr.add_run().add_picture(str(DEST/filename),width=Inches(6.4))
         para(caption,'Caption'); md.extend(['![%s](%s)'%(caption,filename),''])
     def matrix_from(frame,column):
         return [frame.query('fold==@f and cost==@r and budget==@b')[column].iloc[0]
@@ -250,7 +280,7 @@ def build():
     heatmap('loss_contrasts.png',[
         ('C minus A loss per 100',matrix_from(ca,'loss_delta100'),True),
         ('C minus B loss per 100',matrix_from(cb,'loss_delta100'),True)],
-        'Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to one decimal.')
+        'Figure 1. Fixed XGBoost loss contrasts for every phase, cost and capacity budget. Negative values favor C on the stated relative loss. Panels use separate color scales; cell values are rounded to two decimals. P1 to P4 identify test phases, r is the assumed missed-shift cost, and panel letters identify the compared rules.')
     para(f'Across the 64 phase–budget–cost combinations, C−A ranged from {rng(ca.loss_delta100)} relative loss units per 100 shifts and C−B from {rng(cb.loss_delta100)}. Strategy preference depends on the record stage and assumed missed-event cost: the same capacity-constrained rule can reduce loss in one setting and increase it in another.')
     para('In phase 2, both B and C selected no alarms for every cost, so C−B is zero. The same decision can lower loss relative to A when r is modest and increase it when missed events carry a higher assumed cost. In phase 1, C reduces inspection work compared with the large alert set chosen by B at higher costs, while accepting more missed hazardous shifts. The positive C−B difference is the observed loss tradeoff after transferring the capacity-constrained rule, not a guaranteed penalty of capacity constraints.')
     paired=capacity.query("model=='XGBoost' and cohort=='pooled' and workflow=='fixed' and cost==10 and budget==0.2").iloc[0]

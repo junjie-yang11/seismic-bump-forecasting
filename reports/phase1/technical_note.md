@@ -188,7 +188,7 @@ The predetermined holdout cases are shown in Figure 4. Each case decomposes the 
 
 The TP, FP and FN categories depend on predicted alerts and observed labels. The first row in each category supplies a deterministic illustration with limited discretionary case selection.
 
-![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin.](../../results/phase1/figures/shap_warning_cases.png)
+![Figure 4. Earliest holdout true-positive, false-positive and false-negative cases under the 10 percent reference budget. IDs are one-based mirror rows; raw log-odds contributions, including Other features, sum with the bias to the margin. Bars use a common symmetric scale.](../../results/phase1/figures/shap_warning_cases.png)
 
 ## 6 Warning budgets and inspection workload
 
