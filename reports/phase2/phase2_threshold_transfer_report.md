@@ -13,7 +13,7 @@ Keywords: seismic hazard; warning threshold; relative cost; inspection capacity;
 
 A warning score becomes an inspection decision through a threshold that trades missed hazardous shifts against false alerts. A cutoff selected under historical costs and capacity may trigger a different workload on later records. This study asks whether such rules reduce loss relative to no alarms, how their inspection demand transfers, and how model refitting changes decisions at the same cutoff. An alert identifies a candidate shift for inspection; the labels do not measure inspection effectiveness or avoided accidents. The contribution is auditable decision analysis that links historical selection reasons to later loss, hazardous-shift coverage and capacity excess, and evaluates refitting at the same numerical cutoff.
 
-Mining cold-start research examines limited local history at new sites [10], while microseismic reviews distinguish waveform tasks from forecasting [11]. Threshold-choice theory connects scores, rules and operating conditions [12]. Risk-informed warning identification compares anomalies with three hazard assessments [13]; our outcome remains the subsequent hazardous-shift label. Cost-sensitive loss [5] and historical budgets connect selection audits to later loss, coverage, workload and refitting.
+Mining cold-start research examines limited local history at new sites [9], while microseismic reviews distinguish waveform tasks from forecasting [10]. Threshold-choice theory connects scores, rules and operating conditions [11]. Risk-informed warning identification compares anomalies with three hazard assessments [12]; our outcome remains the subsequent hazardous-shift label. Cost-sensitive loss [5] and historical budgets connect selection audits to later loss, coverage, workload and refitting.
 
 UCI describes eight-hour shift summaries and a next-shift target indicating a seismic bump above 10⁴ J [1]. We retain the first-stage 2,578-row mirror, with 170 positives, and its full 17-column design. The official 2,584-row file contains six duplicate occurrences removed in the mirror; the first-stage source mapping identifies their retained first occurrences. Recorded row order is the temporal proxy because timestamps and operation identifiers are unavailable.
 
@@ -46,7 +46,7 @@ Table 2. Rules on the historical reference area
 
 Budgets are 1%, 5%, 10% and 20%; relative penalties r for missing a hazardous shift are 5, 10, 20 and 50, with false-alarm cost 1. A is selected once per budget, B once per cost, and C once per combination. Alerts satisfy s ≥ τ. Tied scores move together. The cutoff is the minimum included reference score, except +∞ for no alarms and −∞ for all alarms. Equal-loss B/C decisions select fewer alerts. Zero capacity slots force A/C to +∞; without reference positives B/C select no alarms, while A remains budget-only.
 
-A uses a reference alert-rate constraint to choose a numerical cutoff, then applies that fixed cutoff to later scores. It does not maintain a prescribed test alert rate. B and C are empirical reference-loss choices, with C restricting the candidate set. Their historical optima are not test-optimal rules. This selection/application distinction connects the workflows to threshold-choice theory [12].
+A uses a reference alert-rate constraint to choose a numerical cutoff, then applies that fixed cutoff to later scores. It does not maintain a prescribed test alert rate. B and C are empirical reference-loss choices, with C restricting the candidate set. Their historical optima are not test-optimal rules. This selection/application distinction connects the workflows to threshold-choice theory [11].
 
 The no-alarm baseline is always evaluated. Batch Top-k selects the largest whole-tie test-score set within floor(B Ntest), without test labels, and can underfill capacity. This retrospective ranking reference requires scores for the complete test batch; its capacity is enforced on that batch rather than inherited from a historical cutoff.
 
@@ -255,7 +255,7 @@ LR and CART extend the policy comparison across retained baseline models using i
 
 The scenario changes hazardous-shift prevalence π to 2%, 5%, 10% or 15%, holding policies and empirical class-conditional error rates fixed. Expected loss is L100(π) = 100[r π FNR + (1 − π) FPR]; expected alert rate is π(1 − FNR) + (1 − π)FPR. Cutoffs remain frozen. These prevalence-only expectations exclude within-class changes and do not estimate capacity-exceedance probability.
 
-Expected precision is π TPR / [π TPR + (1 − π)FPR], with TPR = 1 − FNR. It is undefined when expected alert mass is zero; the descriptive scenario output leaves that field empty. This differs from the zero convention used for observed zero-alert precision. Precision depends on prevalence even at fixed class-conditional rates [14], so Table A5 pairs it with workload and relative loss for each budget rather than interpreting a PR change as a model change.
+Expected precision is π TPR / [π TPR + (1 − π)FPR], with TPR = 1 − FNR. It is undefined when expected alert mass is zero; the descriptive scenario output leaves that field empty. This differs from the zero convention used for observed zero-alert precision. Precision depends on prevalence even at fixed class-conditional rates [13], so Table A5 pairs it with workload and relative loss for each budget rather than interpreting a PR change as a model change.
 
 Table 11. Pooled prior-shift sensitivity: relative C loss and expected workload
 
@@ -287,7 +287,7 @@ Later decision value is assessed jointly through loss, hazardous-shift coverage 
 
 The frozen-rule cost boundary adds an interpretable condition to this decision evidence: the false-alert count must be outweighed by the assumed value of detected hazardous shifts. Changing that evaluation weight changes relative loss without changing workload or detections. Frozen prevalence scenarios complement this accounting by changing expected class proportions and thus expected precision and demand. Both calculations characterize specified conditions; neither selects a deployment rule from the test outcomes.
 
-Historical selection, later capacity and model updating require separate evidence. Cross-longwall transfer [7] and new-site cold start [10] concern identified locations; our cutoff comparisons concern later record blocks. Structured validation distinguishes interpolation from extrapolation [8]. Costs and capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
+Historical selection, later capacity and model updating require separate evidence. Cross-longwall transfer [7] and new-site cold start [9] concern identified locations; our cutoff comparisons concern later record blocks. Structured validation distinguishes interpolation from extrapolation [8]. Costs and capacity remain hypothetical. Further evidence should cover complete fitting/selection uncertainty and a preregistered rule on an independent, timestamped working face with recorded inspection outcomes.
 
 Appendix A Detection, capacity and pooled evidence
 
@@ -392,9 +392,11 @@ Reproducibility and electronic appendix
 
 The protocol was locked on 2 October 2026 at 19:20:26 UTC; its hash starts 85a1a16b30a5b9ac. Independent reproduction replayed 15 model pairs and paired resampling. The results/phase2 directory retains row evidence, threshold candidates, audits, evaluations, contrasts and bootstrap arrays. Infinite thresholds are sentinels; empty cells denote undefined quantities.
 
-Manifests and checks establish provenance for generated tables and figures. Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting. Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [9].
+Manifests and checks establish provenance for generated tables and figures. Code, commands and complete evidence: https://github.com/junjie-yang11/seismic-bump-forecasting.
 
-The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, verification and writing. CONTRIBUTIONS.md in the repository separates author review from computational checks and links project decisions to evidence.
+Acknowledgements and AI assistance
+
+The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational verification, reference-metadata checks and writing. CONTRIBUTIONS.md in the repository separates author review from computational checks and links project decisions to evidence.
 
 References
 
@@ -414,14 +416,12 @@ References
 
 [8] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography; 2017;40:913–929. doi:10.1111/ecog.02881.
 
-[9] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv; 2026. doi:10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065.
+[9] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence; 2017;64:83–94. doi:10.1016/j.engappai.2017.06.002.
 
-[10] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence; 2017;64:83–94. doi:10.1016/j.engappai.2017.06.002.
+[10] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews; 2023;239:104371. doi:10.1016/j.earscirev.2023.104371.
 
-[11] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews; 2023;239:104371. doi:10.1016/j.earscirev.2023.104371.
+[11] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research; 2012;13:2813–2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html.
 
-[12] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research; 2012;13:2813–2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html.
+[12] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems; 2023;108:17. doi:10.1007/s10846-023-01887-2.
 
-[13] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems; 2023;108:17. doi:10.1007/s10846-023-01887-2.
-
-[14] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE; 2015;10(3):e0118432. doi:10.1371/journal.pone.0118432.
+[13] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE; 2015;10(3):e0118432. doi:10.1371/journal.pone.0118432.

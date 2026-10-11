@@ -20,7 +20,7 @@ The UCI Seismic Bumps data provide a defined next-shift forecasting task: each r
 
 Rule-based mining-hazard prediction predates this study. Sikora and Wrobel [9] evaluated shift and hourly forecasts using longwall-specific monitoring data and also transferred rules between working faces. Their hazard definition and cohorts differ from the public UCI task, so their classification results provide engineering context rather than a numerical benchmark for our average precision.
 
-Janusz et al. [13] compared expert and sensor information and investigated cold start at new mining sites. Site adaptation requires identified locations and local histories; our common-row evaluation addresses protocol comparisons within an anonymous record sequence. The microseismic review by Anikiev et al. [14] distinguishes detection and location tasks from forecasting. This study uses shift summaries, not waveform detection or event-location models.
+Janusz et al. [12] compared expert and sensor information and investigated cold start at new mining sites. Site adaptation requires identified locations and local histories; our common-row evaluation addresses protocol comparisons within an anonymous record sequence. The microseismic review by Anikiev et al. [13] distinguishes detection and location tasks from forecasting. This study uses shift summaries, not waveform detection or event-location models.
 
 Validation protocols can change both the training history and the test population [3,4]. Comparing their scores on different shifts can therefore obscure the source of an apparent performance gap. A common test cohort makes that comparison interpretable, while probability assessment determines what the score scale conveys. Feature ablation, model explanations and frozen thresholds then connect the monitoring inputs to predictive contribution and warning workload.
 
@@ -229,11 +229,11 @@ SHAP and ablation answer different engineering questions. Energy and low-energy 
 
 Changing a probability scale and changing a decision rule address different engineering questions. Cost-sensitive decision theory [11] links probabilities to error costs; here historical reference scores supply empirical cutoffs. Prior-only distribution change [10] is a specific assumption rather than a diagnosis of the observed protocol gap. The companion decision study evaluates loss, capacity and refitting at frozen thresholds; it builds on this forecast evidence without treating calibration gains as evidence of operational warning value.
 
-Threshold-choice theory [15] places the scoring model, decision rule and operating conditions in the same loss framework. A reference budget selects a historical score cutoff; carrying that number forward does not enforce a future alert rate. Stage two makes fixed-model transfer its primary workflow and compares refitting separately. Its frozen-rule cost boundaries retain the historical selection cost while varying evaluation cost, and its prevalence scenarios retain class-conditional rates while varying class proportions. Precision changes under the latter assumption need not indicate changed ranking [16]. These decision calculations complement the present AP, probability-reference and feature-use evidence.
+Threshold-choice theory [14] places the scoring model, decision rule and operating conditions in the same loss framework. A reference budget selects a historical score cutoff; carrying that number forward does not enforce a future alert rate. Stage two makes fixed-model transfer its primary workflow and compares refitting separately. Its frozen-rule cost boundaries retain the historical selection cost while varying evaluation cost, and its prevalence scenarios retain class-conditional rates while varying class proportions. Precision changes under the latter assumption need not indicate changed ranking [15]. These decision calculations complement the present AP, probability-reference and feature-use evidence.
 
 These results concern the audited mirror under a record-order forecasting assumption. Timestamps, longwall identifiers and event locations are needed for direct temporal, site-specific and spatial validation. Repeated measurements can correspond to distinct shifts; the provenance audit establishes the mirror transformation rather than the operational validity of deduplication. Native TreeSHAP uses training leaf covers, and correlated inputs affect the allocation of contributions. Signed contributions explain how the fitted model uses a variable, not the causal effect of changing that variable. Phase stability is conditional on the fitted models and observed test distributions.
 
-The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. A maximum AP among these feature sets is not treated as a validated model-selection result. The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. The cold-start question in [13] concerns adapting to a new site with limited local history. Our record blocks assess evaluation and cutoff transfer, without identifying site changes. A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.
+The feature comparisons are prespecified descriptive contrasts with unadjusted fixed-prediction intervals. A maximum AP among these feature sets is not treated as a validated model-selection result. The already inspected holdout supplies additional warning evidence but does not constitute an untouched confirmatory test. The cold-start question in [12] concerns adapting to a new site with limited local history. Our record blocks assess evaluation and cutoff transfer, without identifying site changes. A subsequent study should preregister its feature and alert-policy choices, then test them on independent timestamped working-face data with defined inspection actions.
 
 ## 8 Conclusions
 
@@ -245,9 +245,9 @@ Source data are available from UCI [1] and the CSV mirror [2]. Saved evidence in
 
 The extended analysis uses Python 3.12.14, NumPy 2.3.5, pandas 3.0.1, XGBoost 3.1.3 and SciPy 1.18.1. The legacy LR/CART baselines use the original verified Python 3.7 environment and retain their saved full-model predictions. Run commands from the repository root. Use the recorded baseline environment for python -m phase1.run_experiments and python -m phase1.run_engineering. For the extension, install requirements/requirements-research.txt in a separate Python 3.12 environment, then run python -m phase1.run_research, python -m phase1.review_analysis and python -m phase1.verify_research --replay. In a separate document environment, python -m phase1.generate_report --docx generates the paper; pwsh -NoProfile -ExecutionPolicy Bypass -File phase1/export_report.ps1 exports PDF. Use python -m phase1.verify_results --reports to check results and report agreement.
 
-Reference metadata were cross-checked with the citation-management tools in Scientific Agent Skills [12].
+## Acknowledgements and AI assistance
 
-The author directed the research scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, verification and writing. The repository CONTRIBUTIONS.md separates author review from recorded computational checks and links project decisions to evidence.
+The author directed the research scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational verification, reference-metadata checks and writing. The repository CONTRIBUTIONS.md separates author review from recorded computational checks and links project decisions to evidence.
 
 ## References
 
@@ -273,15 +273,13 @@ The author directed the research scope, protocol refinement and review prioritie
 
 [11] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf
 
-[12] Kassis T, Agarwal V, He Y, Patel D, Brueckner AM. Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents. arXiv, 2026. DOI: 10.48550/arXiv.2609.00065. https://arxiv.org/abs/2609.00065
+[12] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence, 2017, 64:83-94. DOI: 10.1016/j.engappai.2017.06.002.
 
-[13] Janusz A, Grzegorowski M, Michalak M, Wrobel L, Sikora M, Slezak D. Predicting seismic events in coal mines based on underground sensor measurements. Engineering Applications of Artificial Intelligence, 2017, 64:83-94. DOI: 10.1016/j.engappai.2017.06.002.
+[13] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews, 2023, 239:104371. DOI: 10.1016/j.earscirev.2023.104371.
 
-[14] Anikiev D, Birnie C, Waheed Ub, Alkhalifah T, Gu C, Verschuur DJ, Eisner L. Machine learning in microseismic monitoring. Earth-Science Reviews, 2023, 239:104371. DOI: 10.1016/j.earscirev.2023.104371.
+[14] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research, 2012, 13:2813-2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html
 
-[15] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research, 2012, 13:2813-2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html
-
-[16] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE, 2015, 10(3):e0118432. DOI: 10.1371/journal.pone.0118432.
+[15] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE, 2015, 10(3):e0118432. DOI: 10.1371/journal.pone.0118432.
 
 ## Appendix A Feature definitions and phase evidence
 
