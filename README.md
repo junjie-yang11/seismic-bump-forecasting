@@ -42,6 +42,8 @@ Generated from [saved pooled results](results/phase2/decision_value_pooled.csv) 
 
 The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A and C−B comparisons by phase, budget and cost. Negative differences favor C; panels use separate color scales. The compact table above uses the separate no-alarm baseline. [Cost equality for frozen policies](results/phase2/frozen_policy_cost_boundaries.csv) distinguishes historical selection cost from evaluation cost. [Frozen prevalence scenarios](results/phase2/prevalence_decision_value.csv) also report expected precision alongside loss and workload; neither extension reselects a threshold.
 
+The [frozen-policy supplement](phase2/comparators/README.md) adds no-alarm loss intervals and direct rules for each of three hazard-grade fields. At `r=10`, the nonzero pooled C comparisons versus no alarms or the grade rules have intervals spanning zero. These conditional comparisons do not establish ML loss superiority or equivalence. [All phase/cost combinations](reports/overall/comparator_appendix.md) · [Saved evidence and independent replay](results/phase2/comparators/README.md).
+
 ## Contribution and study scope
 
 The project contributes an audited data transformation, comparable-cohort evaluation, training-local probability and threshold handling, and joint accounting of transferred loss, detection, capacity and refitting. Established model and decision methods support these empirical findings. [Author contributions and AI assistance](CONTRIBUTIONS.md) · [Related work and method origins](docs/RELATED_WORK.md) · [Study boundaries and next questions](docs/PROJECT_OVERVIEW.md#study-boundaries-and-next-questions).

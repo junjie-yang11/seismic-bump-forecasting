@@ -1,0 +1,26 @@
+{
+  "order": [
+    "a",
+    "b",
+    "c",
+    "d"
+  ],
+  "interpretation": "UCI explicitly defines the seismic severity order. The common ordered coding is adopted for the two other assessments, whose ARFF domains are also a,b,c,d; these are study comparators, not verified deployed mine rules.",
+  "source_url": "https://archive.ics.uci.edu/dataset/266/seismic+bumps",
+  "observed_counts": {
+    "seismic": {
+      "a": 1676,
+      "b": 902
+    },
+    "seismoacoustic": {
+      "a": 1576,
+      "b": 954,
+      "c": 48
+    },
+    "ghazard": {
+      "a": 2336,
+      "b": 212,
+      "c": 30
+    }
+  }
+}

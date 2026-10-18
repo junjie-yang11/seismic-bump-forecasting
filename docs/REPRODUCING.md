@@ -96,15 +96,19 @@ Table 9 is located by its unique column headers in both editions, so a baseline 
 
 ## Integrated report after both stages
 
-The main [overall report](../reports/overall/integrated_research_report.pdf) is generated after the two technical papers and source checks. In the reporting environment:
+The main [overall report](../reports/overall/integrated_research_report.pdf) is generated after the two technical papers and source checks. Run the supplement in the research environment, then the authoring/export checks in the reporting environment:
 
 ```text
+python -B -m phase2.comparators.run
+python -B -m phase2.comparators.verify
 python -B -m reporting.overall
 pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1
 python -B -m reporting.verify_overall --pdf
 ```
 
-These commands read saved results and do not refit models or change historical rules. The [reporting guide](../reporting/README.md) identifies inputs, outputs and verification scope. The overall report's standard-library saved-evidence check is included in `python -B -m phase1.quick_check`; PDF text and visual layout are checked separately in the reporting environment. Keep the original stage reports and model-replay records.
+These commands do not refit models or change the original ML rules. The [reporting guide](../reporting/README.md) identifies inputs, outputs and verification scope. The overall report's standard-library saved-evidence check is included in `python -B -m phase1.quick_check`; PDF text and visual layout are checked separately in the reporting environment. Keep the original stage reports and model-replay records.
+
+The first two commands execute the [separately specified supplement](../phase2/comparators/README.md) in the research environment: ML decisions remain frozen, while new direct grade thresholds are selected on the original reference rows. Use the reporting environment for the last three commands. Complete combinations are retained in the [generated appendix](../reports/overall/comparator_appendix.md). Quick Check independently verifies all supplementary decisions, resampling draws and intervals in its disposable snapshot.
 
 ## Reading the records
 

@@ -68,7 +68,7 @@ def _checks(root, pdf_text):
     for t in body.findall('w:tbl',NS):
         word_tables.append([[''.join(c.itertext()) for c in row.findall('w:tc',NS)]
                             for row in t.findall('w:tr',NS)])
-    check(len(word_tables)==len(manifest['tables'])==10,'ten complete tables')
+    check(len(word_tables)==len(manifest['tables'])==13,'thirteen complete tables')
     tables={}
     for observed,declared in zip(word_tables,manifest['tables']):
         check(observed==[declared['headers']]+declared['rows'],'Word table '+declared['id'])
@@ -82,14 +82,16 @@ def _checks(root, pdf_text):
     check([int(n) for n,_ in references]==list(range(1,len(references)+1)),'continuous bibliography')
     check(len(references)==17,'retained scientific, data and method references')
     prose=md.split('## References')[0]
-    citations=[int(n) for group in re.findall(r'\[(\d+(?:,\d+)*)\]',prose) for n in group.split(',')]
+    # Bibliographic indices are positive; [0,0] is an explicitly reported zero interval.
+    citations=[int(n) for group in re.findall(r'\[([1-9]\d*(?:,[1-9]\d*)*)\]',prose) for n in group.split(',')]
     check(set(citations)==set(range(1,len(references)+1)),'each citation resolves and every source is used')
     for unwanted in ['Scientific Agent Skills','2609.00065','TODO','TBD','PLACEHOLDER']:
         check(unwanted not in md,'no unwanted tool reference or placeholder '+unwanted)
     check('AI-assisted writing workflows do not supply scientific evidence' in md,'AI disclosure separated from evidence')
     check('wholly within the common test rows' in md and 'supplementary, overlapping evidence' in md,'overlapping holdout explicit')
     check('not a direct grade-to-alarm rule' in md,'ratings-only meaning explicit')
-    check('do not have a corresponding paired interval' in md,'no-alarm uncertainty scope explicit')
+    check('separately specified supplement' in md and 'interval is [0,0] by construction' in md,'new conditional no-alarm evidence explicit')
+    check('weighted by recall increments' in md and 'precision increments' not in md,'correct AP definition')
     check('not to AP-minus-pi' in md,'protocol interval distinct from AP-gain uncertainty')
     for target in re.findall(r'\]\(([^)]+)\)',md):
         if '://' not in target and not target.startswith('#'):check((out/target).exists(),'report image/link '+target)
@@ -195,6 +197,42 @@ def _checks(root, pdf_text):
             row.extend([fmt(delta,2),f'{100*expected_alerts:.2f}%',f'{100*p*tpr/expected_alerts:.2f}%' if expected_alerts else 'NA'])
         expected.append(row)
     check(tables['scenarios']==expected,'scenario loss, workload and precision from class-conditional counts')
+    se=read('results/phase2/comparators/evaluations.csv');sc=read('results/phase2/comparators/intervals.csv')
+    def effect(r):return fmt(r['loss_delta100'],2)+' '+bounds(r['ci_low'],r['ci_high'],2)
+    def integer(value):return str(int(float(value)))
+    expected=[]
+    for f in (0,1,2,3,-1):
+        for b in (.01,.05,.1,.2):
+            e=take(se,method='XGBoost',fold=f,mechanism='C',cost=10,budget=b)
+            r=take(sc,left_method='XGBoost',right_method='none',fold=f,mechanism='C',cost=10,budget=b)
+            expected.append(['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%',effect(r),integer(e['tp']),integer(e['fn']),integer(e['alerts'])])
+    check(tables['no_alarm_intervals']==expected,'complete phase and pooled C-minus-none intervals and detections')
+    expected=[]
+    for b in (.01,.05,.1,.2):
+        for m in ('XGBoost','seismic','seismoacoustic','ghazard'):
+            e=take(se,method=m,fold=-1,mechanism='C',cost=10,budget=b)
+            r=take(sc,left_method=m,right_method='none',fold=-1,mechanism='C',cost=10,budget=b)
+            expected.append([f'{100*b:.0f}%',m,effect(r)]+[integer(e[k]) for k in ('tp','fn','fp','alerts','excess')])
+    check(tables['grade_decisions']==expected,'all grade methods retained at every displayed budget')
+    expected=[]
+    for f in (0,1,2,3,-1):
+        for b in (.01,.05,.1,.2):
+            row=['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%']
+            for m in ('seismic','seismoacoustic','ghazard'):
+                row.append(effect(take(sc,left_method='XGBoost',right_method=m,fold=f,mechanism='C',cost=10,budget=b)))
+            expected.append(row)
+    check(tables['grade_intervals']==expected,'all phase-specific ML-minus-grade intervals')
+    appendix=(out/'comparator_appendix.md').read_text(encoding='utf-8')
+    lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in sc if r['comparison']=='policy-none'}
+    for e in se:
+        ci=lookup[(e['method'],e['rule'],e['cost'],e['fold'])]
+        cells=['Pooled' if int(e['fold'])<0 else str(int(e['fold'])+1),e['method'],e['rule'],effect(ci)]
+        cells += [integer(e[k]) for k in ('tp','fn','fp','alerts')]+[integer(e['excess']) if e['excess'] else '-']
+        check('| '+' | '.join(cells)+' |' in appendix,'full-cost appendix policy row')
+    for r in sc:
+        if r['comparison']!='ML-grade':continue
+        cells=['Pooled' if int(r['fold'])<0 else str(int(r['fold'])+1),r['right_method'],r['rule'],effect(r)]
+        check('| '+' | '.join(cells)+' |' in appendix,'full-cost appendix paired contrast')
     figures=len(body.findall('.//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}inline'))
     check(figures==3,'three inline figures')
     pdf=out/(STEM+'.pdf');check(pdf.read_bytes().startswith(b'%PDF-'),'valid PDF export')
@@ -202,7 +240,7 @@ def _checks(root, pdf_text):
     if pdf_text:
         from pypdf import PdfReader
         reader=PdfReader(pdf);pages=len(reader.pages)
-        check(10<=pages<=18,'expected integrated report page range')
+        check(8<=pages<=22,'expected integrated report page range')
         text='\n'.join(p.extract_text() or '' for p in reader.pages)
         check('Scientific Agent Skills' not in text and '2609.00065' not in text,'no tool paper in PDF')
         check('/Author' not in (reader.metadata or {}),'clean PDF author metadata')
@@ -215,7 +253,7 @@ def _checks(root, pdf_text):
                 scope='Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.',
                 manifest_sha256=sha(out/'report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
                 checked_row_and_table_inputs_sha256=checked_inputs,
-                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png')})
+                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','comparator_appendix.md')})
 
 
 def verify(root=ROOT,pdf_text=False):

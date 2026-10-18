@@ -1,0 +1,2309 @@
+{
+  "status": "complete",
+  "started_at_utc": "2026-10-18T22:17:39.833967+00:00",
+  "inputs_sha256": {
+    "phase2/comparators/protocol.json": "588f3a9b905094cf9447cc4906b4a01b8d96b781e4609364dc2608b8a4cf6716",
+    "phase2/locked_plan.json": "c773b1366ddf934cb02dba663a16d1398df0a4bc9491eae65c6afa1d4748149e",
+    "data/seismic-bumps.csv": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
+    "results/phase2/run_manifest.json": "0e7496fbec57b1bf4f5184f6036377be5011db533353626e31eb50ecde361f46",
+    "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+    "results/phase2/references.csv": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+    "results/phase2/decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+    "results/phase2/audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+    "results/phase2/candidates.csv": "c8ce74e151287288428cab7c2b3edd087a8dc5c041ca4281c858c5629c93ae37",
+    "results/phase2/fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f"
+  },
+  "code_sha256": {
+    "phase2/comparators/run.py": "aece5dcdc06ae827812bcc480061c9d50dc9d4e2ccbdd73470346b5b3b8fc632",
+    "phase2/decisions.py": "dff17588f3720fd83ef43faf169c42bd6476b1f9c07a625073b1c40d0a9118cb",
+    "src/uncertainty.py": "4498fe6a712ade626182e077e2021f41b50a501d3ce4f5a4f3287b9441fad948"
+  },
+  "outputs_sha256": {
+    "audits.csv": "b0f3cff39d9bdb71a2906a04a1af80af595ab83a7a4cf9efa17517f458b15039",
+    "bootstrap_counts.npz": "98d25f13cc831029700143c00c419110a318f703059a15bd5029ca7a75584a3d",
+    "bootstrap_replicates.npz": "b066440791aae9055d4a5acc7796d1e7b1fdd19287e127ebf90372f7d1d8d1bd",
+    "candidates.csv": "3a151a6893c5e71c63523e98880218d0c679393293bf1567eb50e6e1d2918152",
+    "decisions.csv": "00ebb57298b7da475dfdbeec5d4733c41a8d65d538c525d1109c0b2360e51c13",
+    "evaluations.csv": "19ba7dd6016de3006ae080d2f071533b2fd2d95c0dc263e54c52b4dc17126468",
+    "grade_metadata.json": "894a38dbc77ed07c24f0588869429f2ad6e554511b5d013456188f0aae78669b",
+    "intervals.csv": "c5c06f8df03d1967be522edc96932e62d6b81792d288ff99552d8d8b728168ae",
+    "references.csv": "69f77a4904876766660d64b1672ec610077f6e4559b61a3a5294d8a14cdf8046"
+  },
+  "comparison_specs": [
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b01",
+      "mechanism": "A",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b05",
+      "mechanism": "A",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b10",
+      "mechanism": "A",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "A_b20",
+      "mechanism": "A",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "B_r05",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "B_r10",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "B_r20",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "B_r50",
+      "mechanism": "B",
+      "budget": null,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b01_r05",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b01_r10",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b01_r20",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b01_r50",
+      "mechanism": "C",
+      "budget": 0.01,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b05_r05",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b05_r10",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b05_r20",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b05_r50",
+      "mechanism": "C",
+      "budget": 0.05,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b10_r05",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b10_r10",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b10_r20",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b10_r50",
+      "mechanism": "C",
+      "budget": 0.1,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b20_r05",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 5,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b20_r10",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 10,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b20_r20",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 20,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "XGBoost",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "seismoacoustic",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "policy-none",
+      "left_method": "ghazard",
+      "right_method": "none"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismic"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "seismoacoustic"
+    },
+    {
+      "rule": "C_b20_r50",
+      "mechanism": "C",
+      "budget": 0.2,
+      "cost": 50,
+      "comparison": "ML-grade",
+      "left_method": "XGBoost",
+      "right_method": "ghazard"
+    }
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1"
+  },
+  "elapsed_seconds": 1.3087566999602132,
+  "scope": "Frozen saved XGBoost and new reference-only grade policies; no refitting; conditional paired block intervals"
+}

@@ -1,12 +1,12 @@
 {
-  "checks": 460,
-  "tables": 10,
+  "checks": 2225,
+  "tables": 13,
   "figures": 3,
   "pages": 14,
   "pdf_text_checked": true,
   "scope": "Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.",
-  "manifest_sha256": "96d6340ece91387e98d0962d95afed08e81b9642ae23d3c66912e826e55ddfad",
-  "generator_sha256": "bf6b32cf6a5f3e20540a8bc8339367d3a59788f70867a748b831c81629168fd8",
+  "manifest_sha256": "d0b68612e22220b7c7a35c00abfd6ec480713e1c87c29708d17ca307dc13fea1",
+  "generator_sha256": "c5e60092b5a3c81b7a082936539d091c81526e48f0c8c9f8d84f179af1950ab2",
   "checked_row_and_table_inputs_sha256": {
     "results/phase1/feature_ablation.csv": "cdef258d39ef33c23047e7632c8c1c66368ddf2f52ae8932eb8186e00407ebf7",
     "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
@@ -20,17 +20,20 @@
     "results/phase2/decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
     "results/phase2/threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
     "results/phase2/evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
-    "results/phase2/audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85"
+    "results/phase2/audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+    "results/phase2/comparators/evaluations.csv": "19ba7dd6016de3006ae080d2f071533b2fd2d95c0dc263e54c52b4dc17126468",
+    "results/phase2/comparators/intervals.csv": "c5c06f8df03d1967be522edc96932e62d6b81792d288ff99552d8d8b728168ae"
   },
   "outputs_sha256": {
-    "integrated_research_report.md": "bee9595b607931803ba12d867d006256070c2a7b53fc7c1087f0af8038ae5d8f",
-    "integrated_research_report.docx": "68afd62c3fe2d660e27c31afa26a5759ae637cbe65392e87c90b916807d7d396",
-    "integrated_research_report.pdf": "5edea1864171035ae3431d51d377fb43a6a3a9de0313b29faa41f6cad282771a",
-    "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6"
+    "integrated_research_report.md": "0c4376c1d12f8e15d2d4f784e954e7b3b899d79d8411b18db22b63bb594f6ecd",
+    "integrated_research_report.docx": "7d7b8120fa66d808d09c7baa49091086fbf97b64829624ddaf45e0d0496bdb49",
+    "integrated_research_report.pdf": "d2dd78871415793fe9a75621d07c2ee107ba9f4fbbd3134c45cdd38586e40b06",
+    "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
+    "comparator_appendix.md": "fb06842fc03d6d278ed8a86512861059751e32f57ea814f712ae9577ccc627ba"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-18T16:36:40.053107+00:00",
-  "completed_at_utc": "2026-10-18T16:36:40.591818+00:00",
-  "verifier_sha256": "74765b7786a65d8cd595859dd9915e4fa5e4b9ce4ce169463d6fa7232d600d0a"
+  "started_at_utc": "2026-10-18T22:21:58.595346+00:00",
+  "completed_at_utc": "2026-10-18T22:21:59.357587+00:00",
+  "verifier_sha256": "28ecb3e369d210b0fe16b47389afee5e36803635226a9ebb309c65f0e346d6ad"
 }

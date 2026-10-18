@@ -111,11 +111,12 @@ def assemble():
     plan = lock['plan']
     # Record source-certification scope without rewriting the source records.
     certificates = {}
-    for relative in ['results/phase2/verification.json', 'results/phase2/supplement_verification.json']:
+    for relative in ['results/phase2/verification.json', 'results/phase2/supplement_verification.json',
+                     'results/phase2/comparators/verification.json']:
         record = json.loads((ROOT / relative).read_text(encoding='utf-8'))
         if not record.get('passed'):
             raise RuntimeError('Passed source verification required: ' + relative)
-        if relative.endswith('/verification.json') and not record.get('replay'):
+        if relative=='results/phase2/verification.json' and not record.get('replay'):
             raise RuntimeError('A retained full Stage 2 replay is required before authoring')
         certificates[relative] = dict(sha256=digest(ROOT / relative), scope=record.get('scope'),
                                       replay=record.get('replay'), checks=record.get('checks'))
@@ -160,6 +161,9 @@ def assemble():
     audits = s2('threshold_explanations'); all_audits = s2('audits'); transfers = s2('refit_transfer')
     comparisons = s2('comparisons'); capacity = s2('capacity_tradeoffs')
     boundary = s2('frozen_policy_cost_boundaries'); scenarios = s2('prevalence_decision_value')
+    supplement = s2('comparators/evaluations'); supplement_ci = s2('comparators/intervals')
+    grade_metadata = evidence.json('results/phase2/comparators/grade_metadata.json')
+    evidence.json('phase2/comparators/protocol.json')
     xv = [r for r in evaluations if match(r, model='XGBoost', scheme='time', workflow='fixed')]
     va = [r for r in xv if match(r, mechanism='A', cost=10)]
     vc = [r for r in xv if r['mechanism']=='C']
@@ -167,12 +171,18 @@ def assemble():
     causes = {label:sum(r['no_alarm_reason']==label for r in silent)
               for label in ('cost_selects_no_alarm','capacity_changes_to_no_alarm')}
     over_a, over_c = sum(float(r['excess'])>0 for r in va), sum(float(r['excess'])>0 for r in vc)
+    reductions = ', '.join(f'{float(r["gap_reduction_fraction"])*100:.1f}% for {r["model"]}' for r in gaps)
+    a20=one(main,mechanism='A',budget=.2);c20=one(main,mechanism='C',budget=.2)
+
+    def effect(row):
+        return num(row['loss_delta100'],2)+' '+interval(row['ci_low'],row['ci_high'],2)
 
     items, tables = [], []
 
     def para(text): items.append(dict(kind='paragraph', text=text))
     def heading(text, page=False):
-        if page: items.append(dict(kind='break'))
+        if page and text=='References':
+            items.append(dict(kind='break'))
         items.append(dict(kind='heading', text=text))
     def table(key, caption, headers, rows):
         title = f'Table {len(tables)+1}. {caption}'
@@ -186,11 +196,11 @@ def assemble():
     para('Junjie Yang'); para('Mining Engineering, Fuzhou University')
     heading('Abstract')
     para(f'Forecast performance and warning decision value require distinct evidence. This retrospective mining case connects common-cohort forecast assessment with historical threshold transfer on an audited {source["mirror_rows"]:,}-row UCI Seismic Bumps mirror. '
-         f'Four record-order test blocks contain {n:,} records and {positives} hazardous-shift labels. Matching test records changes the interpretation of random-versus-record-order performance gaps. Training-prior correction reduces logistic-regression expected calibration error from {num(raw["ece"])} to {num(corrected["ece"])}, '
+         f'Four record-order test blocks contain {n:,} records and {positives} hazardous-shift labels. Matching test records reduces the original random-versus-record-order AP gaps by {reductions}, demonstrating cohort sensitivity rather than identifying leakage or drift. Training-prior correction reduces logistic-regression expected calibration error from {num(raw["ece"])} to {num(corrected["ece"])}, '
          'while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. '
          f'In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of {span(float(r["loss_delta_no_alarm100"]) for r in selected_c)} units per 100 records versus no alarms. '
-         f'Historical capacity feasibility does not ensure later feasibility: budget rules exceed capacity in {over_a}/16 phase-budget settings; cost-plus-capacity does so in {over_c}/64 phase-budget-cost settings. These are dependent settings with different denominators. '
-         'Loss, detections and workload together explain the transferred rules, and refitting can change decisions at the same numerical cutoff. The stages share records and are not independent validation studies. Record order is a temporal proxy; costs and capacity are assumptions rather than measured operational outcomes.')
+         f'At the 20% historical budget, C reduces alerts from A\'s {integer(a20["alerts"])} to {integer(c20["alerts"])}, while detections fall from {integer(a20["tp"])}/{positives} to {integer(c20["tp"])}/{positives}. '
+         'A separately specified frozen-policy supplement finds that the nonzero pooled C-minus-no-alarm intervals cross zero at this cost, as do its comparisons with three direct hazard-grade rules. Cost-only B has lower loss than those grade rules, but its interval against no alarms still crosses zero. Historical capacity feasibility does not guarantee later feasibility, and model refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.')
     para('Keywords: seismic hazard; forecast evaluation; average precision; warning decisions; threshold transfer; inspection capacity')
     heading('1 Introduction and research objective')
     para('Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. A model can discriminate between labels, assign more accurate probabilities or rely on interpretable signals without establishing that its selected alerts lower missed-hazard and false-alert loss. The research question is therefore: what forecast evidence and historical selection rules support warning decisions on subsequent mining records under explicit cost and capacity assumptions?')
@@ -237,7 +247,7 @@ def assemble():
     para('In Stage 2, the first 80% of each historical prefix is the fitting area and the remainder is the policy reference. XGBoost chooses parameters on a further 80/20 split inside the fitting area using AP, with negative Brier score if the inner reference has no positives. A separate refitted control adds the policy-reference rows to fitting, retains the selected parameters and applies the identical numerical threshold. Test labels enter evaluation, not model, parameter or cutoff selection. The Stage 2 plan was locked before its fits, after the dataset had already been examined in Stage 1; the complete study remains exploratory and retrospective.')
 
     heading('3.1 Probability, explanation and decision definitions', page=True)
-    para(f'AP groups tied scores before calculating precision increments. The horizontal PR reference is the evaluation cohort prevalence pi {cite("s1_15")}. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. '
+    para(f'AP is the sum of precision values weighted by recall increments, with tied scores evaluated as a group: AP = sum_k P_k (R_k - R_(k-1)). The horizontal PR reference is the evaluation cohort prevalence pi {cite("s1_15")}. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. '
          'It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold\'s unweighted prevalence; CART and XGBoost use their fitted outputs. Ten quantile bins, keeping tied probabilities together, summarize calibration. Brier skill compares squared error with the named historical training-prior or retrospective test-prevalence constant.')
     para(f'Prior-only distribution change is a specific modeling assumption {cite("s1_10")}. A probability correction is monotone within a fold; differing fold-specific corrections should not be assumed to preserve pooled rankings. '
          f'Native exact TreeSHAP decomposes each XGBoost raw log-odds prediction into feature contributions and a bias term, using training leaf covers as its tree-path-dependent reference {cite("s1_7","s1_8")}. Refitted group ablations ask a different question: how predictions change after a model is trained without the group. They are not causal feature effects.')
@@ -245,7 +255,10 @@ def assemble():
          'A maximizes whole-group alerts within floor(B Nref). B minimizes reference loss. C minimizes it among capacity-feasible groups. Ties in B/C loss select fewer alerts. Equal scores move together; nonempty partial sets use the lowest included score. No alarms use +infinity and all alarms use -infinity. These conventions can underfill capacity and do not impose later capacity.')
     para('An alert represents one candidate shift for inspection. TP is a hazardous shift flagged, FP a non-hazardous shift flagged and FN a hazardous shift missed. Loss per 100 records is L100 = 100(r FN + FP)/N. Its difference from no alarms is Delta Lnone,100 = 100(FP - r TP)/N. Negative differences mean lower hypothetical loss. Excess = max(0, Alerts - floor(B Ntest)); all alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums phase excesses, without cancellation by spare slots elsewhere.')
     para(f'Paired moving-block intervals use 2,000 replicates and block length 32, separately within test phases, without wrapping across endpoints or phase boundaries {cite("s1_5","kunsch")}. '
-         'Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The retained loss intervals cover C-A, C-B, secondary B-A and refitted-fixed contrasts. They do not provide ML-minus-no-alarm or ML-minus-direct-grade intervals. No such interval is inferred from a different contrast.')
+         'Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The original contrasts cover C-A, C-B, secondary B-A and refitted-fixed. The separately specified supplement adds policy-minus-no-alarm and ML-minus-direct-grade contrasts; its rules, seeds and results are retained independently. Intervals are unadjusted exploratory comparisons.')
+    para(f'The direct-rule supplement thresholds seismic, seismoacoustic and ghazard separately on the original historical reference rows {cite("s1_1")}. UCI explicitly defines seismic severity from a to d; all three ARFF domains use these codes. The common a<b<c<d ordering is the study\'s ordinal interpretation for the two other assessments, not a verified deployed policy. '
+         'The mirror contains seismic codes '+', '.join(grade_metadata['observed_counts']['seismic'])+
+         '; the two other fields contain a, b and c, with no observed d. Each field uses the same A/B/C objectives, whole-grade ties and canonical thresholds as ML. Duplicate reference alert sets are collapsed: none uses +infinity, all uses -infinity, and partial sets use their minimum included observed grade. No best grade field is selected from test results. Saved ML scores, cutoffs and alerts are reused exactly; no model is retrained.')
 
     heading('4 Forecast evidence on comparable test records', page=True)
     rows=[]
@@ -260,7 +273,6 @@ def assemble():
     table('ranking', f'AP on {n:,} common test records; prevalence reference pi = {num(prevalence)}. AP-minus-pi concerns the record-order column.',
           ['Model','Random AP','Record-order AP','AP minus pi','Random minus order','95% paired interval'], rows)
     para('The interval in the last column belongs to the protocol difference, not to AP-minus-pi. All common-cohort point AP values exceed the prevalence reference; that descriptive observation alone is not a significance test against a random-ranking null. Finite-sample random-order AP and the horizontal PR reference are distinct concepts. No global label permutation is introduced.')
-    reductions = ', '.join(f'{float(r["gap_reduction_fraction"])*100:.1f}% for {r["model"]}' for r in gaps)
     para(f'Restricting the comparison to common rows reduces the original different-cohort gap by {reductions}. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. The Stage 1 technical report retains the original and matched denominators and the full gap calculation.')
     phase_sentences=[]
     for m in folds:
@@ -302,7 +314,7 @@ def assemble():
                          integer(r['fp']),integer(r['alerts']),'-' if not r['excess'] else integer(r['excess'])])
     table('decision', f'Stage 2 fixed XGBoost, r=10, pooled over {n:,} records. Negative loss differences favor the policy over no alarms.',
           ['Rule','Budget','L100','Delta vs none','TP','FN','FP','Alerts','Excess'], mainrows)
-    para('The point loss of C equals the no-alarm comparator at 1% and is higher at the other three budgets. These descriptive no-alarm differences do not have a corresponding paired interval in the locked comparison set. Lower C loss than A is compatible with a higher loss than no alarms: reducing many false alerts can lower assumed cost while also reducing detections. No alarms detect no hazardous shifts and are a loss comparator, not an operating recommendation.')
+    para('The point loss of C equals the no-alarm comparator at 1% and is higher at the other three budgets. The new frozen-policy intervals below assess this particular contrast. Lower C loss than A is compatible with a higher loss than no alarms: reducing false alerts can lower assumed cost while also reducing detections.')
     descriptions=[]
     for f in range(4):
         part=[r for r in xv if match(r, fold=f, mechanism='C', cost=10)]
@@ -312,7 +324,54 @@ def assemble():
     para(f'For the 20% budget at r=10, pooled C-A changes detections from {integer(pair["A_tp"])} to {integer(pair["C_tp"])} and reduces excess demand by {integer(-float(pair["excess_delta"]))} alerts. '
          f'The loss difference is {num(pair["loss100_delta"],2)} per 100 records. This is a measured workload-coverage tradeoff under the assumed loss, not a demonstrated safety improvement. Actual inspection execution and accident avoidance are not observed.')
 
-    heading('5.1 Historical selection explains capacity and no-alarm outcomes', page=True)
+    for f in (0,1):
+        ci=one(comparisons,model='XGBoost',comparison='C-A',workflow='fixed',budget=.2,cost=10,fold=f)
+        para(f'At r=10 and budget 20%, phase {f+1} C-A is {num(ci["loss_delta100"],2)} per 100 records, with paired 95% interval {interval(ci["ci_low"],ci["ci_high"],2)}. '
+             + ('The interval contains zero.' if float(ci['ci_low'])<=0<=float(ci['ci_high']) else 'The interval is entirely below zero.'))
+
+    heading('5.1 Frozen policies compared with no alarms')
+    rows=[]
+    for f in (0,1,2,3,-1):
+        for b in plan['budgets']:
+            r=one(supplement,method='XGBoost',fold=f,mechanism='C',cost=10,budget=b)
+            ci=one(supplement_ci,left_method='XGBoost',right_method='none',fold=f,mechanism='C',cost=10,budget=b)
+            rows.append(['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%',effect(ci),integer(r['tp']),integer(r['fn']),integer(r['alerts'])])
+    table('no_alarm_intervals','Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.',
+          ['Phase','Budget','Delta [95% interval]','TP','FN','Alerts'],rows)
+    para('Phase 1 C at 5% and 10% gives positive loss intervals and no detections; the nonzero pooled intervals cross zero. Phase and pooled evidence therefore support different loss-direction assessments. Where C produces no alerts, every row-level difference is zero and the interval is [0,0] by construction. This establishes identical observed decisions, not reliable transfer. No alarms detect no hazardous shifts and remain a loss comparator rather than an operating recommendation.')
+
+    heading('5.2 Direct hazard-grade comparators')
+    rows=[]
+    for b in plan['budgets']:
+        for method in ('XGBoost','seismic','seismoacoustic','ghazard'):
+            r=one(supplement,method=method,fold=-1,mechanism='C',cost=10,budget=b)
+            ci=one(supplement_ci,left_method=method,right_method='none',fold=-1,mechanism='C',cost=10,budget=b)
+            rows.append([f'{100*b:.0f}%',method,effect(ci),integer(r['tp']),integer(r['fn']),integer(r['fp']),integer(r['alerts']),integer(r['excess'])])
+    table('grade_decisions','C rules at r=10 on the same pooled records. Reference selection is separate for each method; future workloads need not match.',
+          ['Budget','Method','Delta vs none [95%]','TP','FN','FP','Alerts','Excess'],rows)
+    grade=one(supplement,method='ghazard',fold=-1,mechanism='C',cost=10,budget=.2)
+    grade_ci=one(supplement_ci,left_method='ghazard',right_method='none',fold=-1,mechanism='C',cost=10,budget=.2)
+    para(f'At r=10, seismic and seismoacoustic C select no alarms across the displayed budgets. The ghazard rules yield {integer(grade["alerts"])} alerts, {integer(grade["tp"])} detections and {integer(grade["fp"])} false alerts, with loss difference {effect(grade_ci)} versus no alarms. '
+         'Their repeated pooled counts reflect the same transferred decisions, not independent replications. The negative point difference does not establish loss improvement because its interval crosses zero. Coarse reference grade groups can underfill budgets; later frequencies can also exceed them.')
+    rows=[]
+    for f in (0,1,2,3,-1):
+        for b in plan['budgets']:
+            cells=['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%']
+            for field in ('seismic','seismoacoustic','ghazard'):
+                ci=one(supplement_ci,left_method='XGBoost',right_method=field,fold=f,mechanism='C',cost=10,budget=b)
+                cells.append(effect(ci))
+            rows.append(cells)
+    table('grade_intervals','Frozen XGBoost minus each historically selected grade C rule at r=10. Brackets are paired 95% intervals; negative favors ML.',
+          ['Phase','Budget','ML minus seismic','ML minus seismoacoustic','ML minus ghazard'],rows)
+    para('All nondegenerate pooled C-minus-grade contrasts at the displayed cost include zero; identical decisions give exact zero contrasts. These C comparisons do not establish additional ML loss value over the direct grade rules. They also do not prove equivalence: the intervals retain both loss improvement and loss increase. The appendix retains A/B/C for every planned cost and budget, including per-phase and pooled detections, workload, excess and paired contrasts. The direct rules differ from the jointly fitted ratings-only models in Table 5.')
+    b_grade=[one(supplement_ci,left_method='XGBoost',right_method=field,fold=-1,mechanism='B',cost=10) for field in ('seismic','seismoacoustic','ghazard')]
+    b_none=one(supplement_ci,left_method='XGBoost',right_method='none',fold=-1,mechanism='B',cost=10)
+    b_values=[effect(r) for r in b_grade]
+    b_text=b_values[0]+' for each grade field' if len(set(b_values))==1 else '; '.join(field+': '+value for field,value in zip(('seismic','seismoacoustic','ghazard'),b_values))
+    para(f'The selection mechanism changes the comparison. For cost-only B at r=10, pooled ML-minus-grade loss is {b_text}, with all three intervals below zero. In contrast, B-minus-no-alarm is {effect(b_none)}. '
+         'Thus lower loss than these grade rules does not establish lower loss than no alarms. The three B grade contrasts are dependent comparisons on the same records; they are not three independent replications. These exploratory, unadjusted results are retained alongside the C findings without selecting a new preferred workflow.')
+
+    heading('5.3 Historical selection explains capacity and no-alarm outcomes', page=True)
     rows=[]
     for f in range(4):
         a=[r for r in va if match(r, fold=f)]; c=[r for r in vc if match(r, fold=f)]
@@ -330,7 +389,7 @@ def assemble():
          'Different reference/test prevalences, including only one positive among 207 reference records in phase 2, provide context but do not identify prevalence shift as the sole cause; class-conditional scores can also change. Batch Top-k enforces capacity within the complete observed score batch and remains a retrospective ranking reference, not a real-time rule or performance bound.')
     para('On the reference area, C cannot have lower optimized loss than B because its candidate set is a subset. That ordering need not survive transfer. Whole-tie rules and fixed numerical cutoffs explain how historical feasibility can coexist with both later underuse and excess demand.')
 
-    heading('5.2 Model updating and conditional uncertainty', page=True)
+    heading('5.4 Model updating at a frozen numerical cutoff', page=True)
     rows=[]
     for mechanism in ('A','B','C'):
         q=[r for r in transfers if match(r, model='XGBoost', scheme='time', mechanism=mechanism)]
@@ -343,15 +402,13 @@ def assemble():
     table('refitting', 'XGBoost refitted-minus-fixed changes. Finite groups are defined by historical selection.',
           ['Rule','Finite','No alarm','All alarm','Finite Delta L100','Finite Delta alerts'], rows)
     para('Distinct historical settings count phase times budget for A, phase times cost for B, and phase times budget times cost for C. A is reused when evaluating costs. The ranges retain all stated evaluation costs. Refitting can alter both the fitted function and raw-score scale; using the same cutoff measures their combined workflow difference, not a causal effect of either component. Infinite cutoffs are invariant by construction and provide no evidence of finite-cutoff robustness.')
-    for f in (0,1):
-        ci=one(comparisons, model='XGBoost', comparison='C-A', workflow='fixed', budget=.2, cost=10, fold=f)
-        para(f'At the common display setting r=10 and budget 20%, phase {f+1} C-A is {num(ci["loss_delta100"],2)} per 100 records, '
-             f'with paired 95% interval {interval(ci["ci_low"],ci["ci_high"],2)}. '
-             + ('Its interval contains zero.' if float(ci['ci_low'])<=0<=float(ci['ci_high']) else 'Its interval is entirely below zero.')
-             + ' This comparison is between C and A; it does not test C against no alarms.')
+    refit=one(transfers,model='XGBoost',scheme='time',fold=0,rule='A_b20',cost=10)
+    refit_ci=one(comparisons,model='XGBoost',comparison='Refitted-Fixed',left_rule='A_b20',cost=10,fold=0)
+    para(f'For a specific finite cutoff, phase 1 A at budget 20% and r=10 uses {num(refit["threshold_fixed"],6)} in both workflows. Alerts change from {integer(refit["alerts_fixed"])} fixed to {integer(refit["alerts_refitted"])} refitted; detections change from {integer(refit["tp_fixed"])} to {integer(refit["tp_refitted"])}. '
+         f'Refitted-minus-fixed loss is {num(refit["loss100_delta"],2)} per 100 records, with paired 95% interval {interval(refit_ci["ci_low"],refit_ci["ci_high"],2)}. This interval concerns model updating, separately from the C-A policy intervals in Section 5.')
     para('The retained block intervals are descriptive and unadjusted across settings. They characterize uncertainty in differences among frozen decisions on the observed queue of records. LR and bagged CART supply additional model comparisons under the same reference boundaries; they do not certify robustness across mines, future distributions or untested model classes. Complete per-phase results and all costs remain in the Stage 2 technical report and saved files.')
 
-    heading('5.3 Frozen-rule cost and prevalence descriptions', page=True)
+    heading('5.5 Frozen-rule cost and prevalence descriptions', page=True)
     rows=[]
     for b in plan['budgets']:
         r=one(boundary, model='XGBoost', scheme='time', cohort='pooled', workflow='fixed', mechanism='C', selection_cost=10, budget=b)
@@ -377,9 +434,10 @@ def assemble():
     para('The two analyses connect through evidence requirements. Common-cohort comparisons make protocol gaps interpretable, but do not isolate leakage. Training-prior correction improves probability errors relative to the raw model, while the reference determines the sign of Brier skill. Large feature attribution describes a fitted model; a refitted ablation can show a different and uncertain predictive contribution. Each result supports a defined interpretation rather than an undifferentiated claim of a better warning model.')
     para('Decision evaluation adds information that ranking, probability assessment and attribution do not supply. At the displayed cost, C can lower loss and inspection demand relative to A while having no favorable pooled point difference against no alarms. Historical capacity choices explain why rules are silent or active, whereas later counts show their transferred coverage and workload. Refitting changes which score function is subjected to a historical cutoff. These comparisons establish workflow-specific tradeoffs; they do not identify a universally preferred policy.')
     para('The shared cohort is also the main inference boundary. Recorded order supplies no verified timestamps or longwall continuity. Deduplication reproduces a public mirror, not a certified operational history. Costs, capacity slots and the absence of an excess-demand penalty are explicit scenario assumptions. The target counts hazardous shifts, not accidents, executed inspections or interventions. Two analyses of the same observed records increase explanatory coverage, not the number of independent validation cohorts.')
-    para('Further work should prioritize evidence that changes the engineering interpretation. Direct, historically selected rules for each recorded hazard-grade field would test a simpler decision comparator; the existing ratings-only learners do not do this. Paired ML-minus-no-alarm and ML-minus-grade loss intervals would address those specific contrasts. Neither comparison has been run in the retained study. Full refit/reselection uncertainty needs a separate protocol. Cross-row lag features require continuity and working-face evidence, or must remain an explicitly record-order sensitivity analysis. None is presented as a completed result here.')
+    para('The separately specified supplement adds direct grade rules and the previously missing no-alarm and ML-minus-grade paired contrasts. It strengthens the decision comparison without changing the original model selection. At r=10, pooled C intervals do not identify an ML loss advantage over those comparators, whereas cost-only B has lower loss than the grade rules but no resolved loss direction against no alarms. Decision value therefore depends on both selection mechanism and comparator. Full refit/reselection uncertainty remains a separate research task. Cross-row lag features require continuity and working-face evidence, or must remain an explicitly record-order sensitivity analysis. Prospective intervention and independent-site outcomes would address engineering effectiveness beyond these retrospective comparisons.')
     heading('7 Conclusions')
-    para('This mining case provides an auditable connection from forecast evaluation to warning-rule interpretation. Matching test records changes the apparent protocol comparison; explicit probability references and refitted ablations distinguish different forms of predictive evidence. Frozen historical rules then reveal how assumed loss, hazardous-shift coverage, capacity demand and model updating interact on later records. The useful output is a set of traceable, conditional comparisons for engineering review, with a clear boundary between saved computational evidence and operational effectiveness.')
+    para(f'Comparable-cohort evaluation reduces the original AP protocol gaps by {reductions}; the attenuation quantifies cohort sensitivity, not a causal share of leakage or drift. The decision analysis then exposes the coverage cost of reducing workload: at r=10 and budget 20%, C changes A\'s {integer(a20["alerts"])} alerts and {integer(a20["tp"] )}/{positives} detections to {integer(c20["alerts"])} alerts and {integer(c20["tp"])}/{positives} detections. '
+         'The nonzero pooled C loss intervals against no alarms and direct grades retain both improvement and increase. Cost-only B has lower loss than the grade rules, yet its no-alarm interval crosses zero. Joint loss, detection and workload accounting therefore provides the useful engineering evidence: a historical optimum, a feasible budget or an advantage over one comparator alone does not establish later decision value, and model updating can change alerts at the same cutoff.')
     heading('Data, code, contributions and AI assistance')
     para('The repository retains source mapping, predictions, historical candidates, row-level decisions, resampling outputs and version-specific checks. The reporting guide documents generation and verification; both stage papers provide technical detail. Code and evidence: https://github.com/junjie-yang11/seismic-bump-forecasting.')
     para('The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational and reference checks, and writing. CONTRIBUTIONS.md documents these roles. AI-assisted writing workflows do not supply scientific evidence for the research conclusions.')
@@ -418,16 +476,18 @@ def write_outputs(items):
             for key in list(fonts.attrib):
                 if key.endswith('Theme'):del fonts.attrib[key]
             for key in ('ascii','hAnsi','eastAsia','cs'):fonts.set(qn('w:'+key),'Times New Roman')
-    md=[]
+    md=[];break_before=False
     for item in items:
         kind=item['kind']
         if kind=='break':
-            doc.add_page_break(); md.append('<!-- page break -->'); continue
+            break_before=True; md.append('<!-- page break -->'); continue
         if kind=='title':
             p=doc.add_paragraph(item['text'],'Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
             md.append('# '+item['text']); continue
         if kind=='heading':
-            doc.add_paragraph(item['text'],'Heading 1'); md.append('## '+item['text']); continue
+            p=doc.add_paragraph(item['text'],'Heading 1')
+            if break_before:p.paragraph_format.page_break_before=True;break_before=False
+            md.append('## '+item['text']); continue
         if kind=='paragraph':
             text=item['text']; p=doc.add_paragraph(text)
             if text in ('Junjie Yang','Mining Engineering, Fuzhou University'):
@@ -464,15 +524,61 @@ def write_outputs(items):
                 for p in cell.paragraphs:
                     p.paragraph_format.line_spacing=1.02
                     p.paragraph_format.space_before=p.paragraph_format.space_after=Pt(3)
-                    p.paragraph_format.keep_with_next=ri<2
+                    p.paragraph_format.keep_with_next=(ri<len(t.rows)-1 if item['id'] in
+                        ('no_alarm_intervals','grade_decisions','grade_intervals') else ri<2)
                     p.alignment=WD_ALIGN_PARAGRAPH.CENTER if ri==0 else (WD_ALIGN_PARAGRAPH.LEFT if ci==0 or item['id']=='protocols' else WD_ALIGN_PARAGRAPH.RIGHT)
                     for run in p.runs:run.font.size=Pt(9.3 if len(headers)>6 else 10);run.bold=ri==0
+        widths={'no_alarm_intervals':[.65,.65,2.75,.75,.75,.85],
+                'grade_decisions':[.65,1.12,1.93,.42,.42,.42,.65,.79],
+                'grade_intervals':[.6,.7,1.7,1.7,1.7]}.get(item['id'])
+        if widths:
+            t.autofit=False
+            for column,width in zip(t.columns,widths):column.width=Inches(width)
+            for row in t.rows:
+                for cell,width in zip(row.cells,widths):cell.width=Inches(width)
         doc.add_paragraph().paragraph_format.space_after=Pt(1)
     footer=sec.footer.paragraphs[0];footer.alignment=WD_ALIGN_PARAGRAPH.CENTER
     field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
     doc.core_properties.author='';doc.core_properties.last_modified_by='';doc.core_properties.title=TITLE
     doc.save(DEST/(STEM+'.docx'));scrub_report_package(DEST/(STEM+'.docx'))
     (DEST/(STEM+'.md')).write_bytes(('\n\n'.join(md)+'\n').encode('utf-8'))
+
+
+def write_comparison_appendix():
+    """Keep all planned combinations outside the compact main manuscript."""
+    def read(name):
+        return list(csv.DictReader((ROOT/'results/phase2/comparators'/name).open(encoding='utf-8',newline='')))
+    evaluations=read('evaluations.csv');intervals=read('intervals.csv')
+    lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in intervals if r['comparison']=='policy-none'}
+    lines=['# Frozen decision comparison appendix',
+           'This generated appendix retains all planned A/B/C settings. Phase results precede pooled summaries. Negative loss differences favor the left policy. Intervals are unadjusted 95% percentile intervals from 2,000 paired within-phase moving-block draws of length 32, conditional on frozen policies and these records. They exclude refitting and selection uncertainty. Exact zero intervals can follow identical decisions and do not establish transfer stability.',
+           '[Protocol](../../phase2/comparators/protocol.json) · [Evidence and verification](../../results/phase2/comparators/README.md) · [Main manuscript](integrated_research_report.md)',
+           '## Policy minus no alarms']
+    for cost in (5,10,20,50):
+        lines.append('### Assumed missed-shift cost '+str(cost))
+        table=['| Phase | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |',
+               '| --- | --- | --- | --- | --- | --- | --- | --- | --- |']
+        part=[r for r in evaluations if float(r['cost'])==cost]
+        for r in sorted(part,key=lambda r:(int(r['fold']) if int(r['fold'])>=0 else 4,r['method'],r['rule'])):
+            ci=lookup[(r['method'],r['rule'],r['cost'],r['fold'])]
+            cells=['Pooled' if int(r['fold'])<0 else str(int(r['fold'])+1),r['method'],r['rule'],
+                   num(ci['loss_delta100'],2)+' '+interval(ci['ci_low'],ci['ci_high'],2)]
+            cells += [integer(r[k]) for k in ('tp','fn','fp','alerts')]
+            cells += [integer(r['excess']) if r['excess'] else '-']
+            table.append('| '+' | '.join(cells)+' |')
+        lines.append('\n'.join(table))
+    lines.append('## Fixed XGBoost minus each grade rule')
+    for cost in (5,10,20,50):
+        lines.append('### Assumed missed-shift cost '+str(cost))
+        table=['| Phase | Grade field | Rule | ML minus grade loss / 100 [95%] |',
+               '| --- | --- | --- | --- |']
+        part=[r for r in intervals if r['comparison']=='ML-grade' and float(r['cost'])==cost]
+        for r in sorted(part,key=lambda r:(int(r['fold']) if int(r['fold'])>=0 else 4,r['right_method'],r['rule'])):
+            cells=['Pooled' if int(r['fold'])<0 else str(int(r['fold'])+1),r['right_method'],r['rule'],
+                   num(r['loss_delta100'],2)+' '+interval(r['ci_low'],r['ci_high'],2)]
+            table.append('| '+' | '.join(cells)+' |')
+        lines.append('\n'.join(table))
+    (DEST/'comparator_appendix.md').write_text('\n\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
 
 
 def build():
@@ -486,10 +592,11 @@ def build():
         overview_figure(DEST/'evidence_overview.png')
         items,tables,inputs,source_checks=assemble()
         write_outputs(items)
-        manifest=dict(title=TITLE,scope='Integrated reporting from saved evidence; no new model, feature, threshold or uncertainty experiment',
+        write_comparison_appendix()
+        manifest=dict(title=TITLE,scope='Integrated reporting with separately specified frozen-policy and direct-grade supplements; no ML refitting or ML threshold reselection',
                       inputs=inputs,generator_sha256=digest(Path(__file__)),tables=tables,
                       source_certificates_at_build=source_checks,
-                      outputs={name:digest(DEST/name) for name in (STEM+'.md',STEM+'.docx','evidence_overview.png')})
+                      outputs={name:digest(DEST/name) for name in (STEM+'.md',STEM+'.docx','evidence_overview.png','comparator_appendix.md')})
         (DEST/'report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
         certificate.write_text(json.dumps(dict(passed=False,status='awaiting independent verification')),encoding='utf-8')
         print(f'Integrated manuscript generated: {len(tables)} tables; model and decision evidence untouched.')

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "baseline_commit": "f15ab579e283324cbddffab56746e580027501fc",
+  "nature": "Exploratory retrospective supplement after inspecting the original results; specified before running these comparisons",
+  "primary_model": "Saved fixed XGBoost; no training, retuning or ML threshold reselection",
+  "cohorts": "The existing four record-order test blocks, separately and pooled with preserved phase boundaries; no holdout analysis",
+  "fields": ["seismic", "seismoacoustic", "ghazard"],
+  "grade_order": ["a", "b", "c", "d"],
+  "grade_interpretation": "UCI explicitly defines the seismic severity order. The common ordered coding is adopted for the two other assessments, whose ARFF domains are also a,b,c,d; these are study comparators, not verified deployed mine rules.",
+  "budgets": [0.01, 0.05, 0.1, 0.2],
+  "costs": [5, 10, 20, 50],
+  "selection": "For each field separately, apply unchanged A/B/C objectives to the same historical reference rows; freeze the selected cutoff for the matching test rows. Do not select a best field from test performance.",
+  "candidate_convention": "One canonical threshold per distinct reference alert set: +inf for none, -inf for all, otherwise the minimum included observed grade score. Absent grade levels do not create duplicate reference decisions. Equal grades move together; B/C loss ties choose fewer alerts.",
+  "comparisons": ["Each frozen policy minus no alarms", "Fixed XGBoost minus each of the three historically selected grade policies under the same rule and selection settings"],
+  "bootstrap": {"replicates": 2000, "block_length": 32, "seed": 20261003, "seed_rule": "seed + fold + 1; pooled fold=-1; identical row draws for every comparison"},
+  "interval_scope": "Unadjusted percentile intervals conditional on frozen models, selected policies and current rows; no refitting or reselection uncertainty; record order remains a temporal proxy",
+  "reporting": "Per-phase results are primary. Display r=10 and all four budgets, with A/B/C retained. Full cost combinations are saved. A is selected once per budget and evaluated at each cost; B is selected once per cost without a capacity condition.",
+  "source_url": "https://archive.ics.uci.edu/dataset/266/seismic+bumps",
+  "official_arff_url": "https://archive.ics.uci.edu/static/public/266/seismic+bumps.zip",
+  "amendments": []
+}

@@ -36,6 +36,7 @@ Replace `PORT` with your proxy's port. No proxy address is required or stored by
 | Stage 2 | `phase2/verify.py` | Saved references, choices, decisions, losses, capacity and all paired block replicates; source hashes |
 | Supplement | `phase2/verify_supplement.py` | No-alarm reasons and value, finite/extreme rules, capacity contrasts and frozen scenarios |
 | Formulas | `phase1/verify_formulae.py` | Independent arithmetic reconstruction from saved row-level evidence |
+| Frozen comparisons | `phase2/comparators/verify.py` | Historical grade-rule enumeration, frozen ML decisions, all supplemental policy losses and complete paired block replay |
 | Integrated paper | `reporting/verify_overall.py` | Source and artifact hashes; common cohorts, row-level loss and decision counts, table arithmetic, and Word/Markdown agreement |
 | Navigation and documents | `phase1/quick_check.py` | Current local file/image links, Stage 2 generator/input hashes, Word/Markdown text and tables, PDF file headers |
 

@@ -1,0 +1,15 @@
+{
+  "checks": 26911,
+  "evaluations": 720,
+  "intervals": 1260,
+  "decisions": 8252,
+  "replicates_replayed": 2520000,
+  "run_manifest_sha256": "7f224e6d0ede5b05f07d4d5b228041703bc6a899e965295fcc8ea7e4a5f44967",
+  "protocol_sha256": "588f3a9b905094cf9447cc4906b4a01b8d96b781e4609364dc2608b8a4cf6716",
+  "scope": "Exact frozen ML decisions, independent grade selection enumeration, all policy arithmetic and all within-phase draws/paired replicates; no model refitting or field validation",
+  "passed": true,
+  "status": "passed",
+  "started_at_utc": "2026-10-18T22:17:41.559672+00:00",
+  "completed_at_utc": "2026-10-18T22:17:43.306549+00:00",
+  "verifier_sha256": "0b49e1066e2edee17f1d8055e78e11c14f65eaebb264db5d398010972a27cf61"
+}

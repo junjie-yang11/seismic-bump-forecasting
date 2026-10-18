@@ -31,6 +31,8 @@ The descriptive extension separates historical selection cost from evaluation co
 
 ## Project contribution
 
+The [independent frozen-policy supplement](../phase2/comparators/README.md) adds three direct hazard-grade rules and paired policy-minus-no-alarm/ML-minus-grade loss intervals. At r=10, nonzero pooled C differences versus no alarms and the three grade comparators have intervals spanning zero. The comparisons retain detections and workload, and do not establish ML loss superiority or policy equivalence. Full phase/cost combinations remain in the [appendix](../reports/overall/comparator_appendix.md).
+
 The work contributed in this repository is the data-source audit, the implementation of comparable-cohort evaluation, training-local probability and threshold handling, the engineering feature comparisons, and the reproducible accounting of loss, capacity and refitting. Saved scores, candidate decisions and independent checks connect each reported result to its calculation. This supplies a reproducible evaluation workflow for examining which forecast properties and historical decision rules carry into later records. Calibration gains, uncertain feature-removal contrasts and transferred decision tradeoffs each inform that assessment.
 
 LR, CART, XGBoost, TreeSHAP, cost-sensitive loss and block resampling are established methods. The contribution is their implementation and joint empirical evaluation in this mining case. [Related-work comparison](RELATED_WORK.md) separates method origins from the project's findings.

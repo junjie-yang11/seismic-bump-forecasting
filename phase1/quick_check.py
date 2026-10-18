@@ -102,6 +102,7 @@ def run(proxy=None):
         ('Stage 2 saved decisions and block arithmetic', ['-m', 'phase2.verify']),
         ('Supplementary decision accounting', ['-m', 'phase2.verify_supplement']),
         ('Independent formula reconstruction', ['-m', 'phase1.verify_formulae']),
+        ('Frozen-policy and direct-grade comparisons', ['-m', 'phase2.comparators.verify']),
         ('Integrated report and row-level decision agreement', ['-m', 'reporting.verify_overall']),
     )
     with tempfile.TemporaryDirectory(prefix='seismic-evidence-') as directory:

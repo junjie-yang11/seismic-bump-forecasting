@@ -5,6 +5,8 @@ The [overall paper](../reports/overall/integrated_research_report.pdf) connects 
 Run from the repository root after both stages and their source checks are complete:
 
 ```text
+python -B -m phase2.comparators.run
+python -B -m phase2.comparators.verify
 python -B -m reporting.overall
 pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1
 python -B -m reporting.verify_overall --pdf
@@ -22,4 +24,4 @@ Outputs are under `reports/overall/`. The manifest identifies the exact source f
 
 Rebuilding also removes the previous PDF. Export the new Word document before verification; an older PDF must not accompany a rebuilt manuscript.
 
-The main report's AP-minus-prevalence column is descriptive arithmetic for the stated cohort; its protocol-difference intervals do not become AP-gain intervals. Ratings-only learners are not direct grade-warning rules. Such direct comparisons and ML-minus-no-alarm intervals remain proposed work, not completed findings.
+The main report's AP-minus-prevalence column is descriptive arithmetic for the stated cohort; its protocol-difference intervals do not become AP-gain intervals. The separately specified [frozen-policy supplement](../phase2/comparators/README.md) adds direct grade-warning rules and no-alarm/ML-minus-grade intervals. The generator reads its saved results, produces compact tables and a [complete combination appendix](../reports/overall/comparator_appendix.md), and does not perform the experiment itself. The original stage papers retain their locked-study scope.
