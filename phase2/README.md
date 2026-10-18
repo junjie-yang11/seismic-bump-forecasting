@@ -6,6 +6,8 @@ XGBoost; weighted LR and unweighted 60-tree bagged CART retain the existing
 baseline designs. No additional model, feature selection or SHAP analysis is
 introduced.
 
+Read the [overall report](../reports/overall/integrated_research_report.pdf) for the joint interpretation with Stage 1. Saved no-alarm loss differences are descriptive point comparisons. Existing paired intervals cover contrasts among A/B/C and fixed/refitted rules; they do not provide ML-minus-no-alarm or ML-minus-direct-grade intervals. The main fixed-model workflow differs from Stage 1's outer-refitted threshold workflow.
+
 ## Reproduce the experiment
 
 From the repository root, use Python 3.12 with `requirements/requirements-research.txt`:

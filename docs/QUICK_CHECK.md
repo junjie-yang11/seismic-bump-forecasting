@@ -36,9 +36,12 @@ Replace `PORT` with your proxy's port. No proxy address is required or stored by
 | Stage 2 | `phase2/verify.py` | Saved references, choices, decisions, losses, capacity and all paired block replicates; source hashes |
 | Supplement | `phase2/verify_supplement.py` | No-alarm reasons and value, finite/extreme rules, capacity contrasts and frozen scenarios |
 | Formulas | `phase1/verify_formulae.py` | Independent arithmetic reconstruction from saved row-level evidence |
+| Integrated paper | `reporting/verify_overall.py` | Source and artifact hashes; common cohorts, row-level loss and decision counts, table arithmetic, and Word/Markdown agreement |
 | Navigation and documents | `phase1/quick_check.py` | Current local file/image links, Stage 2 generator/input hashes, Word/Markdown text and tables, PDF file headers |
 
 Success ends with `QUICK CHECK PASSED`, a measured elapsed time and a statement that published sources/results/reports were preserved. Any failed check exits with a nonzero status. A terminal success line is not a stored certification for later file edits.
+
+The disposable snapshot includes `CONTRIBUTIONS.md` because it is a recorded input to the integrated paper. The snapshot's integrated-paper check uses the standard-library mode; PDF text and visual review are separate reporting steps described in the [reporting guide](../reporting/README.md).
 
 For the earlier presentation edition, the command completed in **50.35 seconds** on the review machine with the mirror already cached. This excludes dependency installation and is an observed runtime, not a time limit or a promise for other machines. The saved-evidence block calculations account for most of that run. The [complete October 7 review](audits/2026-10-07-full-review/REVIEW.md) records that edition's tests, timings, fresh model reproduction and independent source download.
 

@@ -1,5 +1,7 @@
 # Research overview
 
+Read the [integrated paper](../reports/overall/integrated_research_report.pdf) for the complete argument, or use this page for a short overview. The stage reports below are supporting technical documents. They share evaluated records; their sample sizes do not represent independent cohorts.
+
 ## The engineering question
 
 What evidence supports using mine-monitoring forecasts to select later shifts for inspection? This project connects two retrospective studies. Stage 1 separates ranking performance, probability accuracy and fitted-model feature use on comparable test records. Stage 2 links historical threshold choices to later loss, hazardous-shift coverage and inspection demand under stated costs and capacity. The engineering objective is to make these decisions auditable: each claim has a defined comparator, a saved calculation and a stated scope of application.

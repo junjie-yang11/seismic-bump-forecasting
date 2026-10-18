@@ -1,0 +1,557 @@
+{
+  "title": "From Forecast Evaluation to Warning Decisions: A Retrospective Study of Seismic Hazard in Underground Mining",
+  "scope": "Integrated reporting from saved evidence; no new model, feature, threshold or uncertainty experiment",
+  "inputs": {
+    "results/phase1/source_audit.json": "a74645647a7987e4fa2d81a105b1eae5cd1918a7fb71f7b82c5526c974a79063",
+    "phase2/locked_plan.json": "c773b1366ddf934cb02dba663a16d1398df0a4bc9491eae65c6afa1d4748149e",
+    "reports/phase1/technical_note.md": "aa615d962e1d0c5e371de70009878869c9596a3777159c6dbfe5dde6c1478523",
+    "reports/phase2/phase2_threshold_transfer_report.md": "a65bd4bb192303b742b1eb114ea58ca13f1617dc3a9cc266c51f2bd44f146aca",
+    "CONTRIBUTIONS.md": "033a89a7b72ba7bf78ae30c735b53a30736f1ef6d49f4415dc25b03b39a48854",
+    "results/phase1/feature_ablation.csv": "cdef258d39ef33c23047e7632c8c1c66368ddf2f52ae8932eb8186e00407ebf7",
+    "results/phase1/feature_ablation_intervals.csv": "1033f137d05f34855d1b4af0f97e5df594bc3146a618304a9edef90657c98c5c",
+    "results/phase1/shared_test_comparison.csv": "6239c15971820bb322e49a8573c8ca09b396c1b672c5ce8170fab97e4c6cf63d",
+    "results/phase1/paired_uncertainty.csv": "9f760c612f4b23d6c60de74a5c8746c8f9e4cba9b37bf760f97ce37bb03cf457",
+    "results/phase1/xgboost_shared_by_seed.csv": "fc516c11a46c362a58f68d12fa50df0aae90356c6d6f90fd8a949a21f63b72d4",
+    "results/phase1/xgboost_protocol_interval.csv": "0ebedc97e4b6fa4a01c60c83b5b9366764b1e6367008445489191487c0c19f9f",
+    "results/phase1/gap_attenuation.csv": "2f15912ff54ea6e67be05da58b882b5a8323adf64ee1dd7f298215dd264a1381",
+    "results/phase1/calibration.csv": "008c83cc0aa62693a27ae4a4a997d2cc536b9da40f6a092bc192106609071666",
+    "results/phase1/probability_reference_comparison.csv": "faa65daf771f89cf898108d5a94b4b68bcee652bccca94aa7e873dcce50b717b",
+    "results/phase1/shap_importance.csv": "936edb78d8ccb1bd1b2f2a5ecde1949416c89a5b4a52f1b0c697f1c9d47e64d6",
+    "results/phase2/fold_manifest.json": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
+    "results/phase1/feature_ablation_by_fold.csv": "bd65fd9232e81fad7b369a093e1c263e02d50b149f880e644abc74302ddde80c",
+    "results/phase2/evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+    "results/phase2/pooled_evaluations.csv": "59b9265dca9063081ac4095f03de6b4d5a7693be7b9089bd4852142052a6f7bd",
+    "results/phase2/threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+    "results/phase2/audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85",
+    "results/phase2/refit_transfer.csv": "338806a9a4633bcf645caae69bfdaf970714a61b47d39c8241ae62c19920ec39",
+    "results/phase2/comparisons.csv": "72df72dfef505688e153979647998cbdd7790d0ec9a369223411721f75dab253",
+    "results/phase2/capacity_tradeoffs.csv": "d7ff6523ea83ce7e9754e7c340c09ec633ea7f030ad6c12143cf123b5fc5a690",
+    "results/phase2/frozen_policy_cost_boundaries.csv": "5287eeb89e5d7509c62ae2cef12451b033a9da09ff1d8e2524c4cac331958d12",
+    "results/phase2/prevalence_decision_value.csv": "7f5e9f9230115562c434fb17c5389fc100493517b2cd79c5a40717cb7df3dcd4",
+    "reports/overall/evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
+    "results/phase1/figures/reliability_lr.png": "82e7c14da8bd992ccd7850097d46a564afec639d23c2e88c18361ee6eeb9719d",
+    "results/phase1/figures/shap_phase_stability.png": "cc373b05a2d815eeb74b04cc279231c71735693d319cc9aeeedf62b652e34b99"
+  },
+  "generator_sha256": "bf6b32cf6a5f3e20540a8bc8339367d3a59788f70867a748b831c81629168fd8",
+  "tables": [
+    {
+      "id": "cohorts",
+      "caption": "Table 1. Shared test census and Stage 2 reference areas. Phases are record blocks, not identified mining sites.",
+      "headers": [
+        "Phase",
+        "Test n",
+        "Test +",
+        "Test prevalence",
+        "Stage 2 ref n",
+        "Stage 2 ref +"
+      ],
+      "rows": [
+        [
+          "1",
+          "516",
+          "36",
+          "6.98%",
+          "103",
+          "21"
+        ],
+        [
+          "2",
+          "515",
+          "10",
+          "1.94%",
+          "207",
+          "1"
+        ],
+        [
+          "3",
+          "516",
+          "24",
+          "4.65%",
+          "310",
+          "7"
+        ],
+        [
+          "4",
+          "516",
+          "18",
+          "3.49%",
+          "413",
+          "20"
+        ]
+      ]
+    },
+    {
+      "id": "protocols",
+      "caption": "Table 2. Workflow definitions. Numerical cutoffs and alert counts are comparable only under matched workflows.",
+      "headers": [
+        "Item",
+        "Forecast study (Stage 1)",
+        "Decision study (Stage 2)"
+      ],
+      "rows": [
+        [
+          "Main comparison",
+          "Random versus expanding record order on common test rows",
+          "Historical A/B/C rules transferred to the same later blocks"
+        ],
+        [
+          "Model fitting",
+          "Outer models refit on supplied training rows",
+          "Primary fixed model fits first 80% of outer history"
+        ],
+        [
+          "Policy reference",
+          "Last 20% of history; separate earlier reference model",
+          "Last 20% of history; scores from primary fixed model"
+        ],
+        [
+          "XGBoost choice",
+          "Separate training-local searches for outer/reference models",
+          "Search inside fitting area; same chosen settings for refitted control"
+        ],
+        [
+          "Budget cutoff",
+          "Exclude boundary score and all ties",
+          "Canonical whole-score groups; alerts score >= cutoff"
+        ],
+        [
+          "Primary transfer",
+          "Reference cutoff applied after outer refitting",
+          "Freeze model and cutoff; refit on all history as a control"
+        ],
+        [
+          "Probability scale",
+          "LR prior correction for probability evaluation; raw scores for alerts",
+          "Raw scores for fixed and refitted alert rules"
+        ]
+      ]
+    },
+    {
+      "id": "ranking",
+      "caption": "Table 3. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-minus-pi concerns the record-order column.",
+      "headers": [
+        "Model",
+        "Random AP",
+        "Record-order AP",
+        "AP minus pi",
+        "Random minus order",
+        "95% paired interval"
+      ],
+      "rows": [
+        [
+          "LR",
+          "0.0953",
+          "0.0838",
+          "0.0412",
+          "0.0114",
+          "[-0.0110, 0.0243]"
+        ],
+        [
+          "CART",
+          "0.0972",
+          "0.0784",
+          "0.0357",
+          "0.0188",
+          "[0.0064, 0.0323]"
+        ],
+        [
+          "XGBoost",
+          "0.0995",
+          "0.0862",
+          "0.0436",
+          "0.0133",
+          "[0.0004, 0.0256]"
+        ]
+      ]
+    },
+    {
+      "id": "probability",
+      "caption": "Table 4. Common-cohort probability references. LR is prior-corrected; CART and XGBoost retain raw probabilities.",
+      "headers": [
+        "Model",
+        "Model Brier",
+        "Historical Brier",
+        "Historical skill",
+        "Retrospective Brier",
+        "Retrospective skill"
+      ],
+      "rows": [
+        [
+          "LR",
+          "0.0439",
+          "0.0455",
+          "0.0342",
+          "0.0408",
+          "-0.0751"
+        ],
+        [
+          "CART",
+          "0.0433",
+          "0.0455",
+          "0.0472",
+          "0.0408",
+          "-0.0607"
+        ],
+        [
+          "XGBoost",
+          "0.0429",
+          "0.0455",
+          "0.0573",
+          "0.0408",
+          "-0.0494"
+        ]
+      ]
+    },
+    {
+      "id": "ablation",
+      "caption": "Table 5. Full design versus a refitted learner using all three hazard-rating fields.",
+      "headers": [
+        "Model",
+        "Full AP",
+        "Ratings-only AP",
+        "Full minus ratings",
+        "95% paired interval"
+      ],
+      "rows": [
+        [
+          "LR",
+          "0.0838",
+          "0.0596",
+          "0.0243",
+          "[-0.0039, 0.0619]"
+        ],
+        [
+          "CART",
+          "0.0784",
+          "0.0738",
+          "0.0046",
+          "[-0.0252, 0.0264]"
+        ],
+        [
+          "XGBoost",
+          "0.0862",
+          "0.0766",
+          "0.0096",
+          "[-0.0148, 0.0413]"
+        ]
+      ]
+    },
+    {
+      "id": "decision",
+      "caption": "Table 6. Stage 2 fixed XGBoost, r=10, pooled over 2,063 records. Negative loss differences favor the policy over no alarms.",
+      "headers": [
+        "Rule",
+        "Budget",
+        "L100",
+        "Delta vs none",
+        "TP",
+        "FN",
+        "FP",
+        "Alerts",
+        "Excess"
+      ],
+      "rows": [
+        [
+          "none",
+          "-",
+          "42.66",
+          "0.00",
+          "0",
+          "88",
+          "0",
+          "0",
+          "-"
+        ],
+        [
+          "A",
+          "1%",
+          "45.52",
+          "2.86",
+          "0",
+          "88",
+          "59",
+          "59",
+          "39"
+        ],
+        [
+          "A",
+          "5%",
+          "45.90",
+          "3.25",
+          "9",
+          "79",
+          "157",
+          "166",
+          "81"
+        ],
+        [
+          "A",
+          "10%",
+          "47.21",
+          "4.56",
+          "14",
+          "74",
+          "234",
+          "248",
+          "84"
+        ],
+        [
+          "A",
+          "20%",
+          "56.33",
+          "13.67",
+          "25",
+          "63",
+          "532",
+          "557",
+          "227"
+        ],
+        [
+          "B",
+          "-",
+          "44.06",
+          "1.41",
+          "35",
+          "53",
+          "379",
+          "414",
+          "-"
+        ],
+        [
+          "C",
+          "1%",
+          "42.66",
+          "0.00",
+          "0",
+          "88",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "C",
+          "5%",
+          "43.33",
+          "0.68",
+          "1",
+          "87",
+          "24",
+          "25",
+          "0"
+        ],
+        [
+          "C",
+          "10%",
+          "43.48",
+          "0.82",
+          "1",
+          "87",
+          "27",
+          "28",
+          "0"
+        ],
+        [
+          "C",
+          "20%",
+          "43.24",
+          "0.58",
+          "2",
+          "86",
+          "32",
+          "34",
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": "capacity",
+      "caption": "Table 7. Fixed-XGBoost capacity excess and historical reasons for C no-alarm selection.",
+      "headers": [
+        "Phase",
+        "A excess settings",
+        "C excess settings",
+        "Cost selects none",
+        "Capacity changes to none"
+      ],
+      "rows": [
+        [
+          "1",
+          "1/4",
+          "0/16",
+          "0",
+          "4"
+        ],
+        [
+          "2",
+          "4/4",
+          "0/16",
+          "16",
+          "0"
+        ],
+        [
+          "3",
+          "4/4",
+          "0/16",
+          "12",
+          "4"
+        ],
+        [
+          "4",
+          "4/4",
+          "2/16",
+          "0",
+          "4"
+        ]
+      ]
+    },
+    {
+      "id": "refitting",
+      "caption": "Table 8. XGBoost refitted-minus-fixed changes. Finite groups are defined by historical selection.",
+      "headers": [
+        "Rule",
+        "Finite",
+        "No alarm",
+        "All alarm",
+        "Finite Delta L100",
+        "Finite Delta alerts"
+      ],
+      "rows": [
+        [
+          "A",
+          "16",
+          "0",
+          "0",
+          "-18.83 to 18.22",
+          "-97 to 82"
+        ],
+        [
+          "B",
+          "9",
+          "7",
+          "0",
+          "-17.64 to 18.80",
+          "-25 to 119"
+        ],
+        [
+          "C",
+          "24",
+          "40",
+          "0",
+          "-11.05 to 7.75",
+          "-11 to 2"
+        ]
+      ]
+    },
+    {
+      "id": "boundaries",
+      "caption": "Table 9. Cost equality for unchanged pooled C rules selected historically at rselect=10.",
+      "headers": [
+        "Historical budget",
+        "TP",
+        "FP",
+        "Alerts",
+        "Equality cost r*"
+      ],
+      "rows": [
+        [
+          "1%",
+          "0",
+          "0",
+          "0",
+          "-"
+        ],
+        [
+          "5%",
+          "1",
+          "24",
+          "25",
+          "24.00"
+        ],
+        [
+          "10%",
+          "1",
+          "27",
+          "28",
+          "27.00"
+        ],
+        [
+          "20%",
+          "2",
+          "32",
+          "34",
+          "16.00"
+        ]
+      ]
+    },
+    {
+      "id": "scenarios",
+      "caption": "Table 10. Frozen prevalence scenarios for C selected at r=10. Loss differences are versus no alarms; alerts and precision are expectations.",
+      "headers": [
+        "Budget",
+        "pi 5% Delta",
+        "Alerts",
+        "Precision",
+        "pi 10% Delta",
+        "Alerts",
+        "Precision"
+      ],
+      "rows": [
+        [
+          "1%",
+          "0.00",
+          "0.00%",
+          "NA",
+          "0.00",
+          "0.00%",
+          "NA"
+        ],
+        [
+          "5%",
+          "0.59",
+          "1.21%",
+          "4.69%",
+          "-0.04",
+          "1.21%",
+          "9.41%"
+        ],
+        [
+          "10%",
+          "0.73",
+          "1.36%",
+          "4.19%",
+          "0.09",
+          "1.34%",
+          "8.45%"
+        ],
+        [
+          "20%",
+          "0.40",
+          "1.65%",
+          "6.88%",
+          "-0.81",
+          "1.69%",
+          "13.48%"
+        ]
+      ]
+    }
+  ],
+  "source_certificates_at_build": {
+    "results/phase2/verification.json": {
+      "sha256": "66760ae0a873dbf8cd6bb258a963b493d7306438ec30bc119d404f8d0b715503",
+      "scope": null,
+      "replay": true,
+      "checks": 63854
+    },
+    "results/phase2/supplement_verification.json": {
+      "sha256": "7e3a741f64e83207c5ed23c354ee849e9612e2e89e7c1b57d41c28d55ed90ffb",
+      "scope": null,
+      "replay": null,
+      "checks": 13036
+    }
+  },
+  "outputs": {
+    "integrated_research_report.md": "bee9595b607931803ba12d867d006256070c2a7b53fc7c1087f0af8038ae5d8f",
+    "integrated_research_report.docx": "68afd62c3fe2d660e27c31afa26a5759ae637cbe65392e87c90b916807d7d396",
+    "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6"
+  }
+}

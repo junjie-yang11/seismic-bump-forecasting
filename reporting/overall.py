@@ -1,0 +1,503 @@
+"""Build an integrated manuscript from saved, verified two-stage evidence.
+
+Run ``python -m reporting.overall`` in the reporting environment. Model fits,
+thresholds, costs and retained experiment outputs are never changed here.
+"""
+from __future__ import annotations
+import csv
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+from datetime import datetime, timezone
+
+ROOT = Path(__file__).resolve().parents[1]
+DEST = ROOT / 'reports/overall'
+STEM = 'integrated_research_report'
+TITLE = 'From Forecast Evaluation to Warning Decisions: A Retrospective Study of Seismic Hazard in Underground Mining'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def match(row, **conditions):
+    for key, value in conditions.items():
+        actual = row[key]
+        if isinstance(value, (float, int)):
+            if not actual or float(actual) != value:
+                return False
+        elif actual != value:
+            return False
+    return True
+
+
+def one(rows, **conditions):
+    selected = [row for row in rows if match(row, **conditions)]
+    if len(selected) != 1:
+        raise ValueError(f'Expected one evidence row, found {len(selected)}: {conditions}')
+    return selected[0]
+
+
+def num(value, places=4):
+    return f'{float(value):.{places}f}'
+
+
+def integer(value):
+    return str(int(float(value)))
+
+
+def interval(lo, hi, places=4):
+    return f'[{num(lo, places)}, {num(hi, places)}]'
+
+
+def span(values, places=2):
+    values = list(map(float, values))
+    lo, hi = min(values), max(values)
+    return num(lo, places) if lo == hi else f'{num(lo, places)} to {num(hi, places)}'
+
+
+class Evidence:
+    def __init__(self):
+        self.inputs = {}
+        self.cache = {}
+
+    def text(self, relative):
+        path = ROOT / relative
+        self.inputs[relative] = digest(path)
+        return path.read_text(encoding='utf-8')
+
+    def csv(self, relative):
+        if relative not in self.cache:
+            self.cache[relative] = list(csv.DictReader(self.text(relative).splitlines()))
+        return self.cache[relative]
+
+    def json(self, relative):
+        return json.loads(self.text(relative))
+
+    def image(self, relative):
+        self.inputs[relative] = digest(ROOT / relative)
+        return relative
+
+
+def overview_figure(path):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import FancyBboxPatch
+    fig, ax = plt.subplots(figsize=(10, 4.2))
+    ax.set(xlim=(0, 10), ylim=(0, 4.2)); ax.axis('off')
+    boxes = [(.15, 1.30, 2.0, 1.6, 'Shared records\n\nSource audit\nCommon test rows', '#edf2f6'),
+             (3.0, 2.3, 3.25, 1.55, 'Forecast evidence\n\nRanking and probabilities\nFeature use and ablation', '#e5eff9'),
+             (3.0, .25, 3.25, 1.55, 'Decision evidence\n\nHistorical A/B/C rules\nCutoff transfer and refitting', '#e7f3ee'),
+             (7.1, 1.15, 2.7, 1.9, 'Joint interpretation\n\nLoss and coverage\nDemand and capacity excess', '#f5eee0')]
+    for x, y, w, h, label, color in boxes:
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle='round,pad=0.03',
+                                   facecolor=color, edgecolor='#65717c', linewidth=1))
+        ax.text(x+w/2, y+h/2, label, ha='center', va='center', fontsize=13, linespacing=1.5)
+    for start, end in [((2.2, 2.5), (2.95, 3.0)), ((2.2, 1.65), (2.95, 1.0)),
+                       ((6.3, 3.0), (7.05, 2.6)), ((6.3, 1.0), (7.05, 1.6))]:
+        ax.annotate('', xy=end, xytext=start, arrowprops=dict(arrowstyle='->', color='#65717c', lw=1.3))
+    fig.tight_layout(pad=.25); fig.savefig(path, dpi=210, bbox_inches='tight'); plt.close(fig)
+
+
+def assemble():
+    evidence = Evidence()
+    s1 = lambda name: evidence.csv('results/phase1/' + name + '.csv')
+    s2 = lambda name: evidence.csv('results/phase2/' + name + '.csv')
+    source = evidence.json('results/phase1/source_audit.json')
+    lock = evidence.json('phase2/locked_plan.json')
+    plan = lock['plan']
+    # Record source-certification scope without rewriting the source records.
+    certificates = {}
+    for relative in ['results/phase2/verification.json', 'results/phase2/supplement_verification.json']:
+        record = json.loads((ROOT / relative).read_text(encoding='utf-8'))
+        if not record.get('passed'):
+            raise RuntimeError('Passed source verification required: ' + relative)
+        if relative.endswith('/verification.json') and not record.get('replay'):
+            raise RuntimeError('A retained full Stage 2 replay is required before authoring')
+        certificates[relative] = dict(sha256=digest(ROOT / relative), scope=record.get('scope'),
+                                      replay=record.get('replay'), checks=record.get('checks'))
+    old1 = evidence.text('reports/phase1/technical_note.md')
+    old2 = evidence.text('reports/phase2/phase2_threshold_transfer_report.md')
+    evidence.text('CONTRIBUTIONS.md')
+    ref1 = {int(n): text for n, text in re.findall(r'^\[(\d+)\] (.+)$', old1, re.M)}
+    ref2 = {int(n): text for n, text in re.findall(r'^\[(\d+)\] (.+)$', old2, re.M)}
+    references = {f's1_{n}': text for n, text in ref1.items()}
+    references.update(kunsch=ref2[4], warning=ref2[12])
+    used = []
+
+    def cite(*keys):
+        for key in keys:
+            if key not in used:
+                used.append(key)
+        return '[' + ','.join(str(used.index(key)+1) for key in keys) + ']'
+
+    models = ('LR', 'CART', 'XGBoost')
+    ablation = s1('feature_ablation'); ab_ci = s1('feature_ablation_intervals')
+    full = {m: one(ablation, model=m, variant='full') for m in models}
+    n, positives = int(full['LR']['n']), int(full['LR']['positives'])
+    prevalence = positives/n
+    shared = s1('shared_test_comparison'); protocol_ci = s1('paired_uncertainty')
+    xrandom = s1('xgboost_shared_by_seed'); xci = s1('xgboost_protocol_interval')[0]
+    gaps = s1('gap_attenuation')
+    calibration = s1('calibration')
+    raw = next(r for r in calibration if r['model']=='LR' and r['variant'].startswith('as'))
+    corrected = next(r for r in calibration if r['model']=='LR' and r['variant'].startswith('after'))
+    probability = s1('probability_reference_comparison')
+    historical = {m: one(probability, model=m, validation='time', fold=-1) for m in models}
+    removed = one(ablation, model='XGBoost', variant='without_seismic_activity')
+    removed_ci = one(ab_ci, model='XGBoost', variant='without_seismic_activity')
+    importance = sorted([r for r in s1('shap_importance') if match(r, validation='time', fold=-1)],
+                        key=lambda r: -float(r['mean_abs']))
+    folds = evidence.json('results/phase2/fold_manifest.json')
+    folds = sorted([m for m in folds if m['model']=='XGBoost' and m['scheme']=='time'], key=lambda m:m['fold'])
+    phase = s1('feature_ablation_by_fold')
+    evaluations = s2('evaluations'); pooled = s2('pooled_evaluations')
+    main = [r for r in pooled if match(r, model='XGBoost', workflow='fixed', cost=10)]
+    selected_c = sorted([r for r in main if r['mechanism']=='C'], key=lambda r:float(r['budget']))
+    audits = s2('threshold_explanations'); all_audits = s2('audits'); transfers = s2('refit_transfer')
+    comparisons = s2('comparisons'); capacity = s2('capacity_tradeoffs')
+    boundary = s2('frozen_policy_cost_boundaries'); scenarios = s2('prevalence_decision_value')
+    xv = [r for r in evaluations if match(r, model='XGBoost', scheme='time', workflow='fixed')]
+    va = [r for r in xv if match(r, mechanism='A', cost=10)]
+    vc = [r for r in xv if r['mechanism']=='C']
+    silent = [r for r in audits if match(r, model='XGBoost', scheme='time', reference_alerts=0)]
+    causes = {label:sum(r['no_alarm_reason']==label for r in silent)
+              for label in ('cost_selects_no_alarm','capacity_changes_to_no_alarm')}
+    over_a, over_c = sum(float(r['excess'])>0 for r in va), sum(float(r['excess'])>0 for r in vc)
+
+    items, tables = [], []
+
+    def para(text): items.append(dict(kind='paragraph', text=text))
+    def heading(text, page=False):
+        if page: items.append(dict(kind='break'))
+        items.append(dict(kind='heading', text=text))
+    def table(key, caption, headers, rows):
+        title = f'Table {len(tables)+1}. {caption}'
+        value = dict(id=key, caption=title, headers=headers, rows=[[str(v) for v in row] for row in rows])
+        tables.append(value); items.append(dict(kind='table', **value))
+    def figure(relative, caption, width=6.4):
+        evidence.image(relative)
+        items.append(dict(kind='figure', path=relative, caption=caption, width=width))
+
+    items.append(dict(kind='title', text=TITLE))
+    para('Junjie Yang'); para('Mining Engineering, Fuzhou University')
+    heading('Abstract')
+    para(f'Forecast performance and warning decision value require distinct evidence. This retrospective mining case connects common-cohort forecast assessment with historical threshold transfer on an audited {source["mirror_rows"]:,}-row UCI Seismic Bumps mirror. '
+         f'Four record-order test blocks contain {n:,} records and {positives} hazardous-shift labels. Matching test records changes the interpretation of random-versus-record-order performance gaps. Training-prior correction reduces logistic-regression expected calibration error from {num(raw["ece"])} to {num(corrected["ece"])}, '
+         'while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. '
+         f'In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of {span(float(r["loss_delta_no_alarm100"]) for r in selected_c)} units per 100 records versus no alarms. '
+         f'Historical capacity feasibility does not ensure later feasibility: budget rules exceed capacity in {over_a}/16 phase-budget settings; cost-plus-capacity does so in {over_c}/64 phase-budget-cost settings. These are dependent settings with different denominators. '
+         'Loss, detections and workload together explain the transferred rules, and refitting can change decisions at the same numerical cutoff. The stages share records and are not independent validation studies. Record order is a temporal proxy; costs and capacity are assumptions rather than measured operational outcomes.')
+    para('Keywords: seismic hazard; forecast evaluation; average precision; warning decisions; threshold transfer; inspection capacity')
+    heading('1 Introduction and research objective')
+    para('Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. A model can discriminate between labels, assign more accurate probabilities or rely on interpretable signals without establishing that its selected alerts lower missed-hazard and false-alert loss. The research question is therefore: what forecast evidence and historical selection rules support warning decisions on subsequent mining records under explicit cost and capacity assumptions?')
+    para('The project answers this question through two complementary analyses. The forecast study compares common test records and separates ranking, probability assessment and feature use. The decision study transfers historically selected rules to later records and measures loss, hazardous-shift coverage and workload. Their joint contribution is a reproducible account of which comparisons support each engineering interpretation. The two analyses retain their own fitting and threshold protocols; one is not a prospective validation of the other.')
+
+    heading('1.1 Relation to mining and decision research', page=True)
+    para(f'The UCI task concerns a high-energy seismic bump in the next shift, rather than a confirmed rockburst accident {cite("s1_1")}. Earlier rule-induction work used working-face-specific monitoring and examined rule transfer {cite("s1_9")}. '
+         f'Janusz and colleagues compared expert and sensor information and studied cold start with identified mining sites and structured histories {cite("s1_12")}. Those cohorts and forecast targets do not supply a directly comparable performance leaderboard for the present shift-summary mirror. '
+         f'The microseismic monitoring review distinguishes waveform detection and location from forecasting {cite("s1_13")}. This study evaluates supplied shift summaries, not event detection from waveforms.')
+    para(f'Threshold-choice theory relates scores, operating conditions and expected classification loss {cite("s1_14")}. Risk-informed warning identification connects warnings to assessment and response, but its assessment-based Seismic Bumps comparison differs from this study\'s subsequent-shift event label {cite("warning")}. '
+         f'Precision-recall interpretation also depends on the evaluation prevalence {cite("s1_15")}. These sources motivate explicit comparators; they do not establish that a retrospectively selected rule will work at a new mine or future operating condition.')
+    para('The report makes three linked empirical contributions: a common-cohort comparison of forecast protocols; a separation of probability improvement, feature use and predictive dependence; and a joint account of historical selection reasons, later loss, capacity excess and refitting. The contribution is an applied evaluation workflow and its mining-case findings. The retained learning, explanation and resampling methods are established methods.')
+    figure('reports/overall/evidence_overview.png', 'Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.')
+
+    heading('2 Data, target and common evaluation records', page=True)
+    para(f'The official source contains {source["original_rows"]:,} records and {source["original_positives"]} positive shift labels. An ARFF-to-mirror audit reproduces first-occurrence deduplication without reordering: {source["removed_rows"]} exact duplicate occurrences, all negative, are removed to yield {source["mirror_rows"]:,} mirror records {cite("s1_1","s1_2")}. '
+         'This verifies the mirror transformation; it does not establish that identical monitoring records could not have represented distinct real shifts. A positive label denotes a bump above 10,000 J in the subsequent eight-hour shift. It is not a catalogue of independent accidents or a measured intervention benefit.')
+    para('The retained 17-column design contains three hazard assessments (seismic, seismoacoustic, ghazard), four geophone variables, nine seismic-activity variables and shift type. The geophone deviations already use historical summaries supplied with the data. The total count nbumps is omitted from this design; constant energy-band columns remain. Neither timestamps nor working-face identifiers are available to validate cross-row continuity. Recorded order is therefore the stated temporal proxy, not a verified sequence of consecutive shifts from one working face.')
+    rows=[]
+    for m in folds:
+        f=m['fold']; row=one(phase, model='XGBoost', variant='full', fold=f)
+        ref=one(audits, model='XGBoost', scheme='time', fold=f, rule='C_b01_r05')
+        rows.append([f+1, row['n'], row['positives'], f'{100*float(row["prevalence"]):.2f}%',
+                     ref['reference_n'], ref['reference_positives']])
+    table('cohorts', 'Shared test census and Stage 2 reference areas. Phases are record blocks, not identified mining sites.',
+          ['Phase','Test n','Test +','Test prevalence','Stage 2 ref n','Stage 2 ref +'], rows)
+    para(f'The common test cohort has {positives}/{n} positives ({100*prevalence:.2f}%), distinct from the full-mirror prevalence of {100*source["original_positives"]/source["mirror_rows"]:.2f}%. '
+         'The 774-record holdout is wholly within the common test rows and uses a different training cutoff. It was already inspected and is supplementary, overlapping evidence; it is neither an additional independent cohort nor an untouched confirmation set. Sample counts are not added across stages or protocols.')
+
+    heading('3 Two complementary evaluation protocols', page=True)
+    para(f'LR uses balanced class weights and an L2 penalty of 1. Bagged CART uses 60 unweighted bootstrap trees, depth 6 and minimum leaf size 20. XGBoost uses binary logistic loss, histogram trees, learning rate 0.05, minimum child weight 10 and L2 penalty 5 {cite("s1_6")}. '
+         'The grid is depths 2/3 crossed with 80/160 rounds, with seed 7, two threads and full row/column sampling. Tuning occurs within the supplied training area. Models have deliberately asymmetric weighting and tuning; these are comparisons of retained workflows, not equal-budget algorithm searches.')
+    table('protocols', 'Workflow definitions. Numerical cutoffs and alert counts are comparable only under matched workflows.',
+          ['Item','Forecast study (Stage 1)','Decision study (Stage 2)'],[
+              ['Main comparison','Random versus expanding record order on common test rows','Historical A/B/C rules transferred to the same later blocks'],
+              ['Model fitting','Outer models refit on supplied training rows','Primary fixed model fits first 80% of outer history'],
+              ['Policy reference','Last 20% of history; separate earlier reference model','Last 20% of history; scores from primary fixed model'],
+              ['XGBoost choice','Separate training-local searches for outer/reference models','Search inside fitting area; same chosen settings for refitted control'],
+              ['Budget cutoff','Exclude boundary score and all ties','Canonical whole-score groups; alerts score >= cutoff'],
+              ['Primary transfer','Reference cutoff applied after outer refitting','Freeze model and cutoff; refit on all history as a control'],
+              ['Probability scale','LR prior correction for probability evaluation; raw scores for alerts','Raw scores for fixed and refitted alert rules']])
+    para(f'Stage 1 uses ten stratified random folds and five seeds; random predictions are restricted to the same {n:,} rows as record-order evaluation. Random AP is the mean of seed-specific AP values. Expanding-window fits train on earlier record blocks. '
+         f'Structured validation makes the tested population and information boundary explicit {cite("s1_3","s1_4")}. Matching test rows does not equalize training sizes or remove all protocol differences.')
+    para('In Stage 2, the first 80% of each historical prefix is the fitting area and the remainder is the policy reference. XGBoost chooses parameters on a further 80/20 split inside the fitting area using AP, with negative Brier score if the inner reference has no positives. A separate refitted control adds the policy-reference rows to fitting, retains the selected parameters and applies the identical numerical threshold. Test labels enter evaluation, not model, parameter or cutoff selection. The Stage 2 plan was locked before its fits, after the dataset had already been examined in Stage 1; the complete study remains exploratory and retrospective.')
+
+    heading('3.1 Probability, explanation and decision definitions', page=True)
+    para(f'AP groups tied scores before calculating precision increments. The horizontal PR reference is the evaluation cohort prevalence pi {cite("s1_15")}. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. '
+         'It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold\'s unweighted prevalence; CART and XGBoost use their fitted outputs. Ten quantile bins, keeping tied probabilities together, summarize calibration. Brier skill compares squared error with the named historical training-prior or retrospective test-prevalence constant.')
+    para(f'Prior-only distribution change is a specific modeling assumption {cite("s1_10")}. A probability correction is monotone within a fold; differing fold-specific corrections should not be assumed to preserve pooled rankings. '
+         f'Native exact TreeSHAP decomposes each XGBoost raw log-odds prediction into feature contributions and a bias term, using training leaf covers as its tree-path-dependent reference {cite("s1_7","s1_8")}. Refitted group ablations ask a different question: how predictions change after a model is trained without the group. They are not causal feature effects.')
+    para(f'Cost-sensitive decisions use the hypothetical loss L = r FN + FP, with false-alert cost 1 {cite("s1_11")}. Historical budgets are 1%, 5%, 10% and 20%; r takes 5, 10, 20 and 50. '
+         'A maximizes whole-group alerts within floor(B Nref). B minimizes reference loss. C minimizes it among capacity-feasible groups. Ties in B/C loss select fewer alerts. Equal scores move together; nonempty partial sets use the lowest included score. No alarms use +infinity and all alarms use -infinity. These conventions can underfill capacity and do not impose later capacity.')
+    para('An alert represents one candidate shift for inspection. TP is a hazardous shift flagged, FP a non-hazardous shift flagged and FN a hazardous shift missed. Loss per 100 records is L100 = 100(r FN + FP)/N. Its difference from no alarms is Delta Lnone,100 = 100(FP - r TP)/N. Negative differences mean lower hypothetical loss. Excess = max(0, Alerts - floor(B Ntest)); all alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums phase excesses, without cancellation by spare slots elsewhere.')
+    para(f'Paired moving-block intervals use 2,000 replicates and block length 32, separately within test phases, without wrapping across endpoints or phase boundaries {cite("s1_5","kunsch")}. '
+         'Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The retained loss intervals cover C-A, C-B, secondary B-A and refitted-fixed contrasts. They do not provide ML-minus-no-alarm or ML-minus-direct-grade intervals. No such interval is inferred from a different contrast.')
+
+    heading('4 Forecast evidence on comparable test records', page=True)
+    rows=[]
+    for model in models:
+        if model=='XGBoost':
+            random_ap=sum(float(r['random_ap']) for r in xrandom)/len(xrandom); ci=xci
+        else:
+            record=next(r for r in shared if ('logistic' in r['model'])==(model=='LR'))
+            random_ap=float(record['random_pr_auc']); ci=one(protocol_ci, model=model, block_length=32)
+        ap=float(full[model]['pr_auc'])
+        rows.append([model,num(random_ap),num(ap),num(ap-prevalence),num(ci['delta']),interval(ci['ci_low'],ci['ci_high'])])
+    table('ranking', f'AP on {n:,} common test records; prevalence reference pi = {num(prevalence)}. AP-minus-pi concerns the record-order column.',
+          ['Model','Random AP','Record-order AP','AP minus pi','Random minus order','95% paired interval'], rows)
+    para('The interval in the last column belongs to the protocol difference, not to AP-minus-pi. All common-cohort point AP values exceed the prevalence reference; that descriptive observation alone is not a significance test against a random-ranking null. Finite-sample random-order AP and the horizontal PR reference are distinct concepts. No global label permutation is introduced.')
+    reductions = ', '.join(f'{float(r["gap_reduction_fraction"])*100:.1f}% for {r["model"]}' for r in gaps)
+    para(f'Restricting the comparison to common rows reduces the original different-cohort gap by {reductions}. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. The Stage 1 technical report retains the original and matched denominators and the full gap calculation.')
+    phase_sentences=[]
+    for m in folds:
+        r=one(phase, model='XGBoost', variant='full', fold=m['fold'])
+        phase_sentences.append(f'phase {m["fold"]+1}: AP {num(r["pr_auc"])} at prevalence {num(r["prevalence"])}')
+    para('Stage-specific XGBoost results further separate ranking from cohort composition: ' + '; '.join(phase_sentences) + '. These are Stage 1 outer-model predictions, not Stage 2 fixed-model scores. The supplementary holdout overlaps these records and is not used to choose a model, subset or budget.')
+
+    heading('4.1 Probability improvement depends on the reference', page=True)
+    para(f'Training-prior correction reduces LR ECE from {num(raw["ece"])} to {num(corrected["ece"])} and Brier score from {num(raw["brier"])} to {num(corrected["brier"])}. '
+         'This compares the same model outputs before and after the probability-scale correction. Brier skill asks whether the corrected forecasts improve on a separately defined reference, so the sign of skill can differ across references without contradicting improved ECE.')
+    table('probability', 'Common-cohort probability references. LR is prior-corrected; CART and XGBoost retain raw probabilities.',
+          ['Model','Model Brier','Historical Brier','Historical skill','Retrospective Brier','Retrospective skill'],
+          [[m,num(historical[m]['model_brier']),num(historical[m]['historical_brier']),num(historical[m]['historical_skill']),
+            num(historical[m]['oracle_brier']),num(historical[m]['oracle_skill'])] for m in models])
+    figure('results/phase1/figures/reliability_lr.png', 'Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The panel axes differ.', width=6.2)
+    para('The historical constant is deployable within each recorded protocol because it uses training labels only. The retrospective constant uses the evaluated prevalence for assessment and does not generate predictions. Stage 2 does not apply cost cutoffs to corrected LR probabilities: its A/B/C rules operate on raw reference scores. A calibration gain therefore does not constitute an observed reduction in Stage 2 warning loss.')
+
+    heading('4.2 Feature use and incremental predictive evidence', page=True)
+    rows=[]
+    for model in models:
+        rating=one(ablation, model=model, variant='ratings_only'); ci=one(ab_ci, model=model, variant='ratings_only')
+        rows.append([model,num(full[model]['pr_auc']),num(rating['pr_auc']),
+                     num(float(full[model]['pr_auc'])-float(rating['pr_auc'])),interval(-float(ci['ci_high']),-float(ci['ci_low']))])
+    table('ablation', 'Full design versus a refitted learner using all three hazard-rating fields.',
+          ['Model','Full AP','Ratings-only AP','Full minus ratings','95% paired interval'], rows)
+    para('Ratings-only denotes a separately fitted LR, CART or XGBoost using seismic, seismoacoustic and ghazard together. It is not a direct grade-to-alarm rule or the mine\'s deployed practice. The paired gain intervals include zero under the retained configurations. XGBoost ablations reuse full-design training-selected parameters, so the contrasts are conditional design comparisons rather than equally retuned optima for every subset.')
+    figure('results/phase1/figures/shap_phase_stability.png', 'Figure 3. Full-feature XGBoost attribution and phase-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution.')
+    para(f'The leading contributions are {", ".join(r["feature"] for r in importance[:3])}. Removing the seismic-activity group and refitting yields AP {num(removed["pr_auc"])} versus {num(full["XGBoost"]["pr_auc"])} for the full design; '
+         f'the paired difference is {num(removed_ci["delta"])} with interval {interval(removed_ci["ci_low"], removed_ci["ci_high"])}. The interval includes zero. Large attribution and uncertain refitted benefit can coexist because they concern different models and questions. Correlated inputs, interactions and sampling variability are possible explanations, not identified causes. No subset is selected from these test results.')
+
+    heading('5 Warning loss, detections and inspection demand', page=True)
+    mainrows=[]
+    ordered=[one(main, mechanism='none')]
+    ordered += sorted([r for r in main if r['mechanism']=='A'], key=lambda r:float(r['budget']))
+    ordered += [one(main, mechanism='B')]+selected_c
+    for r in ordered:
+        mainrows.append([r['mechanism'], '-' if not r['budget'] else f'{100*float(r["budget"]):.0f}%',
+                         num(r['loss100'],2),num(r['loss_delta_no_alarm100'],2),integer(r['tp']),integer(r['fn']),
+                         integer(r['fp']),integer(r['alerts']),'-' if not r['excess'] else integer(r['excess'])])
+    table('decision', f'Stage 2 fixed XGBoost, r=10, pooled over {n:,} records. Negative loss differences favor the policy over no alarms.',
+          ['Rule','Budget','L100','Delta vs none','TP','FN','FP','Alerts','Excess'], mainrows)
+    para('The point loss of C equals the no-alarm comparator at 1% and is higher at the other three budgets. These descriptive no-alarm differences do not have a corresponding paired interval in the locked comparison set. Lower C loss than A is compatible with a higher loss than no alarms: reducing many false alerts can lower assumed cost while also reducing detections. No alarms detect no hazardous shifts and are a loss comparator, not an operating recommendation.')
+    descriptions=[]
+    for f in range(4):
+        part=[r for r in xv if match(r, fold=f, mechanism='C', cost=10)]
+        descriptions.append(f'phase {f+1}: {span(r["loss_delta_no_alarm100"] for r in part)}')
+    para('At r=10 the phase-specific C-minus-no-alarm loss ranges are ' + '; '.join(descriptions) + ' units per 100 records. These ranges retain all four budgets; pooled findings are not attributed uniformly to every phase. Historical budgets constrain reference selection, so methods with the same budget can generate different later workloads.')
+    pair=one(capacity, model='XGBoost', scheme='time', cohort='pooled', workflow='fixed', cost=10, budget=.2)
+    para(f'For the 20% budget at r=10, pooled C-A changes detections from {integer(pair["A_tp"])} to {integer(pair["C_tp"])} and reduces excess demand by {integer(-float(pair["excess_delta"]))} alerts. '
+         f'The loss difference is {num(pair["loss100_delta"],2)} per 100 records. This is a measured workload-coverage tradeoff under the assumed loss, not a demonstrated safety improvement. Actual inspection execution and accident avoidance are not observed.')
+
+    heading('5.1 Historical selection explains capacity and no-alarm outcomes', page=True)
+    rows=[]
+    for f in range(4):
+        a=[r for r in va if match(r, fold=f)]; c=[r for r in vc if match(r, fold=f)]
+        quiet=[r for r in silent if match(r, fold=f)]
+        rows.append([f+1, f'{sum(float(r["excess"])>0 for r in a)}/4', f'{sum(float(r["excess"])>0 for r in c)}/16',
+                     sum(r['no_alarm_reason']=='cost_selects_no_alarm' for r in quiet),
+                     sum(r['no_alarm_reason']=='capacity_changes_to_no_alarm' for r in quiet)])
+    table('capacity', 'Fixed-XGBoost capacity excess and historical reasons for C no-alarm selection.',
+          ['Phase','A excess settings','C excess settings','Cost selects none','Capacity changes to none'], rows)
+    para(f'All reference areas contain positive labels, yet {len(silent)} of the 64 C settings select no alarms. Of these, {causes["cost_selects_no_alarm"]} follow unconstrained cost optima and {causes["capacity_changes_to_no_alarm"]} follow changes induced by the historical capacity restriction. '
+         'These classifications use reference decisions, not test performance. A small reference advantage over another feasible alarm set describes a weak selection margin; it does not by itself establish unstable thresholds.')
+    example=one(xv, fold=1, mechanism='A', budget=.2, cost=10)
+    para(f'The budget rule exceeds later capacity in {over_a}/16 phase-budget settings and C in {over_c}/64 phase-budget-cost settings. The settings are dependent and use different denominators. '
+         f'In phase 2, A at a 20% budget produces {integer(example["alerts"])} alerts, with {integer(example["excess"])} above its {integer(example["slots"])} later slots. The reference budget had been feasible. '
+         'Different reference/test prevalences, including only one positive among 207 reference records in phase 2, provide context but do not identify prevalence shift as the sole cause; class-conditional scores can also change. Batch Top-k enforces capacity within the complete observed score batch and remains a retrospective ranking reference, not a real-time rule or performance bound.')
+    para('On the reference area, C cannot have lower optimized loss than B because its candidate set is a subset. That ordering need not survive transfer. Whole-tie rules and fixed numerical cutoffs explain how historical feasibility can coexist with both later underuse and excess demand.')
+
+    heading('5.2 Model updating and conditional uncertainty', page=True)
+    rows=[]
+    for mechanism in ('A','B','C'):
+        q=[r for r in transfers if match(r, model='XGBoost', scheme='time', mechanism=mechanism)]
+        decisions={(r['fold'],r['rule']):r for r in all_audits if match(r, model='XGBoost', scheme='time', mechanism=mechanism)}
+        finite=[r for r in q if r['threshold_kind']=='finite']
+        rows.append([mechanism,sum(math.isfinite(float(r['threshold'])) for r in decisions.values()),
+                     sum(float(r['threshold'])==math.inf for r in decisions.values()),
+                     sum(float(r['threshold'])==-math.inf for r in decisions.values()),
+                     span(r['loss100_delta'] for r in finite), span((r['alerts_delta'] for r in finite), places=0)])
+    table('refitting', 'XGBoost refitted-minus-fixed changes. Finite groups are defined by historical selection.',
+          ['Rule','Finite','No alarm','All alarm','Finite Delta L100','Finite Delta alerts'], rows)
+    para('Distinct historical settings count phase times budget for A, phase times cost for B, and phase times budget times cost for C. A is reused when evaluating costs. The ranges retain all stated evaluation costs. Refitting can alter both the fitted function and raw-score scale; using the same cutoff measures their combined workflow difference, not a causal effect of either component. Infinite cutoffs are invariant by construction and provide no evidence of finite-cutoff robustness.')
+    for f in (0,1):
+        ci=one(comparisons, model='XGBoost', comparison='C-A', workflow='fixed', budget=.2, cost=10, fold=f)
+        para(f'At the common display setting r=10 and budget 20%, phase {f+1} C-A is {num(ci["loss_delta100"],2)} per 100 records, '
+             f'with paired 95% interval {interval(ci["ci_low"],ci["ci_high"],2)}. '
+             + ('Its interval contains zero.' if float(ci['ci_low'])<=0<=float(ci['ci_high']) else 'Its interval is entirely below zero.')
+             + ' This comparison is between C and A; it does not test C against no alarms.')
+    para('The retained block intervals are descriptive and unadjusted across settings. They characterize uncertainty in differences among frozen decisions on the observed queue of records. LR and bagged CART supply additional model comparisons under the same reference boundaries; they do not certify robustness across mines, future distributions or untested model classes. Complete per-phase results and all costs remain in the Stage 2 technical report and saved files.')
+
+    heading('5.3 Frozen-rule cost and prevalence descriptions', page=True)
+    rows=[]
+    for b in plan['budgets']:
+        r=one(boundary, model='XGBoost', scheme='time', cohort='pooled', workflow='fixed', mechanism='C', selection_cost=10, budget=b)
+        rows.append([f'{100*b:.0f}%',integer(r['tp']),integer(r['fp']),integer(r['alerts']),
+                     '-' if not r['break_even_cost'] else num(r['break_even_cost'],2)])
+    table('boundaries', 'Cost equality for unchanged pooled C rules selected historically at rselect=10.',
+          ['Historical budget','TP','FP','Alerts','Equality cost r*'], rows)
+    para('For a frozen alert set, Delta Lnone,100(reval) = 100(FP - reval TP)/N. When TP>0, equality occurs at r*=FP/TP and the assumed loss favors the unchanged rule above that evaluation cost. TP=FP=0 is equivalent to no alarms for every cost; with TP=0 and FP>0 there is no finite improvement. The dash identifies no-alarm equivalence. These are descriptive equality points on this cohort, not cost estimates or test-selected recommendations.')
+    rows=[]
+    for b in plan['budgets']:
+        cells=[f'{100*b:.0f}%']
+        for pi in (.05,.10):
+            r=one(scenarios, model='XGBoost', scheme='time', fold=-1, workflow='fixed', cost=10, budget=b,
+                  rule=f'C_b{round(100*b):02d}_r10', scenario_prevalence=pi)
+            cells += [num(r['delta_loss_vs_no_alarm_100'],2), f'{100*float(r["expected_alert_rate"]):.2f}%',
+                      'NA' if not r['expected_precision'] else f'{100*float(r["expected_precision"]):.2f}%']
+        rows.append(cells)
+    table('scenarios', 'Frozen prevalence scenarios for C selected at r=10. Loss differences are versus no alarms; alerts and precision are expectations.',
+          ['Budget','pi 5% Delta','Alerts','Precision','pi 10% Delta','Alerts','Precision'], rows)
+    para('The full supplement retains prevalences 2%, 5%, 10% and 15%. The compact display pairs loss and workload at 5% and 10% without reselecting policies. Assuming unchanged within-class rates, L100(pi)=100[r pi FNR+(1-pi)FPR], alert fraction=pi TPR+(1-pi)FPR and precision=pi TPR/alert fraction. Precision is undefined at zero expected alerts (NA); observed zero-alert precision retains its existing zero convention. These scenarios neither diagnose actual shift nor estimate the probability of exceeding capacity.')
+
+    heading('6 Integrated interpretation and next evidence', page=True)
+    para('The two analyses connect through evidence requirements. Common-cohort comparisons make protocol gaps interpretable, but do not isolate leakage. Training-prior correction improves probability errors relative to the raw model, while the reference determines the sign of Brier skill. Large feature attribution describes a fitted model; a refitted ablation can show a different and uncertain predictive contribution. Each result supports a defined interpretation rather than an undifferentiated claim of a better warning model.')
+    para('Decision evaluation adds information that ranking, probability assessment and attribution do not supply. At the displayed cost, C can lower loss and inspection demand relative to A while having no favorable pooled point difference against no alarms. Historical capacity choices explain why rules are silent or active, whereas later counts show their transferred coverage and workload. Refitting changes which score function is subjected to a historical cutoff. These comparisons establish workflow-specific tradeoffs; they do not identify a universally preferred policy.')
+    para('The shared cohort is also the main inference boundary. Recorded order supplies no verified timestamps or longwall continuity. Deduplication reproduces a public mirror, not a certified operational history. Costs, capacity slots and the absence of an excess-demand penalty are explicit scenario assumptions. The target counts hazardous shifts, not accidents, executed inspections or interventions. Two analyses of the same observed records increase explanatory coverage, not the number of independent validation cohorts.')
+    para('Further work should prioritize evidence that changes the engineering interpretation. Direct, historically selected rules for each recorded hazard-grade field would test a simpler decision comparator; the existing ratings-only learners do not do this. Paired ML-minus-no-alarm and ML-minus-grade loss intervals would address those specific contrasts. Neither comparison has been run in the retained study. Full refit/reselection uncertainty needs a separate protocol. Cross-row lag features require continuity and working-face evidence, or must remain an explicitly record-order sensitivity analysis. None is presented as a completed result here.')
+    heading('7 Conclusions')
+    para('This mining case provides an auditable connection from forecast evaluation to warning-rule interpretation. Matching test records changes the apparent protocol comparison; explicit probability references and refitted ablations distinguish different forms of predictive evidence. Frozen historical rules then reveal how assumed loss, hazardous-shift coverage, capacity demand and model updating interact on later records. The useful output is a set of traceable, conditional comparisons for engineering review, with a clear boundary between saved computational evidence and operational effectiveness.')
+    heading('Data, code, contributions and AI assistance')
+    para('The repository retains source mapping, predictions, historical candidates, row-level decisions, resampling outputs and version-specific checks. The reporting guide documents generation and verification; both stage papers provide technical detail. Code and evidence: https://github.com/junjie-yang11/seismic-bump-forecasting.')
+    para('The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational and reference checks, and writing. CONTRIBUTIONS.md documents these roles. AI-assisted writing workflows do not supply scientific evidence for the research conclusions.')
+    heading('References', page=True)
+    for index,key in enumerate(used,1):
+        para(f'[{index}] {references[key]}')
+    return items, tables, evidence.inputs, certificates
+
+
+def write_outputs(items):
+    from docx import Document
+    from docx.shared import Inches, Pt
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from phase1.generate_report import scrub_report_package
+    doc=Document(); sec=doc.sections[0]
+    sec.page_width=Inches(8.27); sec.page_height=Inches(11.69)
+    sec.top_margin=sec.bottom_margin=Inches(.75)
+    sec.left_margin=sec.right_margin=Inches(.8)
+    normal=doc.styles['Normal']; normal.font.name='Times New Roman'; normal.font.size=Pt(11.5)
+    normal.paragraph_format.line_spacing=1.12; normal.paragraph_format.space_after=Pt(6)
+    normal.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY
+    for name,size in [('Title',16),('Heading 1',12.5),('Heading 2',12),('Caption',10)]:
+        style=doc.styles[name]; style.font.name='Times New Roman'; style.font.size=Pt(size)
+        style.font.color.rgb=None
+        if name!='Caption':style.font.bold=True
+    doc.styles['Caption'].font.bold=False
+    doc.styles['Caption'].font.italic=False
+    for style in doc.styles:
+        for border in list(style.element.iter(qn('w:pBdr'))):
+            border.getparent().remove(border)
+        if style.type==1:
+            fonts=style.element.get_or_add_rPr().get_or_add_rFonts()
+            for key in list(fonts.attrib):
+                if key.endswith('Theme'):del fonts.attrib[key]
+            for key in ('ascii','hAnsi','eastAsia','cs'):fonts.set(qn('w:'+key),'Times New Roman')
+    md=[]
+    for item in items:
+        kind=item['kind']
+        if kind=='break':
+            doc.add_page_break(); md.append('<!-- page break -->'); continue
+        if kind=='title':
+            p=doc.add_paragraph(item['text'],'Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+            md.append('# '+item['text']); continue
+        if kind=='heading':
+            doc.add_paragraph(item['text'],'Heading 1'); md.append('## '+item['text']); continue
+        if kind=='paragraph':
+            text=item['text']; p=doc.add_paragraph(text)
+            if text in ('Junjie Yang','Mining Engineering, Fuzhou University'):
+                p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+            if re.match(r'^\[\d+\]',text):
+                p.paragraph_format.left_indent=Inches(.23); p.paragraph_format.first_line_indent=Inches(-.23)
+                p.alignment=WD_ALIGN_PARAGRAPH.LEFT
+                for run in p.runs:run.font.size=Pt(10)
+            md.append(text); continue
+        if kind=='figure':
+            p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.keep_with_next=True
+            p.add_run().add_picture(str(ROOT/item['path']),width=Inches(item['width']))
+            doc.add_paragraph(item['caption'],'Caption')
+            target=Path('../../')/item['path']
+            md.append(f'![{item["caption"]}]({target.as_posix()})'); continue
+        p=doc.add_paragraph(item['caption'],'Caption'); p.paragraph_format.keep_with_next=True
+        headers=item['headers']; rows=item['rows']
+        md.append(item['caption'])
+        md_rows=['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']
+        t=doc.add_table(rows=1,cols=len(headers));t.alignment=WD_TABLE_ALIGNMENT.CENTER;t.style='Table Grid'
+        for c,h in zip(t.rows[0].cells,headers):c.text=h
+        for values in rows:
+            for c,v in zip(t.add_row().cells,values):c.text=v
+            md_rows.append('| '+' | '.join(values)+' |')
+        md.append('\n'.join(md_rows))
+        for ri,row in enumerate(t.rows):
+            prop=row._tr.get_or_add_trPr();prop.append(OxmlElement('w:cantSplit'))
+            if ri==0:prop.append(OxmlElement('w:tblHeader'))
+            for ci,cell in enumerate(row.cells):
+                cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
+                if ri==0:
+                    shading=OxmlElement('w:shd');shading.set(qn('w:fill'),'EDEFF1');cell._tc.get_or_add_tcPr().append(shading)
+                for p in cell.paragraphs:
+                    p.paragraph_format.line_spacing=1.02
+                    p.paragraph_format.space_before=p.paragraph_format.space_after=Pt(3)
+                    p.paragraph_format.keep_with_next=ri<2
+                    p.alignment=WD_ALIGN_PARAGRAPH.CENTER if ri==0 else (WD_ALIGN_PARAGRAPH.LEFT if ci==0 or item['id']=='protocols' else WD_ALIGN_PARAGRAPH.RIGHT)
+                    for run in p.runs:run.font.size=Pt(9.3 if len(headers)>6 else 10);run.bold=ri==0
+        doc.add_paragraph().paragraph_format.space_after=Pt(1)
+    footer=sec.footer.paragraphs[0];footer.alignment=WD_ALIGN_PARAGRAPH.CENTER
+    field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
+    doc.core_properties.author='';doc.core_properties.last_modified_by='';doc.core_properties.title=TITLE
+    doc.save(DEST/(STEM+'.docx'));scrub_report_package(DEST/(STEM+'.docx'))
+    (DEST/(STEM+'.md')).write_bytes(('\n\n'.join(md)+'\n').encode('utf-8'))
+
+
+def build():
+    DEST.mkdir(parents=True,exist_ok=True)
+    certificate=DEST/'verification.json'
+    started=datetime.now(timezone.utc).isoformat()
+    certificate.write_text(json.dumps(dict(passed=False,status='building',started_at_utc=started)),encoding='utf-8')
+    try:
+        # A prior PDF cannot certify a newly generated Word manuscript.
+        (DEST/(STEM+'.pdf')).unlink(missing_ok=True)
+        overview_figure(DEST/'evidence_overview.png')
+        items,tables,inputs,source_checks=assemble()
+        write_outputs(items)
+        manifest=dict(title=TITLE,scope='Integrated reporting from saved evidence; no new model, feature, threshold or uncertainty experiment',
+                      inputs=inputs,generator_sha256=digest(Path(__file__)),tables=tables,
+                      source_certificates_at_build=source_checks,
+                      outputs={name:digest(DEST/name) for name in (STEM+'.md',STEM+'.docx','evidence_overview.png')})
+        (DEST/'report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+        certificate.write_text(json.dumps(dict(passed=False,status='awaiting independent verification')),encoding='utf-8')
+        print(f'Integrated manuscript generated: {len(tables)} tables; model and decision evidence untouched.')
+    except (Exception,KeyboardInterrupt) as error:
+        certificate.write_text(json.dumps(dict(passed=False,status='failed',started_at_utc=started,
+                                               error_type=type(error).__name__,error=str(error)),indent=2),encoding='utf-8')
+        raise
+
+
+if __name__=='__main__':
+    build()

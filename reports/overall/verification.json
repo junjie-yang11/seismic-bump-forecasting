@@ -1,0 +1,36 @@
+{
+  "checks": 460,
+  "tables": 10,
+  "figures": 3,
+  "pages": 14,
+  "pdf_text_checked": true,
+  "scope": "Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.",
+  "manifest_sha256": "96d6340ece91387e98d0962d95afed08e81b9642ae23d3c66912e826e55ddfad",
+  "generator_sha256": "bf6b32cf6a5f3e20540a8bc8339367d3a59788f70867a748b831c81629168fd8",
+  "checked_row_and_table_inputs_sha256": {
+    "results/phase1/feature_ablation.csv": "cdef258d39ef33c23047e7632c8c1c66368ddf2f52ae8932eb8186e00407ebf7",
+    "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
+    "results/phase2/references.csv": "7a2e1d38a4a7db1fe04644c05faa8e86c2d6c7619d3964c4626139e99701d6ff",
+    "results/phase1/shared_test_comparison.csv": "6239c15971820bb322e49a8573c8ca09b396c1b672c5ce8170fab97e4c6cf63d",
+    "results/phase1/paired_uncertainty.csv": "9f760c612f4b23d6c60de74a5c8746c8f9e4cba9b37bf760f97ce37bb03cf457",
+    "results/phase1/xgboost_shared_by_seed.csv": "fc516c11a46c362a58f68d12fa50df0aae90356c6d6f90fd8a949a21f63b72d4",
+    "results/phase1/xgboost_protocol_interval.csv": "0ebedc97e4b6fa4a01c60c83b5b9366764b1e6367008445489191487c0c19f9f",
+    "results/phase1/probability_reference_comparison.csv": "faa65daf771f89cf898108d5a94b4b68bcee652bccca94aa7e873dcce50b717b",
+    "results/phase1/feature_ablation_intervals.csv": "1033f137d05f34855d1b4af0f97e5df594bc3146a618304a9edef90657c98c5c",
+    "results/phase2/decisions.csv": "2cbbc759ff2ea8865f233712b5ed6d8fb868a62942d503d3758cf621a55836e8",
+    "results/phase2/threshold_explanations.csv": "b8555456c13315310773070ec74c0fdd36f11e7d1e348d6d850986f432ba2caa",
+    "results/phase2/evaluations.csv": "59e597a41924c838b8d6ae6cf392c7c19a60361e812c0cac54f69fa74ea0c5b5",
+    "results/phase2/audits.csv": "54f868314788e3a3d64723c9e4aae04172068797aa62fd0e783403d1c9bfbb85"
+  },
+  "outputs_sha256": {
+    "integrated_research_report.md": "bee9595b607931803ba12d867d006256070c2a7b53fc7c1087f0af8038ae5d8f",
+    "integrated_research_report.docx": "68afd62c3fe2d660e27c31afa26a5759ae637cbe65392e87c90b916807d7d396",
+    "integrated_research_report.pdf": "5edea1864171035ae3431d51d377fb43a6a3a9de0313b29faa41f6cad282771a",
+    "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6"
+  },
+  "passed": true,
+  "status": "passed",
+  "started_at_utc": "2026-10-18T16:36:40.053107+00:00",
+  "completed_at_utc": "2026-10-18T16:36:40.591818+00:00",
+  "verifier_sha256": "74765b7786a65d8cd595859dd9915e4fa5e4b9ce4ce169463d6fa7232d600d0a"
+}

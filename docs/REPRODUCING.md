@@ -94,6 +94,18 @@ The homepage updater reads the saved pooled fixed-XGBoost C results at r=10, ind
 
 Table 9 is located by its unique column headers in both editions, so a baseline with or without the decision-assumption table is supported. Its cell values must still match exactly; a missing or duplicate interval overview fails verification. Retained certificates describe the verifier hash recorded in them. Rerun the report check after changing its implementation.
 
+## Integrated report after both stages
+
+The main [overall report](../reports/overall/integrated_research_report.pdf) is generated after the two technical papers and source checks. In the reporting environment:
+
+```text
+python -B -m reporting.overall
+pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1
+python -B -m reporting.verify_overall --pdf
+```
+
+These commands read saved results and do not refit models or change historical rules. The [reporting guide](../reporting/README.md) identifies inputs, outputs and verification scope. The overall report's standard-library saved-evidence check is included in `python -B -m phase1.quick_check`; PDF text and visual layout are checked separately in the reporting environment. Keep the original stage reports and model-replay records.
+
 ## Reading the records
 
 Current experiment manifests belong to `results/phase1/` and `results/phase2/`. Final manuscript provenance accompanies the paper. Dated review editions are kept in `docs/audits/`; historical paths and hashes describe their original editions. The final reports retain the study boundaries: record order is a temporal proxy, holdout results are supplementary, costs and capacity are hypothetical, and intervals condition on fixed predictions or fitted rules.

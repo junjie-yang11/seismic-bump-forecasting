@@ -6,12 +6,16 @@ The project uses the audited UCI Seismic Bumps mirror: 2,578 shift records and 1
 
 ## Start here
 
+**Read the integrated study first:** [Overall report (PDF)](reports/overall/integrated_research_report.pdf) · [Word](reports/overall/integrated_research_report.docx) · [Online manuscript](reports/overall/integrated_research_report.md).
+
+It connects comparable-cohort forecast evidence to warning loss, coverage, capacity and model updating. The two technical reports below retain stage-specific methods and full results; they use overlapping records and are not independent validation studies.
+
 | Study | Question | Final paper | Editable paper | Code and steps |
 | --- | --- | --- | --- | --- |
 | **Stage 1 · Forecast evaluation** | How do comparable test cohorts, probability calibration and model explanations change the interpretation of performance? | [PDF](reports/phase1/technical_report.pdf) | [Word](reports/phase1/technical_report.docx) | [Stage 1 guide](phase1/README.md) |
 | **Stage 2 · Warning decisions** | How do historical thresholds transfer under assumed missed-event costs and inspection capacity? | [PDF](reports/phase2/phase2_threshold_transfer_report.pdf) | [Word](reports/phase2/phase2_threshold_transfer_report.docx) | [Stage 2 guide](phase2/README.md) |
 
-Read Stage 1 for predictive evidence and Stage 2 for decision value, capacity excess and refitting effects. [All final reports](reports/README.md) include online manuscripts. The [research overview](docs/PROJECT_OVERVIEW.md) connects the questions, findings and next studies in a short read.
+Use Stage 1 for predictive detail and Stage 2 for decision detail. [Report navigation and generation](reports/README.md) distinguish the integrated paper from its supporting technical reports. The [research overview](docs/PROJECT_OVERVIEW.md) provides a short introduction.
 
 ## Three findings
 
@@ -75,12 +79,14 @@ The filenames in Steps 3–4 belong to `results/phase1/`; those in Steps 5–7 b
 phase1/              Stage 1 experiments, analysis, verification and paper generator
 phase2/              Stage 2 locked protocol, decisions, transfer study and paper generator
 reports/
+  overall/           Main integrated paper, conceptual overview and report provenance
   phase1/            Final Stage 1 Word, PDF and manuscript
   phase2/            Final Stage 2 Word, PDF, manuscript and report figures
 results/
   phase1/            Stage 1 predictions, metrics, explanations and diagnostic figures
   phase2/            Stage 2 references, thresholds, decisions and verification evidence
 src/                 Shared data, models, metrics, calibration and validation
+reporting/           Cross-stage paper generator, Word export and independent checks
 tests/               Shared and Stage 1 behavioral tests; Stage 2 tests live in phase2/
 data/                Data-source guide and ignored local download cache
 requirements/        Separate baseline, research and reporting environments

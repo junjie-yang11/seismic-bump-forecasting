@@ -18,7 +18,7 @@ import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-FOLDERS = ('src', 'phase1', 'phase2', 'tests', 'results', 'reports')
+FOLDERS = ('src', 'phase1', 'phase2', 'reporting', 'tests', 'results', 'reports')
 NS = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 
 
@@ -93,7 +93,7 @@ def run(proxy=None):
     started = time.perf_counter()
     files = [p for folder in FOLDERS for p in (ROOT / folder).rglob('*')
              if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc']
-    files.append(ROOT / 'README.md')
+    files.extend(ROOT / name for name in ('README.md', 'CONTRIBUTIONS.md'))
     original = {p: sha(p) for p in files}
     steps = (
         ('Behavior tests', ['-m', 'unittest', 'discover', '-s', 'tests']),
@@ -102,13 +102,15 @@ def run(proxy=None):
         ('Stage 2 saved decisions and block arithmetic', ['-m', 'phase2.verify']),
         ('Supplementary decision accounting', ['-m', 'phase2.verify_supplement']),
         ('Independent formula reconstruction', ['-m', 'phase1.verify_formulae']),
+        ('Integrated report and row-level decision agreement', ['-m', 'reporting.verify_overall']),
     )
     with tempfile.TemporaryDirectory(prefix='seismic-evidence-') as directory:
         snapshot = Path(directory)
         for folder in FOLDERS:
             shutil.copytree(ROOT / folder, snapshot / folder,
                             ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        shutil.copy2(ROOT / 'README.md', snapshot / 'README.md')
+        for name in ('README.md', 'CONTRIBUTIONS.md'):
+            shutil.copy2(ROOT / name, snapshot / name)
         (snapshot / 'data').mkdir()
         mirror = ROOT / 'data/seismic-bumps.csv'
         if mirror.exists():

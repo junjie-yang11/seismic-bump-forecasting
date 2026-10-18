@@ -4,6 +4,8 @@
 
 Read the [paper](../reports/phase1/technical_report.pdf) or [editable Word version](../reports/phase1/technical_report.docx). All measured outputs belong to `results/phase1/`; shared models and metric implementations live in `src/`.
 
+The [overall report](../reports/overall/integrated_research_report.pdf) connects this evidence to Stage 2 decisions. The ratings-only ablation refits each learner on all three rating fields; it is not a direct grade-to-alarm baseline. The 774-row holdout is within the 2,063 common test rows and uses a different training cutoff, so it is supplementary overlapping evidence, not another independent validation cohort.
+
 ## Execution order
 
 Run from the repository root. Baseline and engineering fits use the recorded Python 3.7 environment; the XGBoost extension and complete tests use the research environment. [Environment details](../docs/REPRODUCING.md) describe the separate installations.
