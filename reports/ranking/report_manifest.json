@@ -1,12 +1,14 @@
 {
   "title": "Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot",
-  "created_at_utc": "2026-10-19T08:22:27.090598+00:00",
+  "created_at_utc": "2026-10-19T08:45:59.462658+00:00",
   "inputs": {
     "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
     "results/phase2/ranking/evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
-    "results/phase2/ranking/intervals.csv": "96d2fd5c5c45551cd9a1f69c36e69711005e27518bc03b8d8b67c79e485e1e5a"
+    "results/phase2/ranking/intervals.csv": "96d2fd5c5c45551cd9a1f69c36e69711005e27518bc03b8d8b67c79e485e1e5a",
+    "results/phase2/ranking/rows.csv": "f9bbbf528629e65de4002e5254ee1f2d3b15e0bed9eb9de8b91fcd4c8a7e8dda",
+    "results/phase2/ranking/allocations.csv": "0f8381d63bcaa4d4cec5e01725a077739c3a23be092fbd2273d44279a12fd2f4"
   },
-  "generator_sha256": "62874163c14c4b5a1a55894c1c38b4779b5fa43bee1c0dc6933b02429c740c3c",
+  "generator_sha256": "8f9caf3b35606afb61fa06f0e903c35872edf53a6ed3c5015b3eea87cbe1e70a",
   "writer_sha256": "1b2f0a0d60f76705f48c1dd234e1dd30bdbd7a35da189c3234651c37c2227985",
   "tables": [
     {
@@ -225,12 +227,57 @@
       ]
     }
   ],
+  "worked_allocation": {
+    "n": 516,
+    "k": 103,
+    "a_n": 430,
+    "b_n": 86,
+    "a_slots": 17,
+    "b_slots": 86,
+    "a_positives": 21,
+    "b_positives": 15,
+    "a_ml_tp": 2,
+    "b_ml_tp": 15,
+    "a_random_expected_tp": 0.8302325581395349,
+    "total_ml_tp": 17,
+    "total_random_expected_tp": 15.830232558139533,
+    "extra_tp": 1.1697674418604667,
+    "ci_low": -0.7018779342723018,
+    "ci_high": 5.67578963681998
+  },
+  "source_snapshot": "e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535",
+  "source_links": [
+    [
+      "Repository source snapshot",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/tree/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535"
+    ],
+    [
+      "Pilot protocol",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/phase2/ranking/protocol.json"
+    ],
+    [
+      "Ranking code",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/tree/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/phase2/ranking"
+    ],
+    [
+      "Saved evidence and verification guide",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/results/phase2/ranking/README.md"
+    ],
+    [
+      "Numerical verifier",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/phase2/ranking/verify.py"
+    ],
+    [
+      "Integrated report",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/reports/overall/integrated_research_report.pdf"
+    ]
+  ],
   "source_certificate_at_build": {
     "sha256": "30965b729b0b6ad4ed5b93caf5fa29b05048970fc8a34300c9e262ed81eba4d9",
     "scope": "Frozen source scores, exact grade quotas and K, independent ranking, analytical random allocation via SciPy, every block draw and weighted reranking replay; no fitting or real dispatch validation"
   },
   "outputs": {
-    "within_grade_ranking_pilot.md": "529af8868256fcf596d73881e23eaf1873e10ac98022eb62eb5f58449aff178d",
-    "within_grade_ranking_pilot.docx": "bac2b680a7a2e24561e1b8e42fcf116af5d3e414a24239439c7e232892d2b993"
+    "within_grade_ranking_pilot.md": "2aeea0f03dfb92f3b5dfa17d562db176d57ec3d6ea53717ca4357db9d17bea9a",
+    "within_grade_ranking_pilot.docx": "f4bfc16dea608875d6bfe9f80f6980d8dd36847644840a1b87afb1a3533a6c2c"
   }
 }

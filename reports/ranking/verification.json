@@ -1,18 +1,20 @@
 {
-  "checks": 192,
+  "checks": 242,
   "tables": 2,
   "pages": 3,
   "pdf_text_checked": true,
-  "scope": "Pilot report source/code/artifact hashes, all table values, Word/Markdown agreement and optional PDF text; numerical ranking replay is a separate check",
-  "manifest_sha256": "df1152f401fa888d576a9f0661b4a76b3606bba53d49c8a1eff1cd7859f76894",
+  "source_links_checked": 6,
+  "worked_allocation_checked": true,
+  "scope": "Pilot report source/code/artifact hashes, tables and row-derived allocation example, native Word/Markdown links, optional PDF text and link annotations; numerical ranking replay is separate",
+  "manifest_sha256": "8a45a30824bb5ee18291b20254409cfad70cc0f047c3a0e862f13673c10e3d79",
   "outputs_sha256": {
-    "within_grade_ranking_pilot.md": "529af8868256fcf596d73881e23eaf1873e10ac98022eb62eb5f58449aff178d",
-    "within_grade_ranking_pilot.docx": "bac2b680a7a2e24561e1b8e42fcf116af5d3e414a24239439c7e232892d2b993",
-    "within_grade_ranking_pilot.pdf": "9008f653958627cc064edef90f27e109df19d3d069b3ff66672ed917471be8a7"
+    "within_grade_ranking_pilot.md": "2aeea0f03dfb92f3b5dfa17d562db176d57ec3d6ea53717ca4357db9d17bea9a",
+    "within_grade_ranking_pilot.docx": "f4bfc16dea608875d6bfe9f80f6980d8dd36847644840a1b87afb1a3533a6c2c",
+    "within_grade_ranking_pilot.pdf": "419ff49c0a490fc38a0f4c9cdb9dd9a02fd1e31b4447026fbd2abaae66b78e8d"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-19T08:24:00.695481+00:00",
-  "completed_at_utc": "2026-10-19T08:24:00.947827+00:00",
-  "verifier_sha256": "bc5b24ae34eab6b5a41dfbe5072d2c319ab60ba46cb5a717a0d7eaf5753aed68"
+  "started_at_utc": "2026-10-19T08:47:46.670582+00:00",
+  "completed_at_utc": "2026-10-19T08:47:46.938219+00:00",
+  "verifier_sha256": "457fd1ea427ad3811dd0f69a52466ed2bb6f9b8aa32d5f138f2091aec1d448de"
 }

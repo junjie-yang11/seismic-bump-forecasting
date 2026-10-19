@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import re
 from datetime import datetime,timezone
 from pathlib import Path
@@ -32,6 +33,7 @@ def checks(root,pdf_text):
     md=(out/(STEM+'.md')).read_text(encoding='utf-8')
     with ZipFile(out/(STEM+'.docx')) as package:
         body=ET.fromstring(package.read('word/document.xml')).find('w:body',NS)
+        relationships=ET.fromstring(package.read('word/_rels/document.xml.rels'))
         core=ET.fromstring(package.read('docProps/core.xml'))
         for node in core:
             if node.tag.rsplit('}',1)[-1] in ('creator','lastModifiedBy'):check(not node.text,'clean author metadata')
@@ -67,6 +69,43 @@ def checks(root,pdf_text):
           'auxiliary header identifies the random expectation comparator')
     check('Extra TP is measured against the grade-random expectation, not against Grade+ML.' in manifest['tables'][1]['caption'],
           'auxiliary caption distinguishes the two possible contrasts')
+    source_rows=read('rows.csv');allocation_rows=read('allocations.csv')
+    queue=[r for r in source_rows if r['fold']=='0']
+    groups={grade:[r for r in queue if r['grade_code']==grade] for grade in ('a','b')}
+    positives={grade:sum(int(float(r['y'])) for r in group) for grade,group in groups.items()}
+    selected={grade:[r for r in group if r['grade_ml_b20']=='True'] for grade,group in groups.items()}
+    slots={grade:len(group) for grade,group in selected.items()}
+    detected={grade:sum(int(float(r['y'])) for r in group) for grade,group in selected.items()}
+    for grade,code in (('a',0),('b',1)):
+        q=one(allocation_rows,fold=0,budget=.2,grade=code)
+        check((int(q['n']),int(q['positives']),int(q['k']))==(len(groups[grade]),positives[grade],slots[grade]),
+              'example allocations agree with saved row decisions: '+grade)
+    check(slots['b']==len(groups['b']) and 0<slots['a']<len(groups['a']),'full b and partial a inclusion')
+    baseline=sum(slots[grade]*positives[grade]/len(groups[grade]) for grade in groups)
+    interval=one(ci,fold=0,budget=.2,method='grade_ml')
+    expected_example=dict(n=len(queue),k=math.floor(.2*len(queue)),a_n=len(groups['a']),b_n=len(groups['b']),
+        a_slots=slots['a'],b_slots=slots['b'],a_positives=positives['a'],b_positives=positives['b'],
+        a_ml_tp=detected['a'],b_ml_tp=detected['b'],a_random_expected_tp=slots['a']*positives['a']/len(groups['a']),
+        total_ml_tp=sum(detected.values()),total_random_expected_tp=baseline,extra_tp=sum(detected.values())-baseline,
+        ci_low=float(interval['ci_low']),ci_high=float(interval['ci_high']))
+    check(set(manifest['worked_allocation'])==set(expected_example),'complete worked-example fields')
+    for name,value in expected_example.items():
+        check(math.isclose(manifest['worked_allocation'][name],value,rel_tol=0,abs_tol=1e-12),'row-derived example '+name)
+    expression=f'{slots["a"]}*{positives["a"]}/{len(groups["a"])} = {num(expected_example["a_random_expected_tp"])}'
+    check(expression in md and effect(interval) in md,'worked arithmetic and conditional interval in manuscript')
+    version='e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535';base='https://github.com/junjie-yang11/seismic-bump-forecasting'
+    sources=[['Repository source snapshot',f'{base}/tree/{version}'],
+        ['Pilot protocol',f'{base}/blob/{version}/phase2/ranking/protocol.json'],
+        ['Ranking code',f'{base}/tree/{version}/phase2/ranking'],
+        ['Saved evidence and verification guide',f'{base}/blob/{version}/results/phase2/ranking/README.md'],
+        ['Numerical verifier',f'{base}/blob/{version}/phase2/ranking/verify.py'],
+        ['Integrated report',f'{base}/blob/{version}/reports/overall/integrated_research_report.pdf']]
+    check(manifest['source_snapshot']==version and manifest['source_links']==sources,'fixed source snapshot and destinations')
+    targets={r.get('Id'):r.get('Target') for r in relationships if r.get('Type','').endswith('/hyperlink') and r.get('TargetMode')=='External'}
+    word_links=[[''.join(link.itertext()),targets.get(link.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id'))]
+                for link in body.findall('.//w:hyperlink',NS)]
+    check(word_links==sources,'native Word hyperlinks match the fixed source labels and targets')
+    for label,url in sources:check('['+label+']('+url+')' in md,'clickable Markdown source: '+label)
     for statement in ('same total and grade-specific allocations','not an isolated sensor effect','not validation of real-time dispatch',
                       'reallocated and reranked','distinct from the block-bootstrap uncertainty','That study has not been performed'):
         check(statement in md,'scope: '+statement)
@@ -80,6 +119,13 @@ def checks(root,pdf_text):
         check('/Author' not in (reader.metadata or {}),'clean PDF author metadata')
         text='\n'.join(p.extract_text() or '' for p in reader.pages)
         compact=re.sub(r'\s+','',text)
+        check(re.sub(r'\s+','',expression) in compact,'worked arithmetic exported to PDF')
+        pdf_targets=set()
+        for page in reader.pages:
+            for annotation in page.get('/Annots',[]):
+                action=annotation.get_object().get('/A')
+                if action:pdf_targets.add(str(action.get_object().get('/URI','')))
+        for label,url in sources:check(url in pdf_targets,'clickable PDF source: '+label)
         check('GlobalTP-grade-randomE(TP)[95%CI]' in compact,'PDF auxiliary header names the random baseline')
         check('ExtraTPismeasuredagainstthegrade-randomexpectation,notagainstGrade+ML.' in compact,
               'PDF auxiliary caption identifies the subtraction baseline')
@@ -87,8 +133,8 @@ def checks(root,pdf_text):
             for row in table['rows']:
                 for cell in row:
                     for number in re.findall(r'\b\d+\.\d+\b',cell):check(number in text,'PDF table number '+number)
-    return dict(checks=count,tables=2,pages=pages,pdf_text_checked=pdf_text,
-                scope='Pilot report source/code/artifact hashes, all table values, Word/Markdown agreement and optional PDF text; numerical ranking replay is a separate check',
+    return dict(checks=count,tables=2,pages=pages,pdf_text_checked=pdf_text,source_links_checked=len(sources),worked_allocation_checked=True,
+                scope='Pilot report source/code/artifact hashes, tables and row-derived allocation example, native Word/Markdown links, optional PDF text and link annotations; numerical ranking replay is separate',
                 manifest_sha256=sha(out/'report_manifest.json'),outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf')})
 
 

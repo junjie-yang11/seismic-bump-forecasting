@@ -11,9 +11,45 @@ ROOT=Path(__file__).resolve().parents[1]
 DEST=ROOT/'reports/ranking'
 STEM='within_grade_ranking_pilot'
 TITLE='Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot'
+SOURCE_COMMIT='e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535'
+REPOSITORY='https://github.com/junjie-yang11/seismic-bump-forecasting'
+SOURCE_LINKS=[
+    ('Repository source snapshot',f'{REPOSITORY}/tree/{SOURCE_COMMIT}'),
+    ('Pilot protocol',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/phase2/ranking/protocol.json'),
+    ('Ranking code',f'{REPOSITORY}/tree/{SOURCE_COMMIT}/phase2/ranking'),
+    ('Saved evidence and verification guide',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/results/phase2/ranking/README.md'),
+    ('Numerical verifier',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/phase2/ranking/verify.py'),
+    ('Integrated report',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/reports/overall/integrated_research_report.pdf'),
+]
 
 
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def link_sources(destination):
+    """Give the same source labels native Word links and Markdown links."""
+    from docx import Document
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from docx.opc.constants import RELATIONSHIP_TYPE
+    from phase1.generate_report import scrub_report_package
+    word=destination/(STEM+'.docx');manuscript=destination/(STEM+'.md')
+    document=Document(word);text=manuscript.read_text(encoding='utf-8')
+    for label,url in SOURCE_LINKS:
+        paragraphs=[p for p in document.paragraphs if p.text==label]
+        if len(paragraphs)!=1:raise ValueError('Expected one source-link paragraph: '+label)
+        paragraph=paragraphs[0];paragraph.clear()
+        link=OxmlElement('w:hyperlink')
+        link.set(qn('r:id'),paragraph.part.relate_to(url,RELATIONSHIP_TYPE.HYPERLINK,is_external=True))
+        run=OxmlElement('w:r');properties=OxmlElement('w:rPr')
+        color=OxmlElement('w:color');color.set(qn('w:val'),'0563C1');properties.append(color)
+        underline=OxmlElement('w:u');underline.set(qn('w:val'),'single');properties.append(underline)
+        run.append(properties);value=OxmlElement('w:t');value.text=label;run.append(value);link.append(run)
+        paragraph._p.append(link)
+        original='\n\n'+label+'\n'
+        if text.count(original)!=1:raise ValueError('Expected one Markdown source label: '+label)
+        text=text.replace(original,'\n\n['+label+']('+url+')\n')
+    document.save(word);scrub_report_package(word);manuscript.write_bytes(text.encode('utf-8'))
 
 
 def build():
@@ -36,6 +72,21 @@ def build():
         protocol=ROOT/'phase2/ranking/protocol.json';inputs['phase2/ranking/protocol.json']=sha(protocol)
         plan=json.loads(protocol.read_text(encoding='utf-8'))
         e=read('results/phase2/ranking/evaluations.csv');ci=read('results/phase2/ranking/intervals.csv')
+        saved_rows=read('results/phase2/ranking/rows.csv');allocations=read('results/phase2/ranking/allocations.csv')
+        queue=[r for r in saved_rows if int(r['fold'])==0]
+        a=[r for r in queue if r['grade_code']=='a'];b=[r for r in queue if r['grade_code']=='b']
+        a_slots=int(one(allocations,fold=0,budget=.2,grade=0)['k'])
+        b_slots=int(one(allocations,fold=0,budget=.2,grade=1)['k'])
+        if len(a)+len(b)!=len(queue) or b_slots!=len(b) or not 0<a_slots<len(a):
+            raise ValueError('The worked example requires full grade-b and partial grade-a inclusion')
+        positive=lambda group:sum(int(float(r['y'])) for r in group)
+        detected=lambda group:positive([r for r in group if r['grade_ml_b20']=='True'])
+        example=one(e,fold=0,budget=.2);example_ci=one(ci,fold=0,budget=.2,method='grade_ml')
+        worked=dict(n=len(queue),k=int(example['k']),a_n=len(a),b_n=len(b),a_slots=a_slots,b_slots=b_slots,
+                    a_positives=positive(a),b_positives=positive(b),a_ml_tp=detected(a),b_ml_tp=detected(b),
+                    a_random_expected_tp=a_slots*positive(a)/len(a),
+                    total_ml_tp=int(example['grade_ml_tp']),total_random_expected_tp=float(example['expected_random_tp']),
+                    extra_tp=float(example_ci['extra_tp']),ci_low=float(example_ci['ci_low']),ci_high=float(example_ci['ci_high']))
         items=[dict(kind='title',text=TITLE),dict(kind='paragraph',text='Junjie Yang')];tables=[]
         def heading(text):items.append(dict(kind='heading',text=text))
         def para(text):items.append(dict(kind='paragraph',text=text))
@@ -72,12 +123,22 @@ def build():
         table('ranking_aux','Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.',
               ['Budget','K','Grade+ML TP','Global ML TP','Global TP - grade-random E(TP) [95% CI]'],rows)
         para('The primary comparison holds grade-specific allocations fixed. The global comparison holds only total K fixed and therefore answers a different allocation question. Under the original hypothetical cost, L=r*P+K-(r+1)*TP. At fixed P and K, loss change is determined entirely by detection change; a second cost grid would not supply independent evidence.')
+        heading('Worked allocation example')
+        para(f'Phase 1 has {worked["n"]} records and {worked["k"]} slots at the 20% budget. Both grade-priority methods include all {worked["b_n"]} grade-b records, covering the same {worked["b_positives"]} hazardous records. '
+             f'The remaining {worked["a_slots"]} slots come from {worked["a_n"]} grade-a records, including {worked["a_positives"]} hazardous records. ML detects {worked["a_ml_tp"]} in that group; random selection expects '
+             f'{worked["a_slots"]}*{worked["a_positives"]}/{worked["a_n"]} = {num(worked["a_random_expected_tp"])}. '
+             f'Total detections are {worked["total_ml_tp"]} versus expected {num(worked["total_random_expected_tp"])}: an increment of {effect(example_ci)}. '
+             'Only the partially selected grade-a group contributes to this within-grade increment. The interval includes zero; the example illustrates allocation rather than establishing a consistent ranking benefit.')
         para('These records are not verified simultaneously waiting inspection candidates. The pilot is retrospective batch ranking, not validation of real-time dispatch or accident prevention. Record order remains a temporal proxy. The present evidence does not establish a within-grade ranking increment or prove monitoring information useless. A source-attribution study would require matched grade-only and grade-plus-monitoring models, with shift type handled identically and equal fitting/tuning opportunities. That study has not been performed here.')
         heading('Code and evidence')
         para('The protocol and execution code are in phase2/ranking/. Results under results/phase2/ranking/ retain row-level decisions and random inclusion probabilities, allocations, evaluations, analytic allocation distributions and every block draw and reranked contrast. The verifier uses independent sorting, weighted-prefix reranking and SciPy hypergeometric probabilities. Author review and AI assistance follow the repository CONTRIBUTIONS.md statement; computational evidence comes from saved data and actual execution.')
+        para('The links below preserve the source and evidence snapshot at commit '+SOURCE_COMMIT[:7]+'. The report presentation is generated by the current reporting code.')
+        for label,_ in SOURCE_LINKS:para(label)
         write_outputs(items,DEST,STEM,TITLE)
+        link_sources(DEST)
         manifest=dict(title=TITLE,created_at_utc=datetime.now(timezone.utc).isoformat(),inputs=inputs,
                       generator_sha256=sha(Path(__file__)),writer_sha256=sha(ROOT/'reporting/overall.py'),tables=tables,
+                      worked_allocation=worked,source_snapshot=SOURCE_COMMIT,source_links=SOURCE_LINKS,
                       source_certificate_at_build=dict(sha256=sha(ROOT/'results/phase2/ranking/verification.json'),scope=certificate['scope']),
                       outputs={name:sha(DEST/name) for name in (STEM+'.md',STEM+'.docx')})
         (DEST/'report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
