@@ -6,7 +6,7 @@ XGBoost; weighted LR and unweighted 60-tree bagged CART retain the existing
 baseline designs. No additional model, feature selection or SHAP analysis is
 introduced.
 
-Read the [overall report](../reports/overall/integrated_research_report.pdf) for the joint interpretation with Stage 1. The original study's paired intervals cover contrasts among A/B/C and fixed/refitted rules. The independent [comparator supplement](comparators/README.md) adds policy-minus-no-alarm and ML-minus-direct-grade intervals without refitting or changing the original ML rules. The main fixed-model workflow differs from Stage 1's outer-refitted threshold workflow.
+Read the [overall report](../reports/overall/integrated_research_report.pdf) for the joint interpretation with Stage 1. The original study's paired intervals cover contrasts among A/B/C and fixed/refitted rules. The separately specified [comparator supplement](comparators/README.md) adds policy-minus-no-alarm and ML-minus-direct-grade intervals without refitting or changing the original ML rules. The main fixed-model workflow differs from Stage 1's outer-refitted threshold workflow. A separate [within-grade ranking pilot](ranking/README.md) examines equal-capacity batch ranking with the saved scores; it changes neither study's historical thresholds.
 
 ## Reproduce the experiment
 

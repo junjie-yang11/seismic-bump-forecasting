@@ -110,6 +110,25 @@ These commands do not refit models or change the original ML rules. The [reporti
 
 The first two commands execute the [separately specified supplement](../phase2/comparators/README.md) in the research environment: ML decisions remain frozen, while new direct grade thresholds are selected on the original reference rows. Use the reporting environment for the last three commands. Complete combinations are retained in the [generated appendix](../reports/overall/comparator_appendix.md). Quick Check independently verifies all supplementary decisions, resampling draws and intervals in its disposable snapshot.
 
+## Separate within-grade ranking pilot
+
+This exploratory analysis reuses the original fixed XGBoost test scores and audited grades. It has a separately saved protocol and does not refit models, change thresholds or select a preferred budget from test outcomes. First run the following in the research environment:
+
+```text
+python -B -m phase2.ranking.run
+python -B -m phase2.ranking.verify
+```
+
+Then use the reporting environment and native Word exporter:
+
+```text
+python -B -m reporting.ranking
+pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1 -ReportDirectory ranking -Stem within_grade_ranking_pilot
+python -B -m reporting.verify_ranking --pdf
+```
+
+The [module guide](../phase2/ranking/README.md) defines grade-specific allocations, exact capacity, seeded score ties and analytic random selection. Every block-bootstrap queue is reranked. The [evidence directory](../results/phase2/ranking/README.md) preserves all draws, increments and exact random-allocation distributions. Outputs and the short report are separate from the original two-stage evidence. Quick Check includes both new verifiers; PDF text and visual inspection remain separate authoring checks.
+
 ## Reading the records
 
 Current experiment manifests belong to `results/phase1/` and `results/phase2/`. Final manuscript provenance accompanies the paper. Dated review editions are kept in `docs/audits/`; historical paths and hashes describe their original editions. The final reports retain the study boundaries: record order is a temporal proxy, holdout results are supplementary, costs and capacity are hypothetical, and intervals condition on fixed predictions or fitted rules.

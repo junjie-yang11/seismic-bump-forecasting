@@ -198,6 +198,14 @@ def _checks(root, pdf_text):
         expected.append(row)
     check(tables['scenarios']==expected,'scenario loss, workload and precision from class-conditional counts')
     se=read('results/phase2/comparators/evaluations.csv');sc=read('results/phase2/comparators/intervals.csv')
+    sd=read('results/phase2/comparators/decisions.csv')
+    grade_b={field:sorted([r for r in sd if r['method']==field],key=lambda r:int(r['row'])) for field in ('seismic','seismoacoustic','ghazard')}
+    for field in ('seismoacoustic','ghazard'):
+        check([(r['row'],r['B_r10']) for r in grade_b[field]]==[(r['row'],r['B_r10']) for r in grade_b['seismic']],
+              'grade B decisions are identical, not merely dependent')
+    check(all((r['B_r10']=='True')==(int(r['fold'])==0) for r in grade_b['seismic']),'grade B alarms all phase 1 and none later')
+    check('three grade B rules make exactly the same row-level decisions' in md and '101 fewer false alerts' in md,'common B comparator and detection tradeoff explicit')
+    check('an unresolved pooled direction does not erase a resolved increase' in md,'phase and pooled conclusions remain distinct')
     def effect(r):return fmt(r['loss_delta100'],2)+' '+bounds(r['ci_low'],r['ci_high'],2)
     def integer(value):return str(int(float(value)))
     expected=[]

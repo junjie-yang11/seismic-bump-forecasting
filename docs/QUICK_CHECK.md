@@ -37,7 +37,9 @@ Replace `PORT` with your proxy's port. No proxy address is required or stored by
 | Supplement | `phase2/verify_supplement.py` | No-alarm reasons and value, finite/extreme rules, capacity contrasts and frozen scenarios |
 | Formulas | `phase1/verify_formulae.py` | Independent arithmetic reconstruction from saved row-level evidence |
 | Frozen comparisons | `phase2/comparators/verify.py` | Historical grade-rule enumeration, frozen ML decisions, all supplemental policy losses and complete paired block replay |
+| Ranking pilot | `phase2/ranking/verify.py` | Equal grade allocations, analytic random distributions and every reallocated/reranked block contrast |
 | Integrated paper | `reporting/verify_overall.py` | Source and artifact hashes; common cohorts, row-level loss and decision counts, table arithmetic, and Word/Markdown agreement |
+| Separate ranking report | `reporting/verify_ranking.py` | Pilot input/artifact hashes, both reconstructed tables, Word/Markdown agreement and PDF header |
 | Navigation and documents | `phase1/quick_check.py` | Current local file/image links, Stage 2 generator/input hashes, Word/Markdown text and tables, PDF file headers |
 
 Success ends with `QUICK CHECK PASSED`, a measured elapsed time and a statement that published sources/results/reports were preserved. Any failed check exits with a nonzero status. A terminal success line is not a stored certification for later file edits.

@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "started_at_utc": "2026-10-19T06:42:50.460170+00:00",
+  "inputs_sha256": {
+    "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
+    "phase2/locked_plan.json": "c773b1366ddf934cb02dba663a16d1398df0a4bc9491eae65c6afa1d4748149e",
+    "data/seismic-bumps.csv": "e41de6a3c2039ce5a50d081143bd573581f2b4c053a49e665145f5c16c1d1d7a",
+    "results/phase2/run_manifest.json": "0e7496fbec57b1bf4f5184f6036377be5011db533353626e31eb50ecde361f46",
+    "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6"
+  },
+  "code_sha256": {
+    "phase2/ranking/run.py": "ce3273ea53bedba79f7b9625b242f6e29ec2eaff5bb809415dd0ee1ffa1b4262",
+    "src/uncertainty.py": "4498fe6a712ade626182e077e2021f41b50a501d3ce4f5a4f3287b9441fad948"
+  },
+  "outputs_sha256": {
+    "allocations.csv": "0f8381d63bcaa4d4cec5e01725a077739c3a23be092fbd2273d44279a12fd2f4",
+    "bootstrap_counts.npz": "98d25f13cc831029700143c00c419110a318f703059a15bd5029ca7a75584a3d",
+    "bootstrap_replicates.npz": "b002b85e99c9f80f25d4ad5b402f1a70a5d251ceb1efece4b07d31b88a8a49f2",
+    "evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
+    "intervals.csv": "96d2fd5c5c45551cd9a1f69c36e69711005e27518bc03b8d8b67c79e485e1e5a",
+    "random_allocation_distribution.csv": "0e410a47eee2fe9b60db0de90adfadd3f4490eff88a1969f8471943f14410b43",
+    "rows.csv": "f9bbbf528629e65de4002e5254ee1f2d3b15e0bed9eb9de8b91fcd4c8a7e8dda"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1"
+  },
+  "elapsed_seconds": 5.460183600021992,
+  "scope": "Frozen-score equal-capacity ranking; analytical random allocation; all bootstrap queues reranked within phases; no fitting"
+}

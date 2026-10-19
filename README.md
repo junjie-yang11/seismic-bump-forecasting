@@ -13,14 +13,16 @@ It connects comparable-cohort forecast evidence to warning loss, coverage, capac
 | Study | Question | Final paper | Editable paper | Code and steps |
 | --- | --- | --- | --- | --- |
 | **Stage 1 · Forecast evaluation** | How do comparable test cohorts, probability calibration and model explanations change the interpretation of performance? | [PDF](reports/phase1/technical_report.pdf) | [Word](reports/phase1/technical_report.docx) | [Stage 1 guide](phase1/README.md) |
-| **Stage 2 · Warning decisions** | How do historical thresholds transfer under assumed missed-event costs and inspection capacity? | [PDF](reports/phase2/phase2_threshold_transfer_report.pdf) | [Word](reports/phase2/phase2_threshold_transfer_report.docx) | [Stage 2 guide](phase2/README.md) |
+| **Stage 2 · Locked warning experiment** | How do historical thresholds transfer under assumed missed-event costs and inspection capacity? | [Locked-study PDF](reports/phase2/phase2_threshold_transfer_report.pdf) | [Word](reports/phase2/phase2_threshold_transfer_report.docx) | [Stage 2 guide](phase2/README.md) · [Added grade/interval analysis](phase2/comparators/README.md) |
 
 Use Stage 1 for predictive detail and Stage 2 for decision detail. [Report navigation and generation](reports/README.md) distinguish the integrated paper from its supporting technical reports. The [research overview](docs/PROJECT_OVERVIEW.md) provides a short introduction.
+
+The **latest complete forecasting/decision analysis**, including direct grades and no-alarm intervals, is in the integrated report above and its [full comparison appendix](reports/overall/comparator_appendix.md). The original Stage 2 PDF retains the locked-experiment edition. A separate [within-grade ranking pilot](phase2/ranking/README.md) asks a new equal-capacity batch question; its [short report](reports/ranking/within_grade_ranking_pilot.pdf) does not replace the main study.
 
 ## Three findings
 
 1. **Who is tested changes the apparent validation gap.** On common test records, the original random-versus-record-order AP gap shrinks by 89.7% for LR and 86.9% for CART; residual differences are 0.0114 and 0.0188. This recalculation shows cohort sensitivity, not a causal decomposition of leakage or drift. [Matched results](results/phase1/shared_test_comparison.csv) · [Gap calculation](results/phase1/gap_attenuation.csv).
-2. **A historical optimum can have no later loss advantage over no alarms.** At `r=10`, pooled fixed XGBoost cost-plus-capacity rule C has differences of **0.00 to +0.82 relative loss units per 100 shifts** versus no alarms across four budgets. Negative differences would mean improvement. The result applies to the assumed cost and observed cohort. [No-alarm comparison](results/phase2/decision_value_pooled.csv).
+2. **Pooled loss point estimates and interval evidence answer different questions.** At `r=10`, pooled fixed XGBoost cost-plus-capacity rule C has point differences of **0.00 to +0.82 relative loss units per 100 shifts** versus no alarms. The nonzero pooled conditional intervals still include loss improvement and increase. Phase 1 C at 5% and 10% has no detections and entirely positive loss-difference intervals. These findings apply to the assumed cost and observed records. [Point comparisons](results/phase2/decision_value_pooled.csv) · [Phase and pooled intervals](results/phase2/comparators/intervals.csv).
 3. **Historical capacity feasibility does not guarantee future feasibility.** Budget rule A exceeds later capacity in **13/16 phase–budget settings**; C does so in **2/64 phase–budget–cost settings**. These are different, dependent setting counts, not directly comparable independent violation rates. Refitting can also change alerts at the same finite numerical cutoff. [Capacity and detection](results/phase2/capacity_tradeoffs.csv) · [Refitting](results/phase2/refit_transfer.csv).
 
 ## Read the decision tradeoff
@@ -43,6 +45,8 @@ Generated from [saved pooled results](results/phase2/decision_value_pooled.csv) 
 The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A and C−B comparisons by phase, budget and cost. Negative differences favor C; panels use separate color scales. The compact table above uses the separate no-alarm baseline. [Cost equality for frozen policies](results/phase2/frozen_policy_cost_boundaries.csv) distinguishes historical selection cost from evaluation cost. [Frozen prevalence scenarios](results/phase2/prevalence_decision_value.csv) also report expected precision alongside loss and workload; neither extension reselects a threshold.
 
 The [frozen-policy supplement](phase2/comparators/README.md) adds no-alarm loss intervals and direct rules for each of three hazard-grade fields. At `r=10`, the nonzero pooled C comparisons versus no alarms or the grade rules have intervals spanning zero. These conditional comparisons do not establish ML loss superiority or equivalence. [All phase/cost combinations](reports/overall/comparator_appendix.md) · [Saved evidence and independent replay](results/phase2/comparators/README.md).
+
+At `r=10`, the three grade B rules make identical decisions: all records in phase 1 are flagged and none later. Their common result is 36 detections, 480 false alerts and 516 alerts; XGBoost B gives 35, 379 and 414. Its lower loss against that common rule reflects 101 fewer false alerts at the cost of one fewer detection, not three distinct confirmations.
 
 ## Contribution and study scope
 
@@ -71,6 +75,8 @@ This checks saved evidence and formulas in a disposable copy, preserves publishe
 | 5 | Lock Stage 2 settings and separate fitting/reference/test areas | [Locked protocol](phase2/locked_plan.json), [fold fitting](phase2/experiment.py) | `results/phase2/fold_manifest.json`, `references.csv`, `tuning*` |
 | 6 | Select budget, cost and cost-plus-capacity rules; transfer fixed cutoffs | [Decision rules](phase2/decisions.py), [experiment](phase2/run.py) | `candidates.csv`, `audits.csv`, `decisions.csv`, `evaluations.csv` |
 | 7 | Compare loss, inspection demand and refitting; evaluate frozen prevalence scenarios | [Paired analysis](phase2/analysis.py), [decision accounting](phase2/supplement.py) | `comparisons.csv`, `capacity_tradeoffs.csv`, `refit_transfer.csv`, `prevalence_decision_value.csv` |
+| 7a · Supplement | Compare frozen ML rules with no alarms and direct hazard grades | [Separate protocol](phase2/comparators/protocol.json), [runner](phase2/comparators/run.py), [independent verifier](phase2/comparators/verify.py) | [All saved comparisons](results/phase2/comparators/README.md) |
+| 7b · Pilot | Test extra detections within the same grade and exact inspection allocation | [Ranking protocol](phase2/ranking/protocol.json), [runner](phase2/ranking/run.py), [independent replay](phase2/ranking/verify.py) | [Pilot evidence](results/phase2/ranking/README.md), [short report](reports/ranking/within_grade_ranking_pilot.pdf) |
 | 8 | Verify saved evidence and generate the papers | [Stage 1 checks](phase1/verify_results.py), [Stage 2 replay](phase2/verify.py), [equation checks](phase1/verify_formulae.py), [paper generators](reports/README.md) | [Final reports](reports/README.md), [verification guide](docs/REPRODUCING.md) |
 
 The filenames in Steps 3–4 belong to `results/phase1/`; those in Steps 5–7 belong to `results/phase2/`. [Result-file guides](results/README.md) explain their roles.
@@ -84,6 +90,7 @@ reports/
   overall/           Main integrated paper, conceptual overview and report provenance
   phase1/            Final Stage 1 Word, PDF and manuscript
   phase2/            Final Stage 2 Word, PDF, manuscript and report figures
+  ranking/           Separate exploratory within-grade ranking short report
 results/
   phase1/            Stage 1 predictions, metrics, explanations and diagnostic figures
   phase2/            Stage 2 references, thresholds, decisions and verification evidence

@@ -1,0 +1,18 @@
+{
+  "checks": 188,
+  "tables": 2,
+  "pages": 3,
+  "pdf_text_checked": true,
+  "scope": "Pilot report source/code/artifact hashes, all table values, Word/Markdown agreement and optional PDF text; numerical ranking replay is a separate check",
+  "manifest_sha256": "cbe6c63448b53ae0a7ebd8a5d3eeb98654d3ce20aff9c50d9c5b8237197062ce",
+  "outputs_sha256": {
+    "within_grade_ranking_pilot.md": "66d1d7f84d9f6eb7a655deb78726a6150cc40e8926d1439d8f7919a70d2b8948",
+    "within_grade_ranking_pilot.docx": "ba866fbf84dfc1b7fe0ff869b975d71fe453ed774c5791daddb6d207a09caed3",
+    "within_grade_ranking_pilot.pdf": "11a198409e6e8a96246945a8ba81d77b8c813af58c16c9f1b9f9fb59a2dd5264"
+  },
+  "passed": true,
+  "status": "passed",
+  "started_at_utc": "2026-10-19T06:45:49.678119+00:00",
+  "completed_at_utc": "2026-10-19T06:45:49.834488+00:00",
+  "verifier_sha256": "6ab3c154131d43bb7af7706f3974e750459ec543a7055b8da3af2b4eb894db4f"
+}

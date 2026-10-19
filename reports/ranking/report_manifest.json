@@ -1,0 +1,236 @@
+{
+  "title": "Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot",
+  "created_at_utc": "2026-10-19T06:44:17.397433+00:00",
+  "inputs": {
+    "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
+    "results/phase2/ranking/evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
+    "results/phase2/ranking/intervals.csv": "96d2fd5c5c45551cd9a1f69c36e69711005e27518bc03b8d8b67c79e485e1e5a"
+  },
+  "generator_sha256": "c7716bdea5029404b0a85c9760c9653d8c663287288ebaaf12c615f4c7586368",
+  "writer_sha256": "1b2f0a0d60f76705f48c1dd234e1dd30bdbd7a35da189c3234651c37c2227985",
+  "tables": [
+    {
+      "id": "ranking_primary",
+      "caption": "Table 1. Extra detections from grade-first ML relative to analytic grade-random expectation. Brackets are conditional 95% block intervals.",
+      "headers": [
+        "Phase",
+        "Budget",
+        "K",
+        "Random E(TP)",
+        "Grade+ML TP",
+        "Extra TP [95%]"
+      ],
+      "rows": [
+        [
+          "1",
+          "1%",
+          "5",
+          "0.87",
+          "0",
+          "-0.87 [-1.39, 0.34]"
+        ],
+        [
+          "1",
+          "5%",
+          "25",
+          "4.36",
+          "5",
+          "0.64 [-3.71, 2.99]"
+        ],
+        [
+          "1",
+          "10%",
+          "51",
+          "8.90",
+          "11",
+          "2.10 [-3.87, 4.43]"
+        ],
+        [
+          "1",
+          "20%",
+          "103",
+          "15.83",
+          "17",
+          "1.17 [-0.70, 5.68]"
+        ],
+        [
+          "2",
+          "1%",
+          "5",
+          "0.23",
+          "0",
+          "-0.23 [-0.40, -0.07]"
+        ],
+        [
+          "2",
+          "5%",
+          "25",
+          "1.15",
+          "0",
+          "-1.15 [-1.90, 0.43]"
+        ],
+        [
+          "2",
+          "10%",
+          "51",
+          "2.35",
+          "0",
+          "-2.35 [-3.26, 1.13]"
+        ],
+        [
+          "2",
+          "20%",
+          "103",
+          "4.75",
+          "5",
+          "0.25 [-3.11, 1.63]"
+        ],
+        [
+          "3",
+          "1%",
+          "5",
+          "0.22",
+          "0",
+          "-0.22 [-0.35, 0.84]"
+        ],
+        [
+          "3",
+          "5%",
+          "25",
+          "1.12",
+          "3",
+          "1.88 [-0.96, 4.31]"
+        ],
+        [
+          "3",
+          "10%",
+          "51",
+          "2.28",
+          "4",
+          "1.72 [-0.99, 5.57]"
+        ],
+        [
+          "3",
+          "20%",
+          "103",
+          "4.61",
+          "6",
+          "1.39 [-1.99, 4.58]"
+        ],
+        [
+          "4",
+          "1%",
+          "5",
+          "0.14",
+          "1",
+          "0.86 [-0.24, 1.85]"
+        ],
+        [
+          "4",
+          "5%",
+          "25",
+          "0.70",
+          "1",
+          "0.30 [-0.90, 3.01]"
+        ],
+        [
+          "4",
+          "10%",
+          "51",
+          "1.43",
+          "2",
+          "0.57 [-1.64, 4.54]"
+        ],
+        [
+          "4",
+          "20%",
+          "103",
+          "2.88",
+          "4",
+          "1.12 [-1.51, 4.86]"
+        ],
+        [
+          "Pooled",
+          "1%",
+          "20",
+          "1.47",
+          "1",
+          "-0.47 [-1.94, 1.09]"
+        ],
+        [
+          "Pooled",
+          "5%",
+          "100",
+          "7.33",
+          "9",
+          "1.67 [-4.35, 5.43]"
+        ],
+        [
+          "Pooled",
+          "10%",
+          "204",
+          "14.96",
+          "17",
+          "2.04 [-3.81, 9.31]"
+        ],
+        [
+          "Pooled",
+          "20%",
+          "412",
+          "28.08",
+          "32",
+          "3.92 [-2.05, 9.86]"
+        ]
+      ]
+    },
+    {
+      "id": "ranking_aux",
+      "caption": "Table 2. Global model ranking on each phase, pooled afterwards. This can change allocations between grades and does not isolate within-grade information.",
+      "headers": [
+        "Budget",
+        "K",
+        "Grade+ML TP",
+        "Global ML TP",
+        "Global extra TP [95%]"
+      ],
+      "rows": [
+        [
+          "1%",
+          "20",
+          "1",
+          "0",
+          "-1.47 [-2.01, 0.56]"
+        ],
+        [
+          "5%",
+          "100",
+          "9",
+          "7",
+          "-0.33 [-6.26, 4.53]"
+        ],
+        [
+          "10%",
+          "204",
+          "17",
+          "14",
+          "-0.96 [-6.80, 7.55]"
+        ],
+        [
+          "20%",
+          "412",
+          "32",
+          "31",
+          "2.92 [-9.31, 13.11]"
+        ]
+      ]
+    }
+  ],
+  "source_certificate_at_build": {
+    "sha256": "30965b729b0b6ad4ed5b93caf5fa29b05048970fc8a34300c9e262ed81eba4d9",
+    "scope": "Frozen source scores, exact grade quotas and K, independent ranking, analytical random allocation via SciPy, every block draw and weighted reranking replay; no fitting or real dispatch validation"
+  },
+  "outputs": {
+    "within_grade_ranking_pilot.md": "66d1d7f84d9f6eb7a655deb78726a6150cc40e8926d1439d8f7919a70d2b8948",
+    "within_grade_ranking_pilot.docx": "ba866fbf84dfc1b7fe0ff869b975d71fe453ed774c5791daddb6d207a09caed3"
+  }
+}

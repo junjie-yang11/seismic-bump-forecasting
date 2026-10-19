@@ -30,8 +30,9 @@ def check_navigation(root):
     guides = [root / 'README.md'] + list((root / 'docs').glob('*.md'))
     guides += [root / folder / 'README.md' for folder in FOLDERS if (root / folder / 'README.md').exists()]
     guides += list((root / 'reports').rglob('*.md')) + list((root / 'results').rglob('README.md'))
+    guides += list((root / 'phase2').rglob('README.md'))
     count = 0
-    for guide in guides:
+    for guide in sorted(set(guides)):
         for target in re.findall(r'\]\(([^)]+)\)', guide.read_text(encoding='utf-8')):
             if '://' in target or target.startswith(('mailto:', '#')):
                 continue
@@ -103,7 +104,9 @@ def run(proxy=None):
         ('Supplementary decision accounting', ['-m', 'phase2.verify_supplement']),
         ('Independent formula reconstruction', ['-m', 'phase1.verify_formulae']),
         ('Frozen-policy and direct-grade comparisons', ['-m', 'phase2.comparators.verify']),
+        ('Within-grade ranking and reranking uncertainty', ['-m', 'phase2.ranking.verify']),
         ('Integrated report and row-level decision agreement', ['-m', 'reporting.verify_overall']),
+        ('Separate ranking report agreement', ['-m', 'reporting.verify_ranking']),
     )
     with tempfile.TemporaryDirectory(prefix='seismic-evidence-') as directory:
         snapshot = Path(directory)

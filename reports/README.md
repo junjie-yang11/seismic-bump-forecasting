@@ -17,6 +17,10 @@ The [integrated generator and commands](../reporting/README.md) use existing evi
 
 The integrated report includes the separately specified [frozen-policy and direct-grade supplement](../phase2/comparators/README.md). Its [complete phase/cost appendix](overall/comparator_appendix.md) retains every A/B/C combination, with detections, missed shifts, false alerts, workload, excess and paired intervals. The original stage papers remain the locked-study technical edition.
 
+For the latest complete threshold-decision analysis, use the integrated report and its appendix above. The Stage 2 PDF is the original locked-experiment technical report; it does not include the later direct-grade supplement.
+
+The **separate exploratory ranking pilot** asks whether complete-model scores add detections within the same seismic grade at identical inspection allocations: [PDF](ranking/within_grade_ranking_pilot.pdf) · [Word](ranking/within_grade_ranking_pilot.docx) · [Online report](ranking/within_grade_ranking_pilot.md). Its [protocol and commands](../phase2/ranking/README.md), [evidence](../results/phase2/ranking/README.md), [report manifest](ranking/report_manifest.json) and [verification](ranking/verification.json) are separate from the locked threshold study. It reuses saved scores and does not establish sensor-specific value.
+
 The [Stage 2 report checker](../phase2/verify_report.py) compares the manuscript, Word tables, PDF numbers and input/generator hashes. Its [verification record](phase2/report_verification.json) identifies the checked report hashes and verifier version. Inspect the rendered pages as well as these computational checks. Use [the homepage table updater](../phase2/update_readme.py) after rebuilding the second paper's presentation.
 
 See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The current structure places all final papers here; older review editions record their original paths.

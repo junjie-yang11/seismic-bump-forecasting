@@ -162,6 +162,7 @@ def assemble():
     comparisons = s2('comparisons'); capacity = s2('capacity_tradeoffs')
     boundary = s2('frozen_policy_cost_boundaries'); scenarios = s2('prevalence_decision_value')
     supplement = s2('comparators/evaluations'); supplement_ci = s2('comparators/intervals')
+    supplement_decisions = s2('comparators/decisions')
     grade_metadata = evidence.json('results/phase2/comparators/grade_metadata.json')
     evidence.json('phase2/comparators/protocol.json')
     xv = [r for r in evaluations if match(r, model='XGBoost', scheme='time', workflow='fixed')]
@@ -173,6 +174,16 @@ def assemble():
     over_a, over_c = sum(float(r['excess'])>0 for r in va), sum(float(r['excess'])>0 for r in vc)
     reductions = ', '.join(f'{float(r["gap_reduction_fraction"])*100:.1f}% for {r["model"]}' for r in gaps)
     a20=one(main,mechanism='A',budget=.2);c20=one(main,mechanism='C',budget=.2)
+    grade_b={field:sorted([r for r in supplement_decisions if r['method']==field],key=lambda r:int(r['row']))
+             for field in ('seismic','seismoacoustic','ghazard')}
+    for field in ('seismoacoustic','ghazard'):
+        if [(r['row'],r['B_r10']) for r in grade_b[field]]!=[(r['row'],r['B_r10']) for r in grade_b['seismic']]:
+            raise ValueError('The stated common grade-B decision no longer holds')
+    if not all((r['B_r10']=='True')==(int(r['fold'])==0) for r in grade_b['seismic']):
+        raise ValueError('The stated phase pattern for grade B no longer holds')
+    gb=one(supplement,method='seismic',fold=-1,mechanism='B',cost=10)
+    xb=one(supplement,method='XGBoost',fold=-1,mechanism='B',cost=10)
+    fewer_fp=integer(float(gb['fp'])-float(xb['fp']));fewer_tp=integer(float(gb['tp'])-float(xb['tp']))
 
     def effect(row):
         return num(row['loss_delta100'],2)+' '+interval(row['ci_low'],row['ci_high'],2)
@@ -200,7 +211,9 @@ def assemble():
          'while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. '
          f'In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of {span(float(r["loss_delta_no_alarm100"]) for r in selected_c)} units per 100 records versus no alarms. '
          f'At the 20% historical budget, C reduces alerts from A\'s {integer(a20["alerts"])} to {integer(c20["alerts"])}, while detections fall from {integer(a20["tp"])}/{positives} to {integer(c20["tp"])}/{positives}. '
-         'A separately specified frozen-policy supplement finds that the nonzero pooled C-minus-no-alarm intervals cross zero at this cost, as do its comparisons with three direct hazard-grade rules. Cost-only B has lower loss than those grade rules, but its interval against no alarms still crosses zero. Historical capacity feasibility does not guarantee later feasibility, and model refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.')
+         'Phase 1 C at 5% and 10% produces no detections and positive loss-difference intervals versus no alarms; the nonzero pooled C intervals cross zero. '
+         f'The three grade B rules produce identical decisions: all alarms in phase 1 and none later. XGBoost B makes {fewer_fp} fewer false alerts and {fewer_tp} fewer detection, lowering assumed loss against that common rule, while its no-alarm interval crosses zero. '
+         'Historical capacity feasibility does not guarantee later feasibility, and refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.')
     para('Keywords: seismic hazard; forecast evaluation; average precision; warning decisions; threshold transfer; inspection capacity')
     heading('1 Introduction and research objective')
     para('Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. A model can discriminate between labels, assign more accurate probabilities or rely on interpretable signals without establishing that its selected alerts lower missed-hazard and false-alert loss. The research question is therefore: what forecast evidence and historical selection rules support warning decisions on subsequent mining records under explicit cost and capacity assumptions?')
@@ -369,7 +382,8 @@ def assemble():
     b_values=[effect(r) for r in b_grade]
     b_text=b_values[0]+' for each grade field' if len(set(b_values))==1 else '; '.join(field+': '+value for field,value in zip(('seismic','seismoacoustic','ghazard'),b_values))
     para(f'The selection mechanism changes the comparison. For cost-only B at r=10, pooled ML-minus-grade loss is {b_text}, with all three intervals below zero. In contrast, B-minus-no-alarm is {effect(b_none)}. '
-         'Thus lower loss than these grade rules does not establish lower loss than no alarms. The three B grade contrasts are dependent comparisons on the same records; they are not three independent replications. These exploratory, unadjusted results are retained alongside the C findings without selecting a new preferred workflow.')
+         f'The three grade B rules make exactly the same row-level decisions: every phase-1 record is flagged and no record is flagged in phases 2-4. Each gives {integer(gb["tp"])} detections, {integer(gb["fp"])} false alerts and {integer(gb["alerts"])} alerts; XGBoost gives {integer(xb["tp"])}, {integer(xb["fp"])} and {integer(xb["alerts"])} respectively. '
+         f'The lower assumed loss therefore reflects {fewer_fp} fewer false alerts at the cost of {fewer_tp} fewer detection. These are three comparisons with the same final rule, not three distinct empirical confirmations. Lower loss than that rule does not establish lower loss than no alarms. These exploratory, unadjusted results are retained without selecting a new preferred workflow.')
 
     heading('5.3 Historical selection explains capacity and no-alarm outcomes', page=True)
     rows=[]
@@ -433,11 +447,14 @@ def assemble():
     heading('6 Integrated interpretation and next evidence', page=True)
     para('The two analyses connect through evidence requirements. Common-cohort comparisons make protocol gaps interpretable, but do not isolate leakage. Training-prior correction improves probability errors relative to the raw model, while the reference determines the sign of Brier skill. Large feature attribution describes a fitted model; a refitted ablation can show a different and uncertain predictive contribution. Each result supports a defined interpretation rather than an undifferentiated claim of a better warning model.')
     para('Decision evaluation adds information that ranking, probability assessment and attribution do not supply. At the displayed cost, C can lower loss and inspection demand relative to A while having no favorable pooled point difference against no alarms. Historical capacity choices explain why rules are silent or active, whereas later counts show their transferred coverage and workload. Refitting changes which score function is subjected to a historical cutoff. These comparisons establish workflow-specific tradeoffs; they do not identify a universally preferred policy.')
+    para('Phase-specific evidence must accompany the pooled comparison. In phase 1, C at 5% and 10% has no detections and loss-difference intervals entirely above zero. The nonzero pooled intervals cross zero. Pooling therefore does not describe every phase, and an unresolved pooled direction does not erase a resolved increase within the stated phase and conditional analysis.')
     para('The shared cohort is also the main inference boundary. Recorded order supplies no verified timestamps or longwall continuity. Deduplication reproduces a public mirror, not a certified operational history. Costs, capacity slots and the absence of an excess-demand penalty are explicit scenario assumptions. The target counts hazardous shifts, not accidents, executed inspections or interventions. Two analyses of the same observed records increase explanatory coverage, not the number of independent validation cohorts.')
     para('The separately specified supplement adds direct grade rules and the previously missing no-alarm and ML-minus-grade paired contrasts. It strengthens the decision comparison without changing the original model selection. At r=10, pooled C intervals do not identify an ML loss advantage over those comparators, whereas cost-only B has lower loss than the grade rules but no resolved loss direction against no alarms. Decision value therefore depends on both selection mechanism and comparator. Full refit/reselection uncertainty remains a separate research task. Cross-row lag features require continuity and working-face evidence, or must remain an explicitly record-order sensitivity analysis. Prospective intervention and independent-site outcomes would address engineering effectiveness beyond these retrospective comparisons.')
     heading('7 Conclusions')
     para(f'Comparable-cohort evaluation reduces the original AP protocol gaps by {reductions}; the attenuation quantifies cohort sensitivity, not a causal share of leakage or drift. The decision analysis then exposes the coverage cost of reducing workload: at r=10 and budget 20%, C changes A\'s {integer(a20["alerts"])} alerts and {integer(a20["tp"] )}/{positives} detections to {integer(c20["alerts"])} alerts and {integer(c20["tp"])}/{positives} detections. '
-         'The nonzero pooled C loss intervals against no alarms and direct grades retain both improvement and increase. Cost-only B has lower loss than the grade rules, yet its no-alarm interval crosses zero. Joint loss, detection and workload accounting therefore provides the useful engineering evidence: a historical optimum, a feasible budget or an advantage over one comparator alone does not establish later decision value, and model updating can change alerts at the same cutoff.')
+         'Phase 1 C at 5% and 10% has no detections and positive loss-difference intervals; the nonzero pooled C intervals span zero. '
+         f'The three grade B rules collapse to one decision pattern, all alarms in phase 1 and none later. XGBoost B lowers assumed loss through {fewer_fp} fewer false alerts and {fewer_tp} fewer detection, but its interval against no alarms still crosses zero. '
+         'Joint loss, detection and workload accounting shows why historical optimality, capacity feasibility and an advantage over one comparator do not establish later decision value on their own.')
     heading('Data, code, contributions and AI assistance')
     para('The repository retains source mapping, predictions, historical candidates, row-level decisions, resampling outputs and version-specific checks. The reporting guide documents generation and verification; both stage papers provide technical detail. Code and evidence: https://github.com/junjie-yang11/seismic-bump-forecasting.')
     para('The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational and reference checks, and writing. CONTRIBUTIONS.md documents these roles. AI-assisted writing workflows do not supply scientific evidence for the research conclusions.')
@@ -447,7 +464,7 @@ def assemble():
     return items, tables, evidence.inputs, certificates
 
 
-def write_outputs(items):
+def write_outputs(items, destination=None, stem=STEM, title=TITLE):
     from docx import Document
     from docx.shared import Inches, Pt
     from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -455,6 +472,7 @@ def write_outputs(items):
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from phase1.generate_report import scrub_report_package
+    destination=Path(destination) if destination is not None else DEST
     doc=Document(); sec=doc.sections[0]
     sec.page_width=Inches(8.27); sec.page_height=Inches(11.69)
     sec.top_margin=sec.bottom_margin=Inches(.75)
@@ -525,12 +543,14 @@ def write_outputs(items):
                     p.paragraph_format.line_spacing=1.02
                     p.paragraph_format.space_before=p.paragraph_format.space_after=Pt(3)
                     p.paragraph_format.keep_with_next=(ri<len(t.rows)-1 if item['id'] in
-                        ('no_alarm_intervals','grade_decisions','grade_intervals') else ri<2)
+                        ('no_alarm_intervals','grade_decisions','grade_intervals','ranking_primary','ranking_aux') else ri<2)
                     p.alignment=WD_ALIGN_PARAGRAPH.CENTER if ri==0 else (WD_ALIGN_PARAGRAPH.LEFT if ci==0 or item['id']=='protocols' else WD_ALIGN_PARAGRAPH.RIGHT)
                     for run in p.runs:run.font.size=Pt(9.3 if len(headers)>6 else 10);run.bold=ri==0
         widths={'no_alarm_intervals':[.65,.65,2.75,.75,.75,.85],
                 'grade_decisions':[.65,1.12,1.93,.42,.42,.42,.65,.79],
-                'grade_intervals':[.6,.7,1.7,1.7,1.7]}.get(item['id'])
+                'grade_intervals':[.6,.7,1.7,1.7,1.7],
+                'ranking_primary':[.55,.65,.45,1.,1.,2.75],
+                'ranking_aux':[.6,.5,1.,1.,3.3]}.get(item['id'])
         if widths:
             t.autofit=False
             for column,width in zip(t.columns,widths):column.width=Inches(width)
@@ -539,9 +559,9 @@ def write_outputs(items):
         doc.add_paragraph().paragraph_format.space_after=Pt(1)
     footer=sec.footer.paragraphs[0];footer.alignment=WD_ALIGN_PARAGRAPH.CENTER
     field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
-    doc.core_properties.author='';doc.core_properties.last_modified_by='';doc.core_properties.title=TITLE
-    doc.save(DEST/(STEM+'.docx'));scrub_report_package(DEST/(STEM+'.docx'))
-    (DEST/(STEM+'.md')).write_bytes(('\n\n'.join(md)+'\n').encode('utf-8'))
+    doc.core_properties.author='';doc.core_properties.last_modified_by='';doc.core_properties.title=title
+    doc.save(destination/(stem+'.docx'));scrub_report_package(destination/(stem+'.docx'))
+    (destination/(stem+'.md')).write_bytes(('\n\n'.join(md)+'\n').encode('utf-8'))
 
 
 def write_comparison_appendix():

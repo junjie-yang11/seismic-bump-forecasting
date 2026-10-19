@@ -30,13 +30,14 @@
     "results/phase2/prevalence_decision_value.csv": "7f5e9f9230115562c434fb17c5389fc100493517b2cd79c5a40717cb7df3dcd4",
     "results/phase2/comparators/evaluations.csv": "19ba7dd6016de3006ae080d2f071533b2fd2d95c0dc263e54c52b4dc17126468",
     "results/phase2/comparators/intervals.csv": "c5c06f8df03d1967be522edc96932e62d6b81792d288ff99552d8d8b728168ae",
+    "results/phase2/comparators/decisions.csv": "00ebb57298b7da475dfdbeec5d4733c41a8d65d538c525d1109c0b2360e51c13",
     "results/phase2/comparators/grade_metadata.json": "894a38dbc77ed07c24f0588869429f2ad6e554511b5d013456188f0aae78669b",
     "phase2/comparators/protocol.json": "588f3a9b905094cf9447cc4906b4a01b8d96b781e4609364dc2608b8a4cf6716",
     "reports/overall/evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
     "results/phase1/figures/reliability_lr.png": "82e7c14da8bd992ccd7850097d46a564afec639d23c2e88c18361ee6eeb9719d",
     "results/phase1/figures/shap_phase_stability.png": "cc373b05a2d815eeb74b04cc279231c71735693d319cc9aeeedf62b652e34b99"
   },
-  "generator_sha256": "c5e60092b5a3c81b7a082936539d091c81526e48f0c8c9f8d84f179af1950ab2",
+  "generator_sha256": "1b2f0a0d60f76705f48c1dd234e1dd30bdbd7a35da189c3234651c37c2227985",
   "tables": [
     {
       "id": "cohorts",
@@ -1063,8 +1064,8 @@
     }
   },
   "outputs": {
-    "integrated_research_report.md": "0c4376c1d12f8e15d2d4f784e954e7b3b899d79d8411b18db22b63bb594f6ecd",
-    "integrated_research_report.docx": "7d7b8120fa66d808d09c7baa49091086fbf97b64829624ddaf45e0d0496bdb49",
+    "integrated_research_report.md": "5e057e6c00940ca4a153423b0301b76077f5270a67b3242f10abd519e6c74a66",
+    "integrated_research_report.docx": "c77f6d80a97eb239c8a45c1fc880a13ec61c95e4b0338cca8c021aa68c8bccd5",
     "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
     "comparator_appendix.md": "fb06842fc03d6d278ed8a86512861059751e32f57ea814f712ae9577ccc627ba"
   }

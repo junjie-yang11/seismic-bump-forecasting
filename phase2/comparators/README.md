@@ -1,6 +1,6 @@
 # Frozen policies and direct hazard grades
 
-This independent Stage 2 supplement adds policy-minus-no-alarm and fixed-XGBoost-minus-grade loss intervals. It reuses the saved fixed XGBoost model decisions and original reference/test rows. It fits no model and does not reselect any ML threshold. The [protocol](protocol.json) was recorded before these supplemental calculations, after inspection of the original study; this is exploratory retrospective work.
+This separately specified Stage 2 supplement adds policy-minus-no-alarm and fixed-XGBoost-minus-grade loss intervals. It reuses the saved fixed XGBoost model decisions and original reference/test rows. It fits no model and does not reselect any ML threshold. The [protocol](protocol.json) was recorded before these supplemental calculations, after inspection of the original study; this is exploratory retrospective work.
 
 Run from the repository root, using the existing research environment and cached audited data mirror:
 

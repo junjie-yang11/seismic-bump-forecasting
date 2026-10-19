@@ -13,6 +13,7 @@ data/*
 !results/phase1/*.csv
 !results/phase2/*.csv
 !results/phase2/comparators/*.csv
+!results/phase2/ranking/*.csv
 
 # ---------------------------------------------------------------------------
 # Python

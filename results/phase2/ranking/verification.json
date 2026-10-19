@@ -1,0 +1,15 @@
+{
+  "checks": 26342,
+  "rows": 2063,
+  "evaluations": 20,
+  "intervals": 40,
+  "reranked_bootstrap_contrasts": 80000,
+  "manifest_sha256": "3ba8a65f9674af47f939dd3701fe81d153583aefc8bc3621ea12e58c4b88aa18",
+  "protocol_sha256": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
+  "scope": "Frozen source scores, exact grade quotas and K, independent ranking, analytical random allocation via SciPy, every block draw and weighted reranking replay; no fitting or real dispatch validation",
+  "passed": true,
+  "status": "passed",
+  "started_at_utc": "2026-10-19T06:43:03.632762+00:00",
+  "completed_at_utc": "2026-10-19T06:43:08.266968+00:00",
+  "verifier_sha256": "988acdb40e43f17ebc38c3bce3051a1009bccfed6a012ed25e4ff636c3286fa1"
+}
