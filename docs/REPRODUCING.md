@@ -27,11 +27,14 @@ In the baseline environment:
 
 ```powershell
 python -m phase1.audit_source
+python -B -m phase1.record_environment
 python -m phase1.run_experiments
 python -m phase1.run_engineering
 ```
 
-`audit_source --source PATH_TO_ARFF` uses an existing official file; `--proxy URL` explicitly supplies a download proxy. Data loading downloads the mirror when the local cache is absent. No cached source file is committed. Before parsing current source inputs, the audit invalidates the previous match claim; a failed check records its error. This verifies the official-to-mirror transformation and row mapping, rather than independently validating the original field measurements.
+`audit_source --source PATH_TO_ARFF` uses an existing official file; `--proxy URL` explicitly supplies a download proxy. Data loading downloads the mirror when the local cache is absent. No cached source file is committed. Before acquiring or parsing current source inputs, the audit invalidates the previous match claim. Download, ZIP, cache-write and comparison failures save a failed status and their error. This verifies the official-to-mirror transformation and row mapping, rather than independently validating the original field measurements.
+
+Run `record_environment` in the same activated baseline environment immediately before fitting, in the separate reproduction checkout. It writes that run's `results/phase1/environment.txt`; Stage 2 subsequently records the first-stage evidence snapshot. When only checking saved results, preserve the published environment record instead of replacing it with the checking environment.
 
 In the research environment:
 

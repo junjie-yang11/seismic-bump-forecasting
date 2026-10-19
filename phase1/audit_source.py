@@ -54,26 +54,34 @@ def _audit(source):
     (ROOT/'results/phase1/source_audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2))
 
-def audit(source):
-    """Invalidate an earlier match before parsing the current source inputs."""
+def audit(source=None, proxy=None):
+    """Record acquisition and comparison as one failure-safe audit invocation."""
     output = ROOT / 'results/phase1/source_audit.json'
     output.parent.mkdir(parents=True, exist_ok=True)
     record = dict(status='running', order_preserving_dedup_matches=False)
     output.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
     try:
-        _audit(source)
+        if source is None:
+            opener = (urllib.request.build_opener(urllib.request.ProxyHandler({'https': proxy}))
+                      if proxy else urllib.request.build_opener())
+            with opener.open(URL, timeout=40) as response:
+                payload = response.read()
+            with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+                original = archive.read('seismic-bumps.arff')
+            (ROOT / 'data').mkdir(exist_ok=True)
+            source = ROOT / 'data/original-seismic-bumps.arff'
+            source.write_bytes(original)
+        _audit(Path(source))
     except (Exception, KeyboardInterrupt) as error:
         record.update(status='failed', error_type=type(error).__name__, error=str(error))
         output.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
         raise
 
-if __name__=='__main__':
+def main(argv=None):
     ap=argparse.ArgumentParser(); ap.add_argument('--source'); ap.add_argument('--proxy')
-    args=ap.parse_args()
-    if args.source: path=Path(args.source)
-    else:
-        opener=urllib.request.build_opener(urllib.request.ProxyHandler({'https':args.proxy})) if args.proxy else urllib.request.build_opener()
-        with opener.open(URL,timeout=40) as r: archive=zipfile.ZipFile(io.BytesIO(r.read()))
-        (ROOT / 'data').mkdir(exist_ok=True)
-        path=ROOT/'data/original-seismic-bumps.arff'; path.write_bytes(archive.read('seismic-bumps.arff'))
-    audit(path)
+    args=ap.parse_args(argv)
+    audit(args.source, args.proxy)
+
+
+if __name__=='__main__':
+    main()
