@@ -1,12 +1,12 @@
 {
   "title": "Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot",
-  "created_at_utc": "2026-10-19T06:44:17.397433+00:00",
+  "created_at_utc": "2026-10-19T08:22:27.090598+00:00",
   "inputs": {
     "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
     "results/phase2/ranking/evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
     "results/phase2/ranking/intervals.csv": "96d2fd5c5c45551cd9a1f69c36e69711005e27518bc03b8d8b67c79e485e1e5a"
   },
-  "generator_sha256": "c7716bdea5029404b0a85c9760c9653d8c663287288ebaaf12c615f4c7586368",
+  "generator_sha256": "62874163c14c4b5a1a55894c1c38b4779b5fa43bee1c0dc6933b02429c740c3c",
   "writer_sha256": "1b2f0a0d60f76705f48c1dd234e1dd30bdbd7a35da189c3234651c37c2227985",
   "tables": [
     {
@@ -185,13 +185,13 @@
     },
     {
       "id": "ranking_aux",
-      "caption": "Table 2. Global model ranking on each phase, pooled afterwards. This can change allocations between grades and does not isolate within-grade information.",
+      "caption": "Table 2. Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.",
       "headers": [
         "Budget",
         "K",
         "Grade+ML TP",
         "Global ML TP",
-        "Global extra TP [95%]"
+        "Global TP - grade-random E(TP) [95% CI]"
       ],
       "rows": [
         [
@@ -230,7 +230,7 @@
     "scope": "Frozen source scores, exact grade quotas and K, independent ranking, analytical random allocation via SciPy, every block draw and weighted reranking replay; no fitting or real dispatch validation"
   },
   "outputs": {
-    "within_grade_ranking_pilot.md": "66d1d7f84d9f6eb7a655deb78726a6150cc40e8926d1439d8f7919a70d2b8948",
-    "within_grade_ranking_pilot.docx": "ba866fbf84dfc1b7fe0ff869b975d71fe453ed774c5791daddb6d207a09caed3"
+    "within_grade_ranking_pilot.md": "529af8868256fcf596d73881e23eaf1873e10ac98022eb62eb5f58449aff178d",
+    "within_grade_ranking_pilot.docx": "bac2b680a7a2e24561e1b8e42fcf116af5d3e414a24239439c7e232892d2b993"
   }
 }

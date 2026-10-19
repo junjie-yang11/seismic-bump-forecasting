@@ -1,6 +1,6 @@
 # Research overview
 
-Read the [integrated paper](../reports/overall/integrated_research_report.pdf) for the complete argument, or use this page for a short overview. The stage reports below are supporting technical documents. They share evaluated records; their sample sizes do not represent independent cohorts.
+This overview introduces the research questions, main findings, contribution and study boundaries. The [integrated report](../reports/overall/integrated_research_report.pdf) develops the complete argument; the stage-specific reports below provide supporting technical detail. The two stages share evaluated records; their sample sizes do not represent independent validation cohorts.
 
 ## The engineering question
 
@@ -35,7 +35,7 @@ The [separately specified frozen-policy supplement](../phase2/comparators/README
 
 The [separate ranking pilot](../phase2/ranking/README.md) tests full-score ranking within seismic grades at identical inspection allocations. It is an exploratory batch task using saved scores, not a new fitted model or real dispatch study. Its results remain in a [short report](../reports/ranking/within_grade_ranking_pilot.pdf); they do not change the two-stage study's main question.
 
-The work contributed in this repository is the data-source audit, the implementation of comparable-cohort evaluation, training-local probability and threshold handling, the engineering feature comparisons, and the reproducible accounting of loss, capacity and refitting. Saved scores, candidate decisions and independent checks connect each reported result to its calculation. This supplies a reproducible evaluation workflow for examining which forecast properties and historical decision rules carry into later records. Calibration gains, uncertain feature-removal contrasts and transferred decision tradeoffs each inform that assessment.
+The work contributed in this repository is the data-source audit, the implementation of comparable-cohort evaluation, training-local probability and threshold handling, the engineering feature comparisons, and the reproducible accounting of loss, capacity and refitting. Saved scores, candidate decisions and verification through separate calculation paths connect reported results to their underlying computations. This supplies a reproducible evaluation workflow for examining which forecast properties and historical decision rules carry into later records. Calibration gains, uncertain feature-removal contrasts and transferred decision tradeoffs each inform that assessment. The [verification guide](QUICK_CHECK.md#verification-scope) distinguishes source/file checks, separate-path recalculation and model refitting/replay; these project-run checks do not constitute external third-party replication.
 
 LR, CART, XGBoost, TreeSHAP, cost-sensitive loss and block resampling are established methods. The contribution is their implementation and joint empirical evaluation in this mining case. [Related-work comparison](RELATED_WORK.md) separates method origins from the project's findings.
 

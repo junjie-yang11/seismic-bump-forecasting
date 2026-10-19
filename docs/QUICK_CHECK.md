@@ -27,6 +27,18 @@ python -B -m phase1.quick_check --proxy http://127.0.0.1:PORT
 
 Replace `PORT` with your proxy's port. No proxy address is required or stored by default. Temporary outputs disappear when the command exits.
 
+## Verification scope
+
+The repository distinguishes three types of project-run verification:
+
+| Verification type | What it establishes | Scope |
+| --- | --- | --- |
+| Source and file checks | Which inputs were used and whether saved files match the recorded version | Hashes and mappings identify inputs and transformations; they do not independently validate the original mine measurements |
+| Recalculation through separate paths | Whether metrics, decisions and report tables can be reconstructed from retained evidence | Independent algorithms or calculation paths check arithmetic and accounting; they are not an external researcher's replication |
+| Model refitting and replay | Whether the specified environment reproduces model scores and transferred alert decisions | Requires actual fitting and replay commands; the records identify their environment, inputs and comparison criteria |
+
+Here, an independent verifier means a separate implementation or calculation path. The checks were performed within this AI-assisted project workflow; no external third-party replication is claimed. Saved model-replay records describe the runs they record. Quick Check covers saved evidence and behavior tests and does not rerun the complete research models. Use the [full reproduction sequence](REPRODUCING.md) for model refitting and replay.
+
 ## What is checked
 
 | Check | Existing code used | Scope |

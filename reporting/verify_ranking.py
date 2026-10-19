@@ -63,6 +63,10 @@ def checks(root,pdf_text):
         e=one(ev,fold=-1,budget=budget);r=one(ci,fold=-1,budget=budget,method='global_ml')
         expected.append([f'{100*budget:.0f}%',e['k'],e['grade_ml_tp'],e['global_ml_tp'],effect(r)])
     check(manifest['tables'][1]['rows']==expected,'auxiliary global ranking rows')
+    check(manifest['tables'][1]['headers'][-1]=='Global TP - grade-random E(TP) [95% CI]',
+          'auxiliary header identifies the random expectation comparator')
+    check('Extra TP is measured against the grade-random expectation, not against Grade+ML.' in manifest['tables'][1]['caption'],
+          'auxiliary caption distinguishes the two possible contrasts')
     for statement in ('same total and grade-specific allocations','not an isolated sensor effect','not validation of real-time dispatch',
                       'reallocated and reranked','distinct from the block-bootstrap uncertainty','That study has not been performed'):
         check(statement in md,'scope: '+statement)
@@ -75,6 +79,10 @@ def checks(root,pdf_text):
         check(2<=pages<=6,'short pilot report page range')
         check('/Author' not in (reader.metadata or {}),'clean PDF author metadata')
         text='\n'.join(p.extract_text() or '' for p in reader.pages)
+        compact=re.sub(r'\s+','',text)
+        check('GlobalTP-grade-randomE(TP)[95%CI]' in compact,'PDF auxiliary header names the random baseline')
+        check('ExtraTPismeasuredagainstthegrade-randomexpectation,notagainstGrade+ML.' in compact,
+              'PDF auxiliary caption identifies the subtraction baseline')
         for table in manifest['tables']:
             for row in table['rows']:
                 for cell in row:

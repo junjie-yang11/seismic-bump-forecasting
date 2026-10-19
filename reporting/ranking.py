@@ -69,8 +69,8 @@ def build():
         for budget in plan['budgets']:
             r=one(e,fold=-1,budget=budget);interval=one(ci,fold=-1,budget=budget,method='global_ml')
             rows.append([f'{100*budget:.0f}%',r['k'],r['grade_ml_tp'],r['global_ml_tp'],effect(interval)])
-        table('ranking_aux','Global model ranking on each phase, pooled afterwards. This can change allocations between grades and does not isolate within-grade information.',
-              ['Budget','K','Grade+ML TP','Global ML TP','Global extra TP [95%]'],rows)
+        table('ranking_aux','Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.',
+              ['Budget','K','Grade+ML TP','Global ML TP','Global TP - grade-random E(TP) [95% CI]'],rows)
         para('The primary comparison holds grade-specific allocations fixed. The global comparison holds only total K fixed and therefore answers a different allocation question. Under the original hypothetical cost, L=r*P+K-(r+1)*TP. At fixed P and K, loss change is determined entirely by detection change; a second cost grid would not supply independent evidence.')
         para('These records are not verified simultaneously waiting inspection candidates. The pilot is retrospective batch ranking, not validation of real-time dispatch or accident prevention. Record order remains a temporal proxy. The present evidence does not establish a within-grade ranking increment or prove monitoring information useless. A source-attribution study would require matched grade-only and grade-plus-monitoring models, with shift type handled identically and equal fitting/tuning opportunities. That study has not been performed here.')
         heading('Code and evidence')

@@ -6,16 +6,22 @@ The project uses the audited UCI Seismic Bumps mirror: 2,578 shift records and 1
 
 ## Start here
 
-**Read the integrated study first:** [Overall report (PDF)](reports/overall/integrated_research_report.pdf) · [Word](reports/overall/integrated_research_report.docx) · [Online manuscript](reports/overall/integrated_research_report.md).
+Start with the research overview for the questions, findings and study scope. Read the integrated report for the complete argument, then use the technical reports and workflow guide to inspect methods, code and evidence.
 
-It connects comparable-cohort forecast evidence to warning loss, coverage, capacity and model updating. The two technical reports below retain stage-specific methods and full results; they use overlapping records and are not independent validation studies.
+| Reading level | Entry | What it provides |
+| --- | --- | --- |
+| Quick introduction | [Research overview](docs/PROJECT_OVERVIEW.md) | Research questions, main findings, contribution and study boundaries |
+| Complete argument | [Integrated report: PDF](reports/overall/integrated_research_report.pdf) · [Word](reports/overall/integrated_research_report.docx) · [Online manuscript](reports/overall/integrated_research_report.md) | Methods, results, discussion and the evidence chain |
+| Technical detail and reproduction | [Technical reports and supplements](reports/README.md) · [Workflow](#follow-the-research-workflow) · [Reproduction guide](docs/REPRODUCING.md) | Stage-specific protocols, supplementary studies, code and verification |
+
+The integrated report connects comparable-cohort forecast evidence to warning loss, coverage, capacity and model updating. The two technical reports below retain stage-specific methods and full results; they use overlapping records and are not independent validation studies.
 
 | Study | Question | Final paper | Editable paper | Code and steps |
 | --- | --- | --- | --- | --- |
 | **Stage 1 · Forecast evaluation** | How do comparable test cohorts, probability calibration and model explanations change the interpretation of performance? | [PDF](reports/phase1/technical_report.pdf) | [Word](reports/phase1/technical_report.docx) | [Stage 1 guide](phase1/README.md) |
 | **Stage 2 · Locked warning experiment** | How do historical thresholds transfer under assumed missed-event costs and inspection capacity? | [Locked-study PDF](reports/phase2/phase2_threshold_transfer_report.pdf) | [Word](reports/phase2/phase2_threshold_transfer_report.docx) | [Stage 2 guide](phase2/README.md) · [Added grade/interval analysis](phase2/comparators/README.md) |
 
-Use Stage 1 for predictive detail and Stage 2 for decision detail. [Report navigation and generation](reports/README.md) distinguish the integrated paper from its supporting technical reports. The [research overview](docs/PROJECT_OVERVIEW.md) provides a short introduction.
+Use Stage 1 for predictive detail and Stage 2 for decision detail. [Report navigation and generation](reports/README.md) distinguish the integrated paper from its supporting technical reports.
 
 The **latest complete forecasting/decision analysis**, including direct grades and no-alarm intervals, is in the integrated report above and its [full comparison appendix](reports/overall/comparator_appendix.md). The original Stage 2 PDF retains the locked-experiment edition. A separate [within-grade ranking pilot](phase2/ranking/README.md) asks a new equal-capacity batch question; its [short report](reports/ranking/within_grade_ranking_pilot.pdf) does not replace the main study.
 
@@ -62,7 +68,7 @@ With Python 3.12 and the [research dependencies](requirements/requirements-resea
 python -B -m phase1.quick_check
 ```
 
-This checks saved evidence and formulas in a disposable copy, preserves published verification records and ends with `QUICK CHECK PASSED` if all checks succeed. It downloads the mirror only when the local cache is absent. [Setup, scope and measured runtime](docs/QUICK_CHECK.md) · [Full model reproduction](docs/REPRODUCING.md).
+This checks saved evidence and formulas in a disposable copy, preserves published verification records and ends with `QUICK CHECK PASSED` if all checks succeed. It downloads the mirror only when the local cache is absent. These are project-run checks through separate calculation paths, not a claim of external third-party replication. [Verification types](docs/QUICK_CHECK.md#verification-scope) · [Setup and measured runtime](docs/QUICK_CHECK.md) · [Full model reproduction](docs/REPRODUCING.md).
 
 ## Follow the research workflow
 

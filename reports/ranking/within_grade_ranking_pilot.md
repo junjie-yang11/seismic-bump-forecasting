@@ -49,9 +49,9 @@ Phase-specific intervals and counts are the primary evidence. The pooled point i
 
 ## Auxiliary ranking and interpretation
 
-Table 2. Global model ranking on each phase, pooled afterwards. This can change allocations between grades and does not isolate within-grade information.
+Table 2. Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.
 
-| Budget | K | Grade+ML TP | Global ML TP | Global extra TP [95%] |
+| Budget | K | Grade+ML TP | Global ML TP | Global TP - grade-random E(TP) [95% CI] |
 | --- | --- | --- | --- | --- |
 | 1% | 20 | 1 | 0 | -1.47 [-2.01, 0.56] |
 | 5% | 100 | 9 | 7 | -0.33 [-6.26, 4.53] |
