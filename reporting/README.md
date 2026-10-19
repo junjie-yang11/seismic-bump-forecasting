@@ -16,7 +16,7 @@ Use the existing reporting dependencies for authoring and PDF text checks. PDF e
 
 | File | Responsibility |
 | --- | --- |
-| `overall.py` | Read saved CSVs and source references, construct the integrated argument and generate Markdown/Word plus the conceptual overview |
+| `overall.py` | Read saved CSVs and source references, construct the integrated argument and generate Markdown/Word plus the conceptual overview and phase-specific decision tradeoff figure |
 | `export_overall.ps1` | Export the generated Word document to PDF |
 | `verify_overall.py` | Reconstruct main decision counts/loss and scenarios from aligned row decisions; verify tables, citations, inputs and generated files |
 | `ranking.py` | Build the separate short ranking report from verified pilot evidence, using the shared Word writer |
@@ -39,3 +39,11 @@ python -B -m reporting.verify_ranking --pdf
 ```
 
 Outputs are in `reports/ranking/`. The pilot has its own protocol, result directory, report manifest and verification record. The shared writer controls typography only; the pilot does not add a new result to the integrated paper or rewrite its research question. Export Word documents serially. Both builders remove their previous PDFs before generation, and their verifiers revoke stale success on failure.
+
+## Main argument and decision figure
+
+The integrated paper asks how common test cohorts change interpretation of forecast gaps, and how historical warning rules transfer in loss, coverage and workload. Table 3a retains the common-cohort AP results; Table 3b computes gap attenuation from unrounded saved differences. Calibration and feature-use analyses support these questions. The ranking pilot remains a separately specified exploratory study.
+
+Figure 4 reads the frozen XGBoost C results at `r=10` from the comparator CSVs. The generated [plot data](../reports/overall/decision_tradeoffs.csv) retain all four budgets, four record blocks and a supplementary pooled row, with the original policy-minus-no-alarm intervals. The figure does not run a new bootstrap. Grouped table budgets must have identical complete row-level decisions; capacity excess is still reported separately for each budget. Full combinations remain in the appendix.
+
+The ranking report manifest records the hash of `overall.py`, which contains its shared Word writer. After changing that file, rebuild and verify the ranking report too, even when the pilot evidence and prose are unchanged. The original two stage reports and experimental result directories are not regenerated for presentation-only edits.

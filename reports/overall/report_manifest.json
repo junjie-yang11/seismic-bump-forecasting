@@ -35,13 +35,16 @@
     "phase2/comparators/protocol.json": "588f3a9b905094cf9447cc4906b4a01b8d96b781e4609364dc2608b8a4cf6716",
     "reports/overall/evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
     "results/phase1/figures/reliability_lr.png": "82e7c14da8bd992ccd7850097d46a564afec639d23c2e88c18361ee6eeb9719d",
-    "results/phase1/figures/shap_phase_stability.png": "cc373b05a2d815eeb74b04cc279231c71735693d319cc9aeeedf62b652e34b99"
+    "results/phase1/figures/shap_phase_stability.png": "cc373b05a2d815eeb74b04cc279231c71735693d319cc9aeeedf62b652e34b99",
+    "reports/overall/decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
+    "reports/overall/decision_tradeoffs.png": "d1c7289b0168322c809a5b9a04970bc628d751cf21db59c028666e6b6004bff3"
   },
-  "generator_sha256": "1b2f0a0d60f76705f48c1dd234e1dd30bdbd7a35da189c3234651c37c2227985",
+  "generator_sha256": "a04ce3a61be6c6917f1545df736acdd0b16ac855238e9b54d2ea45e6003f14ed",
   "tables": [
     {
       "id": "cohorts",
       "caption": "Table 1. Shared test census and Stage 2 reference areas. Phases are record blocks, not identified mining sites.",
+      "continuation": false,
       "headers": [
         "Phase",
         "Test n",
@@ -88,6 +91,7 @@
     {
       "id": "protocols",
       "caption": "Table 2. Workflow definitions. Numerical cutoffs and alert counts are comparable only under matched workflows.",
+      "continuation": false,
       "headers": [
         "Item",
         "Forecast study (Stage 1)",
@@ -133,7 +137,8 @@
     },
     {
       "id": "ranking",
-      "caption": "Table 3. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-minus-pi concerns the record-order column.",
+      "caption": "Table 3a. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-minus-pi concerns the record-order column.",
+      "continuation": false,
       "headers": [
         "Model",
         "Random AP",
@@ -170,8 +175,34 @@
       ]
     },
     {
+      "id": "gap_attenuation",
+      "caption": "Table 3b. Attenuation of the AP protocol gap after matching test records.",
+      "continuation": true,
+      "headers": [
+        "Model",
+        "Different-cohort gap",
+        "Common-cohort gap",
+        "Attenuation"
+      ],
+      "rows": [
+        [
+          "LR",
+          "0.11141",
+          "0.01145",
+          "89.7%"
+        ],
+        [
+          "CART",
+          "0.14330",
+          "0.01876",
+          "86.9%"
+        ]
+      ]
+    },
+    {
       "id": "probability",
       "caption": "Table 4. Common-cohort probability references. LR is prior-corrected; CART and XGBoost retain raw probabilities.",
+      "continuation": false,
       "headers": [
         "Model",
         "Model Brier",
@@ -210,6 +241,7 @@
     {
       "id": "ablation",
       "caption": "Table 5. Full design versus a refitted learner using all three hazard-rating fields.",
+      "continuation": false,
       "headers": [
         "Model",
         "Full AP",
@@ -244,6 +276,7 @@
     {
       "id": "decision",
       "caption": "Table 6. Stage 2 fixed XGBoost, r=10, pooled over 2,063 records. Negative loss differences favor the policy over no alarms.",
+      "continuation": false,
       "headers": [
         "Rule",
         "Budget",
@@ -371,6 +404,7 @@
     {
       "id": "no_alarm_intervals",
       "caption": "Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.",
+      "continuation": false,
       "headers": [
         "Phase",
         "Budget",
@@ -414,31 +448,7 @@
         ],
         [
           "2",
-          "1%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "10",
-          "0"
-        ],
-        [
-          "2",
-          "5%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "10",
-          "0"
-        ],
-        [
-          "2",
-          "10%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "10",
-          "0"
-        ],
-        [
-          "2",
-          "20%",
+          "1%, 5%, 10%, 20%",
           "0.00 [0.00, 0.00]",
           "0",
           "10",
@@ -446,31 +456,7 @@
         ],
         [
           "3",
-          "1%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "24",
-          "0"
-        ],
-        [
-          "3",
-          "5%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "24",
-          "0"
-        ],
-        [
-          "3",
-          "10%",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "24",
-          "0"
-        ],
-        [
-          "3",
-          "20%",
+          "1%, 5%, 10%, 20%",
           "0.00 [0.00, 0.00]",
           "0",
           "24",
@@ -486,23 +472,7 @@
         ],
         [
           "4",
-          "5%",
-          "1.16 [-3.10, 4.46]",
-          "1",
-          "17",
-          "17"
-        ],
-        [
-          "4",
-          "10%",
-          "1.16 [-3.10, 4.46]",
-          "1",
-          "17",
-          "17"
-        ],
-        [
-          "4",
-          "20%",
+          "5%, 10%, 20%",
           "1.16 [-3.10, 4.46]",
           "1",
           "17",
@@ -545,6 +515,7 @@
     {
       "id": "grade_decisions",
       "caption": "Table 8. C rules at r=10 on the same pooled records. Reference selection is separate for each method; future workloads need not match.",
+      "continuation": false,
       "headers": [
         "Budget",
         "Method",
@@ -567,36 +538,6 @@
           "0"
         ],
         [
-          "1%",
-          "seismic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "1%",
-          "seismoacoustic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "1%",
-          "ghazard",
-          "-0.87 [-3.97, 1.36]",
-          "4",
-          "84",
-          "22",
-          "26",
-          "21"
-        ],
-        [
           "5%",
           "XGBoost",
           "0.68 [-0.34, 1.65]",
@@ -607,36 +548,6 @@
           "0"
         ],
         [
-          "5%",
-          "seismic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "5%",
-          "seismoacoustic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "5%",
-          "ghazard",
-          "-0.87 [-3.97, 1.36]",
-          "4",
-          "84",
-          "22",
-          "26",
-          "1"
-        ],
-        [
           "10%",
           "XGBoost",
           "0.82 [-0.19, 1.84]",
@@ -644,36 +555,6 @@
           "87",
           "27",
           "28",
-          "0"
-        ],
-        [
-          "10%",
-          "seismic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "10%",
-          "seismoacoustic",
-          "0.00 [0.00, 0.00]",
-          "0",
-          "88",
-          "0",
-          "0",
-          "0"
-        ],
-        [
-          "10%",
-          "ghazard",
-          "-0.87 [-3.97, 1.36]",
-          "4",
-          "84",
-          "22",
-          "26",
           "0"
         ],
         [
@@ -687,40 +568,41 @@
           "0"
         ],
         [
-          "20%",
+          "1%, 5%, 10%, 20%",
           "seismic",
           "0.00 [0.00, 0.00]",
           "0",
           "88",
           "0",
           "0",
-          "0"
+          "0, 0, 0, 0"
         ],
         [
-          "20%",
+          "1%, 5%, 10%, 20%",
           "seismoacoustic",
           "0.00 [0.00, 0.00]",
           "0",
           "88",
           "0",
           "0",
-          "0"
+          "0, 0, 0, 0"
         ],
         [
-          "20%",
+          "1%, 5%, 10%, 20%",
           "ghazard",
           "-0.87 [-3.97, 1.36]",
           "4",
           "84",
           "22",
           "26",
-          "0"
+          "21, 1, 0, 0"
         ]
       ]
     },
     {
       "id": "grade_intervals",
       "caption": "Table 9. Frozen XGBoost minus each historically selected grade C rule at r=10. Brackets are paired 95% intervals; negative favors ML.",
+      "continuation": false,
       "headers": [
         "Phase",
         "Budget",
@@ -759,56 +641,14 @@
         ],
         [
           "2",
-          "1%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "2",
-          "5%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "2",
-          "10%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "2",
-          "20%",
+          "1%, 5%, 10%, 20%",
           "0.00 [0.00, 0.00]",
           "0.00 [0.00, 0.00]",
           "0.00 [0.00, 0.00]"
         ],
         [
           "3",
-          "1%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "3",
-          "5%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "3",
-          "10%",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]",
-          "0.00 [0.00, 0.00]"
-        ],
-        [
-          "3",
-          "20%",
+          "1%, 5%, 10%, 20%",
           "0.00 [0.00, 0.00]",
           "0.00 [0.00, 0.00]",
           "0.00 [0.00, 0.00]"
@@ -822,21 +662,7 @@
         ],
         [
           "4",
-          "5%",
-          "1.16 [-3.10, 4.46]",
-          "1.16 [-3.10, 4.46]",
-          "1.16 [-3.10, 4.46]"
-        ],
-        [
-          "4",
-          "10%",
-          "1.16 [-3.10, 4.46]",
-          "1.16 [-3.10, 4.46]",
-          "1.16 [-3.10, 4.46]"
-        ],
-        [
-          "4",
-          "20%",
+          "5%, 10%, 20%",
           "1.16 [-3.10, 4.46]",
           "1.16 [-3.10, 4.46]",
           "1.16 [-3.10, 4.46]"
@@ -874,6 +700,7 @@
     {
       "id": "capacity",
       "caption": "Table 10. Fixed-XGBoost capacity excess and historical reasons for C no-alarm selection.",
+      "continuation": false,
       "headers": [
         "Phase",
         "A excess settings",
@@ -915,6 +742,7 @@
     {
       "id": "refitting",
       "caption": "Table 11. XGBoost refitted-minus-fixed changes. Finite groups are defined by historical selection.",
+      "continuation": false,
       "headers": [
         "Rule",
         "Finite",
@@ -953,6 +781,7 @@
     {
       "id": "boundaries",
       "caption": "Table 12. Cost equality for unchanged pooled C rules selected historically at rselect=10.",
+      "continuation": false,
       "headers": [
         "Historical budget",
         "TP",
@@ -994,6 +823,7 @@
     {
       "id": "scenarios",
       "caption": "Table 13. Frozen prevalence scenarios for C selected at r=10. Loss differences are versus no alarms; alerts and precision are expectations.",
+      "continuation": false,
       "headers": [
         "Budget",
         "pi 5% Delta",
@@ -1064,9 +894,11 @@
     }
   },
   "outputs": {
-    "integrated_research_report.md": "5e057e6c00940ca4a153423b0301b76077f5270a67b3242f10abd519e6c74a66",
-    "integrated_research_report.docx": "c77f6d80a97eb239c8a45c1fc880a13ec61c95e4b0338cca8c021aa68c8bccd5",
+    "integrated_research_report.md": "5dbc3311e2369803eec7cd39c63ed266a0f5580d562c3268052e40dbfb365980",
+    "integrated_research_report.docx": "45bab95d606973bd3eed5f691b06f420143a1cc5ff6573d3fd4156554c453f54",
     "evidence_overview.png": "8dbf9ccefa6f4c83ec8b2a1e14ad414bf5ad9024ff80b131e55b68e3ffdd88c6",
+    "decision_tradeoffs.png": "d1c7289b0168322c809a5b9a04970bc628d751cf21db59c028666e6b6004bff3",
+    "decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
     "comparator_appendix.md": "fb06842fc03d6d278ed8a86512861059751e32f57ea814f712ae9577ccc627ba"
   }
 }

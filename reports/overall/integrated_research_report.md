@@ -6,15 +6,15 @@ Mining Engineering, Fuzhou University
 
 ## Abstract
 
-Forecast performance and warning decision value require distinct evidence. This retrospective mining case connects common-cohort forecast assessment with historical threshold transfer on an audited 2,578-row UCI Seismic Bumps mirror. Four record-order test blocks contain 2,063 records and 88 hazardous-shift labels. Matching test records reduces the original random-versus-record-order AP gaps by 89.7% for LR, 86.9% for CART, demonstrating cohort sensitivity rather than identifying leakage or drift. Training-prior correction reduces logistic-regression expected calibration error from 0.2904 to 0.0271, while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of 0.00 to 0.82 units per 100 records versus no alarms. At the 20% historical budget, C reduces alerts from A's 557 to 34, while detections fall from 25/88 to 2/88. Phase 1 C at 5% and 10% produces no detections and positive loss-difference intervals versus no alarms; the nonzero pooled C intervals cross zero. The three grade B rules produce identical decisions: all alarms in phase 1 and none later. XGBoost B makes 101 fewer false alerts and 1 fewer detection, lowering assumed loss against that common rule, while its no-alarm interval crosses zero. Historical capacity feasibility does not guarantee later feasibility, and refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.
+Historically selected seismic warning rules can change their loss, hazardous-shift coverage and workload when transferred to later records. This retrospective mining case connects common-cohort forecast assessment with historical threshold transfer on an audited 2,578-row UCI Seismic Bumps mirror. Four record-order test blocks contain 2,063 records and 88 hazardous-shift labels. Matching test records reduces the original random-versus-record-order AP gaps by 89.7% for LR, 86.9% for CART, demonstrating cohort sensitivity rather than identifying leakage or drift. Training-prior correction reduces logistic-regression expected calibration error from 0.2904 to 0.0271, while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of 0.00 to 0.82 units per 100 records versus no alarms. At the 20% historical budget, C reduces alerts from A's 557 to 34, while detections fall from 25/88 to 2/88. Phase 1 C at 5% and 10% produces no detections and positive loss-difference intervals versus no alarms; the nonzero pooled C intervals cross zero. The three grade B rules produce identical decisions: all alarms in phase 1 and none later. XGBoost B makes 101 fewer false alerts and 1 fewer detection, lowering assumed loss against that common rule, while its no-alarm interval crosses zero. Historical capacity feasibility does not guarantee later feasibility, and refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.
 
 Keywords: seismic hazard; forecast evaluation; average precision; warning decisions; threshold transfer; inspection capacity
 
 ## 1 Introduction and research objective
 
-Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. A model can discriminate between labels, assign more accurate probabilities or rely on interpretable signals without establishing that its selected alerts lower missed-hazard and false-alert loss. The research question is therefore: what forecast evidence and historical selection rules support warning decisions on subsequent mining records under explicit cost and capacity assumptions?
+Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. Historical loss minimization or capacity feasibility does not determine what the same rule will demand or detect on later records. This study asks: how do historically selected seismic warning rules perform on subsequent records in loss, hazardous-shift coverage and alarm workload, and what forecast-evaluation evidence supports interpreting those outcomes?
 
-The project answers this question through two complementary analyses. The forecast study compares common test records and separates ranking, probability assessment and feature use. The decision study transfers historically selected rules to later records and measures loss, hazardous-shift coverage and workload. Their joint contribution is a reproducible account of which comparisons support each engineering interpretation. The two analyses retain their own fitting and threshold protocols; one is not a prospective validation of the other.
+Two questions organize the analysis. First, how does evaluation on common test records change the apparent forecast-protocol gap? Second, how do loss, coverage and workload change when historical warning rules transfer under assumed costs and capacity? Calibration, TreeSHAP and refitted ablations provide supporting evidence about probabilities and model use of information. The separately specified within-grade ranking pilot addresses a different batch-allocation question and remains outside this manuscript. The two stages retain their own fitting and threshold protocols; one is not a prospective validation of the other.
 
 ## 1.1 Relation to mining and decision research
 
@@ -22,7 +22,7 @@ The UCI task concerns a high-energy seismic bump in the next shift, rather than 
 
 Threshold-choice theory relates scores, operating conditions and expected classification loss [5]. Risk-informed warning identification connects warnings to assessment and response, but its assessment-based Seismic Bumps comparison differs from this study's subsequent-shift event label [6]. Precision-recall interpretation also depends on the evaluation prevalence [7]. These sources motivate explicit comparators; they do not establish that a retrospectively selected rule will work at a new mine or future operating condition.
 
-The report makes three linked empirical contributions: a common-cohort comparison of forecast protocols; a separation of probability improvement, feature use and predictive dependence; and a joint account of historical selection reasons, later loss, capacity excess and refitting. The contribution is an applied evaluation workflow and its mining-case findings. The retained learning, explanation and resampling methods are established methods.
+Two case findings anchor the contribution. Matching test records attenuates the apparent AP protocol gap by 89.7% for LR, 86.9% for CART, without identifying a causal share of leakage or drift. Transferred rules expose a loss-coverage-workload tradeoff: at r=10 and a 20% historical budget, C changes A's 557 alerts and 25/88 detections to 34 alerts and 2/88; historical capacity feasibility and refitting are evaluated alongside that tradeoff. The methodological contribution is a documented, reproducible application connecting these comparisons in one mining case. Learning algorithms, threshold-choice theory, explanation and resampling methods are established foundations.
 
 ![Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.](../../reports/overall/evidence_overview.png)
 
@@ -79,7 +79,7 @@ The direct-rule supplement thresholds seismic, seismoacoustic and ghazard separa
 
 ## 4 Forecast evidence on comparable test records
 
-Table 3. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-minus-pi concerns the record-order column.
+Table 3a. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-minus-pi concerns the record-order column.
 
 | Model | Random AP | Record-order AP | AP minus pi | Random minus order | 95% paired interval |
 | --- | --- | --- | --- | --- | --- |
@@ -87,9 +87,18 @@ Table 3. AP on 2,063 common test records; prevalence reference pi = 0.0427. AP-m
 | CART | 0.0972 | 0.0784 | 0.0357 | 0.0188 | [0.0064, 0.0323] |
 | XGBoost | 0.0995 | 0.0862 | 0.0436 | 0.0133 | [0.0004, 0.0256] |
 
-The interval in the last column belongs to the protocol difference, not to AP-minus-pi. All common-cohort point AP values exceed the prevalence reference; that descriptive observation alone is not a significance test against a random-ranking null. Finite-sample random-order AP and the horizontal PR reference are distinct concepts. No global label permutation is introduced.
+Table 3b. Attenuation of the AP protocol gap after matching test records.
 
-Restricting the comparison to common rows reduces the original different-cohort gap by 89.7% for LR, 86.9% for CART. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. The Stage 1 technical report retains the original and matched denominators and the full gap calculation.
+| Model | Different-cohort gap | Common-cohort gap | Attenuation |
+| --- | --- | --- | --- |
+| LR | 0.11141 | 0.01145 | 89.7% |
+| CART | 0.14330 | 0.01876 | 86.9% |
+
+The different-cohort gap compares random validation on 2,578 records with record-order validation on 2,063; the common-cohort gap evaluates both on the same 2,063 records. Attenuation = 1 - common-cohort gap / different-cohort gap, calculated before rounding. The record-order predictions and fitted random models are unchanged. Attenuation is descriptive cohort sensitivity, not a causal decomposition or a confidence interval.
+
+The interval in Table 3a belongs to the protocol difference, not to AP-minus-pi. All common-cohort point AP values exceed the prevalence reference; that descriptive observation alone is not a significance test against a random-ranking null. Finite-sample random-order AP and the horizontal PR reference are distinct concepts. No global label permutation is introduced.
+
+Restricting the comparison to common rows reduces the original different-cohort gap by 89.7% for LR, 86.9% for CART. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. Table 3b makes the original and matched gaps directly comparable; the Stage 1 technical report retains the full protocol detail.
 
 Stage-specific XGBoost results further separate ranking from cohort composition: phase 1: AP 0.1341 at prevalence 0.0698; phase 2: AP 0.0284 at prevalence 0.0194; phase 3: AP 0.0731 at prevalence 0.0465; phase 4: AP 0.0618 at prevalence 0.0349. These are Stage 1 outer-model predictions, not Stage 2 fixed-model scores. The supplementary holdout overlaps these records and is not used to choose a model, subset or budget.
 
@@ -154,6 +163,8 @@ At r=10 and budget 20%, phase 2 C-A is -36.50 per 100 records, with paired 95% i
 
 ## 5.1 Frozen policies compared with no alarms
 
+![Figure 4. Fixed-XGBoost C at r=10 across four historical budgets. Left: loss versus no alarms per 100 records (negative favors C), with conditional 95% block intervals. Right: alerts (gray) and hazardous shifts flagged, TP (green); P denotes all hazardous shifts. Shaded pooling is supplementary. Zero intervals reflect identical decisions. Intervals exclude fitting and selection uncertainty.](../../reports/overall/decision_tradeoffs.png)
+
 Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.
 
 | Phase | Budget | Delta [95% interval] | TP | FN | Alerts |
@@ -162,24 +173,16 @@ Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are
 | 1 | 5% | 1.55 [0.39, 3.10] | 0 | 36 | 8 |
 | 1 | 10% | 2.13 [0.78, 4.07] | 0 | 36 | 11 |
 | 1 | 20% | 1.16 [-3.88, 4.84] | 1 | 35 | 17 |
-| 2 | 1% | 0.00 [0.00, 0.00] | 0 | 10 | 0 |
-| 2 | 5% | 0.00 [0.00, 0.00] | 0 | 10 | 0 |
-| 2 | 10% | 0.00 [0.00, 0.00] | 0 | 10 | 0 |
-| 2 | 20% | 0.00 [0.00, 0.00] | 0 | 10 | 0 |
-| 3 | 1% | 0.00 [0.00, 0.00] | 0 | 24 | 0 |
-| 3 | 5% | 0.00 [0.00, 0.00] | 0 | 24 | 0 |
-| 3 | 10% | 0.00 [0.00, 0.00] | 0 | 24 | 0 |
-| 3 | 20% | 0.00 [0.00, 0.00] | 0 | 24 | 0 |
+| 2 | 1%, 5%, 10%, 20% | 0.00 [0.00, 0.00] | 0 | 10 | 0 |
+| 3 | 1%, 5%, 10%, 20% | 0.00 [0.00, 0.00] | 0 | 24 | 0 |
 | 4 | 1% | 0.00 [0.00, 0.00] | 0 | 18 | 0 |
-| 4 | 5% | 1.16 [-3.10, 4.46] | 1 | 17 | 17 |
-| 4 | 10% | 1.16 [-3.10, 4.46] | 1 | 17 | 17 |
-| 4 | 20% | 1.16 [-3.10, 4.46] | 1 | 17 | 17 |
+| 4 | 5%, 10%, 20% | 1.16 [-3.10, 4.46] | 1 | 17 | 17 |
 | Pooled | 1% | 0.00 [0.00, 0.00] | 0 | 88 | 0 |
 | Pooled | 5% | 0.68 [-0.34, 1.65] | 1 | 87 | 25 |
 | Pooled | 10% | 0.82 [-0.19, 1.84] | 1 | 87 | 28 |
 | Pooled | 20% | 0.58 [-1.02, 1.89] | 2 | 86 | 34 |
 
-Phase 1 C at 5% and 10% gives positive loss intervals and no detections; the nonzero pooled intervals cross zero. Phase and pooled evidence therefore support different loss-direction assessments. Where C produces no alerts, every row-level difference is zero and the interval is [0,0] by construction. This establishes identical observed decisions, not reliable transfer. No alarms detect no hazardous shifts and remain a loss comparator rather than an operating recommendation.
+Comma-separated budgets share exactly the same aligned row-level decisions within that phase, not merely rounded loss or interval endpoints. The complete appendix retains each setting separately. Phase 1 C at 5% and 10% gives positive loss intervals and no detections; the nonzero pooled intervals cross zero. Phase and pooled evidence therefore support different loss-direction assessments. Where C produces no alerts, every row-level difference is zero and the interval is [0,0] by construction. This establishes identical observed decisions, not reliable transfer. No alarms detect no hazardous shifts and remain a loss comparator rather than an operating recommendation.
 
 ## 5.2 Direct hazard-grade comparators
 
@@ -188,21 +191,14 @@ Table 8. C rules at r=10 on the same pooled records. Reference selection is sepa
 | Budget | Method | Delta vs none [95%] | TP | FN | FP | Alerts | Excess |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1% | XGBoost | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 1% | seismic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 1% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 1% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 21 |
 | 5% | XGBoost | 0.68 [-0.34, 1.65] | 1 | 87 | 24 | 25 | 0 |
-| 5% | seismic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 5% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 5% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 1 |
 | 10% | XGBoost | 0.82 [-0.19, 1.84] | 1 | 87 | 27 | 28 | 0 |
-| 10% | seismic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 10% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 10% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 0 |
 | 20% | XGBoost | 0.58 [-1.02, 1.89] | 2 | 86 | 32 | 34 | 0 |
-| 20% | seismic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 20% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0 |
-| 20% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 0 |
+| 1%, 5%, 10%, 20% | seismic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0, 0, 0, 0 |
+| 1%, 5%, 10%, 20% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0, 0, 0, 0 |
+| 1%, 5%, 10%, 20% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 21, 1, 0, 0 |
+
+Budgets are grouped only when their full transferred decision vectors match. Comma-separated excess counts follow the listed budget order: identical alarms can exceed different numbers of capacity slots. The appendix retains the ungrouped phase and pooled settings.
 
 At r=10, seismic and seismoacoustic C select no alarms across the displayed budgets. The ghazard rules yield 26 alerts, 4 detections and 22 false alerts, with loss difference -0.87 [-3.97, 1.36] versus no alarms. Their repeated pooled counts reflect the same transferred decisions, not independent replications. The negative point difference does not establish loss improvement because its interval crosses zero. Coarse reference grade groups can underfill budgets; later frequencies can also exceed them.
 
@@ -214,18 +210,10 @@ Table 9. Frozen XGBoost minus each historically selected grade C rule at r=10. B
 | 1 | 5% | 1.55 [0.39, 3.10] | 1.55 [0.39, 3.10] | 5.04 [-4.07, 18.02] |
 | 1 | 10% | 2.13 [0.78, 4.07] | 2.13 [0.78, 4.07] | 5.62 [-3.49, 18.99] |
 | 1 | 20% | 1.16 [-3.88, 4.84] | 1.16 [-3.88, 4.84] | 4.65 [-3.49, 15.90] |
-| 2 | 1% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 2 | 5% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 2 | 10% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 2 | 20% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 3 | 1% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 3 | 5% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 3 | 10% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 3 | 20% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
+| 2 | 1%, 5%, 10%, 20% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
+| 3 | 1%, 5%, 10%, 20% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
 | 4 | 1% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] |
-| 4 | 5% | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] |
-| 4 | 10% | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] |
-| 4 | 20% | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] |
+| 4 | 5%, 10%, 20% | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] | 1.16 [-3.10, 4.46] |
 | Pooled | 1% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 0.87 [-1.36, 3.97] |
 | Pooled | 5% | 0.68 [-0.34, 1.65] | 0.68 [-0.34, 1.65] | 1.55 [-0.92, 5.04] |
 | Pooled | 10% | 0.82 [-0.19, 1.84] | 0.82 [-0.19, 1.84] | 1.70 [-0.82, 5.19] |

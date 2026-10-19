@@ -68,7 +68,7 @@ def _checks(root, pdf_text):
     for t in body.findall('w:tbl',NS):
         word_tables.append([[''.join(c.itertext()) for c in row.findall('w:tc',NS)]
                             for row in t.findall('w:tr',NS)])
-    check(len(word_tables)==len(manifest['tables'])==13,'thirteen complete tables')
+    check(len(word_tables)==len(manifest['tables'])==14,'thirteen numbered tables with two Table 3 panels')
     tables={}
     for observed,declared in zip(word_tables,manifest['tables']):
         check(observed==[declared['headers']]+declared['rows'],'Word table '+declared['id'])
@@ -124,6 +124,23 @@ def _checks(root, pdf_text):
         check(int(full[m]['n'])==len(labels) and int(full[m]['positives'])==sum(labels.values()),'AP cohort '+m)
         expected.append([m,fmt(random),fmt(ap),fmt(ap-pi),fmt(result['delta']),bounds(result['ci_low'],result['ci_high'])])
     check(tables['ranking']==expected,'AP table and descriptive baseline gains')
+    gaps=read('results/phase1/gap_attenuation.csv')
+    original=read('results/phase1/metrics_by_scheme.csv');expected=[]
+    for model in ('LR','CART'):
+        g=take(gaps,model=model)
+        name=next(r['model'] for r in shared if ('logistic' in r['model'])==(model=='LR'))
+        oldrandom=take(original,model=name,validation='random stratified 10-fold')
+        ordered=take(original,model=name,validation='time-ordered expanding window')
+        common=take(shared,model=name)
+        oldgap=float(oldrandom['pr_auc'])-float(ordered['pr_auc'])
+        newgap=float(common['random_pr_auc'])-float(common['time_pr_auc'])
+        reduction=1-newgap/oldgap
+        for actual,value in ((g['original_gap'],oldgap),(g['same_test_gap'],newgap),(g['gap_reduction_fraction'],reduction)):
+            check(math.isclose(float(actual),value,rel_tol=1e-12,abs_tol=1e-14),'gap from original/common AP sources')
+        expected.append([model,fmt(oldgap,5),fmt(newgap,5),f'{100*reduction:.1f}%'])
+    check(tables['gap_attenuation']==expected,'Table 3b uses unrounded gaps')
+    check('Attenuation = 1 - common-cohort gap / different-cohort gap' in md,'attenuation formula explicit')
+    check('Two questions organize the analysis' in md and 'one is not a prospective validation of the other' in md,'two questions preserve separate protocols')
     probability=read('results/phase1/probability_reference_comparison.csv');expected=[]
     for m in ('LR','CART','XGBoost'):
         r=take(probability,model=m,validation='time',fold=-1)
@@ -208,20 +225,50 @@ def _checks(root, pdf_text):
     check('an unresolved pooled direction does not erase a resolved increase' in md,'phase and pooled conclusions remain distinct')
     def effect(r):return fmt(r['loss_delta100'],2)+' '+bounds(r['ci_low'],r['ci_high'],2)
     def integer(value):return str(int(float(value)))
+    def expand(rows, methods):
+        expanded=[]
+        for row in rows:
+            fold=-1 if row[0]=='Pooled' else int(row[0])-1
+            budgets=[float(v.strip().rstrip('%'))/100 for v in row[1].split(',')]
+            for method in methods:
+                reference=None
+                cohort=sorted([r for r in sd if r['method']==method and (fold<0 or int(r['fold'])==fold)],key=lambda r:int(r['row']))
+                for budget in budgets:
+                    column=f'C_b{round(100*budget):02d}_r10'
+                    vector=[(r['row'],r['y'],r[column]) for r in cohort]
+                    check(reference is None or vector==reference,'grouped budgets have exactly identical decisions')
+                    reference=vector
+            for budget in budgets:expanded.append([row[0],f'{100*budget:.0f}%']+row[2:])
+        check(len({tuple(r[:2]) for r in expanded})==len(expanded),'no omitted/duplicated grouped cohort-budget keys')
+        return sorted(expanded)
     expected=[]
     for f in (0,1,2,3,-1):
         for b in (.01,.05,.1,.2):
             e=take(se,method='XGBoost',fold=f,mechanism='C',cost=10,budget=b)
             r=take(sc,left_method='XGBoost',right_method='none',fold=f,mechanism='C',cost=10,budget=b)
             expected.append(['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%',effect(r),integer(e['tp']),integer(e['fn']),integer(e['alerts'])])
-    check(tables['no_alarm_intervals']==expected,'complete phase and pooled C-minus-none intervals and detections')
+    check(expand(tables['no_alarm_intervals'],('XGBoost',))==sorted(expected),'complete phase and pooled C-minus-none intervals and detections')
     expected=[]
     for b in (.01,.05,.1,.2):
         for m in ('XGBoost','seismic','seismoacoustic','ghazard'):
             e=take(se,method=m,fold=-1,mechanism='C',cost=10,budget=b)
             r=take(sc,left_method=m,right_method='none',fold=-1,mechanism='C',cost=10,budget=b)
             expected.append([f'{100*b:.0f}%',m,effect(r)]+[integer(e[k]) for k in ('tp','fn','fp','alerts','excess')])
-    check(tables['grade_decisions']==expected,'all grade methods retained at every displayed budget')
+    expanded=[]
+    for row in tables['grade_decisions']:
+        budgets=[v.strip() for v in row[0].split(',')]
+        excess=[v.strip() for v in row[-1].split(',')]
+        check(len(budgets)==len(excess),'capacity excess mapped to each budget')
+        reference=None
+        cohort=sorted([r for r in sd if r['method']==row[1]],key=lambda r:int(r['row']))
+        for budget,value in zip(budgets,excess):
+            column=f"C_b{int(budget.rstrip('%')):02d}_r10"
+            vector=[(r['row'],r['y'],r[column]) for r in cohort]
+            check(reference is None or vector==reference,'pooled grade groups use identical row decisions')
+            reference=vector
+            expanded.append([budget]+row[1:-1]+[value])
+    check(len(expanded)==len({tuple(r[:2]) for r in expanded})==16,'all sixteen method-budget settings retained')
+    check(sorted(expanded)==sorted(expected),'all grade methods and budget-specific capacity retained')
     expected=[]
     for f in (0,1,2,3,-1):
         for b in (.01,.05,.1,.2):
@@ -229,7 +276,25 @@ def _checks(root, pdf_text):
             for m in ('seismic','seismoacoustic','ghazard'):
                 row.append(effect(take(sc,left_method='XGBoost',right_method=m,fold=f,mechanism='C',cost=10,budget=b)))
             expected.append(row)
-    check(tables['grade_intervals']==expected,'all phase-specific ML-minus-grade intervals')
+    check(expand(tables['grade_intervals'],('XGBoost','seismic','seismoacoustic','ghazard'))==sorted(expected),'all phase-specific ML-minus-grade intervals')
+    plot=read('reports/overall/decision_tradeoffs.csv')
+    check(len(plot)==20,'all four budgets in four phases plus supplemental pooled figure')
+    check(len({(r['fold'],r['budget']) for r in plot})==20,'unique plot settings')
+    for r in plot:
+        check((r['model'],r['workflow'],r['mechanism'],r['cost'])==('XGBoost','fixed','C','10'),'fixed decision-figure conditions')
+        fold=int(r['fold']);budget=float(r['budget']);column=f'C_b{round(100*budget):02d}_r10'
+        cohort=[v for v in sd if v['method']=='XGBoost' and (fold<0 or int(v['fold'])==fold)]
+        positive=sum(int(float(v['y'])) for v in cohort)
+        alerted=[v for v in cohort if v[column].lower() in ('true','1')]
+        tp=sum(int(float(v['y'])) for v in alerted);fp=len(alerted)-tp
+        for field,value in (('n',len(cohort)),('positives',positive),('alerts',len(alerted)),('tp',tp),('fn',positive-tp)):
+            check(int(r[field])==value,'plot counts from raw decisions '+field)
+        check(math.isclose(float(r['delta_loss100']),100*(fp-10*tp)/len(cohort),abs_tol=1e-10),'plot loss sign and arithmetic')
+        ci=take(sc,left_method='XGBoost',right_method='none',fold=fold,mechanism='C',cost=10,budget=budget)
+        for field in ('ci_low','ci_high'):check(float(r[field])==float(ci[field]),'correct policy-minus-none interval '+field)
+        observed=take(se,method='XGBoost',fold=fold,mechanism='C',cost=10,budget=budget)
+        for field in ('slots','excess'):check(int(r[field])==int(float(observed[field])),'plot capacity field '+field)
+    check((out/'decision_tradeoffs.png').read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid decision plot PNG')
     appendix=(out/'comparator_appendix.md').read_text(encoding='utf-8')
     lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in sc if r['comparison']=='policy-none'}
     for e in se:
@@ -242,7 +307,7 @@ def _checks(root, pdf_text):
         cells=['Pooled' if int(r['fold'])<0 else str(int(r['fold'])+1),r['right_method'],r['rule'],effect(r)]
         check('| '+' | '.join(cells)+' |' in appendix,'full-cost appendix paired contrast')
     figures=len(body.findall('.//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}inline'))
-    check(figures==3,'three inline figures')
+    check(figures==4,'four inline figures including decision evidence')
     pdf=out/(STEM+'.pdf');check(pdf.read_bytes().startswith(b'%PDF-'),'valid PDF export')
     pages=None
     if pdf_text:
@@ -261,7 +326,7 @@ def _checks(root, pdf_text):
                 scope='Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.',
                 manifest_sha256=sha(out/'report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
                 checked_row_and_table_inputs_sha256=checked_inputs,
-                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','comparator_appendix.md')})
+                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md')})
 
 
 def verify(root=ROOT,pdf_text=False):

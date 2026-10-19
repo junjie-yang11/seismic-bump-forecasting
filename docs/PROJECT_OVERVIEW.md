@@ -4,7 +4,7 @@ This overview introduces the research questions, main findings, contribution and
 
 ## The engineering question
 
-What evidence supports using mine-monitoring forecasts to select later shifts for inspection? This project connects two retrospective studies. Stage 1 separates ranking performance, probability accuracy and fitted-model feature use on comparable test records. Stage 2 links historical threshold choices to later loss, hazardous-shift coverage and inspection demand under stated costs and capacity. The engineering objective is to make these decisions auditable: each claim has a defined comparator, a saved calculation and a stated scope of application.
+How do historically selected seismic warning rules perform on subsequent records in loss, hazardous-shift coverage and alarm workload, and what forecast evidence supports interpreting those outcomes? This project connects two retrospective studies. Two questions organize the study: how common test records change the interpretation of forecast-protocol gaps, and how historical rules transfer in loss, coverage and workload. Stage 1 addresses the first question; calibration, TreeSHAP and ablations provide supporting probability and feature-use evidence. Stage 2 links historical threshold choices to later loss, hazardous-shift coverage and inspection demand under stated costs and capacity. The engineering objective is to make these decisions auditable: each claim has a defined comparator, a saved calculation and a stated scope of application.
 
 | Study | Question | Main evidence | Paper |
 | --- | --- | --- | --- |
@@ -28,6 +28,8 @@ Stage 1 compares random and record-order predictions on the same test rows, eval
 **Capacity and the meaning of a cutoff can change after transfer.** All historical A choices satisfy capacity, yet later capacity is exceeded in 13/16 phase–budget settings. C exceeds it in 2/64 phase–budget–cost settings; these denominators differ and are not independent, directly comparable violation rates. Refitting can change alerts at a finite numerical cutoff. A no-alarm cutoff remains empty by definition. Loss, detections and workload must be read together. [Matched capacity and detection results](../results/phase2/capacity_tradeoffs.csv) · [Refitting results](../results/phase2/refit_transfer.csv).
 
 The descriptive extension separates historical selection cost from evaluation cost. [Frozen-policy cost boundaries](../results/phase2/frozen_policy_cost_boundaries.csv) report the FP/TP equality point for every retained A/B/C rule, with explicit no-detection cases. [Prevalence scenarios](../results/phase2/prevalence_decision_value.csv) pair expected precision with loss and workload while retaining the historical rules. These calculations explain conditions for decision value without selecting another strategy from test outcomes.
+
+The [phase-specific decision figure](../reports/overall/decision_tradeoffs.png) shows the four historical budgets together with conditional loss intervals, alarm counts and hazardous-shift detections. [Plot data](../reports/overall/decision_tradeoffs.csv) retain the exact values used.
 
 ## Project contribution
 
