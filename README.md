@@ -25,6 +25,8 @@ Use Stage 1 for predictive detail and Stage 2 for decision detail. [Report navig
 
 The **latest complete forecasting/decision analysis**, including direct grades and no-alarm intervals, is in the integrated report above and its [full comparison appendix](reports/overall/comparator_appendix.md). The original Stage 2 PDF retains the locked-experiment edition. A separate [within-grade ranking pilot](phase2/ranking/README.md) asks a new equal-capacity batch question; its [short report](reports/ranking/within_grade_ranking_pilot.pdf) does not replace the main study.
 
+A separately specified [matched-information study](phase2/information/README.md) compares three hazard grades plus shift type with the full monitoring design at identical grade allocations. Its [short report](reports/information/monitoring_information_increment.pdf), [online results](reports/information/monitoring_information_increment.md) and [evidence](results/phase2/information/README.md) address the added monitoring information. It remains exploratory and does not rewrite the integrated paper or supply a new independent cohort.
+
 ## Three findings
 
 1. **Who is tested changes the apparent validation gap.** On common test records, the original random-versus-record-order AP gap shrinks by 89.7% for LR and 86.9% for CART; residual differences are 0.0114 and 0.0188. This recalculation shows cohort sensitivity, not a causal decomposition of leakage or drift. [Matched results](results/phase1/shared_test_comparison.csv) · [Gap calculation](results/phase1/gap_attenuation.csv).

@@ -47,3 +47,15 @@ The integrated paper asks how common test cohorts change interpretation of forec
 Figure 4 reads the frozen XGBoost C results at `r=10` from the comparator CSVs. The generated [plot data](../reports/overall/decision_tradeoffs.csv) retain all four budgets, four record blocks and a supplementary pooled row, with the original policy-minus-no-alarm intervals. The figure does not run a new bootstrap. Grouped table budgets must have identical complete row-level decisions; capacity excess is still reported separately for each budget. Full combinations remain in the appendix.
 
 The ranking report manifest records the hash of `overall.py`, which contains its shared Word writer. After changing that file, rebuild and verify the ranking report too, even when the pilot evidence and prose are unchanged. The original two stage reports and experimental result directories are not regenerated for presentation-only edits.
+
+## Matched information-source study
+
+The separately specified [information study](../phase2/information/README.md) adds a short report without changing the original manuscripts. In the research environment, first run `python -B -m phase2.information.run` and `python -B -m phase2.information.verify --refit`. The reporting environment then reads the verified evidence:
+
+```text
+python -B -m reporting.information
+pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1 -ReportDirectory information -Stem monitoring_information_increment
+python -B -m reporting.verify_information --pdf
+```
+
+The [short report](../reports/information/monitoring_information_increment.md) contains one phase-specific table and one interval figure, with block length 32 as the main analysis and 16/64 retained as sensitivity settings. Saved scores, models, tuning predictions, inclusion probabilities and bootstrap evidence are under `results/phase2/information/`. Plain calculation/model loading and full candidate/final refitting are separately identified by the numerical verifier. Existing Quick Check covers the original study and discovers the new behavior tests; the two information-study verifiers above are separate additional checks. Export Word documents serially.

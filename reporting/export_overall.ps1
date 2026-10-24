@@ -1,6 +1,6 @@
 param(
-    [ValidateSet('overall','ranking')][string]$ReportDirectory = 'overall',
-    [ValidateSet('integrated_research_report','within_grade_ranking_pilot')][string]$Stem = 'integrated_research_report'
+    [ValidateSet('overall','ranking','information')][string]$ReportDirectory = 'overall',
+    [ValidateSet('integrated_research_report','within_grade_ranking_pilot','monitoring_information_increment')][string]$Stem = 'integrated_research_report'
 )
 $ErrorActionPreference = 'Stop'
 $reportRoot = Join-Path (Split-Path $PSScriptRoot -Parent) ('reports/' + $ReportDirectory)

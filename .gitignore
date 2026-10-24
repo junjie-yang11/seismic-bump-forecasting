@@ -14,7 +14,9 @@ data/*
 !results/phase2/*.csv
 !results/phase2/comparators/*.csv
 !results/phase2/ranking/*.csv
+!results/phase2/information/*.csv
 !reports/overall/decision_tradeoffs.csv
+!reports/information/figure_data.csv
 
 # ---------------------------------------------------------------------------
 # Python

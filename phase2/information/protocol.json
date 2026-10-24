@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "specified_at_utc": "2026-10-24T22:48:18.131644+00:00",
+  "baseline_commit": "9466267451778b9e57792a51751fcbf5e456c6d9",
+  "nature": "Exploratory retrospective matched-information study specified after inspecting the original test records; not confirmatory or preregistered",
+  "question": "At identical seismic-grade allocations, does adding monitoring variables to three hazard assessments and shift type increase expected hazardous-shift detections?",
+  "base_features": [
+    "seismic",
+    "seismoacoustic",
+    "shift",
+    "ghazard"
+  ],
+  "extended_features": "The existing ordered 17-column design; nbumps remains excluded, constant columns retained",
+  "primary_grade": "seismic",
+  "grade_order": [
+    "a",
+    "b",
+    "c",
+    "d"
+  ],
+  "cohorts": "Four existing Stage 2 time folds only; exact fitting/test rows from saved fold_manifest.json; no holdout; policy reference excluded from all fitting and tuning",
+  "fold_source_sha256": "f7b4139df7cda4c6c7e6527129ec07589464d93a94759d5b32f82ec1fe0bf82f",
+  "locked_plan_sha256": "85a1a16b30a5b9acc44469577781aca6d004106a501835153e409457e8ae3970",
+  "model_settings": {
+    "candidates": [
+      [
+        2,
+        80
+      ],
+      [
+        2,
+        160
+      ],
+      [
+        3,
+        80
+      ],
+      [
+        3,
+        160
+      ]
+    ],
+    "eta": 0.05,
+    "min_child_weight": 10,
+    "reg_lambda": 5,
+    "nthread": 2,
+    "seed": 7,
+    "subsample": 1.0,
+    "colsample_bytree": 1.0,
+    "scale_pos_weight": 1
+  },
+  "tuning": "Each design independently selects one of the same four configurations by AP on the same temporal inner split; negative Brier if no inner positives; first grid entry on exact ties; no budget-specific tuning",
+  "budgets": [
+    0.01,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "allocation": "Within each phase K=floor(B*N); higher seismic grade first; identical grade quotas for both models. Pooled counts sum phase allocations and never mix model scores across phases.",
+  "score_ties": "Exact score equality within seismic grade. Include complete higher-score groups; distribute remaining h slots uniformly within a boundary group of m records. Report analytic inclusion probabilities and E(TP)=h*p/m for that group for BOTH models. No random tie seed or label-directed allocation.",
+  "primary_contrast": "Extended E(TP) minus base E(TP); positive favors added monitoring under this fitting and allocation workflow",
+  "bootstrap": {
+    "replicates": 2000,
+    "main_block_length": 32,
+    "block_lengths": [
+      16,
+      32,
+      64
+    ],
+    "seed": 20261025,
+    "seed_rule": "seed + 1000*block_length + fold; independent within-phase nonwrapping moving-block draws. The same counts feed both designs and every budget; pooled replicates sum matched phase replicates.",
+    "operation": "Freeze fitted models and tuning choices; reconstruct each sampled multiset, recompute K and grade quotas, rerank and analytically evaluate score ties. Retain zero-positive samples."
+  },
+  "interval_scope": "Unadjusted conditional 95% percentile intervals; no full fitting/tuning/selection or operational-dispatch uncertainty. Block lengths measure record-order sensitivity, not known physical durations.",
+  "loss_identity": "At fixed P and K, E(L)=r*P+K-(r+1)*E(TP). Cost contrasts are algebraic consequences, not independent outcomes. No new cost grid.",
+  "output_scope": "A separate protocol, phase-specific results table, increment/interval figure and short discussion, with machine-readable scores/models/tuning/row inclusion probabilities/bootstrap evidence and separate calculation/replay checks. Original two-stage papers and pilot evidence remain unchanged.",
+  "no_test_selection": "Retain every phase, budget and block length; do not choose features, models, configurations, a budget or a block length from test outcomes.",
+  "amendments": []
+}

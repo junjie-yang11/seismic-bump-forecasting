@@ -43,6 +43,8 @@ LR, CART, XGBoost, TreeSHAP, cost-sensitive loss and block resampling are establ
 
 The author set the research scope and review priorities and coordinated protocol refinement, reproducibility checks and report revisions. ChatGPT and Codex provided substantial implementation, execution and writing support. [Author contributions and AI assistance](../CONTRIBUTIONS.md) separates these roles and links concrete project decisions to their evidence.
 
+The separately specified [matched-information comparison](../phase2/information/README.md) now fits grade-plus-shift and full-monitoring XGBoost designs with the same historical tuning opportunities. Its [short report](../reports/information/monitoring_information_increment.pdf) compares expected detections at identical grade allocations and integrates score ties analytically. It uses the existing inspected test records; the original two-stage papers and ranking-pilot results remain unchanged.
+
 ## Study boundaries and next questions
 
 The results apply to the audited public cohort and the specified retrospective workflows. Relative costs and inspection slots are assumptions, not measured economic loss or avoided accidents. Current intervals condition on saved predictions or fitted rules. Frozen prevalence scenarios hold class-conditional rates constant and do not identify the cause of observed changes.
