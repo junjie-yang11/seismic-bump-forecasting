@@ -59,7 +59,7 @@ def checks(root,pdf_text):
         for budget in (.01,.05,.1,.2):
             e=one(ev,fold=fold,budget=budget);r=one(ci,fold=fold,budget=budget,method='grade_ml')
             expected.append(['Pooled' if fold<0 else str(fold+1),f'{100*budget:.0f}%',e['k'],num(e['expected_random_tp']),e['grade_ml_tp'],effect(r)])
-    check(manifest['tables'][0]['rows']==expected,'all primary phase/cohort rows')
+    check(manifest['tables'][0]['rows']==expected,'all primary record block/cohort rows')
     expected=[]
     for budget in (.01,.05,.1,.2):
         e=one(ev,fold=-1,budget=budget);r=one(ci,fold=-1,budget=budget,method='global_ml')
@@ -93,13 +93,14 @@ def checks(root,pdf_text):
         check(math.isclose(manifest['worked_allocation'][name],value,rel_tol=0,abs_tol=1e-12),'row-derived example '+name)
     expression=f'{slots["a"]}*{positives["a"]}/{len(groups["a"])} = {num(expected_example["a_random_expected_tp"])}'
     check(expression in md and effect(interval) in md,'worked arithmetic and conditional interval in manuscript')
+    from reporting.edition import edition_url
     version='e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535';base='https://github.com/junjie-yang11/seismic-bump-forecasting'
     sources=[['Repository source snapshot',f'{base}/tree/{version}'],
         ['Pilot protocol',f'{base}/blob/{version}/phase2/ranking/protocol.json'],
         ['Ranking code',f'{base}/tree/{version}/phase2/ranking'],
         ['Saved evidence and verification guide',f'{base}/blob/{version}/results/phase2/ranking/README.md'],
         ['Numerical verifier',f'{base}/blob/{version}/phase2/ranking/verify.py'],
-        ['Integrated report',f'{base}/blob/{version}/reports/overall/integrated_research_report.pdf']]
+        ['Integrated report',edition_url('reports/overall/integrated_research_report.pdf')]]
     check(manifest['source_snapshot']==version and manifest['source_links']==sources,'fixed source snapshot and destinations')
     targets={r.get('Id'):r.get('Target') for r in relationships if r.get('Type','').endswith('/hyperlink') and r.get('TargetMode')=='External'}
     word_links=[[''.join(link.itertext()),targets.get(link.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id'))]

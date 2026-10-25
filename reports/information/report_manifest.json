@@ -1,8 +1,11 @@
 {
   "title": "Monitoring Information Beyond Hazard Grades and Shift Type",
-  "created_at_utc": "2026-10-25T10:11:23.000640+00:00",
+  "created_at_utc": "2026-10-25T11:27:48.103217+00:00",
   "inputs": {
     "phase2/information/protocol.json": "0b0fd33122d25270016b097c1eee989f7af2adf230033bbed616f2dc28cae407",
+    "reporting/edition.py": "00c8cff50bfef40953818e1c99d131943674826465b38f8b75b38a4827f22a91",
+    "results/phase1/source_audit.json": "a74645647a7987e4fa2d81a105b1eae5cd1918a7fb71f7b82c5526c974a79063",
+    "results/phase2/comparators/grade_metadata.json": "894a38dbc77ed07c24f0588869429f2ad6e554511b5d013456188f0aae78669b",
     "phase2/information/provenance.py": "5284cf53cf0308d8622e0da239dc7d36f9bb761f55b99f9a6c330eff7a7d3d26",
     "results/phase2/information/historical_context.zip": "4bdcde53076bd35ff747777f1355d6fa2c38fea5b3bb5b803fbb5556c83de5a0",
     "results/phase2/information/verification.json": "bf47da0861867ddc171b44858a3d9da2d3d55485d61617de9438077b5ba8d1f5",
@@ -13,8 +16,44 @@
     "results/phase2/information/intervals.csv": "87d64c52840720c9aff4c4014d6b368196c258d74a4efaa28e39d3cccaebf406",
     "results/phase2/information/rows.csv": "99f0a7a92fc4747ade2cb1d8a6d5f97550274a29c36180006e5c1048521dae42"
   },
-  "generator_sha256": "5d40a92c448672863b78a925b8e73b91514a541ba4b04deef49f30aeec6c4739",
-  "writer_sha256": "4065b774a7639f14a587c92b5e41c233adfc28151bcdaebd6cd2d18b7c00bc95",
+  "generator_sha256": "b4d8ab80a585d65e4fa0e1f0b5ca4898e06e96ebb400c8293295cbdada69569b",
+  "writer_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
+  "source_version": "de833195e2e7d025ca75c1efb57ac6d866127461",
+  "edition_tag": "manuscript-2026-10-25",
+  "source_links": [
+    [
+      "UCI dataset and target definition",
+      "https://archive.ics.uci.edu/dataset/266/seismic+bumps"
+    ],
+    [
+      "Audited source and row mapping",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/data/README.md"
+    ],
+    [
+      "Matched-information protocol",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/phase2/information/protocol.json"
+    ],
+    [
+      "Model fitting and within-grade allocation",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/phase2/information/run.py"
+    ],
+    [
+      "Numerical verification and refit replay",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/phase2/information/verify.py"
+    ],
+    [
+      "Saved results and verification guide",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/results/phase2/information/README.md"
+    ],
+    [
+      "Integrated manuscript in this edition",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf"
+    ],
+    [
+      "Author contributions and AI assistance",
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/CONTRIBUTIONS.md"
+    ]
+  ],
   "tables": [
     {
       "id": "information_primary",
@@ -191,16 +230,17 @@
       ]
     }
   ],
-  "scope": "Separate matched-information report from computed evidence; one phase table, one all-length interval figure, no fitting or policy selection by reporting",
+  "scope": "Separate matched-information report from computed evidence; one record-block table, one all-length interval figure, no fitting or policy selection by reporting",
   "numerical_verification_at_build": {
     "sha256": "bf47da0861867ddc171b44858a3d9da2d3d55485d61617de9438077b5ba8d1f5",
     "refit": true,
     "scope": "Live model-input/code/output and protected computational-evidence hashes; bounded historical presentation/derived-summary snapshots checked separately (not a claim that current papers are unchanged). Raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay."
   },
   "outputs": {
-    "monitoring_information_increment.md": "90daee8ec877198bf12288e7bdb7decd7a533fc6fa6c24b6d9abf70393152e10",
-    "monitoring_information_increment.docx": "6b42f36b4f005606cbc9ff687e2eb90ecbc8caf07296f4388b2392ab42df55c3",
+    "monitoring_information_increment.md": "c30857731c50bd168fb1a6b2efee9922fdf89ed5b9e0cef2e5379e93e757bdb2",
+    "monitoring_information_increment.docx": "2c88b792e98e2bf960c33a5bcd71223f09a33cca747dbdb4bc39e073d4d4855a",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
-    "information_increment.png": "2883379c7a534b967e21b1d5ecd8928ed5b26c2ef56495989604845166a788fa"
+    "information_increment.png": "0058be9b18d0e7f23ac5cb4bb4519a3ae360a9e8f119591cffdd68b7da0c04f5",
+    "information_increment.svg": "8f1f513cc1d45a6fb582f9d02c5c83a8fe134ac8955e04248d5a9f47a95839e9"
   }
 }

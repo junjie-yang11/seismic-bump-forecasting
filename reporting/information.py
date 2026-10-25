@@ -6,11 +6,24 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 from .overall import write_outputs
+from .edition import EDITION_TAG, edition_url
 
 ROOT=Path(__file__).resolve().parents[1]
 DEST=ROOT/'reports/information'
 STEM='monitoring_information_increment'
 TITLE='Monitoring Information Beyond Hazard Grades and Shift Type'
+SOURCE_COMMIT='de833195e2e7d025ca75c1efb57ac6d866127461'
+SOURCE_BASE='https://github.com/junjie-yang11/seismic-bump-forecasting/blob/'+SOURCE_COMMIT+'/'
+SOURCE_LINKS=[
+    ['UCI dataset and target definition','https://archive.ics.uci.edu/dataset/266/seismic+bumps'],
+    ['Audited source and row mapping',SOURCE_BASE+'data/README.md'],
+    ['Matched-information protocol',SOURCE_BASE+'phase2/information/protocol.json'],
+    ['Model fitting and within-grade allocation',SOURCE_BASE+'phase2/information/run.py'],
+    ['Numerical verification and refit replay',SOURCE_BASE+'phase2/information/verify.py'],
+    ['Saved results and verification guide',SOURCE_BASE+'results/phase2/information/README.md'],
+    ['Integrated manuscript in this edition',edition_url('reports/overall/integrated_research_report.pdf')],
+    ['Author contributions and AI assistance',SOURCE_BASE+'CONTRIBUTIONS.md'],
+]
 
 
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -42,7 +55,7 @@ def increment_figure(rows,path):
     for index,fold in enumerate((0,1,2,3,-1)):
         ax=axes[index]
         title='Pooled (supplementary)' if fold<0 else f'Record block {fold+1}'
-        ax.set_title(title,loc='left',fontsize=10,pad=3)
+        ax.set_title(title,loc='left',fontsize=12,pad=3)
         for j,budget in enumerate((.01,.05,.10,.20)):
             for length in (16,32,64):
                 r=one(rows,fold=fold,budget=budget,block_length=length)
@@ -52,16 +65,16 @@ def increment_figure(rows,path):
             ax.plot(float(point['delta_etp']),j,'o',ms=4,color='#192a35')
         ax.axvline(0,color='#7b858e',ls='--',lw=.8)
         ax.set_xlim(low-margin,high+margin);ax.set_ylim(3.55,-.55)
-        ax.set_yticks(range(4),['1%','5%','10%','20%']);ax.set_ylabel('Budget',fontsize=9)
+        ax.set_yticks(range(4),['1%','5%','10%','20%']);ax.set_ylabel('Budget',fontsize=11)
         ax.spines[['top','right']].set_visible(False)
-        ax.tick_params(labelsize=9);ax.grid(axis='x',alpha=.13);ax.set_axisbelow(True)
+        ax.tick_params(labelsize=11);ax.grid(axis='x',alpha=.13);ax.set_axisbelow(True)
         if fold<0:ax.set_facecolor('#f0f3f5')
     legend=[Line2D([0],[0],color=colors[length],ls=styles[length],lw=1.8 if length==32 else 1.3,
                    label=f'L={length}'+(' (main)' if length==32 else '')) for length in (16,32,64)]
-    fig.legend(handles=legend,loc='upper right',bbox_to_anchor=(.99,1.005),frameon=False,ncol=3,fontsize=9)
-    axes[-1].set_xlabel('Extended minus base expected hazardous-shift detections',fontsize=10)
+    fig.legend(handles=legend,loc='upper right',bbox_to_anchor=(.99,1.005),frameon=False,ncol=3,fontsize=11)
+    axes[-1].set_xlabel('Extended minus base expected hazardous-shift detections',fontsize=12)
     fig.tight_layout(rect=(0,0,1,.975),h_pad=.65)
-    fig.savefig(path,dpi=240,bbox_inches='tight');plt.close(fig)
+    fig.savefig(path,dpi=320,bbox_inches='tight');fig.savefig(Path(path).with_suffix('.svg'),bbox_inches='tight');plt.close(fig)
 
 
 def format_table(destination):
@@ -69,6 +82,8 @@ def format_table(destination):
     from docx import Document
     from docx.shared import Inches,Pt
     from phase1.generate_report import scrub_report_package
+    from docx.oxml.ns import qn
+    import re
     path=destination/(STEM+'.docx');doc=Document(path)
     table=doc.tables[0];table.autofit=False
     widths=[.7,.65,.35,1.25,1.25,2.35]
@@ -79,11 +94,26 @@ def format_table(destination):
             for paragraph in cell.paragraphs:
                 paragraph.paragraph_format.space_before=paragraph.paragraph_format.space_after=Pt(2.4)
                 # Keep the supplementary four-budget pooled group together.
-                # Phase results may continue normally with repeated headers.
+                # Record-block results may continue normally with repeated headers.
                 if row_index>=17:
                     paragraph.paragraph_format.keep_with_next=row_index<20
                 for run in paragraph.runs:run.font.size=Pt(9.5)
+    # Compact the eight source entries into four readable lines without
+    # removing any native hyperlink or changing its destination.
+    links=[p for p in doc.paragraphs if p._p.find(qn('w:hyperlink')) is not None]
+    if len(links)!=8:raise ValueError('Expected eight short-report source links')
+    for first,second in zip(links[::2],links[1::2]):
+        first.add_run(' | ')
+        for node in list(second._p):
+            if node.tag==qn('w:hyperlink'):first._p.append(node)
+        second._p.getparent().remove(second._p)
     doc.save(path);scrub_report_package(path)
+    manuscript=destination/(STEM+'.md');text=manuscript.read_text(encoding='utf-8')
+    entries=re.findall(r'^\[.+\]\(https://[^)]+\)$',text,re.M)
+    if len(entries)!=8:raise ValueError('Expected eight Markdown source links')
+    for first,second in zip(entries[::2],entries[1::2]):
+        text=text.replace(first+'\n\n'+second,first+' | '+second)
+    manuscript.write_text(text,encoding='utf-8',newline='\n')
 
 
 def build(root=ROOT):
@@ -98,6 +128,9 @@ def build(root=ROOT):
             return (root/relative).read_text(encoding='utf-8')
         def csv_input(name):return list(csv.DictReader(read('results/phase2/information/'+name+'.csv').splitlines()))
         plan=json.loads(read('phase2/information/protocol.json'))
+        read('reporting/edition.py')
+        source_audit=json.loads(read('results/phase1/source_audit.json'))
+        grade_metadata=json.loads(read('results/phase2/comparators/grade_metadata.json'))
         for source in ('phase2/information/provenance.py','results/phase2/information/historical_context.zip'):
             inputs[source]=sha(root/source)
         verification=json.loads(read('results/phase2/information/verification.json'))
@@ -132,6 +165,8 @@ def build(root=ROOT):
         pooled=one(ev,fold=-1,budget=.2);pooled_ci=one(intervals,fold=-1,budget=.2,block_length=main_length)
         all_pooled_include_zero=all(float(r['ci_low'])<=0<=float(r['ci_high']) for r in intervals if int(r['fold'])==-1)
         heading('Question and matched comparison')
+        para(f'This study uses the audited UCI Seismic Bumps mirror containing {source_audit["mirror_rows"]:,} records. A hazardous-shift label indicates a seismic bump with energy above 10,000 J in the subsequent eight-hour shift. It identifies a hazardous shift, not an observed accident or an avoided accident. Recorded order is a temporal proxy because timestamps and working-face identifiers are unavailable.')
+        para('The primary seismic assessment orders a (no hazard), b (low hazard), c (high hazard) and d (danger state). The mirror contains only '+', '.join(grade_metadata['observed_counts']['seismic'])+' for this field; c and d are defined levels but are not observed here. Average precision (AP) is the sum of precision values weighted by recall increments, evaluating tied scores as a group. It selects historical model configurations and is distinct from the detection counts evaluated at fixed inspection slots.')
         para('Does monitoring information improve hazardous-shift detection beyond three existing hazard assessments and shift type, at identical inspection allocations? This separately specified exploratory supplement compares a four-input base design with the established 17-column design. Both use XGBoost and the same four historical fitting/test splits. Each design independently selects depth 2/3 and 80/160 rounds on the same inner historical split by AP, with negative Brier if that inner set has no positives. Policy-reference and test labels do not enter fitting or tuning; no holdout is added.')
         para('Within each test block, K=floor(B*N) slots go to higher seismic grades first; model scores rank records within each grade. Both models use uniform allocation within an exactly tied boundary score group: h slots among m records containing p hazards contribute E(TP)=h*p/m. Reported fractional counts integrate allocation randomness rather than describe fractional shifts. Pooled results sum block allocations; scores are never ranked across fitted blocks.')
         heading('Expected detections on the shared test records')
@@ -148,17 +183,20 @@ def build(root=ROOT):
         para('The matched baseline changes the interpretation of the earlier complete-score-versus-grade-random pilot: the present increment is specifically relative to a fitted model already using all three assessments and shift type. Positive point differences occur in '+', '.join(positive_counts)+' budgets in blocks 1-4, respectively; '+str(include_count)+'/'+str(len(main_intervals))+' main block-specific intervals include zero. '+('The pooled intervals also include zero at every budget and block length, so these observations do not resolve a consistent monitoring-information increment under the specified workflow. ' if all_pooled_include_zero else 'The displayed interval directions bound the evidence for increments under the specified workflow. ')+
              'This does not establish that monitoring information is generally uninformative: the comparison concerns these inputs, separately AP-selected configurations and previously examined records. At fixed P and K, E(L)=r*P+K-(r+1)*E(TP), so an additional cost grid would restate detection differences. Recorded order remains a temporal proxy, and the batch allocation is not an observed inspection process or accident-prevention effect. Independent timestamped working-face data with inspection outcomes would test transfer beyond this cohort.')
         heading('Protocol and computational evidence')
-        para('The separate protocol is phase2/information/protocol.json. Model fitting and analytic allocation are implemented in phase2/information/run.py; phase2/information/verify.py recomputes the evidence through a separate calculation path and supports full refitting replay. Results in results/phase2/information/ retain row-level scores and inclusion probabilities, all candidate tuning predictions, eight final models, grade allocations, every bootstrap multiplicity and replicate, and version-specific verification. The original stage-specific papers and ranking-pilot experimental results are retained. The integrated report includes the main matched-information finding; this supplement retains the complete design, table and block-length sensitivity. Author contributions and AI assistance follow CONTRIBUTIONS.md.')
+        para('The protocol, fitting and allocation code, numerical verifier and saved evidence are linked below. The verifier recomputes the calculations through a separate path and supports full refitting replay. Retained results include row-level scores and inclusion probabilities, all candidate tuning predictions, eight final models, grade allocations, every bootstrap multiplicity and replicate, and version-specific verification. The original stage-specific papers and ranking-pilot experimental results are retained. The integrated report includes the main matched-information finding; this supplement retains the complete design, table and block-length sensitivity.')
+        para('Scientific code and saved-evidence links identify commit '+SOURCE_COMMIT[:7]+'. The integrated-manuscript link identifies the fixed presentation edition '+EDITION_TAG+'. This revised report is generated by the current reporting code; its presentation is not claimed to be part of the earlier scientific source edition.')
+        for label,target in SOURCE_LINKS:
+            items.append(dict(kind='link',text=label,target=target))
         heading('Increment and interval figure')
-        items.append(dict(kind='figure',path='reports/information/information_increment.png',width=6.4,
+        items.append(dict(kind='figure',path='reports/information/information_increment.png',width=6.0,
             caption='Figure 1. Extended minus base expected detections at identical allocations. Dots are the unchanged original-queue point differences. Lines show paired 95% intervals for lengths 16 (orange dashed), 32 (blue solid, main) and 64 (green dotted). Positive favors added monitoring. The shaded pooled panel is supplementary; block-specific evidence is primary.'))
         write_outputs(items,dest,STEM,TITLE)
         format_table(dest)
         manifest=dict(title=TITLE,created_at_utc=datetime.now(timezone.utc).isoformat(),inputs=inputs,
-            generator_sha256=sha(Path(__file__)),writer_sha256=sha(root/'reporting/overall.py'),tables=[{k:v for k,v in table.items() if k!='kind'}],
-            scope='Separate matched-information report from computed evidence; one phase table, one all-length interval figure, no fitting or policy selection by reporting',
+            generator_sha256=sha(Path(__file__)),writer_sha256=sha(root/'reporting/overall.py'),source_version=SOURCE_COMMIT,edition_tag=EDITION_TAG,source_links=SOURCE_LINKS,tables=[{k:v for k,v in table.items() if k!='kind'}],
+            scope='Separate matched-information report from computed evidence; one record-block table, one all-length interval figure, no fitting or policy selection by reporting',
             numerical_verification_at_build=dict(sha256=sha(root/'results/phase2/information/verification.json'),refit=verification['refit'],scope=verification['scope']),
-            outputs={name:sha(dest/name) for name in (STEM+'.md',STEM+'.docx','figure_data.csv','information_increment.png')})
+            outputs={name:sha(dest/name) for name in (STEM+'.md',STEM+'.docx','figure_data.csv','information_increment.png','information_increment.svg')})
         (dest/'report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
         record.write_text(json.dumps(dict(passed=False,status='awaiting separate report verification')),encoding='utf-8')
         print('Information supplement generated: one table, one figure, original papers unchanged.')

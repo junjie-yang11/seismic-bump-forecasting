@@ -1,6 +1,6 @@
 {
   "title": "Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot",
-  "created_at_utc": "2026-10-25T10:11:17.252629+00:00",
+  "created_at_utc": "2026-10-25T11:27:41.831213+00:00",
   "inputs": {
     "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
     "results/phase2/ranking/evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
@@ -8,14 +8,14 @@
     "results/phase2/ranking/rows.csv": "f9bbbf528629e65de4002e5254ee1f2d3b15e0bed9eb9de8b91fcd4c8a7e8dda",
     "results/phase2/ranking/allocations.csv": "0f8381d63bcaa4d4cec5e01725a077739c3a23be092fbd2273d44279a12fd2f4"
   },
-  "generator_sha256": "8f9caf3b35606afb61fa06f0e903c35872edf53a6ed3c5015b3eea87cbe1e70a",
-  "writer_sha256": "4065b774a7639f14a587c92b5e41c233adfc28151bcdaebd6cd2d18b7c00bc95",
+  "generator_sha256": "ce0211ced5d5260c7c563416c25430ff624ed1ad41772c4ee4a094d19582b3a4",
+  "writer_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
   "tables": [
     {
       "id": "ranking_primary",
       "caption": "Table 1. Extra detections from grade-first ML relative to analytic grade-random expectation. Brackets are conditional 95% block intervals.",
       "headers": [
-        "Phase",
+        "Block",
         "Budget",
         "K",
         "Random E(TP)",
@@ -187,7 +187,7 @@
     },
     {
       "id": "ranking_aux",
-      "caption": "Table 2. Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.",
+      "caption": "Table 2. Global model ranking on each record block, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.",
       "headers": [
         "Budget",
         "K",
@@ -269,7 +269,7 @@
     ],
     [
       "Integrated report",
-      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/reports/overall/integrated_research_report.pdf"
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf"
     ]
   ],
   "source_certificate_at_build": {
@@ -277,7 +277,7 @@
     "scope": "Frozen source scores, exact grade quotas and K, independent ranking, analytical random allocation via SciPy, every block draw and weighted reranking replay; no fitting or real dispatch validation"
   },
   "outputs": {
-    "within_grade_ranking_pilot.md": "2aeea0f03dfb92f3b5dfa17d562db176d57ec3d6ea53717ca4357db9d17bea9a",
-    "within_grade_ranking_pilot.docx": "47849b36fc9b88dbeecd57e7ac102afb4f9288bbddbc1668488e6e3a86728fd0"
+    "within_grade_ranking_pilot.md": "2680faea0fe26c45734e71097d7902dc522518e25944991c612b6d4894d0a09a",
+    "within_grade_ranking_pilot.docx": "ace769d2134f66f410e7f432b817c9c422ac2afa447570ba717137e9da6293e7"
   }
 }

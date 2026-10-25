@@ -98,6 +98,8 @@ def _checks(root, pdf_text):
     for unwanted in ['Scientific Agent Skills','2609.00065','TODO','TBD','PLACEHOLDER']:
         check(unwanted not in md,'no unwanted tool reference or placeholder '+unwanted)
     check('AI-assisted writing workflows do not supply scientific evidence' in md,'AI disclosure separated from evidence')
+    check('first 1,804 mirror records' in md and '1,805-2,578' in md,'exact one-based holdout ranges')
+    check('Stage 1' in md and 'Stage 2' in md and 'C in record block 1' in md,'research stages and record blocks distinguished')
     check('wholly within the common test rows' in md and 'supplementary, overlapping evidence' in md,'overlapping holdout explicit')
     check('not a direct grade-to-alarm rule' in md,'ratings-only meaning explicit')
     check('separately specified supplement' in md and 'interval is [0,0] by construction' in md,'new conditional no-alarm evidence explicit')
@@ -188,7 +190,7 @@ def _checks(root, pdf_text):
     decisions=read('results/phase2/decisions.csv')
     d=[r for r in decisions if r['model']=='XGBoost' and r['scheme']=='time' and r['workflow']=='fixed']
     check(len(d)==len(pred) and {(int(r['fold']),int(r['row'])) for r in d}
-          =={(int(r['fold']),int(r['row'])) for r in pred},'unique, phase-aligned decision keys')
+          =={(int(r['fold']),int(r['row'])) for r in pred},'unique, block-aligned decision keys')
     def counts(rule):
         selected=[r for r in d if r[rule].lower() in ('true','1')]
         tp=sum(labels[int(r['row'])] for r in selected);fp=len(selected)-tp
@@ -207,7 +209,7 @@ def _checks(root, pdf_text):
             excess=str(total)
         expected.append([m,'-' if b is None else str(b)+'%',fmt(100*(10*fn+fp)/len(labels),2),
                          fmt(100*(fp-10*tp)/len(labels),2),str(tp),str(fn),str(fp),str(alerts),excess])
-    check(tables['decision']==expected,'decision counts, loss and phase-wise excess from raw decisions')
+    check(tables['decision']==expected,'decision counts, loss and record block-wise excess from raw decisions')
     audits=read('results/phase2/threshold_explanations.csv')
     e=read('results/phase2/evaluations.csv');expected=[]
     for f in range(4):
@@ -253,9 +255,9 @@ def _checks(root, pdf_text):
     for field in ('seismoacoustic','ghazard'):
         check([(r['row'],r['B_r10']) for r in grade_b[field]]==[(r['row'],r['B_r10']) for r in grade_b['seismic']],
               'grade B decisions are identical, not merely dependent')
-    check(all((r['B_r10']=='True')==(int(r['fold'])==0) for r in grade_b['seismic']),'grade B alarms all phase 1 and none later')
+    check(all((r['B_r10']=='True')==(int(r['fold'])==0) for r in grade_b['seismic']),'grade B alarms all record block 1 and none later')
     check('three grade B rules make exactly the same row-level decisions' in md and '101 fewer false alerts' in md,'common B comparator and detection tradeoff explicit')
-    check('an unresolved pooled direction does not erase a resolved increase' in md,'phase and pooled conclusions remain distinct')
+    check('an unresolved pooled direction does not erase a resolved increase' in md,'record block and pooled conclusions remain distinct')
     def effect(r):return fmt(r['loss_delta100'],2)+' '+bounds(r['ci_low'],r['ci_high'],2)
     def integer(value):return str(int(float(value)))
     def expand(rows, methods):
@@ -280,7 +282,7 @@ def _checks(root, pdf_text):
             e=take(se,method='XGBoost',fold=f,mechanism='C',cost=10,budget=b)
             r=take(sc,left_method='XGBoost',right_method='none',fold=f,mechanism='C',cost=10,budget=b)
             expected.append(['Pooled' if f<0 else str(f+1),f'{100*b:.0f}%',effect(r),integer(e['tp']),integer(e['fn']),integer(e['alerts'])])
-    check(expand(tables['no_alarm_intervals'],('XGBoost',))==sorted(expected),'complete phase and pooled C-minus-none intervals and detections')
+    check(expand(tables['no_alarm_intervals'],('XGBoost',))==sorted(expected),'complete record block and pooled C-minus-none intervals and detections')
     expected=[]
     for b in (.01,.05,.1,.2):
         for m in ('XGBoost','seismic','seismoacoustic','ghazard'):
@@ -309,9 +311,9 @@ def _checks(root, pdf_text):
             for m in ('seismic','seismoacoustic','ghazard'):
                 row.append(effect(take(sc,left_method='XGBoost',right_method=m,fold=f,mechanism='C',cost=10,budget=b)))
             expected.append(row)
-    check(expand(tables['grade_intervals'],('XGBoost','seismic','seismoacoustic','ghazard'))==sorted(expected),'all phase-specific ML-minus-grade intervals')
+    check(expand(tables['grade_intervals'],('XGBoost','seismic','seismoacoustic','ghazard'))==sorted(expected),'all block-specific ML-minus-grade intervals')
     plot=read('reports/overall/decision_tradeoffs.csv')
-    check(len(plot)==20,'all four budgets in four phases plus supplemental pooled figure')
+    check(len(plot)==20,'all four budgets in four record blocks plus supplemental pooled figure')
     check(len({(r['fold'],r['budget']) for r in plot})==20,'unique plot settings')
     for r in plot:
         check((r['model'],r['workflow'],r['mechanism'],r['cost'])==('XGBoost','fixed','C','10'),'fixed decision-figure conditions')
@@ -402,13 +404,22 @@ def _checks(root, pdf_text):
                 embedded_images.append(dict(page=number,pixels=[int(obj['/Width']),int(obj['/Height'])],
                     drawn_points=[width,height],effective_ppi=[round(int(obj['/Width'])*72/width,2),round(int(obj['/Height'])*72/height,2)]))
             page.extract_text(visitor_operand_before=inspect_image)
-        check(len(embedded_images)==4,'four raster research figures; overview retained as vector')
+        check(len(embedded_images)==0 and sum(len(p.images) for p in reader.pages)==0,'all five research figures retained as vector in PDF')
+        from reporting.edition import EDITION_TAG,edition_url
+        check(manifest['edition_tag']==EDITION_TAG,'fixed presentation edition')
+        targets=set()
+        for page in reader.pages:
+            for ref in page.get('/Annots',[]):
+                action=ref.get_object().get('/A')
+                if action:targets.add(str(action.get_object().get('/URI','')))
+        for path in ('reports/information/monitoring_information_increment.pdf','reports/overall/decision_comparison_supplement.pdf'):
+            check(edition_url(path) in targets,'fixed-version clickable supplement '+path)
     return dict(checks=count,tables=len(tables),figures=figures,pages=pages,pdf_text_checked=pdf_text,
                 embedded_pdf_images=embedded_images,equation_verifier_sha256=sha(root/'reporting/verify_math.py'),
                 scope='Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.',
                 manifest_sha256=sha(out/'report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
                 checked_row_and_table_inputs_sha256=checked_inputs,
-                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md','evidence_overview.svg','calibration_detail.png','shap_readable.png','monitoring_increment.png','monitoring_increment.csv')})
+                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md','evidence_overview.svg','calibration_detail.png','shap_readable.png','monitoring_increment.png','monitoring_increment.csv','calibration_detail.svg','shap_readable.svg','decision_tradeoffs.svg','monitoring_increment.svg')})
 
 
 def verify(root=ROOT,pdf_text=False):

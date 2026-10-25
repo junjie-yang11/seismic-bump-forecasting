@@ -1,23 +1,26 @@
 {
-  "checks": 830,
+  "checks": 866,
   "tables": 1,
   "figures": 1,
   "phase_and_pooled_rows": 20,
   "figure_settings": 60,
   "pages": 3,
   "pdf_text_checked": true,
+  "source_links_checked": 8,
+  "standalone_background_checked": true,
   "scope": "Source/code/output hashes, row-derived expected detections and allocation counts, complete main table and all-length plot data, Word/Markdown agreement and optional PDF text; numerical bootstrap/model refit verification is separate",
-  "manifest_sha256": "477411329cf8a0a3b6480d062155461ad2e004e640a07999410a624b48e5af01",
+  "manifest_sha256": "f72f2fc702c6727fa221644b1c8e194762c27b0662798b0e6132c55c3dceda98",
   "outputs_sha256": {
-    "monitoring_information_increment.md": "90daee8ec877198bf12288e7bdb7decd7a533fc6fa6c24b6d9abf70393152e10",
-    "monitoring_information_increment.docx": "6b42f36b4f005606cbc9ff687e2eb90ecbc8caf07296f4388b2392ab42df55c3",
-    "monitoring_information_increment.pdf": "9ff275ed8ee450a4ccc7c7307d1c275fd67c1998bf3ddeb29580665d68dd2d84",
+    "monitoring_information_increment.md": "c30857731c50bd168fb1a6b2efee9922fdf89ed5b9e0cef2e5379e93e757bdb2",
+    "monitoring_information_increment.docx": "2c88b792e98e2bf960c33a5bcd71223f09a33cca747dbdb4bc39e073d4d4855a",
+    "monitoring_information_increment.pdf": "03a4771891a40a477b4b0dba3f68679173635bc22667e21d9a9b8ed83e591f3b",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
-    "information_increment.png": "2883379c7a534b967e21b1d5ecd8928ed5b26c2ef56495989604845166a788fa"
+    "information_increment.png": "0058be9b18d0e7f23ac5cb4bb4519a3ae360a9e8f119591cffdd68b7da0c04f5",
+    "information_increment.svg": "8f1f513cc1d45a6fb582f9d02c5c83a8fe134ac8955e04248d5a9f47a95839e9"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-25T10:13:57.520516+00:00",
-  "completed_at_utc": "2026-10-25T10:13:57.755514+00:00",
-  "verifier_sha256": "9fa463f684962f2fdf9be9a44c509dc467d514e105b714b7e4b9ad8ba78fb946"
+  "started_at_utc": "2026-10-25T11:29:29.014068+00:00",
+  "completed_at_utc": "2026-10-25T11:29:29.301911+00:00",
+  "verifier_sha256": "076b2c719bd449f1973e268a706ade5a9eee1ea7dd39dbca2a47d4bc6ea5dd21"
 }

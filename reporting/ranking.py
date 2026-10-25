@@ -6,6 +6,7 @@ import json
 from datetime import datetime,timezone
 from pathlib import Path
 from .overall import write_outputs
+from .edition import edition_url
 
 ROOT=Path(__file__).resolve().parents[1]
 DEST=ROOT/'reports/ranking'
@@ -19,7 +20,7 @@ SOURCE_LINKS=[
     ('Ranking code',f'{REPOSITORY}/tree/{SOURCE_COMMIT}/phase2/ranking'),
     ('Saved evidence and verification guide',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/results/phase2/ranking/README.md'),
     ('Numerical verifier',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/phase2/ranking/verify.py'),
-    ('Integrated report',f'{REPOSITORY}/blob/{SOURCE_COMMIT}/reports/overall/integrated_research_report.pdf'),
+    ('Integrated report',edition_url('reports/overall/integrated_research_report.pdf')),
 ]
 
 
@@ -100,31 +101,31 @@ def build():
              'The pooled intervals at all four budgets contain zero. Positive point increments at 5%, 10% and 20% do not resolve the direction of within-grade benefit under this conditional analysis. No grade, budget, model or seed is selected from these results.')
         heading('Data and fixed analysis protocol')
         para('The audited UCI mirror supplies seismic grades for 2,063 existing test records and 88 hazardous-shift labels. The observed primary field has a and b only. Higher grade receives priority. Within each grade, the full XGBoost score supplies the model ranking; seeded label-independent keys break score ties. The same keys are used for global model ranking. The full scores also use two other hazard grades, monitoring variables and shift type, so any increment is not an isolated sensor effect.')
-        para('The separate protocol was saved before these calculations, after previous results had been inspected. It fixes seismic, the four original phases, budgets 1%, 5%, 10% and 20%, and the saved fixed-model scores. No model is trained, retuned or selected. The earlier Stage 2 whole-tie threshold rules remain unchanged; this pilot instead permits a grade group to be split to fill a hypothetical batch allocation.')
-        para('For each phase, K=floor(B*N). Grade-random and grade-first ML receive identical k_g allocations, with E[TP_random]=sum_g k_g*P_g/N_g. Each expectation is calculated analytically rather than from one random draw. The saved hypergeometric allocation distribution describes random choice on this fixed queue; its spread is distinct from the block-bootstrap uncertainty interval.')
-        para('The block analysis uses 2,000 paired moving-block draws of length 32 within phases. Every sampled queue is reallocated and reranked using frozen scores and the original label-independent tie keys, including duplicate copies. The random expectation is recomputed for each queue. Zero-positive draws are retained. Pooled results sum phase-specific allocations and detections; they never rank scores across separately fitted phase models. Intervals are unadjusted and exclude model-fitting and selection uncertainty.')
-        heading('Phase results and pooled comparison')
+        para('The separate protocol was saved before these calculations, after previous results had been inspected. It fixes seismic, the four original record blocks, budgets 1%, 5%, 10% and 20%, and the saved fixed-model scores. No model is trained, retuned or selected. The earlier Stage 2 whole-tie threshold rules remain unchanged; this pilot instead permits a grade group to be split to fill a hypothetical batch allocation.')
+        para('For each record block, K=floor(B*N). Grade-random and grade-first ML receive identical k_g allocations, with E[TP_random]=sum_g k_g*P_g/N_g. Each expectation is calculated analytically rather than from one random draw. The saved hypergeometric allocation distribution describes random choice on this fixed queue; its spread is distinct from the block-bootstrap uncertainty interval.')
+        para('The block analysis uses 2,000 paired moving-block draws of length 32 within blocks. Every sampled queue is reallocated and reranked using frozen scores and the original label-independent tie keys, including duplicate copies. The random expectation is recomputed for each queue. Zero-positive draws are retained. Pooled results sum block-specific allocations and detections; they never rank scores across separately fitted record block models. Intervals are unadjusted and exclude model-fitting and selection uncertainty.')
+        heading('Record block results and pooled comparison')
         rows=[]
         for fold in (0,1,2,3,-1):
             for budget in plan['budgets']:
                 r=one(e,fold=fold,budget=budget);interval=one(ci,fold=fold,budget=budget,method='grade_ml')
                 rows.append(['Pooled' if fold<0 else str(fold+1),f'{100*budget:.0f}%',r['k'],num(r['expected_random_tp']),r['grade_ml_tp'],effect(interval)])
         table('ranking_primary','Extra detections from grade-first ML relative to analytic grade-random expectation. Brackets are conditional 95% block intervals.',
-              ['Phase','Budget','K','Random E(TP)','Grade+ML TP','Extra TP [95%]'],rows)
+              ['Block','Budget','K','Random E(TP)','Grade+ML TP','Extra TP [95%]'],rows)
         phase2_low=one(ci,fold=1,budget=.01,method='grade_ml')
-        para('Phase-specific intervals and counts are the primary evidence. The pooled point increment is negative at 1% and positive at the three larger budgets, while all pooled intervals include both improvement and decrease. '
-             f'Phase 2 at 1% instead has an increment of {effect(phase2_low)}, entirely below zero. '
+        para('Block-specific intervals and counts are the primary evidence. The pooled point increment is negative at 1% and positive at the three larger budgets, while all pooled intervals include both improvement and decrease. '
+             f'Record block 2 at 1% instead has an increment of {effect(phase2_low)}, entirely below zero. '
              'Pooling does not erase that result. An interval spanning zero does not establish equivalence or exclude useful increments on another queue.')
         heading('Auxiliary ranking and interpretation')
         rows=[]
         for budget in plan['budgets']:
             r=one(e,fold=-1,budget=budget);interval=one(ci,fold=-1,budget=budget,method='global_ml')
             rows.append([f'{100*budget:.0f}%',r['k'],r['grade_ml_tp'],r['global_ml_tp'],effect(interval)])
-        table('ranking_aux','Global model ranking on each phase, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.',
+        table('ranking_aux','Global model ranking on each record block, pooled afterwards. Extra TP is measured against the grade-random expectation, not against Grade+ML. This can change allocations between grades and does not isolate within-grade information.',
               ['Budget','K','Grade+ML TP','Global ML TP','Global TP - grade-random E(TP) [95% CI]'],rows)
-        para('The primary comparison holds grade-specific allocations fixed. The global comparison holds only total K fixed and therefore answers a different allocation question. Under the original hypothetical cost, L=r*P+K-(r+1)*TP. At fixed P and K, loss change is determined entirely by detection change; a second cost grid would not supply independent evidence.')
+        para('The primary comparison holds grade-specific allocations fixed. The global comparison holds only total K fixed and therefore answers a different allocation question. Under the original hypothetical cost, fixing the hazardous count P and allocated slots K makes loss change depend entirely on detection change; a second cost grid would not supply independent evidence.')
         heading('Worked allocation example')
-        para(f'Phase 1 has {worked["n"]} records and {worked["k"]} slots at the 20% budget. Both grade-priority methods include all {worked["b_n"]} grade-b records, covering the same {worked["b_positives"]} hazardous records. '
+        para(f'Record block 1 has {worked["n"]} records and {worked["k"]} slots at the 20% budget. Both grade-priority methods include all {worked["b_n"]} grade-b records, covering the same {worked["b_positives"]} hazardous records. '
              f'The remaining {worked["a_slots"]} slots come from {worked["a_n"]} grade-a records, including {worked["a_positives"]} hazardous records. ML detects {worked["a_ml_tp"]} in that group; random selection expects '
              f'{worked["a_slots"]}*{worked["a_positives"]}/{worked["a_n"]} = {num(worked["a_random_expected_tp"])}. '
              f'Total detections are {worked["total_ml_tp"]} versus expected {num(worked["total_random_expected_tp"])}: an increment of {effect(example_ci)}. '

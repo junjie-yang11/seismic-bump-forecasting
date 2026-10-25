@@ -26,7 +26,8 @@ def supporting_figures(bins, importance, destination):
         ax.xaxis.set_major_formatter(PercentFormatter(1,decimals=0));ax.yaxis.set_major_formatter(PercentFormatter(1,decimals=0))
         ax.tick_params(labelsize=12);ax.grid(alpha=.15);ax.spines[['top','right']].set_visible(False)
     fig.tight_layout(w_pad=2)
-    fig.savefig(destination/'calibration_detail.png',dpi=320,bbox_inches='tight');plt.close(fig)
+    fig.savefig(destination/'calibration_detail.png',dpi=320,bbox_inches='tight')
+    fig.savefig(destination/'calibration_detail.svg',bbox_inches='tight');plt.close(fig)
     globally=sorted([r for r in importance if r['validation']=='time' and int(r['fold'])==-1],key=lambda r:-float(r['mean_abs']))[:8]
     shares=[]
     for r in globally:
@@ -41,14 +42,19 @@ def supporting_figures(bins, importance, destination):
     left.set_xlabel('Mean absolute SHAP contribution\n(raw log-odds)',fontsize=13)
     left.set_title('Common-cohort feature use',fontsize=14);left.grid(axis='x',alpha=.15)
     left.spines[['top','right']].set_visible(False);left.tick_params(labelsize=13)
-    matrix=np.asarray(shares);right.imshow(matrix,aspect='auto',cmap='Blues',vmin=0,vmax=max(.3,float(matrix.max())))
+    # Draw the 32 heatmap cells as vector quadrilaterals, not an embedded bitmap.
+    matrix=np.asarray(shares)
+    right.pcolormesh(np.arange(5)-.5,np.arange(9)-.5,matrix,cmap='Blues',vmin=0,
+                    vmax=max(.3,float(matrix.max())),shading='flat')
+    right.set_xlim(-.5,3.5);right.set_ylim(7.5,-.5)
     right.set_xticks(range(4),['Block 1','Block 2','Block 3','Block 4']);right.tick_params(axis='y',left=False,labelleft=False)
     right.set_title('Share of all 17 contributions',fontsize=13)
     right.tick_params(axis='x',labelsize=12)
     for i,row in enumerate(shares):
         for j,value in enumerate(row):right.text(j,i,f'{100*value:.1f}%',ha='center',va='center',fontsize=13,color='white' if value>.18 else '#152635')
     fig.tight_layout(w_pad=1)
-    fig.savefig(destination/'shap_readable.png',dpi=320,bbox_inches='tight');plt.close(fig)
+    fig.savefig(destination/'shap_readable.png',dpi=320,bbox_inches='tight')
+    fig.savefig(destination/'shap_readable.svg',bbox_inches='tight');plt.close(fig)
 
 
 def monitoring_figure(evaluations, intervals, destination):
@@ -78,7 +84,8 @@ def monitoring_figure(evaluations, intervals, destination):
         if fold<0:ax.set_facecolor('#eef2f5')
     axes[-1].set_xlabel('Extended minus base expected detections\n(positive favors monitoring)',fontsize=13)
     fig.tight_layout(h_pad=.65,rect=(0,0,.82,1))
-    fig.savefig(destination/'monitoring_increment.png',dpi=320,bbox_inches='tight');plt.close(fig)
+    fig.savefig(destination/'monitoring_increment.png',dpi=320,bbox_inches='tight')
+    fig.savefig(destination/'monitoring_increment.svg',bbox_inches='tight');plt.close(fig)
 
 
 def add_svg_alternative(inline, path, part):

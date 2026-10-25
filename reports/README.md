@@ -1,6 +1,6 @@
 # Final research reports
 
-Start with the **integrated research report**: [PDF](overall/integrated_research_report.pdf) · [Word](overall/integrated_research_report.docx) · [Online manuscript](overall/integrated_research_report.md). It gives one argument, shared data description and integrated discussion, including the matched-information core finding, while preserving the different stage protocols. The [research overview](../docs/PROJECT_OVERVIEW.md) provides the quick introduction.
+For a quick introduction, read the [research overview](../docs/PROJECT_OVERVIEW.md). For the complete argument, read the **integrated research report**: [PDF](overall/integrated_research_report.pdf) · [Word](overall/integrated_research_report.docx) · [Online manuscript](overall/integrated_research_report.md). It gives one argument, shared data description and integrated discussion, including the matched-information core finding, while preserving the different stage protocols.
 
 The two supporting technical reports retain complete stage-specific methods, combinations and supplementary evidence:
 
@@ -15,7 +15,7 @@ Both papers are generated from verified saved evidence. Their authoring code is 
 
 The [integrated generator and commands](../reporting/README.md) use existing evidence without fitting models. Its [manifest](overall/report_manifest.json) records input hashes and computed table content. Its [independent check](../reporting/verify_overall.py) reconstructs the main decision and scenario tables from aligned saved row decisions; the [verification record](overall/verification.json) states the exact scope and checked output hashes. Visual inspection of exported pages is an additional step.
 
-The integrated report includes the separately specified [frozen-policy and direct-grade supplement](../phase2/comparators/README.md). Its [complete phase/cost appendix](overall/comparator_appendix.md) retains every A/B/C combination, with detections, missed shifts, false alerts, workload, excess and paired intervals. The original stage papers remain the locked-study technical edition.
+The integrated report includes the separately specified [frozen-policy and direct-grade supplement](../phase2/comparators/README.md). Its [complete record-block/cost appendix](overall/comparator_appendix.md) retains every A/B/C combination, with detections, missed shifts, false alerts, workload, excess and paired intervals. The original stage papers remain the locked-study technical edition.
 
 For the latest complete threshold-decision analysis, use the integrated report and its appendix above. The Stage 2 PDF is the original locked-experiment technical report; it does not include the later direct-grade supplement.
 
@@ -25,4 +25,8 @@ The [Stage 2 report checker](../phase2/verify_report.py) compares the manuscript
 
 See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The current structure places all final papers here; older review editions record their original paths.
 
-The matched-information main result appears in Section 5.6 and Figure 5 of the integrated manuscript. The [full supplement](information/monitoring_information_increment.pdf) retains all phase-specific expectations, the three block lengths and the reproduction detail. Historical reference budgets and strict test-batch allocations are distinct; the latter does not add an independent validation cohort.
+The matched-information main result appears in Section 5.6 and Figure 5 of the integrated manuscript. The [full supplement](information/monitoring_information_increment.pdf) retains all record-block-specific expectations, the three block lengths and the reproduction detail. Historical reference budgets and strict test-batch allocations are distinct; the latter does not add an independent validation cohort.
+
+The information supplement introduces the audited dataset, target label, seismic severity order and AP before describing the matched design. Its code and evidence links are pinned to scientific source edition `de83319`, while its integrated-manuscript link points to presentation tag `manuscript-2026-10-25`; the report manifest distinguishes both versions.
+
+The complete frozen-policy comparison supplement is available as [PDF](overall/decision_comparison_supplement.pdf), [Word](overall/decision_comparison_supplement.docx) and [Markdown](overall/decision_comparison_supplement.md). It contains all 1,260 settings without selecting favorable results.

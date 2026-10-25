@@ -16,7 +16,7 @@ Use the existing reporting dependencies for authoring and PDF text checks. PDF e
 
 | File | Responsibility |
 | --- | --- |
-| `overall.py` | Read saved CSVs and source references, construct the integrated argument and generate Markdown/Word plus the conceptual overview and phase-specific decision tradeoff figure |
+| `overall.py` | Read saved CSVs and source references, construct the integrated argument and generate Markdown/Word plus the conceptual overview and record-block-specific decision tradeoff figure |
 | `export_overall.ps1` | Export the generated Word document to PDF |
 | `verify_overall.py` | Reconstruct main decision counts/loss and scenarios from aligned row decisions; verify tables, citations, inputs and generated files |
 | `ranking.py` | Build the separate short ranking report from verified pilot evidence, using the shared Word writer |
@@ -58,7 +58,7 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1 -Repo
 python -B -m reporting.verify_information --pdf
 ```
 
-The [short report](../reports/information/monitoring_information_increment.md) contains one phase-specific table and one interval figure, with block length 32 as the main analysis and 16/64 retained as sensitivity settings. Saved scores, models, tuning predictions, inclusion probabilities and bootstrap evidence are under `results/phase2/information/`. Plain calculation/model loading and full candidate/final refitting are separately identified by the numerical verifier. Existing Quick Check covers the original study and discovers the new behavior tests; the two information-study verifiers above are separate additional checks. Export Word documents serially.
+The [short report](../reports/information/monitoring_information_increment.md) contains one record-block-specific table and one interval figure, with block length 32 as the main analysis and 16/64 retained as sensitivity settings. Saved scores, models, tuning predictions, inclusion probabilities and bootstrap evidence are under `results/phase2/information/`. Plain calculation/model loading and full candidate/final refitting are separately identified by the numerical verifier. Existing Quick Check covers the original study and discovers the new behavior tests; the two information-study verifiers above are separate additional checks. Export Word documents serially.
 
 ## Current manuscript revision and evidence scope
 
@@ -72,8 +72,24 @@ python -B -m phase2.information.verify --refit
 
 The last command repeats all matched-information candidate and final fits and independently replays the saved decisions and resampling calculations; it does not reselect historical Stage 2 policies. The retained original run manifest is unchanged. Its bounded [historical context snapshot](../results/phase2/information/README.md) preserves the old presentation and derived-summary bytes, while computational inputs and evidence remain live hash checks.
 
-In the reporting environment, generate/export/verify the integrated report, then repeat that sequence for the ranking and matched-information reports using their commands above. Export Word documents serially. All three report manifests bind the shared writer version. The main report includes four editable native Word equations and matching Markdown math; its verifier checks fractions, subscripts, signs and floor delimiters through a separately specified mathematical structure. Figure 1 includes an SVG alternative with a PNG fallback. Figures 2/3 are redrawn from saved calibration bins/SHAP means, without changing those source tables. Figure 5 reads the saved length-32 matched-information intervals; all 20 phase/pooled-budget settings are retained in [plot data](../reports/overall/monitoring_increment.csv). No new bootstrap is run by report generation.
+In the reporting environment, generate/export/verify the integrated report, then repeat that sequence for the ranking and matched-information reports using their commands above. Export Word documents serially. All three report manifests bind the shared writer version. The main report includes four editable native Word equations and matching Markdown math; its verifier checks fractions, subscripts, signs and floor delimiters through a separately specified mathematical structure. Figure 1 includes an SVG alternative with a PNG fallback. Figures 2/3 are redrawn from saved calibration bins/SHAP means, without changing those source tables. Figure 5 reads the saved length-32 matched-information intervals; all 20 record-block/pooled-budget settings are retained in [plot data](../reports/overall/monitoring_increment.csv). No new bootstrap is run by report generation.
 
 The complete comparator appendix stays in [Markdown](../reports/overall/comparator_appendix.md), with locked technical reports and exploratory short reports as supporting materials. The main text retains the selection objectives, data isolation, canonical tie/threshold rules and conditional interval scope needed to understand its findings. Computational checks and page-by-page visual inspection are separate tasks.
 
 The original `results/phase1/gap_attenuation.csv` remains the locked two-model summary. The standalone updater and the end of `phase1.run_research` write `results/phase1/gap_attenuation_all_models.csv`; Table 3b reads this separate three-model result. This keeps original Stage 2 input hashes intact. Both the Stage 1 verifier and the integrated-report verifier reconstruct the new summary from saved row predictions.
+
+The matched-information short report is independently readable: it defines the source mirror, next-shift energy label, observed seismic grades and AP. Its native Word/PDF hyperlinks and Markdown links identify scientific source/evidence commit `de83319` and presentation tag `manuscript-2026-10-25`; `source_version`, `edition_tag` and `source_links` in the report manifest identify those fixed destinations. The current presentation is verified against the current generator rather than attributed to that older evidence edition.
+
+## Printable complete supplement and fixed edition
+
+The full frozen comparator tables also have a printable landscape supplement. In the reporting environment, after the main generator has created the Markdown appendix:
+
+```text
+python -B -m reporting.appendix
+pwsh -NoProfile -ExecutionPolicy Bypass -File reporting/export_overall.ps1 -ReportDirectory overall -Stem decision_comparison_supplement
+python -B -m reporting.verify_appendix --pdf
+```
+
+The [PDF](../reports/overall/decision_comparison_supplement.pdf), [Word](../reports/overall/decision_comparison_supplement.docx) and [Markdown](../reports/overall/decision_comparison_supplement.md) retain all 1,260 saved settings. The standalone verifier reconstructs every row from the saved CSVs. The original Markdown comparison appendix remains available for machine inspection.
+
+Presentation links in the papers identify the immutable `manuscript-2026-10-25` edition; scientific source links in the short reports separately identify their earlier evidence commit. The tag is created only after generation and verification and must never be moved to a later revision. A later paper revision needs a new edition tag. README links continue to identify the latest materials. The measured Word quality flag alone retained about 200 PPI, so the actual quality improvement uses embedded SVG alternatives. The main report verifier inspects the exported PDF recursively and requires zero raster images for its five research figures.

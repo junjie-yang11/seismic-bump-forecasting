@@ -1,6 +1,6 @@
 # Frozen decision comparison appendix
 
-This generated appendix retains all planned A/B/C settings. Phase results precede pooled summaries. Negative loss differences favor the left policy. Intervals are unadjusted 95% percentile intervals from 2,000 paired within-phase moving-block draws of length 32, conditional on frozen policies and these records. They exclude refitting and selection uncertainty. Exact zero intervals can follow identical decisions and do not establish transfer stability.
+This generated appendix retains all planned A/B/C settings. Record block results precede pooled summaries. Negative loss differences favor the left policy. Intervals are unadjusted 95% percentile intervals from 2,000 paired within-block moving-block draws of length 32, conditional on frozen policies and these records. They exclude refitting and selection uncertainty. Exact zero intervals can follow identical decisions and do not establish transfer stability.
 
 [Protocol](../../phase2/comparators/protocol.json) · [Evidence and verification](../../results/phase2/comparators/README.md) · [Main manuscript](integrated_research_report.md)
 
@@ -8,7 +8,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 5
 
-| Phase | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
+| Record block | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | XGBoost | A_b01 | 1.55 [0.39, 3.10] | 0 | 36 | 8 | 8 | 3 |
 | 1 | XGBoost | A_b05 | 1.94 [0.58, 3.88] | 0 | 36 | 10 | 10 | 0 |
@@ -193,7 +193,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 10
 
-| Phase | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
+| Record block | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | XGBoost | A_b01 | 1.55 [0.39, 3.10] | 0 | 36 | 8 | 8 | 3 |
 | 1 | XGBoost | A_b05 | 1.94 [0.58, 3.88] | 0 | 36 | 10 | 10 | 0 |
@@ -378,7 +378,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 20
 
-| Phase | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
+| Record block | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | XGBoost | A_b01 | 1.55 [0.39, 3.10] | 0 | 36 | 8 | 8 | 3 |
 | 1 | XGBoost | A_b05 | 1.94 [0.58, 3.88] | 0 | 36 | 10 | 10 | 0 |
@@ -563,7 +563,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 50
 
-| Phase | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
+| Record block | Method | Rule | Delta loss / 100 [95%] | TP | FN | FP | Alerts | Excess |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | XGBoost | A_b01 | 1.55 [0.39, 3.10] | 0 | 36 | 8 | 8 | 3 |
 | 1 | XGBoost | A_b05 | 1.94 [0.58, 3.88] | 0 | 36 | 10 | 10 | 0 |
@@ -750,7 +750,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 5
 
-| Phase | Grade field | Rule | ML minus grade loss / 100 [95%] |
+| Record block | Grade field | Rule | ML minus grade loss / 100 [95%] |
 | --- | --- | --- | --- |
 | 1 | ghazard | A_b01 | 1.16 [-4.26, 7.95] |
 | 1 | ghazard | A_b05 | 1.55 [-4.07, 8.72] |
@@ -890,7 +890,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 10
 
-| Phase | Grade field | Rule | ML minus grade loss / 100 [95%] |
+| Record block | Grade field | Rule | ML minus grade loss / 100 [95%] |
 | --- | --- | --- | --- |
 | 1 | ghazard | A_b01 | 5.04 [-4.07, 18.02] |
 | 1 | ghazard | A_b05 | 5.43 [-3.88, 18.60] |
@@ -1030,7 +1030,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 20
 
-| Phase | Grade field | Rule | ML minus grade loss / 100 [95%] |
+| Record block | Grade field | Rule | ML minus grade loss / 100 [95%] |
 | --- | --- | --- | --- |
 | 1 | ghazard | A_b01 | 12.79 [-4.07, 37.40] |
 | 1 | ghazard | A_b05 | 13.18 [-3.49, 37.98] |
@@ -1170,7 +1170,7 @@ This generated appendix retains all planned A/B/C settings. Phase results preced
 
 ### Assumed missed-shift cost 50
 
-| Phase | Grade field | Rule | ML minus grade loss / 100 [95%] |
+| Record block | Grade field | Rule | ML minus grade loss / 100 [95%] |
 | --- | --- | --- | --- |
 | 1 | ghazard | A_b01 | 36.05 [-4.07, 95.54] |
 | 1 | ghazard | A_b05 | 36.43 [-3.49, 96.12] |

@@ -53,6 +53,48 @@ class WordMathTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             math.math_signature(node)
 
+    def test_ap_has_native_sum_and_cost_boundary_has_superscript(self):
+        from docx import Document
+        ns = {'m': math.MATH_NS}
+        ap = math.append_equation(Document().add_paragraph(), 'ap')
+        self.assertEqual(len(ap.findall('.//m:nary', ns)), 1)
+        self.assertEqual(ap.find('.//m:nary/m:sub/m:r/m:t', ns).text, 'k')
+        cost = math.append_equation(Document().add_paragraph(), 'cost_boundary')
+        self.assertEqual(cost.find('.//m:sSup/m:sup/m:r/m:t', ns).text, '*')
+        self.assertEqual(cost.find('.//m:f/m:den/m:r/m:t', ns).text, 'TP')
+
+    def test_sum_index_operator_and_superscript_corruption_are_detected(self):
+        from docx import Document
+        ns = {'m': math.MATH_NS}
+        original = math.append_equation(Document().add_paragraph(), 'ap')
+        mutated = deepcopy(original); mutated.find('.//m:nary/m:sub/m:r/m:t', ns).text = 'j'
+        self.assertNotEqual(math.math_signature(mutated), math.EQUATIONS['ap']['ast'])
+        mutated = deepcopy(original)
+        mutated.find('.//m:naryPr/m:chr', ns).set('{' + math.MATH_NS + '}val', '∏')
+        with self.assertRaisesRegex(ValueError, 'operator or limits'):
+            math.math_signature(mutated)
+        cost = math.append_equation(Document().add_paragraph(), 'cost_boundary')
+        cost.find('.//m:sSup/m:sup/m:r/m:t', ns).text = '2'
+        self.assertNotEqual(math.math_signature(cost), math.EQUATIONS['cost_boundary']['ast'])
+
+    def test_separate_verifier_checks_all_twelve_main_expressions(self):
+        from docx import Document
+        from reporting.verify_math import MAIN_EQUATION_IDS, verify_equations
+        document = Document(); markdown = []
+        for name in MAIN_EQUATION_IDS:
+            math.append_equation(document.add_paragraph(), name)
+            markdown.append(math.markdown_equation(name))
+        body = ET.fromstring(ET.tostring(document._element.body))
+        def check(condition, message):
+            self.assertTrue(condition, message)
+        verify_equations(body, '\n\n'.join(markdown), check)
+        # A swapped numerator/denominator cannot pass with matching display text.
+        fraction = body.find('.//{' + math.MATH_NS + '}f')
+        denominator = fraction.find('{' + math.MATH_NS + '}den')
+        denominator.find('.//{' + math.MATH_NS + '}t').text = 'wrong'
+        with self.assertRaises(AssertionError):
+            verify_equations(body, '\n\n'.join(markdown), check)
+
     def test_saved_docx_preserves_editable_math_and_markdown(self):
         from docx import Document
         document = Document()

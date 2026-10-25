@@ -44,12 +44,42 @@ def checks(root,pdf_text=False):
     md=(out/(STEM+'.md')).read_text(encoding='utf-8')
     with ZipFile(out/(STEM+'.docx')) as package:
         body=ET.fromstring(package.read('word/document.xml')).find('w:body',NS)
+        relationships=ET.fromstring(package.read('word/_rels/document.xml.rels'))
         core=ET.fromstring(package.read('docProps/core.xml'))
         for node in core:
             if node.tag.rsplit('}',1)[-1] in ('creator','lastModifiedBy'):check(not node.text,'clean Word author metadata')
     for paragraph in body.findall('w:p',NS):
         text=''.join(paragraph.itertext())
-        if text.strip():check(text in md,'Word paragraph agrees with manuscript')
+        if text.strip():
+            prose=re.sub(r'\[([^\]]+)\]\([^)]+\)',r'\1',md) if paragraph.find('w:hyperlink',NS) is not None else md
+            check(text in prose,'Word paragraph agrees with manuscript')
+    version='de833195e2e7d025ca75c1efb57ac6d866127461'
+    edition='manuscript-2026-10-25'
+    base='https://github.com/junjie-yang11/seismic-bump-forecasting/blob/'+version+'/'
+    sources=[
+        ['UCI dataset and target definition','https://archive.ics.uci.edu/dataset/266/seismic+bumps'],
+        ['Audited source and row mapping',base+'data/README.md'],
+        ['Matched-information protocol',base+'phase2/information/protocol.json'],
+        ['Model fitting and within-grade allocation',base+'phase2/information/run.py'],
+        ['Numerical verification and refit replay',base+'phase2/information/verify.py'],
+        ['Saved results and verification guide',base+'results/phase2/information/README.md'],
+        ['Integrated manuscript in this edition','https://github.com/junjie-yang11/seismic-bump-forecasting/blob/'+edition+'/reports/overall/integrated_research_report.pdf'],
+        ['Author contributions and AI assistance',base+'CONTRIBUTIONS.md']]
+    check(manifest['source_version']==version and manifest['edition_tag']==edition,'scientific source and presentation edition distinguished')
+    check(manifest['source_links']==sources,'fixed expected source destinations')
+    targets={r.get('Id'):r.get('Target') for r in relationships if r.get('Type','').endswith('/hyperlink') and r.get('TargetMode')=='External'}
+    word_links=[[''.join(link.itertext()),targets.get(link.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id'))]
+                for link in body.findall('.//w:hyperlink',NS)]
+    check(word_links==sources,'native Word hyperlinks match source and edition targets')
+    for label,url in sources:check('['+label+']('+url+')' in md,'clickable Markdown source '+label)
+    audit=json.loads((root/'results/phase1/source_audit.json').read_text(encoding='utf-8'))
+    check(f'containing {int(audit["mirror_rows"]):,} records' in md,'standalone audited mirror size')
+    for statement in ('above 10,000 J in the subsequent eight-hour shift',
+                      'a (no hazard), b (low hazard), c (high hazard) and d (danger state)',
+                      'mirror contains only a, b for this field',
+                      'Average precision (AP) is the sum of precision values weighted by recall increments',
+                      'evaluating tied scores as a group'):
+        check(statement in md,'standalone background '+statement)
     tables=[[[''.join(cell.itertext()) for cell in row.findall('w:tc',NS)] for row in table.findall('w:tr',NS)] for table in body.findall('w:tbl',NS)]
     check(len(tables)==len(manifest['tables'])==1,'one main result table')
     table=manifest['tables'][0]
@@ -108,15 +138,21 @@ def checks(root,pdf_text=False):
         reader=PdfReader(pdf);pages=len(reader.pages);check(2<=pages<=6,'short supplement page range')
         check('/Author' not in (reader.metadata or {}),'clean PDF author metadata')
         text='\n'.join(page.extract_text() or '' for page in reader.pages)
+        pdf_targets=set()
+        for page in reader.pages:
+            for annotation in page.get('/Annots',[]):
+                action=annotation.get_object().get('/A')
+                if action:pdf_targets.add(str(action.get_object().get('/URI','')))
+        for label,url in sources:check(url in pdf_targets,'clickable PDF source '+label)
         compact=re.sub(r'\s+','',text)
         check('Extendedminusbaseexpecteddetections' in compact,'PDF figure caption retains contrast direction')
         check('Discussion' in text and 'Protocol and computational evidence' in text,'report ends with interpretation and evidence')
         for row in table['rows']:
             for cell in row:
                 for number in re.findall(r'\b\d+\.\d+\b',cell):check(number in text,'PDF table value '+number)
-    return dict(checks=count,tables=1,figures=1,phase_and_pooled_rows=len(expected),figure_settings=len(figure),pages=pages,pdf_text_checked=pdf_text,
+    return dict(checks=count,tables=1,figures=1,phase_and_pooled_rows=len(expected),figure_settings=len(figure),pages=pages,pdf_text_checked=pdf_text,source_links_checked=len(sources),standalone_background_checked=True,
         scope='Source/code/output hashes, row-derived expected detections and allocation counts, complete main table and all-length plot data, Word/Markdown agreement and optional PDF text; numerical bootstrap/model refit verification is separate',
-        manifest_sha256=sha(out/'report_manifest.json'),outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','figure_data.csv','information_increment.png')})
+        manifest_sha256=sha(out/'report_manifest.json'),outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','figure_data.csv','information_increment.png','information_increment.svg')})
 
 
 def verify(root=ROOT,pdf_text=False):

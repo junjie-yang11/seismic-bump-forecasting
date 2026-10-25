@@ -32,16 +32,16 @@ The official source contains 2,584 records and 170 positive shift labels. An ARF
 
 The retained 17-column design contains three hazard assessments (seismic, seismoacoustic, ghazard), four geophone variables, nine seismic-activity variables and shift type. The geophone deviations already use historical summaries supplied with the data. The total count nbumps is omitted from this design; constant energy-band columns remain. Neither timestamps nor working-face identifiers are available to validate cross-row continuity. Recorded order is therefore the stated temporal proxy, not a verified sequence of consecutive shifts from one working face.
 
-Table 1. Shared test census and Stage 2 reference areas. Phases are record blocks, not identified mining sites.
+Table 1. Shared test census and Stage 2 reference areas. The blocks are record-order evaluation groups, not identified mining sites.
 
-| Phase | Test n | Test + | Test prevalence | Stage 2 ref n | Stage 2 ref + |
+| Record block | Test records | Test positives | Test prevalence | Reference records | Reference positives |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 516 | 36 | 6.98% | 103 | 21 |
 | 2 | 515 | 10 | 1.94% | 207 | 1 |
 | 3 | 516 | 24 | 4.65% | 310 | 7 |
 | 4 | 516 | 18 | 3.49% | 413 | 20 |
 
-The common test cohort has 88/2063 positives (4.27%), distinct from the full-mirror prevalence of 6.59%. The 774-record holdout is wholly within the common test rows and uses a different training cutoff. It was already inspected and is supplementary, overlapping evidence; it is neither an additional independent cohort nor an untouched confirmation set. Sample counts are not added across stages or protocols.
+The common test cohort has 88/2063 positives (4.27%), distinct from the full-mirror prevalence of 6.59%. The 774-record holdout is wholly within the common test rows and uses a different training cutoff. It fits the first 1,804 mirror records (one-based rows 1-1,804) and tests the last 774 (rows 1,805-2,578). It was already inspected and is supplementary, overlapping evidence; it is neither an additional independent cohort nor an untouched confirmation set. Sample counts are not added across stages or protocols.
 
 ## 3 Two complementary evaluation protocols
 
@@ -65,7 +65,11 @@ In Stage 2, the first 80% of each historical prefix is the fitting area and the 
 
 ## 3.1 Probability, explanation and decision definitions
 
-AP is the sum of precision values weighted by recall increments, with tied scores evaluated as a group: AP = sum_k P_k (R_k - R_(k-1)). The horizontal PR reference is the evaluation cohort prevalence pi [7]. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold's unweighted prevalence; CART and XGBoost use their fitted outputs.
+AP is the sum of precision values weighted by recall increments, with tied scores evaluated as a group. Precision P and recall R are evaluated at successive distinct-score groups k, starting from zero recall. The horizontal PR reference is the evaluation cohort prevalence π [7]. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold's unweighted prevalence; CART and XGBoost use their fitted outputs.
+
+$$
+AP=\sum_k P_k(R_k-R_{k-1})
+$$
 
 Expected calibration error is the bin-count-weighted absolute difference between mean event probability and observed hazardous fraction [12,13]. The present binary event-probability definition uses up to ten quantile bins, collapses duplicate edges and keeps tied probabilities together. Guo and colleagues instead summarize predicted-class confidence and accuracy using equally spaced bins. Binning is an assessment step, not a calibration model fitted on test labels. Brier score (BS) is the binary event-probability mean squared error [14]; the named historical training-prior or retrospective test-prevalence predictor supplies its reference; skill is undefined when the reference error is zero.
 
@@ -93,9 +97,9 @@ $$
 \mathrm{Excess}=\max\{0,\mathrm{Alerts}-\lfloor BN_{\mathrm{test}}\rfloor\}
 $$
 
-All alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums phase excesses, without cancellation by spare slots elsewhere.
+All alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums record block excesses, without cancellation by spare slots elsewhere.
 
-Paired moving-block intervals use 2,000 replicates and block length 32, separately within test phases, without wrapping across endpoints or phase boundaries [19,20]. Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The original contrasts cover C-A, C-B, secondary B-A and refitted-fixed. The separately specified supplement adds policy-minus-no-alarm and ML-minus-direct-grade contrasts; its rules, seeds and results are recorded separately. Intervals are unadjusted exploratory comparisons.
+Paired moving-block intervals use 2,000 replicates and block length 32, separately within test record blocks, without wrapping across endpoints or record block boundaries [19,20]. Both compared methods use the same sampled rows; pooled sampling preserves record block sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The original contrasts cover C-A, C-B, secondary B-A and refitted-fixed. The separately specified supplement adds policy-minus-no-alarm and ML-minus-direct-grade contrasts; its rules, seeds and results are recorded separately. Intervals are unadjusted exploratory comparisons.
 
 The direct-rule supplement thresholds seismic, seismoacoustic and ghazard separately on the original historical reference rows [1]. UCI explicitly defines seismic severity from a to d; all three ARFF domains use these codes. The common a<b<c<d ordering is the study's ordinal interpretation for the two other assessments, not a verified deployed policy. The mirror contains seismic codes a, b; the two other fields contain a, b and c, with no observed d. Each field uses the same A/B/C objectives, whole-grade ties and canonical thresholds as ML. Duplicate reference alert sets are collapsed: none uses +infinity, all uses -infinity, and partial sets use their minimum included observed grade. No best grade field is selected from test results. Saved ML scores, cutoffs and alerts are reused exactly; no model is retrained.
 
@@ -123,7 +127,7 @@ The interval in Table 3a belongs to the protocol difference, not to AP-minus-pi.
 
 Restricting the comparison to common rows reduces the original different-cohort gap by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. Table 3b makes the original and matched gaps directly comparable; the Stage 1 technical report retains the full protocol detail.
 
-Stage-specific XGBoost results further separate ranking from cohort composition: phase 1: AP 0.1341 at prevalence 0.0698; phase 2: AP 0.0284 at prevalence 0.0194; phase 3: AP 0.0731 at prevalence 0.0465; phase 4: AP 0.0618 at prevalence 0.0349. These are Stage 1 outer-model predictions, not Stage 2 fixed-model scores. The supplementary holdout overlaps these records and is not used to choose a model, subset or budget.
+Record-block-specific XGBoost results further separate ranking from cohort composition: record block 1: AP 0.1341 at prevalence 0.0698; record block 2: AP 0.0284 at prevalence 0.0194; record block 3: AP 0.0731 at prevalence 0.0465; record block 4: AP 0.0618 at prevalence 0.0349. These are Stage 1 outer-model predictions, not Stage 2 fixed-model scores. The supplementary holdout overlaps these records and is not used to choose a model, subset or budget.
 
 ## 4.1 Probability improvement depends on the reference
 
@@ -153,7 +157,7 @@ Table 5. Full design versus a refitted learner using all three hazard-rating fie
 
 Ratings-only denotes a separately fitted LR, CART or XGBoost using seismic, seismoacoustic and ghazard together. It is not a direct grade-to-alarm rule or the mine's deployed practice. The paired gain intervals include zero under the retained configurations. XGBoost ablations reuse full-design training-selected parameters, so the contrasts are conditional design comparisons rather than equally retuned optima for every subset.
 
-![Figure 3. Full-feature XGBoost attribution and phase-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.](../../reports/overall/shap_readable.png)
+![Figure 3. Full-feature XGBoost attribution and block-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.](../../reports/overall/shap_readable.png)
 
 The leading contributions are energy, nbumps2, gpuls. Removing the seismic-activity group and refitting yields AP 0.1292 versus 0.0862 for the full design; the paired difference is 0.0430 with interval [-0.0034, 0.1067]. The interval includes zero. Large attribution and uncertain refitted benefit can coexist because they concern different models and questions. Correlated inputs, interactions and sampling variability are possible explanations, not identified causes. No subset is selected from these test results.
 
@@ -176,13 +180,13 @@ Table 6. Stage 2 fixed XGBoost, r=10, pooled over 2,063 records. Negative loss d
 
 The point loss of C equals the no-alarm comparator at 1% and is higher at the other three budgets. The new frozen-policy intervals below assess this particular contrast. Lower C loss than A is compatible with a higher loss than no alarms: reducing false alerts can lower assumed cost while also reducing detections.
 
-At r=10 the phase-specific C-minus-no-alarm loss ranges are phase 1: 0.00 to 2.13; phase 2: 0.00; phase 3: 0.00; phase 4: 0.00 to 1.16 units per 100 records. These ranges retain all four budgets; pooled findings are not attributed uniformly to every phase. Historical budgets constrain reference selection, so methods with the same budget can generate different later workloads.
+At r=10 the block-specific C-minus-no-alarm loss ranges are record block 1: 0.00 to 2.13; record block 2: 0.00; record block 3: 0.00; record block 4: 0.00 to 1.16 units per 100 records. These ranges retain all four budgets; pooled findings are not attributed uniformly to every record block. Historical budgets constrain reference selection, so methods with the same budget can generate different later workloads.
 
 For the 20% budget at r=10, pooled C-A changes detections from 25 to 2 and reduces excess demand by 227 alerts. The loss difference is -13.09 per 100 records. This is a measured workload-coverage tradeoff under the assumed loss, not a demonstrated safety improvement. Actual inspection execution and accident avoidance are not observed.
 
-At r=10 and budget 20%, phase 1 C-A is 1.36 per 100 records, with paired 95% interval [-0.97, 5.43]. The interval contains zero.
+At r=10 and budget 20%, record block 1 C-A is 1.36 per 100 records, with paired 95% interval [-0.97, 5.43]. The interval contains zero.
 
-At r=10 and budget 20%, phase 2 C-A is -36.50 per 100 records, with paired 95% interval [-49.13, -27.18]. The interval is entirely below zero.
+At r=10 and budget 20%, record block 2 C-A is -36.50 per 100 records, with paired 95% interval [-49.13, -27.18]. The interval is entirely below zero.
 
 ## 5.1 Frozen policies compared with no alarms
 
@@ -190,7 +194,7 @@ At r=10 and budget 20%, phase 2 C-A is -36.50 per 100 records, with paired 95% i
 
 Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.
 
-| Phase | Budget | Delta [95% interval] | TP | FN | Alerts |
+| Record block | Budget | Delta [95% interval] | TP | FN | Alerts |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 1% | 0.00 [0.00, 0.00] | 0 | 36 | 0 |
 | 1 | 5% | 1.55 [0.39, 3.10] | 0 | 36 | 8 |
@@ -205,7 +209,7 @@ Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are
 | Pooled | 10% | 0.82 [-0.19, 1.84] | 1 | 87 | 28 |
 | Pooled | 20% | 0.58 [-1.02, 1.89] | 2 | 86 | 34 |
 
-Comma-separated budgets share exactly the same aligned row-level decisions within that phase, not merely rounded loss or interval endpoints. The complete appendix retains each setting separately. Phase 1 C at 5% and 10% gives positive loss intervals and no detections; the nonzero pooled intervals cross zero. Phase and pooled evidence therefore support different loss-direction assessments. Where C produces no alerts, every row-level difference is zero and the interval is [0,0] by construction. This establishes identical observed decisions, not reliable transfer. No alarms detect no hazardous shifts and remain a loss comparator rather than an operating recommendation.
+Comma-separated budgets share exactly the same aligned row-level decisions within that record block, not merely rounded loss or interval endpoints. The complete appendix retains each setting separately. C in record block 1 at 5% and 10% gives positive loss intervals and no detections; the nonzero pooled intervals cross zero. Record block and pooled evidence therefore support different loss-direction assessments. Where C produces no alerts, every row-level difference is zero and the interval is [0,0] by construction. This establishes identical observed decisions, not reliable transfer. No alarms detect no hazardous shifts and remain a loss comparator rather than an operating recommendation.
 
 ## 5.2 Direct hazard-grade comparators
 
@@ -221,13 +225,13 @@ Table 8. C rules at r=10 on the same pooled records. Reference selection is sepa
 | 1%, 5%, 10%, 20% | seismoacoustic | 0.00 [0.00, 0.00] | 0 | 88 | 0 | 0 | 0, 0, 0, 0 |
 | 1%, 5%, 10%, 20% | ghazard | -0.87 [-3.97, 1.36] | 4 | 84 | 22 | 26 | 21, 1, 0, 0 |
 
-Budgets are grouped only when their full transferred decision vectors match. Comma-separated excess counts follow the listed budget order: identical alarms can exceed different numbers of capacity slots. The appendix retains the ungrouped phase and pooled settings.
+Budgets are grouped only when their full transferred decision vectors match. Comma-separated excess counts follow the listed budget order: identical alarms can exceed different numbers of capacity slots. The appendix retains the ungrouped record block and pooled settings.
 
 At r=10, seismic and seismoacoustic C select no alarms across the displayed budgets. The ghazard rules yield 26 alerts, 4 detections and 22 false alerts, with loss difference -0.87 [-3.97, 1.36] versus no alarms. Their repeated pooled counts reflect the same transferred decisions, not independent replications. The negative point difference does not establish loss improvement because its interval crosses zero. Coarse reference grade groups can underfill budgets; later frequencies can also exceed them.
 
 Table 9. Frozen XGBoost minus each historically selected grade C rule at r=10. Brackets are paired 95% intervals; negative favors ML.
 
-| Phase | Budget | ML minus seismic | ML minus seismoacoustic | ML minus ghazard |
+| Record block | Budget | ML minus seismic | ML minus seismoacoustic | ML minus ghazard |
 | --- | --- | --- | --- | --- |
 | 1 | 1% | 0.00 [0.00, 0.00] | 0.00 [0.00, 0.00] | 3.49 [-5.43, 16.09] |
 | 1 | 5% | 1.55 [0.39, 3.10] | 1.55 [0.39, 3.10] | 5.04 [-4.07, 18.02] |
@@ -242,15 +246,15 @@ Table 9. Frozen XGBoost minus each historically selected grade C rule at r=10. B
 | Pooled | 10% | 0.82 [-0.19, 1.84] | 0.82 [-0.19, 1.84] | 1.70 [-0.82, 5.19] |
 | Pooled | 20% | 0.58 [-1.02, 1.89] | 0.58 [-1.02, 1.89] | 1.45 [-0.83, 4.65] |
 
-All nondegenerate pooled C-minus-grade contrasts at the displayed cost include zero; identical decisions give exact zero contrasts. These C comparisons do not establish additional ML loss value over the direct grade rules. They also do not prove equivalence: the intervals retain both loss improvement and loss increase. The appendix retains A/B/C for every planned cost and budget, including per-phase and pooled detections, workload, excess and paired contrasts. The direct rules differ from the jointly fitted ratings-only models in Table 5.
+All nondegenerate pooled C-minus-grade contrasts at the displayed cost include zero; identical decisions give exact zero contrasts. These C comparisons do not establish additional ML loss value over the direct grade rules. They also do not prove equivalence: the intervals retain both loss improvement and loss increase. The appendix retains A/B/C for every planned cost and budget, including per-block and pooled detections, workload, excess and paired contrasts. The direct rules differ from the jointly fitted ratings-only models in Table 5.
 
-The selection mechanism changes the comparison. For cost-only B at r=10, pooled ML-minus-grade loss is -4.41 [-7.03, -0.97] for each grade field, with all three intervals below zero. In contrast, B-minus-no-alarm is 1.41 [-9.26, 11.05]. The three grade B rules make exactly the same row-level decisions: every phase-1 record is flagged and no record is flagged in phases 2-4. Each gives 36 detections, 480 false alerts and 516 alerts; XGBoost gives 35, 379 and 414 respectively. The lower assumed loss therefore reflects 101 fewer false alerts at the cost of 1 fewer detection. These are three comparisons with the same final rule, not three distinct empirical confirmations. Lower loss than that rule does not establish lower loss than no alarms. These exploratory, unadjusted results are retained without selecting a new preferred workflow.
+The selection mechanism changes the comparison. For cost-only B at r=10, pooled ML-minus-grade loss is -4.41 [-7.03, -0.97] for each grade field, with all three intervals below zero. In contrast, B-minus-no-alarm is 1.41 [-9.26, 11.05]. The three grade B rules make exactly the same row-level decisions: every record in block 1 is flagged and no record is flagged in blocks 2-4. Each gives 36 detections, 480 false alerts and 516 alerts; XGBoost gives 35, 379 and 414 respectively. The lower assumed loss therefore reflects 101 fewer false alerts at the cost of 1 fewer detection. These are three comparisons with the same final rule, not three distinct empirical confirmations. Lower loss than that rule does not establish lower loss than no alarms. These exploratory, unadjusted results are retained without selecting a new preferred workflow.
 
 ## 5.3 Historical selection explains capacity and no-alarm outcomes
 
 Table 10. Fixed-XGBoost capacity excess and historical reasons for C no-alarm selection.
 
-| Phase | A excess settings | C excess settings | Cost selects none | Capacity changes to none |
+| Record block | A excess settings | C excess settings | Cost selects none | Capacity changes to none |
 | --- | --- | --- | --- | --- |
 | 1 | 1/4 | 0/16 | 0 | 4 |
 | 2 | 4/4 | 0/16 | 16 | 0 |
@@ -259,7 +263,7 @@ Table 10. Fixed-XGBoost capacity excess and historical reasons for C no-alarm se
 
 All reference areas contain positive labels, yet 40 of the 64 C settings select no alarms. Of these, 28 follow unconstrained cost optima and 12 follow changes induced by the historical capacity restriction. These classifications use reference decisions, not test performance. A small reference advantage over another feasible alarm set describes a weak selection margin; it does not by itself establish unstable thresholds.
 
-The budget rule exceeds later capacity in 13/16 phase-budget settings and C in 2/64 phase-budget-cost settings. The settings are dependent and use different denominators. In phase 2, A at a 20% budget produces 254 alerts, with 151 above its 103 later slots. The reference budget had been feasible. Different reference/test prevalences, including only one positive among 207 reference records in phase 2, provide context but do not identify prevalence shift as the sole cause; class-conditional scores can also change. Batch Top-k enforces capacity within the complete observed score batch and remains a retrospective ranking reference, not a real-time rule or performance bound.
+The budget rule exceeds later capacity in 13/16 block-budget settings and C in 2/64 block-budget-cost settings. The settings are dependent and use different denominators. In record block 2, A at a 20% budget produces 254 alerts, with 151 above its 103 later slots. The reference budget had been feasible. Different reference/test prevalences, including only one positive among 207 reference records in record block 2, provide context but do not identify prevalence shift as the sole cause; class-conditional scores can also change. Batch Top-k enforces capacity within the complete observed score batch and remains a retrospective ranking reference, not a real-time rule or performance bound.
 
 On the reference area, C cannot have lower optimized loss than B because its candidate set is a subset. That ordering need not survive transfer. Whole-tie rules and fixed numerical cutoffs explain how historical feasibility can coexist with both later underuse and excess demand.
 
@@ -273,11 +277,11 @@ Table 11. XGBoost refitted-minus-fixed changes. Finite groups are defined by his
 | B | 9 | 7 | 0 | -17.64 to 18.80 | -25 to 119 |
 | C | 24 | 40 | 0 | -11.05 to 7.75 | -11 to 2 |
 
-Distinct historical settings count phase times budget for A, phase times cost for B, and phase times budget times cost for C. A is reused when evaluating costs. The ranges retain all stated evaluation costs. Refitting can alter both the fitted function and raw-score scale; using the same cutoff measures their combined workflow difference, not a causal effect of either component. Infinite cutoffs are invariant by construction and provide no evidence of finite-cutoff robustness.
+Distinct historical settings count record block times budget for A, record block times cost for B, and record block times budget times cost for C. A is reused when evaluating costs. The ranges retain all stated evaluation costs. Refitting can alter both the fitted function and raw-score scale; using the same cutoff measures their combined workflow difference, not a causal effect of either component. Infinite cutoffs are invariant by construction and provide no evidence of finite-cutoff robustness.
 
-For a specific finite cutoff, phase 1 A at budget 20% and r=10 uses 0.385854 in both workflows. Alerts change from 21 fixed to 7 refitted; detections change from 2 to 0. Refitted-minus-fixed loss is 1.55 per 100 records, with paired 95% interval [-2.52, 7.17]. This interval concerns model updating, separately from the C-A policy intervals in Section 5.
+For a specific finite cutoff, record block 1 A at budget 20% and r=10 uses 0.385854 in both workflows. Alerts change from 21 fixed to 7 refitted; detections change from 2 to 0. Refitted-minus-fixed loss is 1.55 per 100 records, with paired 95% interval [-2.52, 7.17]. This interval concerns model updating, separately from the C-A policy intervals in Section 5.
 
-The retained block intervals are descriptive and unadjusted across settings. They characterize uncertainty in differences among frozen decisions on the observed queue of records. LR and bagged CART supply additional model comparisons under the same reference boundaries; they do not certify robustness across mines, future distributions or untested model classes. Complete per-phase results and all costs remain in the Stage 2 technical report and saved files.
+The retained block intervals are descriptive and unadjusted across settings. They characterize uncertainty in differences among frozen decisions on the observed queue of records. LR and bagged CART supply additional model comparisons under the same reference boundaries; they do not certify robustness across mines, future distributions or untested model classes. Complete per-block results and all costs remain in the Stage 2 technical report and saved files.
 
 ## 5.5 Frozen-rule cost and prevalence descriptions
 
@@ -290,7 +294,13 @@ Table 12. Cost equality for unchanged pooled C rules selected historically at rs
 | 10% | 1 | 27 | 28 | 27.00 |
 | 20% | 2 | 32 | 34 | 16.00 |
 
-For a frozen alert set, Delta Lnone,100(reval) = 100(FP - reval TP)/N. When TP>0, equality occurs at r*=FP/TP and the assumed loss favors the unchanged rule above that evaluation cost. TP=FP=0 is equivalent to no alarms for every cost; with TP=0 and FP>0 there is no finite improvement. The dash identifies no-alarm equivalence. These are descriptive equality points on this cohort, not cost estimates or test-selected recommendations.
+For a frozen alert set with at least one true detection, the evaluation-cost equality point with no alarms is:
+
+$$
+r^{*}=\frac{FP}{TP}
+$$
+
+Above this ratio the observed point loss favors the unchanged rule. TP=FP=0 is equivalent to no alarms for every cost; with TP=0 and FP>0 the rule has higher loss at every cost. The dash identifies no-alarm equivalence. These are descriptive equality points on this cohort, not cost estimates or test-selected recommendations.
 
 Table 13. Frozen prevalence scenarios for C selected at r=10. Loss differences are versus no alarms; alerts and precision are expectations.
 
@@ -301,23 +311,51 @@ Table 13. Frozen prevalence scenarios for C selected at r=10. Loss differences a
 | 10% | 0.73 | 1.36% | 4.19% | 0.09 | 1.34% | 8.45% |
 | 20% | 0.40 | 1.65% | 6.88% | -0.81 | 1.69% | 13.48% |
 
-The full supplement retains prevalences 2%, 5%, 10% and 15%. The compact display pairs loss and workload at 5% and 10% without reselecting policies. Assuming unchanged within-class rates, L100(pi)=100[r pi FNR+(1-pi)FPR], alert fraction=pi TPR+(1-pi)FPR and precision=pi TPR/alert fraction. Precision is undefined at zero expected alerts (NA); observed zero-alert precision retains its existing zero convention. These scenarios neither diagnose actual shift nor estimate the probability of exceeding capacity.
+The full supplement retains prevalences 2%, 5%, 10% and 15%. The compact display pairs loss and workload at 5% and 10% without reselecting policies. Under unchanged within-class rates, π denotes the scenario hazardous fraction, TPR and FNR are the detection and miss fractions among hazardous records, and FPR is the false-alert fraction among non-hazardous records. Expected loss and alert fraction A are:
+
+$$
+L_{100}(\pi)=100[r\pi\,FNR+(1-\pi)FPR]
+$$
+
+$$
+A(\pi)=\pi\,TPR+(1-\pi)FPR
+$$
+
+$$
+\mathrm{Precision}(\pi)=\frac{\pi\,TPR}{A(\pi)}
+$$
+
+Scenario precision is undefined at zero expected alerts (NA); observed zero-alert precision retains its existing zero convention. These scenarios neither diagnose actual shift nor estimate the probability of exceeding capacity.
 
 ## 5.6 Monitoring information at matched grades and slots
 
 Historical threshold transfer changes both detection and workload. This supplement holds workload and grade allocation fixed to ask how much additional hazardous-shift coverage the monitoring variables supply. The four-input baseline contains seismic, seismoacoustic, ghazard and shift type; the extended design uses the retained 17 columns. Both use XGBoost, the same four historical fitting/test splits and the same inner AP search, tuned separately for each design. Neither policy-reference labels nor test labels enter fitting or tuning. The two designs therefore receive matched tuning opportunities, unlike the earlier ratings-only ablation that omits shift type.
 
-Within each test block, K=floor(B*Ntest) slots are allocated to higher seismic grades first and then to higher model scores within each grade. Both models receive identical total and grade-specific slots. A boundary tie is allocated uniformly: h slots among m tied records containing p hazardous labels contributes E(TP)=h*p/m; labels evaluate the allocation and do not determine it. Counts with decimals are expectations over tie allocation. Each of the 2,000 paired block-bootstrap draws reranks its sampled multiset and recomputes the slots and ties. Length 32 is primary; lengths 16 and 64 and the complete table remain in the supplement. These conditional intervals freeze model fits and tuning and do not cover their uncertainty.
+Within each test block, the following K slots are allocated to higher seismic grades first and then to higher model scores within each grade. Both models receive identical total and grade-specific slots. A boundary tie is allocated uniformly: h slots among m tied records containing p hazardous labels contribute the expectation below; labels evaluate the allocation and do not determine it. Counts with decimals are expectations over tie allocation. Each of the 2,000 paired block-bootstrap draws reranks its sampled multiset and recomputes the slots and ties. Length 32 is primary; lengths 16 and 64 and the complete table remain in the supplement. These conditional intervals freeze model fits and tuning and do not cover their uncertainty.
+
+$$
+K=\lfloor BN_{\mathrm{test}}\rfloor
+$$
+
+$$
+E(TP)=\frac{hp}{m}
+$$
 
 At 20% test-batch slots, the pooled baseline has E(TP)=30.71 and the extended design 32.00, each using 412 slots. The difference is 1.29 with conditional 95% interval [-5.48, 7.05]. All 16 block-specific primary intervals and all four pooled intervals include zero; the point differences vary across blocks. This workflow has not established a consistent monitoring-information increment, and it does not establish that monitoring information is generally uninformative.
+
+At fixed hazardous count P and allocated slots K, expected loss is determined by expected detections; a separate cost grid would restate this contrast:
+
+$$
+E(L)=rP+K-(r+1)E(TP)
+$$
 
 ![Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.](../../reports/overall/monitoring_increment.png)
 
 The two uses of 20% answer different questions. Historical C at r=10 produces 34 test alerts and 2 detections, whereas this batch study allocates 412 slots to each model. Its 32.00 expected detections cannot be compared with C as an improvement at equal workload. The batch task is retrospective ranking, not observed dispatch. Its protocol was specified after these test records had been examined; the records overlap the two stages and add no independent validation cohort.
 
-[Exploratory supplement: matched design, all intervals and reproduction details](../../reports/information/monitoring_information_increment.pdf)
+[Exploratory supplement: matched design, all intervals and reproduction details](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/information/monitoring_information_increment.pdf)
 
-[Supplementary decision combinations and threshold evidence](../../reports/overall/comparator_appendix.md)
+[Supplementary decision combinations and threshold evidence](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/decision_comparison_supplement.pdf)
 
 ## 6 Integrated interpretation and next evidence
 
@@ -325,7 +363,7 @@ Common-cohort comparisons establish protocol-gap sensitivity, probability correc
 
 Decision evaluation adds information that ranking, probability assessment and attribution do not supply. At the displayed cost, C can lower loss and inspection demand relative to A while having no favorable pooled point difference against no alarms. Historical capacity choices explain why rules are silent or active, whereas later counts show their transferred coverage and workload. Refitting changes which score function is subjected to a historical cutoff. These comparisons establish workflow-specific tradeoffs; they do not identify a universally preferred policy.
 
-Phase-specific evidence must accompany the pooled comparison. In phase 1, C at 5% and 10% has no detections and loss-difference intervals entirely above zero. The nonzero pooled intervals cross zero. Pooling therefore does not describe every phase, and an unresolved pooled direction does not erase a resolved increase within the stated phase and conditional analysis.
+Block-specific evidence must accompany the pooled comparison. In record block 1, C at 5% and 10% has no detections and loss-difference intervals entirely above zero. The nonzero pooled intervals cross zero. Pooling therefore does not describe every record block, and an unresolved pooled direction does not erase a resolved increase within the stated record block and conditional analysis.
 
 The shared cohort is also the main inference boundary. Recorded order supplies no verified timestamps or longwall continuity. Deduplication reproduces a public mirror, not a certified operational history. Costs, capacity slots and the absence of an excess-demand penalty are explicit scenario assumptions. The target counts hazardous shifts, not accidents, executed inspections or interventions. Two analyses of the same observed records increase explanatory coverage, not the number of independent validation cohorts.
 
@@ -333,7 +371,7 @@ Additional direct-grade and no-alarm contrasts show that decision value depends 
 
 ## 7 Conclusions
 
-Comparable-cohort evaluation reduces the original AP gaps by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost; this quantifies cohort sensitivity, not leakage or drift attribution. At r=10 and a 20% historical budget, capacity-constrained cost rules produce 34 alerts and 2/88 detections, versus 557 alerts and 25/88 for budget-only rules. Phase 1 C at 5% and 10% has no detections and positive loss-difference intervals; the nonzero pooled C intervals span zero. Joint loss, detection and workload accounting shows why historical optimality and capacity feasibility do not establish later decision value.
+Comparable-cohort evaluation reduces the original AP gaps by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost; this quantifies cohort sensitivity, not leakage or drift attribution. At r=10 and a 20% historical budget, capacity-constrained cost rules produce 34 alerts and 2/88 detections, versus 557 alerts and 25/88 for budget-only rules. C in record block 1 at 5% and 10% has no detections and positive loss-difference intervals; the nonzero pooled C intervals span zero. Joint loss, detection and workload accounting shows why historical optimality and capacity feasibility do not establish later decision value.
 
 Fixing grade allocations and test-batch slots provides a different comparison: at 20%, monitoring inputs add 1.29 expected detections to a grade-plus-shift model, with conditional interval [-5.48, 7.05] and 412 slots per model. The block-specific evidence does not establish a consistent increment. Historical threshold transfer and equal-slot batch ranking should therefore remain distinct when interpreting decision value. Independent timestamped working-face data with inspection outcomes are needed to test transfer beyond this cohort.
 
@@ -342,8 +380,6 @@ Fixing grade allocations and test-batch slots provides a different comparison: a
 The repository retains source mapping, predictions, historical candidates, row-level decisions, resampling outputs and version-specific checks. The reporting guide documents generation and verification; both stage papers provide technical detail. Code and evidence: https://github.com/junjie-yang11/seismic-bump-forecasting.
 
 The author directed scope, protocol refinement and review priorities. ChatGPT and Codex substantially assisted implementation, execution, computational and reference checks, and writing. CONTRIBUTIONS.md documents these roles. AI-assisted writing workflows do not supply scientific evidence for the research conclusions.
-
-<!-- page break -->
 
 ## References
 
@@ -385,4 +421,4 @@ The author directed scope, protocol refinement and review priorities. ChatGPT an
 
 [19] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html
 
-[20] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics, 1989, 17(3):1217–1241. DOI: 10.1214/aos/1176347265.
+[20] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics, 1989, 17(3):1217-1241. DOI: 10.1214/aos/1176347265.

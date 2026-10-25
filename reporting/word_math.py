@@ -24,6 +24,14 @@ def sub(base, index):
     return ('sub', text(base), text(index))
 
 
+def sup(base, index):
+    return ('sup', text(base), text(index))
+
+
+def summation(index, expression):
+    return ('sum', text(index), expression)
+
+
 def fraction(numerator, denominator):
     return ('frac', numerator, denominator)
 
@@ -58,6 +66,49 @@ EQUATIONS = {
         'latex': r'\mathrm{Brier\ skill}=1-\frac{BS_{\mathrm{model}}}{BS_{\mathrm{reference}}}',
         'ast': seq(text('Brier skill'), text('='), text('1'), text('−'),
                    fraction(sub('BS', 'model'), sub('BS', 'reference'))),
+    },
+    'ap': {
+        'latex': r'AP=\sum_k P_k(R_k-R_{k-1})',
+        'ast': seq(text('AP'), text('='), summation('k',
+                   seq(sub('P', 'k'), delimiter('(', ')',
+                       seq(sub('R', 'k'), text('−'), sub('R', 'k−1')))))),
+    },
+    'cost_boundary': {
+        'latex': r'r^{*}=\frac{FP}{TP}',
+        'ast': seq(sup('r', '*'), text('='), fraction(text('FP'), text('TP'))),
+    },
+    'scenario_loss': {
+        'latex': r'L_{100}(\pi)=100[r\pi\,FNR+(1-\pi)FPR]',
+        'ast': seq(sub('L', '100'), delimiter('(', ')', text('π')), text('='), text('100'),
+                   delimiter('[', ']', seq(text('r'), text('π'), text('FNR'), text('+'),
+                       delimiter('(', ')', seq(text('1'), text('−'), text('π'))), text('FPR')))),
+    },
+    'scenario_alert': {
+        'latex': r'A(\pi)=\pi\,TPR+(1-\pi)FPR',
+        'ast': seq(text('A'), delimiter('(', ')', text('π')), text('='), text('π'), text('TPR'), text('+'),
+                   delimiter('(', ')', seq(text('1'), text('−'), text('π'))), text('FPR')),
+    },
+    'scenario_precision': {
+        'latex': r'\mathrm{Precision}(\pi)=\frac{\pi\,TPR}{A(\pi)}',
+        'ast': seq(text('Precision'), delimiter('(', ')', text('π')), text('='),
+                   fraction(seq(text('π'), text('TPR')),
+                            seq(text('A'), delimiter('(', ')', text('π'))))),
+    },
+    'batch_slots': {
+        'latex': r'K=\lfloor BN_{\mathrm{test}}\rfloor',
+        'ast': seq(text('K'), text('='), delimiter('⌊', '⌋', seq(text('B'), sub('N', 'test')))),
+    },
+    'tie_expectation': {
+        'latex': r'E(TP)=\frac{hp}{m}',
+        'ast': seq(text('E'), delimiter('(', ')', text('TP')), text('='),
+                   fraction(seq(text('h'), text('p')), text('m'))),
+    },
+    'expected_loss': {
+        'latex': r'E(L)=rP+K-(r+1)E(TP)',
+        'ast': seq(text('E'), delimiter('(', ')', text('L')), text('='),
+                   text('r'), text('P'), text('+'), text('K'), text('−'),
+                   delimiter('(', ')', seq(text('r'), text('+'), text('1'))),
+                   text('E'), delimiter('(', ')', text('TP'))),
     },
 }
 
@@ -94,6 +145,19 @@ def _elements(expression):
     if kind == 'sub':
         node = OxmlElement('m:sSub')
         names = ('e', 'sub')
+    elif kind == 'sup':
+        node = OxmlElement('m:sSup')
+        names = ('e', 'sup')
+    elif kind == 'sum':
+        lower, content = parts
+        node = OxmlElement('m:nary'); properties = OxmlElement('m:naryPr')
+        for name, value in (('chr', '∑'), ('limLoc', 'undOvr'), ('supHide', '1')):
+            property_node = OxmlElement('m:' + name)
+            property_node.set(qn('m:val'), value); properties.append(property_node)
+        node.append(properties)
+        for name, value in (('sub', lower), ('sup', text('')), ('e', content)):
+            child = OxmlElement('m:' + name); child.extend(_elements(value)); node.append(child)
+        return [node]
     elif kind == 'frac':
         node = OxmlElement('m:f')
         names = ('num', 'den')
@@ -164,6 +228,23 @@ def math_signature(node):
             if {child.tag for child in current} != {qualified('e'), qualified('sub')}:
                 raise ValueError('Unexpected subscript structure')
             return ('sub', children(required(current, 'e')), children(required(current, 'sub')))
+        if tag == qualified('sSup'):
+            if {child.tag for child in current} != {qualified('e'), qualified('sup')}:
+                raise ValueError('Unexpected superscript structure')
+            return ('sup', children(required(current, 'e')), children(required(current, 'sup')))
+        if tag == qualified('nary'):
+            if {child.tag for child in current} != {qualified('naryPr'), qualified('sub'), qualified('sup'), qualified('e')}:
+                raise ValueError('Unexpected summation structure')
+            properties = required(current, 'naryPr')
+            expected = {'chr': '∑', 'limLoc': 'undOvr', 'supHide': '1'}
+            if len(properties) != len(expected):
+                raise ValueError('Unexpected summation properties')
+            for name, value in expected.items():
+                if required(properties, name).get(qualified('val')) != value:
+                    raise ValueError('Unexpected summation operator or limits')
+            if children(required(current, 'sup')) != text(''):
+                raise ValueError('Unexpected upper summation limit')
+            return ('sum', children(required(current, 'sub')), children(required(current, 'e')))
         if tag == qualified('d'):
             if {child.tag for child in current} != {qualified('dPr'), qualified('e')}:
                 raise ValueError('Unexpected delimiter structure')

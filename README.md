@@ -30,8 +30,8 @@ A separately specified [matched-information study](phase2/information/README.md)
 ## Three findings
 
 1. **Who is tested changes the apparent validation gap.** On common test records, the original random-versus-record-order AP gap shrinks by 89.7% for LR, 86.9% for CART and 89.4% for XGBoost; residual AP differences are 0.0114, 0.0188 and 0.0133. This recalculation shows cohort sensitivity, not a causal decomposition of leakage or drift. [Matched results](results/phase1/shared_test_comparison.csv) · [Gap calculation](results/phase1/gap_attenuation_all_models.csv).
-2. **Pooled loss point estimates and interval evidence answer different questions.** At `r=10`, pooled fixed XGBoost cost-plus-capacity rule C has point differences of **0.00 to +0.82 relative loss units per 100 shifts** versus no alarms. The nonzero pooled conditional intervals still include loss improvement and increase. Phase 1 C at 5% and 10% has no detections and entirely positive loss-difference intervals. These findings apply to the assumed cost and observed records. [Point comparisons](results/phase2/decision_value_pooled.csv) · [Phase and pooled intervals](results/phase2/comparators/intervals.csv).
-3. **Historical capacity feasibility does not guarantee future feasibility.** Budget rule A exceeds later capacity in **13/16 phase–budget settings**; C does so in **2/64 phase–budget–cost settings**. These are different, dependent setting counts, not directly comparable independent violation rates. Refitting can also change alerts at the same finite numerical cutoff. [Capacity and detection](results/phase2/capacity_tradeoffs.csv) · [Refitting](results/phase2/refit_transfer.csv).
+2. **Pooled loss point estimates and interval evidence answer different questions.** At `r=10`, pooled fixed XGBoost cost-plus-capacity rule C has point differences of **0.00 to +0.82 relative loss units per 100 shifts** versus no alarms. The nonzero pooled conditional intervals still include loss improvement and increase. C in record block 1 at 5% and 10% has no detections and entirely positive loss-difference intervals. These findings apply to the assumed cost and observed records. [Point comparisons](results/phase2/decision_value_pooled.csv) · [Phase and pooled intervals](results/phase2/comparators/intervals.csv).
+3. **Historical capacity feasibility does not guarantee future feasibility.** Budget rule A exceeds later capacity in **13/16 record-block–budget settings**; C does so in **2/64 record-block–budget–cost settings**. These are different, dependent setting counts, not directly comparable independent violation rates. Refitting can also change alerts at the same finite numerical cutoff. [Capacity and detection](results/phase2/capacity_tradeoffs.csv) · [Refitting](results/phase2/refit_transfer.csv).
 
 ## Read the decision tradeoff
 
@@ -85,6 +85,7 @@ This checks saved evidence and formulas in a disposable copy, preserves publishe
 | 7 | Compare loss, inspection demand and refitting; evaluate frozen prevalence scenarios | [Paired analysis](phase2/analysis.py), [decision accounting](phase2/supplement.py) | `comparisons.csv`, `capacity_tradeoffs.csv`, `refit_transfer.csv`, `prevalence_decision_value.csv` |
 | 7a · Supplement | Compare frozen ML rules with no alarms and direct hazard grades | [Separate protocol](phase2/comparators/protocol.json), [runner](phase2/comparators/run.py), [independent verifier](phase2/comparators/verify.py) | [All saved comparisons](results/phase2/comparators/README.md) |
 | 7b · Pilot | Test extra detections within the same grade and exact inspection allocation | [Ranking protocol](phase2/ranking/protocol.json), [runner](phase2/ranking/run.py), [independent replay](phase2/ranking/verify.py) | [Pilot evidence](results/phase2/ranking/README.md), [short report](reports/ranking/within_grade_ranking_pilot.pdf) |
+| 7c · Matched-information study | Compare monitoring information beyond grades and shift at identical record-block slots | [Protocol](phase2/information/protocol.json) → [fit and rank](phase2/information/run.py) → [numerical and refit verification](phase2/information/verify.py) | [Saved results](results/phase2/information/README.md) → [short report](reports/information/monitoring_information_increment.pdf) |
 | 8 | Verify saved evidence and generate the papers | [Stage 1 checks](phase1/verify_results.py), [Stage 2 replay](phase2/verify.py), [equation checks](phase1/verify_formulae.py), [paper generators](reports/README.md) | [Final reports](reports/README.md), [verification guide](docs/REPRODUCING.md) |
 
 The filenames in Steps 3–4 belong to `results/phase1/`; those in Steps 5–7 belong to `results/phase2/`. [Result-file guides](results/README.md) explain their roles.
@@ -99,6 +100,7 @@ reports/
   phase1/            Final Stage 1 Word, PDF and manuscript
   phase2/            Final Stage 2 Word, PDF, manuscript and report figures
   ranking/           Separate exploratory within-grade ranking short report
+  information/       Matched-information exploratory supplement and interval figure
 results/
   phase1/            Stage 1 predictions, metrics, explanations and diagnostic figures
   phase2/            Stage 2 references, thresholds, decisions and verification evidence

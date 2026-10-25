@@ -1,5 +1,6 @@
 {
   "title": "From Forecast Evaluation to Warning Decisions: A Retrospective Study of Seismic Hazard in Underground Mining",
+  "edition_tag": "manuscript-2026-10-25",
   "scope": "Integrated reporting with frozen-policy, direct-grade and exploratory matched-information evidence; no ML fitting or policy selection in reporting",
   "inputs": {
     "results/phase1/source_audit.json": "a74645647a7987e4fa2d81a105b1eae5cd1918a7fb71f7b82c5526c974a79063",
@@ -43,28 +44,29 @@
     "phase2/information/provenance.py": "5284cf53cf0308d8622e0da239dc7d36f9bb761f55b99f9a6c330eff7a7d3d26",
     "results/phase2/information/historical_context.zip": "4bdcde53076bd35ff747777f1355d6fa2c38fea5b3bb5b803fbb5556c83de5a0",
     "results/phase1/calibration_bins.csv": "58aac140a169b1ab2757912dcdc84ed8a6a9e1ce6b744dba2849c8b277b31050",
-    "reporting/visuals.py": "87a0001a12b007d38fb86c26e2385ca9b1ca8b13b407dfde84ce9d5bcf81c2a4",
-    "reporting/word_math.py": "067f768c7bd86d88e95017e79aef802b7beda434e9e102c440bfb3c0c55a4af9",
+    "reporting/visuals.py": "957f3032e9cf01e13975b32cf2ed704bab2705380b1ec56546d822efa20dd6c5",
+    "reporting/word_math.py": "0d02eac2d9f52ad2965017e523ea0a10d043f21e359e3184d307187764d6ea2e",
+    "reporting/edition.py": "00c8cff50bfef40953818e1c99d131943674826465b38f8b75b38a4827f22a91",
     "reports/overall/evidence_overview.png": "da0ce749a71400aba91408df11bd918609b0b8ca3ebde6c4312d81b71a8456ae",
     "reports/overall/calibration_detail.png": "37ea34ac3faff613ec585611acfe8859af564297498fbf8bac9d45b56d230df9",
-    "reports/overall/shap_readable.png": "56383a748d565de9007abeb9cee54352ff2c39863b24d7fc2d9ea7a3d046182d",
+    "reports/overall/shap_readable.png": "dfb717d34eda0f15b0b39a5384705bd9b80173e6689a255aeaf433629d1a9a49",
     "reports/overall/decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
     "reports/overall/decision_tradeoffs.png": "01ecbabe4997716dcbbcdc239c1fbadd612aeb236c742bffbde2f5968bd46122",
     "reports/overall/monitoring_increment.png": "e396e6e13d211b2ed8cc24ea0166953cff51da7a2783b2dee5d76c500e1a4568"
   },
-  "generator_sha256": "4065b774a7639f14a587c92b5e41c233adfc28151bcdaebd6cd2d18b7c00bc95",
+  "generator_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
   "tables": [
     {
       "id": "cohorts",
-      "caption": "Table 1. Shared test census and Stage 2 reference areas. Phases are record blocks, not identified mining sites.",
+      "caption": "Table 1. Shared test census and Stage 2 reference areas. The blocks are record-order evaluation groups, not identified mining sites.",
       "continuation": false,
       "headers": [
-        "Phase",
-        "Test n",
-        "Test +",
+        "Record block",
+        "Test records",
+        "Test positives",
         "Test prevalence",
-        "Stage 2 ref n",
-        "Stage 2 ref +"
+        "Reference records",
+        "Reference positives"
       ],
       "rows": [
         [
@@ -425,7 +427,7 @@
       "caption": "Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.",
       "continuation": false,
       "headers": [
-        "Phase",
+        "Record block",
         "Budget",
         "Delta [95% interval]",
         "TP",
@@ -623,7 +625,7 @@
       "caption": "Table 9. Frozen XGBoost minus each historically selected grade C rule at r=10. Brackets are paired 95% intervals; negative favors ML.",
       "continuation": false,
       "headers": [
-        "Phase",
+        "Record block",
         "Budget",
         "ML minus seismic",
         "ML minus seismoacoustic",
@@ -721,7 +723,7 @@
       "caption": "Table 10. Fixed-XGBoost capacity excess and historical reasons for C no-alarm selection.",
       "continuation": false,
       "headers": [
-        "Phase",
+        "Record block",
         "A excess settings",
         "C excess settings",
         "Cost selects none",
@@ -919,16 +921,20 @@
     }
   },
   "outputs": {
-    "integrated_research_report.md": "e09dfb2b78a4d977017191ec37b340172d6ed5bfce41cc8b91c273b24d7c9710",
-    "integrated_research_report.docx": "dafaf6791642735ab43078f976e89ae3c56402685bcc425975f0330936a13459",
+    "integrated_research_report.md": "f595d8ecffd0cce3914e3e40f1f746ded828e5582d84cc6c45611c5bc4f7d766",
+    "integrated_research_report.docx": "8af02d1f64c560cf1d63e324ec4a08f65b02885281c37873bef6bd11fbd94660",
     "evidence_overview.png": "da0ce749a71400aba91408df11bd918609b0b8ca3ebde6c4312d81b71a8456ae",
     "decision_tradeoffs.png": "01ecbabe4997716dcbbcdc239c1fbadd612aeb236c742bffbde2f5968bd46122",
     "decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
-    "comparator_appendix.md": "fb06842fc03d6d278ed8a86512861059751e32f57ea814f712ae9577ccc627ba",
-    "evidence_overview.svg": "43ce268ab2d87bf930ab8349389dcab23a747fc2efa026443e441b026a6e946f",
+    "comparator_appendix.md": "ef18de0aa6e344971cea0435b92bff361cb4c660cd877a9c34c68f118dddaf7e",
+    "evidence_overview.svg": "fa9911013672e963dc4aa13a1c2142bdf35ae97c55b743c28d5691be5aacad02",
     "calibration_detail.png": "37ea34ac3faff613ec585611acfe8859af564297498fbf8bac9d45b56d230df9",
-    "shap_readable.png": "56383a748d565de9007abeb9cee54352ff2c39863b24d7fc2d9ea7a3d046182d",
+    "shap_readable.png": "dfb717d34eda0f15b0b39a5384705bd9b80173e6689a255aeaf433629d1a9a49",
     "monitoring_increment.png": "e396e6e13d211b2ed8cc24ea0166953cff51da7a2783b2dee5d76c500e1a4568",
-    "monitoring_increment.csv": "b5e644efe9abd0e61eb10c0b2189500d37f8dcf27f2c1e5f1e573bb34f60fce5"
+    "monitoring_increment.csv": "b5e644efe9abd0e61eb10c0b2189500d37f8dcf27f2c1e5f1e573bb34f60fce5",
+    "calibration_detail.svg": "0b0e40ca482c106224748da07946828358a6b726befb7bc0534e837d41a8411e",
+    "shap_readable.svg": "b1538efea8ebbc6dcfaa09b9505db78869d7e975503bfb2900c2c511005b6f11",
+    "decision_tradeoffs.svg": "6b07ef7addfcf985384ebbb01425f37e913386d969df39bf69ac41efbfd743f7",
+    "monitoring_increment.svg": "d2f8c1fe11c3712b7db89faeae63611bb31a243ae14dd0b75a0411e3f6494a3d"
   }
 }
