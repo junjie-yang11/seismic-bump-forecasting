@@ -1,32 +1,41 @@
-# Final research reports
+# Research reports and supplements
 
-For a quick introduction, read the [research overview](../docs/PROJECT_OVERVIEW.md). For the complete argument, read the **integrated research report**: [PDF](overall/integrated_research_report.pdf) · [Word](overall/integrated_research_report.docx) · [Online manuscript](overall/integrated_research_report.md). It gives one argument, shared data description and integrated discussion, including the matched-information core finding, while preserving the different stage protocols.
+For a quick introduction, read the [research overview](../docs/PROJECT_OVERVIEW.md). The integrated paper develops the full argument; the stage-specific technical reports and separately specified supplements provide the supporting detail. The [directory map](../docs/PROJECT_STRUCTURE.md) connects every study to its code and saved evidence.
 
-The two supporting technical reports retain complete stage-specific methods, combinations and supplementary evidence:
+## Main paper
 
-| Stage | PDF | Word | Online manuscript |
+| Material | PDF | Word | Online |
 | --- | --- | --- | --- |
-| 1 · Reliability and explainability | [PDF](phase1/technical_report.pdf) | [Word](phase1/technical_report.docx) | [Manuscript](phase1/technical_note.md) |
-| 2 · Cost, capacity and threshold transfer | [PDF](phase2/phase2_threshold_transfer_report.pdf) | [Word](phase2/phase2_threshold_transfer_report.docx) | [Manuscript](phase2/phase2_threshold_transfer_report.md) |
+| Integrated research report | [PDF](overall/integrated_research_report.pdf) | [Word](overall/integrated_research_report.docx) | [Manuscript](overall/integrated_research_report.md) |
+| Complete frozen-policy comparison supplement: all 1,260 settings | [PDF](overall/decision_comparison_supplement.pdf) | [Word](overall/decision_comparison_supplement.docx) | [Manuscript](overall/decision_comparison_supplement.md) |
 
-Stage 1 assesses predictions and monitoring signals. Stage 2 measures how historically selected rules translate into later loss, detections and inspection demand. Their fixed/refitted workflows and cutoff definitions differ; cross-paper warning counts require matched workflows.
+The integrated paper connects forecast evidence, historical threshold transfer and decision value. It includes the direct-grade and no-alarm comparisons and the matched-information core finding. The [complete comparison appendix](overall/comparator_appendix.md) also retains every record-block/cost setting, including detections, missed shifts, false alerts, workload, excess and paired intervals.
 
-Both papers are generated from verified saved evidence. Their authoring code is [Stage 1](../phase1/generate_report.py), with [result-driven paper content](../phase1/research_paper.py), and [Stage 2](../phase2/report.py). Stage 2 report figures and its report manifest accompany the manuscript; Stage 1 figure sources remain under `results/phase1/figures/`.
+## Original stage-specific technical reports
 
-The [integrated generator and commands](../reporting/README.md) use existing evidence without fitting models. Its [manifest](overall/report_manifest.json) records input hashes and computed table content. Its [independent check](../reporting/verify_overall.py) reconstructs the main decision and scenario tables from aligned saved row decisions; the [verification record](overall/verification.json) states the exact scope and checked output hashes. Visual inspection of exported pages is an additional step.
+| Stage | PDF | Word | Online | Code and evidence |
+| --- | --- | --- | --- | --- |
+| Stage 1: forecast reliability and explainability | [PDF](phase1/technical_report.pdf) | [Word](phase1/technical_report.docx) | [Manuscript](phase1/technical_note.md) | [Workflow](../phase1/README.md) and [results](../results/phase1/README.md) |
+| Stage 2: cost, capacity and threshold transfer | [PDF](phase2/phase2_threshold_transfer_report.pdf) | [Word](phase2/phase2_threshold_transfer_report.docx) | [Manuscript](phase2/phase2_threshold_transfer_report.md) | [Locked workflow](../phase2/README.md) and [results](../results/phase2/README.md) |
 
-The integrated report includes the separately specified [frozen-policy and direct-grade supplement](../phase2/comparators/README.md). Its [complete record-block/cost appendix](overall/comparator_appendix.md) retains every A/B/C combination, with detections, missed shifts, false alerts, workload, excess and paired intervals. The original stage papers remain the locked-study technical edition.
+These are the retained technical editions. The Stage 2 PDF covers the original locked experiment; later direct-grade and no-alarm comparisons are in the integrated paper and supplement above. The stages use overlapping records and different fitting/threshold workflows, so cross-paper warning counts require matched definitions. They are not independent validation studies.
 
-For the latest complete threshold-decision analysis, use the integrated report and its appendix above. The Stage 2 PDF is the original locked-experiment technical report; it does not include the later direct-grade supplement.
+## Separately specified Stage 2 supplements
 
-The **separate exploratory ranking pilot** asks whether complete-model scores add detections within the same seismic grade at identical inspection allocations: [PDF](ranking/within_grade_ranking_pilot.pdf) · [Word](ranking/within_grade_ranking_pilot.docx) · [Online report](ranking/within_grade_ranking_pilot.md). Its [protocol and commands](../phase2/ranking/README.md), [evidence](../results/phase2/ranking/README.md), [report manifest](ranking/report_manifest.json) and [verification](ranking/verification.json) are separate from the locked threshold study. It reuses saved scores and does not establish sensor-specific value.
+| Study | Question | Report | Protocol, code and evidence |
+| --- | --- | --- | --- |
+| Frozen-policy and direct-grade comparisons | How do frozen ML rules compare with no alarms and direct hazard grades? | [Integrated paper](overall/integrated_research_report.pdf) and [complete comparison supplement](overall/decision_comparison_supplement.pdf) | [Protocol and commands](../phase2/comparators/README.md); [saved comparisons](../results/phase2/comparators/README.md) |
+| Exploratory within-grade ranking pilot | Can complete-model scores add detections at identical grade allocations and batch slots? | [PDF](ranking/within_grade_ranking_pilot.pdf), [Word](ranking/within_grade_ranking_pilot.docx), [online](ranking/within_grade_ranking_pilot.md) | [Protocol and commands](../phase2/ranking/README.md); [evidence](../results/phase2/ranking/README.md) |
+| Exploratory matched-information analysis | Do monitoring variables add detections beyond hazard grades and shift type at identical allocations? | [PDF](information/monitoring_information_increment.pdf), [Word](information/monitoring_information_increment.docx), [online](information/monitoring_information_increment.md) | [Protocol and commands](../phase2/information/README.md); [evidence](../results/phase2/information/README.md) |
 
-The [Stage 2 report checker](../phase2/verify_report.py) compares the manuscript, Word tables, PDF numbers and input/generator hashes. Its [verification record](phase2/report_verification.json) identifies the checked report hashes and verifier version. Inspect the rendered pages as well as these computational checks. Use [the homepage table updater](../phase2/update_readme.py) after rebuilding the second paper's presentation.
+The ranking pilot reuses complete-model scores and does not isolate sensor-specific value. The matched-information analysis compares separately tuned four-input and 17-input designs. Its core result appears in Section 5.6 and Figure 5 of the integrated paper; the short report retains the full design, table and block-length sensitivity. Historical reference budgets and strict test-batch allocations are different constraints. These supplements reuse observed records and add no independent validation cohort.
 
-See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The current structure places all final papers here; older review editions record their original paths.
+## Generation, verification and fixed editions
 
-The matched-information main result appears in Section 5.6 and Figure 5 of the integrated manuscript. The [full supplement](information/monitoring_information_increment.pdf) retains all record-block-specific expectations, the three block lengths and the reproduction detail. Historical reference budgets and strict test-batch allocations are distinct; the latter does not add an independent validation cohort.
+Paper content is generated from saved computations. [Stage 1 generation](../phase1/generate_report.py) uses the [result-driven content module](../phase1/research_paper.py); [Stage 2 generation](../phase2/report.py) produces its technical report. The [reporting guide](../reporting/README.md) covers the integrated paper and short reports. Follow the [execution sequence](../docs/REPRODUCING.md) before rebuilding.
 
-The information supplement introduces the audited dataset, target label, seismic severity order and AP before describing the matched design. Its code and evidence links are pinned to scientific source edition `de83319`, while its integrated-manuscript link points to presentation tag `manuscript-2026-10-26`; the report manifest distinguishes both versions.
+The [integrated manifest](overall/report_manifest.json) identifies inputs and generated tables; the [separate checker](../reporting/verify_overall.py) reconstructs them from saved evidence. Its [verification record](overall/verification.json) states the checked scope and output hashes. The ranking [manifest](ranking/report_manifest.json) and [verification](ranking/verification.json), and matched-information [manifest](information/report_manifest.json) and [verification](information/verification.json), identify their own report editions. Computational checks and visual inspection of exported pages are separate procedures.
 
-The complete frozen-policy comparison supplement is available as [PDF](overall/decision_comparison_supplement.pdf), [Word](overall/decision_comparison_supplement.docx) and [Markdown](overall/decision_comparison_supplement.md). It contains all 1,260 settings without selecting favorable results.
+The [Stage 2 report checker](../phase2/verify_report.py) checks manuscript/Word/PDF agreement and recorded inputs; its [record](phase2/report_verification.json) identifies that edition. The [homepage updater](../phase2/update_readme.py) refreshes its result table from saved computations.
+
+Scientific code/evidence links in the matched-information short report identify source commit de83319; its integrated-paper link identifies presentation tag manuscript-2026-10-26. Current navigation links lead to the latest retained files. Report figures, plotting CSVs and generation/verification records keep their existing locations so the current generators and checkers continue to resolve them. Stage 1 figure sources remain under [its results directory](../results/phase1/README.md).

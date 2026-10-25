@@ -90,27 +90,17 @@ This checks saved evidence and formulas in a disposable copy, preserves publishe
 
 The filenames in Steps 3–4 belong to `results/phase1/`; those in Steps 5–7 belong to `results/phase2/`. [Result-file guides](results/README.md) explain their roles.
 
-## Repository structure
+## Find files by purpose
 
-```text
-phase1/              Stage 1 experiments, analysis, verification and paper generator
-phase2/              Stage 2 locked protocol, decisions, transfer study and paper generator
-reports/
-  overall/           Main integrated paper, conceptual overview and report provenance
-  phase1/            Final Stage 1 Word, PDF and manuscript
-  phase2/            Final Stage 2 Word, PDF, manuscript and report figures
-  ranking/           Separate exploratory within-grade ranking short report
-  information/       Matched-information exploratory supplement and interval figure
-results/
-  phase1/            Stage 1 predictions, metrics, explanations and diagnostic figures
-  phase2/            Stage 2 references, thresholds, decisions and verification evidence
-src/                 Shared data, models, metrics, calibration and validation
-reporting/           Cross-stage paper generator, Word export and independent checks
-tests/               Shared and Stage 1 behavioral tests; Stage 2 tests live in phase2/
-data/                Data-source guide and ignored local download cache
-requirements/        Separate baseline, research and reporting environments
-docs/                Reproduction guide and dated audit history
-```
+| Purpose | Location | Start with |
+| --- | --- | --- |
+| Read the research | [Final papers](reports/) | [Report catalogue](reports/README.md): integrated paper, two technical reports and supplementary studies |
+| Inspect Stage 1 | [Stage 1 code](phase1/) and [evidence](results/phase1/) | [Forecast-evaluation workflow](phase1/README.md) |
+| Inspect Stage 2 | [Stage 2 code](phase2/) and [evidence](results/phase2/) | [Threshold-transfer workflow](phase2/README.md); comparators, ranking and matched information remain separately specified supplements |
+| Run or verify | [Shared code](src/), [tests](tests/), [reporting](reporting/) and [dependencies](requirements/) | [Quick Check](docs/QUICK_CHECK.md), then [complete reproduction](docs/REPRODUCING.md) |
+| Understand sources and history | [Data guide](data/README.md) and [documentation](docs/) | [Project directory map](docs/PROJECT_STRUCTURE.md), [related work](docs/RELATED_WORK.md) and [dated audit index](docs/audits/README.md) |
+
+Code, saved calculations and papers have separate roles. Their existing paths are retained so execution commands and evidence references continue to resolve. The [directory map](docs/PROJECT_STRUCTURE.md) connects each study to its protocol, code, results and report.
 
 ## Reproduce or inspect
 
@@ -121,11 +111,7 @@ docs/                Reproduction guide and dated audit history
 - [Quick verification of saved evidence](docs/QUICK_CHECK.md)
 - [Stage 1 commands](phase1/README.md) · [Stage 2 protocol and commands](phase2/README.md)
 - [Saved evidence](results/README.md) · [Final reports](reports/README.md)
-- [Code and structure cleanup record](docs/audits/STRUCTURE_CLEANUP.json)
-- [Structure and verification review](docs/audits/STRUCTURE_REVIEW.md)
-- [Research presentation release review](docs/audits/RESEARCH_PRESENTATION_REVIEW.md)
-- [Manuscript review and verification](docs/audits/SKILL_EDITORIAL_REVIEW.md)
-- [Complete code, workflow and fresh-reproduction review](docs/audits/2026-10-07-full-review/REVIEW.md)
+- [Dated reviews and historical verification records](docs/audits/README.md)
 
 Run commands from the repository root. Stage 1 uses `python -m phase1.<command>`; Stage 2 uses `python -m phase2.<command>`. Dated audit records describe their original editions and retain the paths used then. The current manifests and verification records above identify the inputs and verifier versions checked for this checkout.
 
