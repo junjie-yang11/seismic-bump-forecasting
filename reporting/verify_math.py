@@ -4,7 +4,7 @@ from reporting.word_math import math_signature
 
 MAIN_EQUATION_IDS = ('ap', 'brier_skill', 'loss100', 'delta_none100', 'excess',
                     'cost_boundary', 'scenario_loss', 'scenario_alert',
-                    'scenario_precision', 'batch_slots', 'tie_expectation', 'expected_loss')
+                    'scenario_precision', 'batch_slots', 'tie_expectation', 'total_expectation', 'expected_loss')
 
 
 def expected_equations(equation_ids=None):
@@ -34,10 +34,12 @@ def expected_equations(equation_ids=None):
          s(t('Precision'),d('(',')',t('π')),t('='),frac(s(t('π'),t('TPR')),s(t('A'),d('(',')',t('π')))))),
         'batch_slots': (r'K=\lfloor BN_{\mathrm{test}}\rfloor',
          s(t('K'),t('='),d('⌊','⌋',s(t('B'),sub('N','test'))))),
-        'tie_expectation': (r'E(TP)=\frac{hp}{m}',
-         s(t('E'),d('(',')',t('TP')),t('='),frac(s(t('h'),t('p')),t('m')))),
-        'expected_loss': (r'E(L)=rP+K-(r+1)E(TP)',
-         s(t('E'),d('(',')',t('L')),t('='),t('r'),t('P'),t('+'),t('K'),t('−'),d('(',')',s(t('r'),t('+'),t('1'))),t('E'),d('(',')',t('TP')))),
+        'tie_expectation': (r'E(TP_{\mathrm{boundary}})=\frac{hp}{m}',
+         s(t('E'),d('(',')',sub('TP','boundary')),t('='),frac(s(t('h'),t('p')),t('m')))),
+        'total_expectation': (r'E(TP_{\mathrm{total}})=TP_{\mathrm{fully\ selected}}+E(TP_{\mathrm{boundary}})',
+         s(t('E'),d('(',')',sub('TP','total')),t('='),sub('TP','fully selected'),t('+'),t('E'),d('(',')',sub('TP','boundary')))),
+        'expected_loss': (r'E(L)=rP+K-(r+1)E(TP_{\mathrm{total}})',
+         s(t('E'),d('(',')',t('L')),t('='),t('r'),t('P'),t('+'),t('K'),t('−'),d('(',')',s(t('r'),t('+'),t('1'))),t('E'),d('(',')',sub('TP','total')))),
     }
     return [registry[key] for key in (MAIN_EQUATION_IDS if equation_ids is None else equation_ids)]
 

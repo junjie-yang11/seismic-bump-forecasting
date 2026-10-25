@@ -1,6 +1,6 @@
 {
   "title": "From Forecast Evaluation to Warning Decisions: A Retrospective Study of Seismic Hazard in Underground Mining",
-  "edition_tag": "manuscript-2026-10-25",
+  "edition_tag": "manuscript-2026-10-26",
   "scope": "Integrated reporting with frozen-policy, direct-grade and exploratory matched-information evidence; no ML fitting or policy selection in reporting",
   "inputs": {
     "results/phase1/source_audit.json": "a74645647a7987e4fa2d81a105b1eae5cd1918a7fb71f7b82c5526c974a79063",
@@ -45,8 +45,8 @@
     "results/phase2/information/historical_context.zip": "4bdcde53076bd35ff747777f1355d6fa2c38fea5b3bb5b803fbb5556c83de5a0",
     "results/phase1/calibration_bins.csv": "58aac140a169b1ab2757912dcdc84ed8a6a9e1ce6b744dba2849c8b277b31050",
     "reporting/visuals.py": "957f3032e9cf01e13975b32cf2ed704bab2705380b1ec56546d822efa20dd6c5",
-    "reporting/word_math.py": "0d02eac2d9f52ad2965017e523ea0a10d043f21e359e3184d307187764d6ea2e",
-    "reporting/edition.py": "00c8cff50bfef40953818e1c99d131943674826465b38f8b75b38a4827f22a91",
+    "reporting/word_math.py": "082afb63bc81c3248f71dae839557b3cf7396fc1e101d8a32a45abc5aecbcbdb",
+    "reporting/edition.py": "ba433aa2748d58aa3102fc8728d74d8879f7d8ef704a20cd909cbc1c07455938",
     "reports/overall/evidence_overview.png": "da0ce749a71400aba91408df11bd918609b0b8ca3ebde6c4312d81b71a8456ae",
     "reports/overall/calibration_detail.png": "37ea34ac3faff613ec585611acfe8859af564297498fbf8bac9d45b56d230df9",
     "reports/overall/shap_readable.png": "dfb717d34eda0f15b0b39a5384705bd9b80173e6689a255aeaf433629d1a9a49",
@@ -54,7 +54,7 @@
     "reports/overall/decision_tradeoffs.png": "01ecbabe4997716dcbbcdc239c1fbadd612aeb236c742bffbde2f5968bd46122",
     "reports/overall/monitoring_increment.png": "e396e6e13d211b2ed8cc24ea0166953cff51da7a2783b2dee5d76c500e1a4568"
   },
-  "generator_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
+  "generator_sha256": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
   "tables": [
     {
       "id": "cohorts",
@@ -921,20 +921,20 @@
     }
   },
   "outputs": {
-    "integrated_research_report.md": "f595d8ecffd0cce3914e3e40f1f746ded828e5582d84cc6c45611c5bc4f7d766",
-    "integrated_research_report.docx": "8af02d1f64c560cf1d63e324ec4a08f65b02885281c37873bef6bd11fbd94660",
+    "integrated_research_report.md": "136257706b161be2c88d706d993b21d94149eee353696505e390a90472e21ddf",
+    "integrated_research_report.docx": "64cb993959f8f3029e40ac541e8f9e977701fe99c7ecfe6140aa14365c585bed",
     "evidence_overview.png": "da0ce749a71400aba91408df11bd918609b0b8ca3ebde6c4312d81b71a8456ae",
     "decision_tradeoffs.png": "01ecbabe4997716dcbbcdc239c1fbadd612aeb236c742bffbde2f5968bd46122",
     "decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
     "comparator_appendix.md": "ef18de0aa6e344971cea0435b92bff361cb4c660cd877a9c34c68f118dddaf7e",
-    "evidence_overview.svg": "fa9911013672e963dc4aa13a1c2142bdf35ae97c55b743c28d5691be5aacad02",
+    "evidence_overview.svg": "8f4c9aefbcdf357d7c20f9ae1153e6952ef7d11a1b9045f8d1abf19ba7ff14f3",
     "calibration_detail.png": "37ea34ac3faff613ec585611acfe8859af564297498fbf8bac9d45b56d230df9",
     "shap_readable.png": "dfb717d34eda0f15b0b39a5384705bd9b80173e6689a255aeaf433629d1a9a49",
     "monitoring_increment.png": "e396e6e13d211b2ed8cc24ea0166953cff51da7a2783b2dee5d76c500e1a4568",
     "monitoring_increment.csv": "b5e644efe9abd0e61eb10c0b2189500d37f8dcf27f2c1e5f1e573bb34f60fce5",
-    "calibration_detail.svg": "0b0e40ca482c106224748da07946828358a6b726befb7bc0534e837d41a8411e",
-    "shap_readable.svg": "b1538efea8ebbc6dcfaa09b9505db78869d7e975503bfb2900c2c511005b6f11",
-    "decision_tradeoffs.svg": "6b07ef7addfcf985384ebbb01425f37e913386d969df39bf69ac41efbfd743f7",
-    "monitoring_increment.svg": "d2f8c1fe11c3712b7db89faeae63611bb31a243ae14dd0b75a0411e3f6494a3d"
+    "calibration_detail.svg": "91ea57cdc7a6fd07789047395bfe5f1e24296bc16d56914e092ca6dd5337795d",
+    "shap_readable.svg": "16268d46b32aca97f0c8cf0f1333186797930d254f046b6947c38deaf4125584",
+    "decision_tradeoffs.svg": "edb2ab015fd57ab37c30c5c9c7f4d32b89a285228da8a8717d55f6b4878ef96f",
+    "monitoring_increment.svg": "3801390370e8c0e8c74b87ddad1758df25c325806b3035f8e4d6d71739132056"
   }
 }

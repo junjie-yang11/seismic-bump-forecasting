@@ -27,6 +27,6 @@ See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The curr
 
 The matched-information main result appears in Section 5.6 and Figure 5 of the integrated manuscript. The [full supplement](information/monitoring_information_increment.pdf) retains all record-block-specific expectations, the three block lengths and the reproduction detail. Historical reference budgets and strict test-batch allocations are distinct; the latter does not add an independent validation cohort.
 
-The information supplement introduces the audited dataset, target label, seismic severity order and AP before describing the matched design. Its code and evidence links are pinned to scientific source edition `de83319`, while its integrated-manuscript link points to presentation tag `manuscript-2026-10-25`; the report manifest distinguishes both versions.
+The information supplement introduces the audited dataset, target label, seismic severity order and AP before describing the matched design. Its code and evidence links are pinned to scientific source edition `de83319`, while its integrated-manuscript link points to presentation tag `manuscript-2026-10-26`; the report manifest distinguishes both versions.
 
 The complete frozen-policy comparison supplement is available as [PDF](overall/decision_comparison_supplement.pdf), [Word](overall/decision_comparison_supplement.docx) and [Markdown](overall/decision_comparison_supplement.md). It contains all 1,260 settings without selecting favorable results.

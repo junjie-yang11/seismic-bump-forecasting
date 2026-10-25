@@ -1,9 +1,10 @@
 {
   "title": "Monitoring Information Beyond Hazard Grades and Shift Type",
-  "created_at_utc": "2026-10-25T11:27:48.103217+00:00",
+  "created_at_utc": "2026-10-25T19:33:05.708248+00:00",
   "inputs": {
     "phase2/information/protocol.json": "0b0fd33122d25270016b097c1eee989f7af2adf230033bbed616f2dc28cae407",
-    "reporting/edition.py": "00c8cff50bfef40953818e1c99d131943674826465b38f8b75b38a4827f22a91",
+    "reporting/edition.py": "ba433aa2748d58aa3102fc8728d74d8879f7d8ef704a20cd909cbc1c07455938",
+    "reporting/word_math.py": "082afb63bc81c3248f71dae839557b3cf7396fc1e101d8a32a45abc5aecbcbdb",
     "results/phase1/source_audit.json": "a74645647a7987e4fa2d81a105b1eae5cd1918a7fb71f7b82c5526c974a79063",
     "results/phase2/comparators/grade_metadata.json": "894a38dbc77ed07c24f0588869429f2ad6e554511b5d013456188f0aae78669b",
     "phase2/information/provenance.py": "5284cf53cf0308d8622e0da239dc7d36f9bb761f55b99f9a6c330eff7a7d3d26",
@@ -16,10 +17,10 @@
     "results/phase2/information/intervals.csv": "87d64c52840720c9aff4c4014d6b368196c258d74a4efaa28e39d3cccaebf406",
     "results/phase2/information/rows.csv": "99f0a7a92fc4747ade2cb1d8a6d5f97550274a29c36180006e5c1048521dae42"
   },
-  "generator_sha256": "b4d8ab80a585d65e4fa0e1f0b5ca4898e06e96ebb400c8293295cbdada69569b",
-  "writer_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
+  "generator_sha256": "00b5077b111ad7cdcc512ac5de9bf8fe3b8283c7ea63371a38c5c8157a3ad7d1",
+  "writer_sha256": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
   "source_version": "de833195e2e7d025ca75c1efb57ac6d866127461",
-  "edition_tag": "manuscript-2026-10-25",
+  "edition_tag": "manuscript-2026-10-26",
   "source_links": [
     [
       "UCI dataset and target definition",
@@ -47,7 +48,7 @@
     ],
     [
       "Integrated manuscript in this edition",
-      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf"
+      "https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/reports/overall/integrated_research_report.pdf"
     ],
     [
       "Author contributions and AI assistance",
@@ -237,10 +238,10 @@
     "scope": "Live model-input/code/output and protected computational-evidence hashes; bounded historical presentation/derived-summary snapshots checked separately (not a claim that current papers are unchanged). Raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay."
   },
   "outputs": {
-    "monitoring_information_increment.md": "c30857731c50bd168fb1a6b2efee9922fdf89ed5b9e0cef2e5379e93e757bdb2",
-    "monitoring_information_increment.docx": "2c88b792e98e2bf960c33a5bcd71223f09a33cca747dbdb4bc39e073d4d4855a",
+    "monitoring_information_increment.md": "d57c2b83aa512438ac30e6df113f2821a63d7247f51d887ae9e943387b540fc8",
+    "monitoring_information_increment.docx": "8ea09450b7b898a9e481ca501381ce1cd536f87d98d4ba58c5b9f912cf3f4b38",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
     "information_increment.png": "0058be9b18d0e7f23ac5cb4bb4519a3ae360a9e8f119591cffdd68b7da0c04f5",
-    "information_increment.svg": "8f1f513cc1d45a6fb582f9d02c5c83a8fe134ac8955e04248d5a9f47a95839e9"
+    "information_increment.svg": "79465646654c6399c53366ecd0731ff91fb1cf1a9916ce676a5eb89625f96827"
   }
 }

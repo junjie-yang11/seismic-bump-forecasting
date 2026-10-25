@@ -48,13 +48,16 @@ def checks(root,pdf_text=False):
         core=ET.fromstring(package.read('docProps/core.xml'))
         for node in core:
             if node.tag.rsplit('}',1)[-1] in ('creator','lastModifiedBy'):check(not node.text,'clean Word author metadata')
+    from reporting.verify_math import verify_equations
+    from reporting.verify_overall import ordinary_paragraph_text
+    verify_equations(body,md,check,('tie_expectation','total_expectation','expected_loss'))
     for paragraph in body.findall('w:p',NS):
-        text=''.join(paragraph.itertext())
+        text=ordinary_paragraph_text(paragraph)
         if text.strip():
             prose=re.sub(r'\[([^\]]+)\]\([^)]+\)',r'\1',md) if paragraph.find('w:hyperlink',NS) is not None else md
             check(text in prose,'Word paragraph agrees with manuscript')
     version='de833195e2e7d025ca75c1efb57ac6d866127461'
-    edition='manuscript-2026-10-25'
+    edition='manuscript-2026-10-26'
     base='https://github.com/junjie-yang11/seismic-bump-forecasting/blob/'+version+'/'
     sources=[
         ['UCI dataset and target definition','https://archive.ics.uci.edu/dataset/266/seismic+bumps'],
@@ -89,6 +92,29 @@ def checks(root,pdf_text=False):
     check('\n'.join(block) in md,'complete GitHub Markdown table')
     rows=read('rows.csv');ev=read('evaluations.csv');ci=read('intervals.csv');expected=[]
     check(len(rows)==2063 and len({r['row'] for r in rows})==2063,'unique shared test rows')
+    # Reconstruct the stated total as complete groups plus the partial boundary.
+    # Do not reuse the experiment's ranking or inclusion-probability functions.
+    for fold in range(4):
+        block=[r for r in rows if int(r['fold'])==fold]
+        for budget in (.01,.05,.10,.20):
+            for design in ('base','extended'):
+                groups={}
+                for r in block:
+                    key=(float(r['grade']),float(r[design+'_score']))
+                    groups.setdefault(key,[]).append(float(r['y']))
+                remaining=math.floor(budget*len(block));fully_selected=0.;boundary=0.
+                for key in sorted(groups,reverse=True):
+                    labels=groups[key];m=len(labels);p=sum(labels)
+                    if remaining>=m:
+                        fully_selected+=p;remaining-=m
+                    elif remaining:
+                        boundary=remaining*p/m;remaining=0
+                    else:
+                        break
+                column=design+f'_prob_b{round(100*budget):02d}'
+                row_total=math.fsum(float(r[column])*float(r['y']) for r in block)
+                check(math.isclose(fully_selected+boundary,row_total,rel_tol=0,abs_tol=1e-10),
+                      'fully selected TP plus boundary expectation equals saved total')
     for fold in (0,1,2,3,-1):
         cohort=[r for r in rows if fold<0 or int(r['fold'])==fold];p=sum(float(r['y']) for r in cohort)
         for budget in (.01,.05,.10,.20):
@@ -123,9 +149,10 @@ def checks(root,pdf_text=False):
     if all(float(r['ci_low'])<=0<=float(r['ci_high']) for r in pooled):
         check('All pooled intervals across the three specified block lengths include zero.' in md,'pooled interval direction across all lengths')
     for text in ('same four historical fitting/test splits','Policy-reference and test labels do not enter fitting or tuning',
-                 'Both models use uniform allocation','E(TP)=h*p/m','scores are never ranked across fitted blocks',
+                 'Both models use uniform allocation','Total expected detections add TP from all fully selected grade-score groups',
+                 'the boundary contribution is zero','Pooled total expectations sum block totals','scores are never ranked across fitted blocks',
                  'recomputes grade allocations and reranks','Intervals exclude fitting, tuning and selection uncertainty',
-                 'E(L)=r*P+K-(r+1)*E(TP)','not an observed inspection process','original stage-specific papers and ranking-pilot experimental results are retained'):
+                 'expected loss uses the total expected detections','not an observed inspection process','original stage-specific papers and ranking-pilot experimental results are retained'):
         check(text in md,'interpretation scope '+text)
     for bad in ('TODO','TBD','PLACEHOLDER','Scientific Agent Skills','2609.00065'):
         check(bad not in md,'no placeholder/tool bibliography '+bad)

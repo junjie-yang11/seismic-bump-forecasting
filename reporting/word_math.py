@@ -99,16 +99,22 @@ EQUATIONS = {
         'ast': seq(text('K'), text('='), delimiter('⌊', '⌋', seq(text('B'), sub('N', 'test')))),
     },
     'tie_expectation': {
-        'latex': r'E(TP)=\frac{hp}{m}',
-        'ast': seq(text('E'), delimiter('(', ')', text('TP')), text('='),
+        'latex': r'E(TP_{\mathrm{boundary}})=\frac{hp}{m}',
+        'ast': seq(text('E'), delimiter('(', ')', sub('TP', 'boundary')), text('='),
                    fraction(seq(text('h'), text('p')), text('m'))),
     },
+    'total_expectation': {
+        'latex': r'E(TP_{\mathrm{total}})=TP_{\mathrm{fully\ selected}}+E(TP_{\mathrm{boundary}})',
+        'ast': seq(text('E'), delimiter('(', ')', sub('TP', 'total')), text('='),
+                   sub('TP', 'fully selected'), text('+'), text('E'),
+                   delimiter('(', ')', sub('TP', 'boundary'))),
+    },
     'expected_loss': {
-        'latex': r'E(L)=rP+K-(r+1)E(TP)',
+        'latex': r'E(L)=rP+K-(r+1)E(TP_{\mathrm{total}})',
         'ast': seq(text('E'), delimiter('(', ')', text('L')), text('='),
                    text('r'), text('P'), text('+'), text('K'), text('−'),
                    delimiter('(', ')', seq(text('r'), text('+'), text('1'))),
-                   text('E'), delimiter('(', ')', text('TP'))),
+                   text('E'), delimiter('(', ')', sub('TP', 'total'))),
     },
 }
 

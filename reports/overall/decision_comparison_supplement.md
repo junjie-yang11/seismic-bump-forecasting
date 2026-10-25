@@ -6,11 +6,11 @@ This supplement retains every specified frozen-policy comparison: 720 policy-min
 
 Negative loss differences favor the left policy. Costs are assumed relative values, not measured money or accident avoidance. All intervals are unadjusted conditional 95% paired moving-block intervals from 2,000 draws of length 32 within blocks; they exclude model fitting, tuning and rule selection. Identical decisions can yield exact zero intervals. No policy is reselected from these tables.
 
-[Integrated manuscript in this edition](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf)
+[Integrated manuscript in this edition](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/reports/overall/integrated_research_report.pdf)
 
-[Comparator protocol and fixed selection rules](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/phase2/comparators/protocol.json)
+[Comparator protocol and fixed selection rules](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/phase2/comparators/protocol.json)
 
-[Complete machine-readable evidence and verification](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/results/phase2/comparators/README.md)
+[Complete machine-readable evidence and verification](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/results/phase2/comparators/README.md)
 
 ## Policies minus no alarms
 

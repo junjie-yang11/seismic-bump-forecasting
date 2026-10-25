@@ -54,7 +54,7 @@ The [full loss-contrast figure](reports/phase2/loss_contrasts.png) retains C−A
 
 The [frozen-policy supplement](phase2/comparators/README.md) adds no-alarm loss intervals and direct rules for each of three hazard-grade fields. At `r=10`, the nonzero pooled C comparisons versus no alarms or the grade rules have intervals spanning zero. These conditional comparisons do not establish ML loss superiority or equivalence. [All phase/cost combinations](reports/overall/comparator_appendix.md) · [Saved evidence and independent replay](results/phase2/comparators/README.md).
 
-At `r=10`, the three grade B rules make identical decisions: all records in phase 1 are flagged and none later. Their common result is 36 detections, 480 false alerts and 516 alerts; XGBoost B gives 35, 379 and 414. Its lower loss against that common rule reflects 101 fewer false alerts at the cost of one fewer detection, not three distinct confirmations.
+At `r=10`, cost-only rules applied separately to the three hazard-assessment fields make identical decisions: all records in record block 1 are flagged and none later. Their common result is 36 detections, 480 false alerts and 516 alerts; XGBoost B gives 35, 379 and 414. Its lower loss against that common rule reflects 101 fewer false alerts at the cost of one fewer detection, not three distinct confirmations.
 
 ## Contribution and study scope
 
@@ -78,7 +78,7 @@ This checks saved evidence and formulas in a disposable copy, preserves publishe
 | --- | --- | --- | --- |
 | 1 | Audit the official dataset and the mirror transformation | [Source audit](phase1/audit_source.py), [data loading](src/data.py) | `results/phase1/source_*` |
 | 2 | Fit LR/CART under random and expanding record-order validation | [Baseline experiment](phase1/run_experiments.py), [shared validation](src/evaluation.py) | `results/phase1/predictions.csv`, `fold_audit.csv` |
-| 3 | Compare the same test rows and assess probabilities | [Paired analysis](phase1/refresh_analysis.py), [metrics](src/metrics.py), [calibration](src/calibration.py) | `shared_test_*`, `paired_uncertainty.csv`, `calibration*` |
+| 3 | Compare the same test rows and assess probabilities | [Paired analysis](phase1/refresh_analysis.py), [gap calculation](phase1/gap_summary.py), [metrics](src/metrics.py), [calibration](src/calibration.py) | `shared_test_*`, `paired_uncertainty.csv`, `calibration*`, [three-model gaps and shrinkage](results/phase1/gap_attenuation_all_models.csv) |
 | 4 | Evaluate engineering feature groups and XGBoost explanations | [Feature study](phase1/run_engineering.py), [XGBoost study](phase1/run_research.py), [explanation analysis](phase1/research_analysis.py) | `results/phase1/feature_ablation*`, `shap_*`, `warning_budgets*` |
 | 5 | Lock Stage 2 settings and separate fitting/reference/test areas | [Locked protocol](phase2/locked_plan.json), [fold fitting](phase2/experiment.py) | `results/phase2/fold_manifest.json`, `references.csv`, `tuning*` |
 | 6 | Select budget, cost and cost-plus-capacity rules; transfer fixed cutoffs | [Decision rules](phase2/decisions.py), [experiment](phase2/run.py) | `candidates.csv`, `audits.csv`, `decisions.csv`, `evaluations.csv` |

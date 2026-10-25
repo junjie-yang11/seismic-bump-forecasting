@@ -77,7 +77,7 @@ class WordMathTests(unittest.TestCase):
         cost.find('.//m:sSup/m:sup/m:r/m:t', ns).text = '2'
         self.assertNotEqual(math.math_signature(cost), math.EQUATIONS['cost_boundary']['ast'])
 
-    def test_separate_verifier_checks_all_twelve_main_expressions(self):
+    def test_separate_verifier_checks_all_main_expressions(self):
         from docx import Document
         from reporting.verify_math import MAIN_EQUATION_IDS, verify_equations
         document = Document(); markdown = []
@@ -108,6 +108,36 @@ class WordMathTests(unittest.TestCase):
         nodes = tree.findall('.//{' + math.MATH_NS + '}oMath')
         self.assertEqual([math.math_signature(x) for x in nodes],
                          [x['ast'] for x in math.EQUATIONS.values()])
+
+    def test_boundary_cannot_replace_total_or_omit_fully_selected_detections(self):
+        from docx import Document
+        from reporting.verify_math import verify_equations
+        ids = ('tie_expectation', 'total_expectation', 'expected_loss')
+        document = Document()
+        for name in ids:
+            math.append_equation(document.add_paragraph(), name)
+        body = ET.fromstring(ET.tostring(document._element.body))
+        markdown = '\n\n'.join(math.markdown_equation(name) for name in ids)
+        ns = {'m': math.MATH_NS}
+        def check(condition, message):
+            self.assertTrue(condition, message)
+        verify_equations(body, markdown, check, ids)
+        # Both totals must retain their explicit scope even if text looks similar.
+        for target in (1, 2):
+            mutated = deepcopy(body)
+            equation = mutated.findall('.//m:oMath', ns)[target]
+            index = next(x for x in equation.findall('.//m:sSub/m:sub/m:r/m:t', ns)
+                         if x.text == 'total')
+            index.text = 'boundary'
+            with self.assertRaises(AssertionError):
+                verify_equations(mutated, markdown, check, ids)
+        mutated = deepcopy(body)
+        equation = mutated.findall('.//m:oMath', ns)[1]
+        term = next(x for x in equation.findall('m:sSub', ns)
+                    if x.find('m:sub/m:r/m:t', ns).text == 'fully selected')
+        equation.remove(term)
+        with self.assertRaises(AssertionError):
+            verify_equations(mutated, markdown, check, ids)
 
 
 if __name__ == '__main__':

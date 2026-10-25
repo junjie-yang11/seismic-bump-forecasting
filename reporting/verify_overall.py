@@ -69,6 +69,15 @@ def _checks(root, pdf_text):
                 check(not node.text,'clean Word author metadata')
     from reporting.verify_math import verify_equations
     verify_equations(body,md,check)
+    check('complements threshold-transfer evaluation' in md and
+          'test-batch workload and grade allocations are held fixed' in md,
+          'exploratory allocation analysis complements the transfer question')
+    for definition in ('average precision (AP)','logistic regression (LR)',
+                       'bagged classification and regression trees (CART)'):
+        check(definition in md,'expanded model or metric abbreviation '+definition)
+    check('If no group is partially selected, the boundary contribution is zero' in md and
+          'Pooled total expectations sum the block totals' in md,
+          'no-boundary and pooled expectations explicitly defined')
     for p in body.findall('w:p',NS):
         text=ordinary_paragraph_text(p)
         if text.strip():check(text in md,'Word paragraph agrees with manuscript')
@@ -256,7 +265,7 @@ def _checks(root, pdf_text):
         check([(r['row'],r['B_r10']) for r in grade_b[field]]==[(r['row'],r['B_r10']) for r in grade_b['seismic']],
               'grade B decisions are identical, not merely dependent')
     check(all((r['B_r10']=='True')==(int(r['fold'])==0) for r in grade_b['seismic']),'grade B alarms all record block 1 and none later')
-    check('three grade B rules make exactly the same row-level decisions' in md and '101 fewer false alerts' in md,'common B comparator and detection tradeoff explicit')
+    check('cost-only rules applied separately to the three hazard-assessment fields make exactly the same row-level decisions' in md and '101 fewer false alerts' in md,'common B comparator and detection tradeoff explicit')
     check('an unresolved pooled direction does not erase a resolved increase' in md,'record block and pooled conclusions remain distinct')
     def effect(r):return fmt(r['loss_delta100'],2)+' '+bounds(r['ci_low'],r['ci_high'],2)
     def integer(value):return str(int(float(value)))
@@ -356,7 +365,7 @@ def _checks(root, pdf_text):
         check(int(r['block_length'])==32,'main monitoring interval length')
         for name in ('ci_low','ci_high'):check(float(r[name])==float(ci[name]),'correct reranking interval '+name)
     twenty=take(information,fold=-1,budget=.2);ci20=take(information_ci,fold=-1,budget=.2,block_length=32)
-    check('E(TP)='+fmt(twenty['base_etp'],2) in md and fmt(twenty['delta_etp'],2)+' with conditional 95% interval '+bounds(ci20['ci_low'],ci20['ci_high'],2) in md,'monitoring quantitative claim')
+    check(fmt(twenty['base_etp'],2)+' expected total detections' in md and fmt(twenty['delta_etp'],2)+' with conditional 95% interval '+bounds(ci20['ci_low'],ci20['ci_high'],2) in md,'monitoring quantitative claim')
     main_intervals=[r for r in information_ci if int(r['block_length'])==32 and int(r['fold'])>=0]
     check(len(main_intervals)==16 and all(float(r['ci_low'])<=0<=float(r['ci_high']) for r in main_intervals),'all block-specific intervals span zero')
     check('cannot be compared with C as an improvement at equal workload' in md and 'protocol was specified after these test records had been examined' in md,'budget distinction and exploratory scope')

@@ -1,14 +1,14 @@
 {
-  "checks": 2934,
+  "checks": 2941,
   "tables": 14,
   "figures": 5,
   "pages": 17,
   "pdf_text_checked": true,
   "embedded_pdf_images": [],
-  "equation_verifier_sha256": "c30a51ee244016799e1e898b382d1e144abfcd60c1c347effa1051b13f977553",
+  "equation_verifier_sha256": "99189f7631116d740861995327a2580ed97d296781b2075e219b45de5a8987e1",
   "scope": "Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.",
-  "manifest_sha256": "2824ac7d404191a9cb4aa6bb071779c9a68df29d9c989125f00ff77d17663b2e",
-  "generator_sha256": "bf95dd2432cdc5886c7f4c372aaad57ae594c1ed94ce68e6688f6d37dc55ff92",
+  "manifest_sha256": "9f997ba33a8ce934a2c8162cbd570d782aee47e3bf04fffdd84476bc5bdf0a40",
+  "generator_sha256": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
   "checked_row_and_table_inputs_sha256": {
     "results/phase1/feature_ablation.csv": "cdef258d39ef33c23047e7632c8c1c66368ddf2f52ae8932eb8186e00407ebf7",
     "results/phase2/predictions.csv": "e76202e941295c896ae6e752907de6439ce7527fa672dfeacd3f2f04fe34a4f6",
@@ -38,26 +38,26 @@
     "reports/overall/monitoring_increment.csv": "b5e644efe9abd0e61eb10c0b2189500d37f8dcf27f2c1e5f1e573bb34f60fce5"
   },
   "outputs_sha256": {
-    "integrated_research_report.md": "f595d8ecffd0cce3914e3e40f1f746ded828e5582d84cc6c45611c5bc4f7d766",
-    "integrated_research_report.docx": "8af02d1f64c560cf1d63e324ec4a08f65b02885281c37873bef6bd11fbd94660",
-    "integrated_research_report.pdf": "343eb9524dee37ad983e9de3252d025152e66af9992299982e0c539f143a7f88",
+    "integrated_research_report.md": "136257706b161be2c88d706d993b21d94149eee353696505e390a90472e21ddf",
+    "integrated_research_report.docx": "64cb993959f8f3029e40ac541e8f9e977701fe99c7ecfe6140aa14365c585bed",
+    "integrated_research_report.pdf": "dcfd536ce52cb0ad54c894f9ee9edeeaa5341671848a0be46564249adae05e44",
     "evidence_overview.png": "da0ce749a71400aba91408df11bd918609b0b8ca3ebde6c4312d81b71a8456ae",
     "decision_tradeoffs.png": "01ecbabe4997716dcbbcdc239c1fbadd612aeb236c742bffbde2f5968bd46122",
     "decision_tradeoffs.csv": "f5c925ade6e77dd73c1288a527f96cc695cc97101b4d96ce42ef275323084f46",
     "comparator_appendix.md": "ef18de0aa6e344971cea0435b92bff361cb4c660cd877a9c34c68f118dddaf7e",
-    "evidence_overview.svg": "fa9911013672e963dc4aa13a1c2142bdf35ae97c55b743c28d5691be5aacad02",
+    "evidence_overview.svg": "8f4c9aefbcdf357d7c20f9ae1153e6952ef7d11a1b9045f8d1abf19ba7ff14f3",
     "calibration_detail.png": "37ea34ac3faff613ec585611acfe8859af564297498fbf8bac9d45b56d230df9",
     "shap_readable.png": "dfb717d34eda0f15b0b39a5384705bd9b80173e6689a255aeaf433629d1a9a49",
     "monitoring_increment.png": "e396e6e13d211b2ed8cc24ea0166953cff51da7a2783b2dee5d76c500e1a4568",
     "monitoring_increment.csv": "b5e644efe9abd0e61eb10c0b2189500d37f8dcf27f2c1e5f1e573bb34f60fce5",
-    "calibration_detail.svg": "0b0e40ca482c106224748da07946828358a6b726befb7bc0534e837d41a8411e",
-    "shap_readable.svg": "b1538efea8ebbc6dcfaa09b9505db78869d7e975503bfb2900c2c511005b6f11",
-    "decision_tradeoffs.svg": "6b07ef7addfcf985384ebbb01425f37e913386d969df39bf69ac41efbfd743f7",
-    "monitoring_increment.svg": "d2f8c1fe11c3712b7db89faeae63611bb31a243ae14dd0b75a0411e3f6494a3d"
+    "calibration_detail.svg": "91ea57cdc7a6fd07789047395bfe5f1e24296bc16d56914e092ca6dd5337795d",
+    "shap_readable.svg": "16268d46b32aca97f0c8cf0f1333186797930d254f046b6947c38deaf4125584",
+    "decision_tradeoffs.svg": "edb2ab015fd57ab37c30c5c9c7f4d32b89a285228da8a8717d55f6b4878ef96f",
+    "monitoring_increment.svg": "3801390370e8c0e8c74b87ddad1758df25c325806b3035f8e4d6d71739132056"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-25T11:29:14.919582+00:00",
-  "completed_at_utc": "2026-10-25T11:29:17.844905+00:00",
-  "verifier_sha256": "029d5fe0e38c5d50e87777842610986dd6cfba6bd8de7f3a493429c85a1b06a4"
+  "started_at_utc": "2026-10-25T19:29:16.463537+00:00",
+  "completed_at_utc": "2026-10-25T19:29:20.507708+00:00",
+  "verifier_sha256": "e75e8fa64cfee788296624970735da6bfc1ca027175472082603d298468dadd4"
 }

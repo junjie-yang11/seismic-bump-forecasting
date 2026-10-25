@@ -10,7 +10,15 @@ The primary seismic assessment orders a (no hazard), b (low hazard), c (high haz
 
 Does monitoring information improve hazardous-shift detection beyond three existing hazard assessments and shift type, at identical inspection allocations? This separately specified exploratory supplement compares a four-input base design with the established 17-column design. Both use XGBoost and the same four historical fitting/test splits. Each design independently selects depth 2/3 and 80/160 rounds on the same inner historical split by AP, with negative Brier if that inner set has no positives. Policy-reference and test labels do not enter fitting or tuning; no holdout is added.
 
-Within each test block, K=floor(B*N) slots go to higher seismic grades first; model scores rank records within each grade. Both models use uniform allocation within an exactly tied boundary score group: h slots among m records containing p hazards contribute E(TP)=h*p/m. Reported fractional counts integrate allocation randomness rather than describe fractional shifts. Pooled results sum block allocations; scores are never ranked across fitted blocks.
+Within each test block, K=floor(B*N) slots go to higher seismic grades first; model scores rank records within each grade. Both models use uniform allocation within an exactly tied boundary score group: h slots among m records containing p hazards contribute the boundary expectation below. Total expected detections add TP from all fully selected grade-score groups. Without a partially selected group, the boundary contribution is zero. Pooled total expectations sum block totals; scores are never ranked across fitted blocks. Fractional counts integrate allocation randomness.
+
+$$
+E(TP_{\mathrm{boundary}})=\frac{hp}{m}
+$$
+
+$$
+E(TP_{\mathrm{total}})=TP_{\mathrm{fully\ selected}}+E(TP_{\mathrm{boundary}})
+$$
 
 ## Expected detections on the shared test records
 
@@ -47,13 +55,17 @@ The saved scores, tuning choices and models are frozen. Each of 2,000 paired mov
 
 ## Discussion
 
-The matched baseline changes the interpretation of the earlier complete-score-versus-grade-random pilot: the present increment is specifically relative to a fitted model already using all three assessments and shift type. Positive point differences occur in 3/4, 0/4, 2/4, 4/4 budgets in blocks 1-4, respectively; 16/16 main block-specific intervals include zero. The pooled intervals also include zero at every budget and block length, so these observations do not resolve a consistent monitoring-information increment under the specified workflow. This does not establish that monitoring information is generally uninformative: the comparison concerns these inputs, separately AP-selected configurations and previously examined records. At fixed P and K, E(L)=r*P+K-(r+1)*E(TP), so an additional cost grid would restate detection differences. Recorded order remains a temporal proxy, and the batch allocation is not an observed inspection process or accident-prevention effect. Independent timestamped working-face data with inspection outcomes would test transfer beyond this cohort.
+The matched baseline changes the interpretation of the earlier complete-score-versus-grade-random pilot: the present increment is specifically relative to a fitted model already using all three assessments and shift type. Positive point differences occur in 3/4, 0/4, 2/4, 4/4 budgets in blocks 1-4, respectively; 16/16 main block-specific intervals include zero. The pooled intervals also include zero at every budget and block length, so these observations do not resolve a consistent monitoring-information increment under the specified workflow. This does not establish that monitoring information is generally uninformative: the comparison concerns these inputs, separately AP-selected configurations and previously examined records. At fixed hazardous count P and allocated slots K, expected loss uses the total expected detections as shown below; an additional cost grid would restate detection differences. Recorded order remains a temporal proxy, and the batch allocation is not an observed inspection process or accident-prevention effect. Independent timestamped working-face data with inspection outcomes would test transfer beyond this cohort.
+
+$$
+E(L)=rP+K-(r+1)E(TP_{\mathrm{total}})
+$$
 
 ## Protocol and computational evidence
 
 The protocol, fitting and allocation code, numerical verifier and saved evidence are linked below. The verifier recomputes the calculations through a separate path and supports full refitting replay. Retained results include row-level scores and inclusion probabilities, all candidate tuning predictions, eight final models, grade allocations, every bootstrap multiplicity and replicate, and version-specific verification. The original stage-specific papers and ranking-pilot experimental results are retained. The integrated report includes the main matched-information finding; this supplement retains the complete design, table and block-length sensitivity.
 
-Scientific code and saved-evidence links identify commit de83319. The integrated-manuscript link identifies the fixed presentation edition manuscript-2026-10-25. This revised report is generated by the current reporting code; its presentation is not claimed to be part of the earlier scientific source edition.
+Scientific code and saved-evidence links identify commit de83319. The integrated-manuscript link identifies the fixed presentation edition manuscript-2026-10-26. This revised report is generated by the current reporting code; its presentation is not claimed to be part of the earlier scientific source edition.
 
 [UCI dataset and target definition](https://archive.ics.uci.edu/dataset/266/seismic+bumps) | [Audited source and row mapping](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/data/README.md)
 
@@ -61,7 +73,7 @@ Scientific code and saved-evidence links identify commit de83319. The integrated
 
 [Numerical verification and refit replay](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/phase2/information/verify.py) | [Saved results and verification guide](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/results/phase2/information/README.md)
 
-[Integrated manuscript in this edition](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf) | [Author contributions and AI assistance](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/CONTRIBUTIONS.md)
+[Integrated manuscript in this edition](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/reports/overall/integrated_research_report.pdf) | [Author contributions and AI assistance](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/de833195e2e7d025ca75c1efb57ac6d866127461/CONTRIBUTIONS.md)
 
 ## Increment and interval figure
 

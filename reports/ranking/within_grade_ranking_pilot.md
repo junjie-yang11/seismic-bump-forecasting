@@ -82,4 +82,4 @@ The links below preserve the source and evidence snapshot at commit e4c517b. The
 
 [Numerical verifier](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/e4c517b6f4b9671aff7b55f6886eb0f8bfaf9535/phase2/ranking/verify.py)
 
-[Integrated report](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-25/reports/overall/integrated_research_report.pdf)
+[Integrated report](https://github.com/junjie-yang11/seismic-bump-forecasting/blob/manuscript-2026-10-26/reports/overall/integrated_research_report.pdf)
