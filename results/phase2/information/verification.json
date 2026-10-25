@@ -1,8 +1,32 @@
 {
-  "checks": 25331,
+  "checks": 25350,
   "refit": true,
   "model_replay": true,
   "final_models": 8,
+  "provenance": {
+    "archive_sha256": "4bdcde53076bd35ff747777f1355d6fa2c38fea5b3bb5b803fbb5556c83de5a0",
+    "archive_bound_to_current_run": true,
+    "historical_context_files": 17,
+    "live_protected_files": 192,
+    "changed_historical_context": [
+      "phase1/run_research.py",
+      "phase1/verify_additions.py",
+      "reports/README.md",
+      "reports/overall/decision_tradeoffs.png",
+      "reports/overall/evidence_overview.png",
+      "reports/overall/integrated_research_report.docx",
+      "reports/overall/integrated_research_report.md",
+      "reports/overall/integrated_research_report.pdf",
+      "reports/overall/report_manifest.json",
+      "reports/overall/verification.json",
+      "reports/ranking/report_manifest.json",
+      "reports/ranking/verification.json",
+      "reports/ranking/within_grade_ranking_pilot.docx",
+      "reports/ranking/within_grade_ranking_pilot.pdf"
+    ],
+    "helper_sha256": "5284cf53cf0308d8622e0da239dc7d36f9bb761f55b99f9a6c330eff7a7d3d26",
+    "scope": "Original run-time context bytes verified from the bounded archive; current presentation and the separately added three-model gap output require their own checks. All other protected evidence, and all model inputs/code/outputs, remain live checks."
+  },
   "candidate_fits_repeated": 32,
   "final_fits_repeated": 8,
   "rows": 2063,
@@ -25,11 +49,11 @@
   },
   "protocol_sha256": "0b0fd33122d25270016b097c1eee989f7af2adf230033bbed616f2dc28cae407",
   "manifest_sha256": "2c0285c06d653da5a9d825880d495f5d48b2d8950a1c9fdaff6120df6a1e0891",
-  "scope": "Source/code/output and protected-evidence hashes; raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay.",
+  "scope": "Live model-input/code/output and protected computational-evidence hashes; bounded historical presentation/derived-summary snapshots checked separately (not a claim that current papers are unchanged). Raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay.",
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-24T22:56:29.380224+00:00",
-  "completed_at_utc": "2026-10-24T22:56:31.163934+00:00",
-  "elapsed_seconds": 1.7831269000016619,
-  "verifier_sha256": "597ae0fd456855e36107eedfd62b5a00b18e8138cc1279d7766a4ef6526cbc53"
+  "started_at_utc": "2026-10-25T10:09:41.119877+00:00",
+  "completed_at_utc": "2026-10-25T10:09:43.099935+00:00",
+  "elapsed_seconds": 1.9798634000035236,
+  "verifier_sha256": "5e9447ded57e92949373566af2587bdd2e55e6afb81d4e9db7c4b00a685b3d9b"
 }

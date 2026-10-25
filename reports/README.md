@@ -1,6 +1,6 @@
 # Final research reports
 
-Start with the **integrated research report**: [PDF](overall/integrated_research_report.pdf) · [Word](overall/integrated_research_report.docx) · [Online manuscript](overall/integrated_research_report.md). It gives one argument, shared data description and integrated discussion, while preserving the different stage protocols.
+Start with the **integrated research report**: [PDF](overall/integrated_research_report.pdf) · [Word](overall/integrated_research_report.docx) · [Online manuscript](overall/integrated_research_report.md). It gives one argument, shared data description and integrated discussion, including the matched-information core finding, while preserving the different stage protocols. The [research overview](../docs/PROJECT_OVERVIEW.md) provides the quick introduction.
 
 The two supporting technical reports retain complete stage-specific methods, combinations and supplementary evidence:
 
@@ -24,3 +24,5 @@ The **separate exploratory ranking pilot** asks whether complete-model scores ad
 The [Stage 2 report checker](../phase2/verify_report.py) compares the manuscript, Word tables, PDF numbers and input/generator hashes. Its [verification record](phase2/report_verification.json) identifies the checked report hashes and verifier version. Inspect the rendered pages as well as these computational checks. Use [the homepage table updater](../phase2/update_readme.py) after rebuilding the second paper's presentation.
 
 See the [execution sequence](../docs/REPRODUCING.md) before rebuilding. The current structure places all final papers here; older review editions record their original paths.
+
+The matched-information main result appears in Section 5.6 and Figure 5 of the integrated manuscript. The [full supplement](information/monitoring_information_increment.pdf) retains all phase-specific expectations, the three block lengths and the reproduction detail. Historical reference budgets and strict test-batch allocations are distinct; the latter does not add an independent validation cohort.

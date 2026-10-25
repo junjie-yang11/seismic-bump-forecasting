@@ -38,6 +38,9 @@ def checks(root,pdf_text=False):
     for name,digest in manifest['outputs'].items():check(sha(out/name)==digest,'generated output '+name)
     numerical=json.loads((root/'results/phase2/information/verification.json').read_text())
     check(numerical.get('passed') and numerical.get('refit'),'passed separate calculations and actual refit replay')
+    check(numerical['verifier_sha256']==sha(root/'phase2/information/verify.py'),'current numerical verifier')
+    check(numerical['provenance']['helper_sha256']==sha(root/'phase2/information/provenance.py'),'current historical-context verifier')
+    check(numerical['provenance']['archive_sha256']==sha(root/'results/phase2/information/historical_context.zip'),'preserved original historical context')
     md=(out/(STEM+'.md')).read_text(encoding='utf-8')
     with ZipFile(out/(STEM+'.docx')) as package:
         body=ET.fromstring(package.read('word/document.xml')).find('w:body',NS)
@@ -92,7 +95,7 @@ def checks(root,pdf_text=False):
     for text in ('same four historical fitting/test splits','Policy-reference and test labels do not enter fitting or tuning',
                  'Both models use uniform allocation','E(TP)=h*p/m','scores are never ranked across fitted blocks',
                  'recomputes grade allocations and reranks','Intervals exclude fitting, tuning and selection uncertainty',
-                 'E(L)=r*P+K-(r+1)*E(TP)','not an observed inspection process','original two-stage papers and ranking pilot remain unchanged'):
+                 'E(L)=r*P+K-(r+1)*E(TP)','not an observed inspection process','original stage-specific papers and ranking-pilot experimental results are retained'):
         check(text in md,'interpretation scope '+text)
     for bad in ('TODO','TBD','PLACEHOLDER','Scientific Agent Skills','2609.00065'):
         check(bad not in md,'no placeholder/tool bibliography '+bad)

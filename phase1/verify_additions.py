@@ -1,8 +1,71 @@
 """Checks for paired analysis, source mapping and engineering count tables."""
 import hashlib
 import json
+import csv
+import itertools
+import math
 import numpy as np
 import pandas as pd
+
+def verify_gap_summary(root, check, close, y):
+    """Reconstruct all gaps directly from CSV rows along a separate AP path."""
+    folder = root / 'results/phase1'
+    def read(name):
+        with (folder / name).open(encoding='utf-8', newline='') as stream:
+            return list(csv.DictReader(stream))
+    def ap(records):
+        positives = math.fsum(float(r['y']) for r in records)
+        check(positives > 0, 'gap AP positive evaluation labels')
+        tp = 0.; count = 0; value = 0.
+        for _, group in itertools.groupby(sorted(records, key=lambda r: -float(r['score'])),
+                                           key=lambda r: float(r['score'])):
+            rows = list(group); gain = math.fsum(float(r['y']) for r in rows)
+            tp += gain; count += len(rows)
+            value += gain / positives * tp / count
+        return value
+    random = read('random_predictions_by_seed.csv')
+    ordered = read('predictions.csv')
+    models = [('LR', 'logistic regression (L2, class-weighted)'),
+              ('CART', 'bagged CART (60 trees, depth 6)')]
+    if (folder / 'research_config.json').exists():
+        models.append(('XGBoost', 'XGBoost'))
+    observed = read('gap_attenuation_all_models.csv')
+    check([r['model'] for r in observed] == [m[0] for m in models], 'complete ordered gap models')
+    common_cohort = None
+    for short, name in models:
+        if short == 'XGBoost':
+            source = read('xgboost_random_predictions.csv')
+            time = [r for r in read('engineering_predictions.csv')
+                    if r['model'] == name and r['validation'] == 'time' and r['variant'] == 'full']
+        else:
+            source = [r for r in random if r['model'] == name]
+            time = [r for r in ordered if r['model'] == name and r['validation'] == 'time']
+        rows = {int(r['row']) for r in time}
+        check(len(rows) == len(time) > 0, 'distinct gap record-order rows ' + short)
+        check(all(float(r['y']) == y[int(r['row'])] for r in time), 'gap record-order source labels ' + short)
+        check(common_cohort is None or rows == common_cohort, 'identical common cohorts ' + short)
+        common_cohort = rows
+        check({int(r['seed']) for r in source} == set(range(5)), 'five gap seeds ' + short)
+        full_aps = []; common_aps = []
+        for seed in range(5):
+            sample = [r for r in source if int(r['seed']) == seed]
+            check(len(sample) == len(y) and {int(r['row']) for r in sample} == set(range(len(y))),
+                  'unique full gap seed coverage ' + short)
+            check(all(float(r['y']) == y[int(r['row'])] for r in sample), 'gap seed source labels ' + short)
+            check(all(math.isfinite(float(r['score'])) and 0 <= float(r['score']) <= 1 for r in sample),
+                  'finite gap prediction scores ' + short)
+            common = [r for r in sample if int(r['row']) in rows]
+            check(len(common) == len(rows), 'gap common seed coverage ' + short)
+            full_aps.append(ap(sample)); common_aps.append(ap(common))
+        order_ap = ap(time)
+        full_gap = math.fsum(full_aps) / 5 - order_ap
+        common_gap = math.fsum(common_aps) / 5 - order_ap
+        check(full_gap != 0, 'defined gap attenuation ' + short)
+        saved = next(r for r in observed if r['model'] == short)
+        close(float(saved['original_gap']), full_gap, 'independent full-cohort gap ' + short)
+        close(float(saved['same_test_gap']), common_gap, 'independent matched gap ' + short)
+        close(float(saved['gap_reduction_fraction']), 1 - common_gap / full_gap,
+              'independent unrounded attenuation ' + short)
 
 def verify_additions(root,check,close,y):
     from metrics import roc_auc,average_precision,summarise
@@ -17,6 +80,8 @@ def verify_additions(root,check,close,y):
     check(set(zip(rnd.model,rnd.seed))=={(m,s) for m in models for s in range(5)},'all-seed prediction combinations')
     check(set(zip(intervals.model,intervals.block_length))=={(m,l) for m in ('LR','CART') for l in (1,16,32,64)} and len(intervals)==8,'bootstrap sensitivity combinations')
     check(len(gaps)==2 and len(operating)==10,'diagnostic table sizes')
+    if (root/'results/phase1/research_config.json').exists():
+        verify_gap_summary(root,check,close,y)
     for model in models:
         short='LR' if 'logistic' in model else 'CART'
         time=pred[(pred.model==model)&(pred.validation=='time')].sort_values('row')

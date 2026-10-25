@@ -16,6 +16,7 @@ data/*
 !results/phase2/ranking/*.csv
 !results/phase2/information/*.csv
 !reports/overall/decision_tradeoffs.csv
+!reports/overall/monitoring_increment.csv
 !reports/information/figure_data.csv
 
 # ---------------------------------------------------------------------------

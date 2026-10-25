@@ -47,7 +47,7 @@ The matched baseline changes the interpretation of the earlier complete-score-ve
 
 ## Protocol and computational evidence
 
-The separate protocol is phase2/information/protocol.json. Model fitting and analytic allocation are implemented in phase2/information/run.py; phase2/information/verify.py recomputes the evidence through a separate calculation path and supports full refitting replay. Results in results/phase2/information/ retain row-level scores and inclusion probabilities, all candidate tuning predictions, eight final models, grade allocations, every bootstrap multiplicity and replicate, and version-specific verification. The original two-stage papers and ranking pilot remain unchanged. Author contributions and AI assistance follow CONTRIBUTIONS.md.
+The separate protocol is phase2/information/protocol.json. Model fitting and analytic allocation are implemented in phase2/information/run.py; phase2/information/verify.py recomputes the evidence through a separate calculation path and supports full refitting replay. Results in results/phase2/information/ retain row-level scores and inclusion probabilities, all candidate tuning predictions, eight final models, grade allocations, every bootstrap multiplicity and replicate, and version-specific verification. The original stage-specific papers and ranking-pilot experimental results are retained. The integrated report includes the main matched-information finding; this supplement retains the complete design, table and block-length sensitivity. Author contributions and AI assistance follow CONTRIBUTIONS.md.
 
 ## Increment and interval figure
 

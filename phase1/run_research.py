@@ -144,6 +144,8 @@ def run():
     analyse(ROOT)
     from phase1.review_analysis import analyse as analyse_review
     analyse_review(ROOT)
+    from phase1.gap_summary import write_gap_summary
+    write_gap_summary(ROOT)
     from phase1.generate_report import write_markdown_report
     write_markdown_report()
     print('Extended experiments and explanations saved.', flush=True)

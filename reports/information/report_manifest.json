@@ -1,18 +1,20 @@
 {
   "title": "Monitoring Information Beyond Hazard Grades and Shift Type",
-  "created_at_utc": "2026-10-24T23:07:52.130169+00:00",
+  "created_at_utc": "2026-10-25T10:11:23.000640+00:00",
   "inputs": {
     "phase2/information/protocol.json": "0b0fd33122d25270016b097c1eee989f7af2adf230033bbed616f2dc28cae407",
-    "results/phase2/information/verification.json": "f4d7e1081050824da035440be8572e56aa4136fc509b37d7638345de8b936433",
+    "phase2/information/provenance.py": "5284cf53cf0308d8622e0da239dc7d36f9bb761f55b99f9a6c330eff7a7d3d26",
+    "results/phase2/information/historical_context.zip": "4bdcde53076bd35ff747777f1355d6fa2c38fea5b3bb5b803fbb5556c83de5a0",
+    "results/phase2/information/verification.json": "bf47da0861867ddc171b44858a3d9da2d3d55485d61617de9438077b5ba8d1f5",
     "results/phase2/information/run_manifest.json": "2c0285c06d653da5a9d825880d495f5d48b2d8950a1c9fdaff6120df6a1e0891",
     "phase2/information/run.py": "81276e68db3fc02b519467f588c546838797a519ef60e52dfc94b50bd6602fc8",
-    "phase2/information/verify.py": "597ae0fd456855e36107eedfd62b5a00b18e8138cc1279d7766a4ef6526cbc53",
+    "phase2/information/verify.py": "5e9447ded57e92949373566af2587bdd2e55e6afb81d4e9db7c4b00a685b3d9b",
     "results/phase2/information/evaluations.csv": "7d01db74c7813873ed79890ba1fd256c86d8f0553c6857055e5fa6636f09b669",
     "results/phase2/information/intervals.csv": "87d64c52840720c9aff4c4014d6b368196c258d74a4efaa28e39d3cccaebf406",
     "results/phase2/information/rows.csv": "99f0a7a92fc4747ade2cb1d8a6d5f97550274a29c36180006e5c1048521dae42"
   },
-  "generator_sha256": "c214d64b2f0fe9ea34ae124473b246e23bba3efa27809d268945b0a462b5318d",
-  "writer_sha256": "a04ce3a61be6c6917f1545df736acdd0b16ac855238e9b54d2ea45e6003f14ed",
+  "generator_sha256": "5d40a92c448672863b78a925b8e73b91514a541ba4b04deef49f30aeec6c4739",
+  "writer_sha256": "4065b774a7639f14a587c92b5e41c233adfc28151bcdaebd6cd2d18b7c00bc95",
   "tables": [
     {
       "id": "information_primary",
@@ -191,13 +193,13 @@
   ],
   "scope": "Separate matched-information report from computed evidence; one phase table, one all-length interval figure, no fitting or policy selection by reporting",
   "numerical_verification_at_build": {
-    "sha256": "f4d7e1081050824da035440be8572e56aa4136fc509b37d7638345de8b936433",
+    "sha256": "bf47da0861867ddc171b44858a3d9da2d3d55485d61617de9438077b5ba8d1f5",
     "refit": true,
-    "scope": "Source/code/output and protected-evidence hashes; raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay."
+    "scope": "Live model-input/code/output and protected computational-evidence hashes; bounded historical presentation/derived-summary snapshots checked separately (not a claim that current papers are unchanged). Raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. All32 inner candidates and8 final models refitted with exact score replay."
   },
   "outputs": {
-    "monitoring_information_increment.md": "140babc707485adab96e9aebf5e207fb5492815fa8ea892f41a771be389bbb1f",
-    "monitoring_information_increment.docx": "86aee6b3615bf823a0b6bce15ca25d8f1a701b2571af47060824e732ac7dd1da",
+    "monitoring_information_increment.md": "90daee8ec877198bf12288e7bdb7decd7a533fc6fa6c24b6d9abf70393152e10",
+    "monitoring_information_increment.docx": "6b42f36b4f005606cbc9ff687e2eb90ecbc8caf07296f4388b2392ab42df55c3",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
     "information_increment.png": "2883379c7a534b967e21b1d5ecd8928ed5b26c2ef56495989604845166a788fa"
   }

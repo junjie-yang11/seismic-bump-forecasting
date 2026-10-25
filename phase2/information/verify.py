@@ -15,6 +15,7 @@ import time
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+from phase2.information.provenance import verify_protected
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -80,8 +81,9 @@ def checks(root,refit=False):
     plan=json.loads((root/'phase2/information/protocol.json').read_text(encoding='utf-8'))
     check(manifest['status']=='complete','complete experiment')
     check(sha(root/'phase2/information/protocol.json')==manifest['protocol_sha256'],'current protocol hash')
-    for field in ('inputs_sha256','code_sha256','protected_sha256'):
+    for field in ('inputs_sha256','code_sha256'):
         for name,value in manifest[field].items():check(sha(root/name)==value,'unchanged '+field+' '+name)
+    provenance=verify_protected(root,manifest,check)
     for name,value in manifest['outputs_sha256'].items():check(sha(out/name)==value,'saved output '+name)
     check(sha(root/'results/phase2/fold_manifest.json')==plan['fold_source_sha256'],'original fold identity')
     original_lock=json.loads((root/'phase2/locked_plan.json').read_text(encoding='utf-8'))
@@ -237,11 +239,12 @@ def checks(root,refit=False):
                 check(int(r.replicates)==settings['replicates'],'all replicates retained')
                 contrasts+=settings['replicates']
     return dict(checks=counter,refit=refit,model_replay=True,final_models=8,
+                provenance=provenance,
                 candidate_fits_repeated=candidate_refits,final_fits_repeated=final_refits,
                 rows=len(rows),evaluations=len(evaluations),intervals=len(intervals),bootstrap_contrasts=contrasts,
                 zero_positive_draws=zero_positive,protocol_sha256=manifest['protocol_sha256'],
                 manifest_sha256=sha(out/'run_manifest.json'),
-                scope='Source/code/output and protected-evidence hashes; raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. '+
+                scope='Live model-input/code/output and protected computational-evidence hashes; bounded historical presentation/derived-summary snapshots checked separately (not a claim that current papers are unchanged). Raw-data encodings and historical split isolation; separate-path tuning metrics, analytic score-tie inclusion, quota/count/interval reconstruction; exact saved-model replay; all moving-block draws and 120000 reranked contrasts. '+
                       ('All32 inner candidates and8 final models refitted with exact score replay.' if refit else 'No model refitting; saved models replayed only.'))
 
 

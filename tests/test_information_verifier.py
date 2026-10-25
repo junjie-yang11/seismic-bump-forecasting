@@ -9,6 +9,20 @@ from phase2.information import verify as verifier
 
 
 class InformationVerifierTests(unittest.TestCase):
+    def test_changed_live_model_input_fails_before_historical_context_check(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);out=root/'results/phase2/information';out.mkdir(parents=True)
+            protocol=root/'phase2/information/protocol.json';protocol.parent.mkdir(parents=True)
+            protocol.write_text('{}')
+            data=root/'data.csv';data.write_text('original inputs')
+            manifest=dict(status='complete',protocol_sha256=verifier.sha(protocol),
+                          inputs_sha256={'data.csv':verifier.sha(data)},code_sha256={})
+            (out/'run_manifest.json').write_text(json.dumps(manifest))
+            data.write_text('changed inputs')
+            with self.assertRaisesRegex(AssertionError,'unchanged inputs_sha256 data.csv'):
+                verifier.verify(root)
+            self.assertFalse(json.loads((out/'verification.json').read_text())['passed'])
+
     def test_prior_success_is_revoked_on_missing_current_input(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);out=root/'results/phase2/information';out.mkdir(parents=True)

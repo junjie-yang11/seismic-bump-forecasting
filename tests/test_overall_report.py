@@ -8,6 +8,11 @@ from reporting import overall, verify_overall
 
 
 class OverallCertificateTests(unittest.TestCase):
+    def test_native_equations_do_not_exempt_adjacent_ordinary_text(self):
+        import xml.etree.ElementTree as ET
+        p=ET.fromstring('<w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><w:r><w:t>Ordinary text still checked</w:t></w:r><m:oMath><m:r><m:t>math checked separately</m:t></m:r></m:oMath></w:p>')
+        self.assertEqual(verify_overall.ordinary_paragraph_text(p),'Ordinary text still checked')
+
     def test_equal_counts_do_not_merge_different_alarm_decisions(self):
         records=[dict(method='XGBoost',fold='0',row='1',y='1',C_b01_r10='True',C_b05_r10='False'),
                  dict(method='XGBoost',fold='0',row='2',y='1',C_b01_r10='False',C_b05_r10='True')]

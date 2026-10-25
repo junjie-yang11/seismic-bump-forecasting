@@ -6,7 +6,7 @@ Mining Engineering, Fuzhou University
 
 ## Abstract
 
-Historically selected seismic warning rules can change their loss, hazardous-shift coverage and workload when transferred to later records. This retrospective mining case connects common-cohort forecast assessment with historical threshold transfer on an audited 2,578-row UCI Seismic Bumps mirror. Four record-order test blocks contain 2,063 records and 88 hazardous-shift labels. Matching test records reduces the original random-versus-record-order AP gaps by 89.7% for LR, 86.9% for CART, demonstrating cohort sensitivity rather than identifying leakage or drift. Training-prior correction reduces logistic-regression expected calibration error from 0.2904 to 0.0271, while Brier skill depends on the stated reference. TreeSHAP and refitted ablations distinguish fitted-model feature use from incremental predictive value. In the decision study, fixed-XGBoost cost-plus-capacity rules selected at missed-shift cost 10 have pooled loss differences of 0.00 to 0.82 units per 100 records versus no alarms. At the 20% historical budget, C reduces alerts from A's 557 to 34, while detections fall from 25/88 to 2/88. Phase 1 C at 5% and 10% produces no detections and positive loss-difference intervals versus no alarms; the nonzero pooled C intervals cross zero. The three grade B rules produce identical decisions: all alarms in phase 1 and none later. XGBoost B makes 101 fewer false alerts and 1 fewer detection, lowering assumed loss against that common rule, while its no-alarm interval crosses zero. Historical capacity feasibility does not guarantee later feasibility, and refitting can change decisions at the same cutoff. The analyses share records; record order is a temporal proxy and costs and capacity are assumed conditions.
+Seismic warning rules can change their loss, coverage and workload on later records. We examine this transfer using complementary forecast and decision analyses on 2,063 common UCI Seismic Bumps test records with 88 hazardous-shift labels. Matching test records substantially narrows random-versus-record-order average-precision differences, showing cohort sensitivity without isolating leakage or drift. We then select budget-only, cost-only and capacity-constrained cost rules on historical reference data and evaluate their frozen transfer. For fixed XGBoost models at an assumed missed-hazard cost ten times the false-alert cost, capacity-constrained cost rules show pooled loss differences of 0.00 to 0.82 units per 100 records against no alarms; intervals for the nonzero differences include zero. At a 20% historical budget, these rules produce 34 alerts and 2 detections, compared with 557 alerts and 25 detections for budget-only rules, among 88 hazardous shifts. Historical capacity feasibility does not ensure later feasibility, and refitting can change decisions at an unchanged cutoff. A separately specified exploratory comparison at matched grade allocations and test-batch slots does not establish a consistent detection increment from adding monitoring variables beyond grades and shift type. The findings support joint evaluation of loss, coverage and workload on overlapping records; recorded order remains a temporal proxy.
 
 Keywords: seismic hazard; forecast evaluation; average precision; warning decisions; threshold transfer; inspection capacity
 
@@ -14,7 +14,7 @@ Keywords: seismic hazard; forecast evaluation; average precision; warning decisi
 
 Mine-monitoring scores become engineering decisions when a rule selects subsequent shifts for inspection. Historical loss minimization or capacity feasibility does not determine what the same rule will demand or detect on later records. This study asks: how do historically selected seismic warning rules perform on subsequent records in loss, hazardous-shift coverage and alarm workload, and what forecast-evaluation evidence supports interpreting those outcomes?
 
-Two questions organize the analysis. First, how does evaluation on common test records change the apparent forecast-protocol gap? Second, how do loss, coverage and workload change when historical warning rules transfer under assumed costs and capacity? Calibration, TreeSHAP and refitted ablations provide supporting evidence about probabilities and model use of information. The separately specified within-grade ranking pilot addresses a different batch-allocation question and remains outside this manuscript. The two stages retain their own fitting and threshold protocols; one is not a prospective validation of the other.
+Two questions organize the analysis. First, how does evaluation on common test records change the apparent forecast-protocol gap? Second, how do loss, coverage and workload change when historical warning rules transfer under assumed costs and capacity? Calibration, TreeSHAP and refitted ablations provide supporting evidence about probabilities and model use of information. The earlier within-grade ranking pilot remains separate. A subsequent matched-information analysis supports the second question by fixing test-batch slots and grade allocations; its core result is included here, with full evidence in the exploratory supplement. The two stages retain their own fitting and threshold protocols; one is not a prospective validation of the other.
 
 ## 1.1 Relation to mining and decision research
 
@@ -22,7 +22,7 @@ The UCI task concerns a high-energy seismic bump in the next shift, rather than 
 
 Threshold-choice theory relates scores, operating conditions and expected classification loss [5]. Risk-informed warning identification connects warnings to assessment and response, but its assessment-based Seismic Bumps comparison differs from this study's subsequent-shift event label [6]. Precision-recall interpretation also depends on the evaluation prevalence [7]. These sources motivate explicit comparators; they do not establish that a retrospectively selected rule will work at a new mine or future operating condition.
 
-Two case findings anchor the contribution. Matching test records attenuates the apparent AP protocol gap by 89.7% for LR, 86.9% for CART, without identifying a causal share of leakage or drift. Transferred rules expose a loss-coverage-workload tradeoff: at r=10 and a 20% historical budget, C changes A's 557 alerts and 25/88 detections to 34 alerts and 2/88; historical capacity feasibility and refitting are evaluated alongside that tradeoff. The methodological contribution is a documented, reproducible application connecting these comparisons in one mining case. Learning algorithms, threshold-choice theory, explanation and resampling methods are established foundations.
+The study contributes three connected elements. First, common-cohort forecast assessment quantifies how the apparent AP protocol gap changes with the evaluated records: the gaps shrink by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost, without identifying a causal share of leakage or drift. Second, the decision analysis jointly measures transferred loss, detections, workload and capacity excess, explains historical no-alarm choices and compares fixed with refitted models. A matched-allocation supplement then asks whether monitoring information adds coverage beyond grades and shift type. Third, the implementation connects source row mappings, saved predictions, historical threshold candidates and row-level decisions to verification through separate calculation paths. This is an application and empirical evaluation of established learning, explanation, threshold-choice and resampling methods.
 
 ![Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.](../../reports/overall/evidence_overview.png)
 
@@ -65,15 +65,37 @@ In Stage 2, the first 80% of each historical prefix is the fitting area and the 
 
 ## 3.1 Probability, explanation and decision definitions
 
-AP is the sum of precision values weighted by recall increments, with tied scores evaluated as a group: AP = sum_k P_k (R_k - R_(k-1)). The horizontal PR reference is the evaluation cohort prevalence pi [7]. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold's unweighted prevalence; CART and XGBoost use their fitted outputs. Ten quantile bins, keeping tied probabilities together, summarize calibration. Brier skill compares squared error with the named historical training-prior or retrospective test-prevalence constant.
+AP is the sum of precision values weighted by recall increments, with tied scores evaluated as a group: AP = sum_k P_k (R_k - R_(k-1)). The horizontal PR reference is the evaluation cohort prevalence pi [7]. AP-minus-pi is reported as a descriptive difference, not a permutation test or an interval estimate. It neither removes all differences between cohorts nor proves decision value. LR prior correction uses only each outer training fold's unweighted prevalence; CART and XGBoost use their fitted outputs.
 
-Prior-only distribution change is a specific modeling assumption [12]. A probability correction is monotone within a fold; differing fold-specific corrections should not be assumed to preserve pooled rankings. Native exact TreeSHAP decomposes each XGBoost raw log-odds prediction into feature contributions and a bias term, using training leaf covers as its tree-path-dependent reference [13,14]. Refitted group ablations ask a different question: how predictions change after a model is trained without the group. They are not causal feature effects.
+Expected calibration error is the bin-count-weighted absolute difference between mean event probability and observed hazardous fraction [12,13]. The present binary event-probability definition uses up to ten quantile bins, collapses duplicate edges and keeps tied probabilities together. Guo and colleagues instead summarize predicted-class confidence and accuracy using equally spaced bins. Binning is an assessment step, not a calibration model fitted on test labels. Brier score (BS) is the binary event-probability mean squared error [14]; the named historical training-prior or retrospective test-prevalence predictor supplies its reference; skill is undefined when the reference error is zero.
 
-Cost-sensitive decisions use the hypothetical loss L = r FN + FP, with false-alert cost 1 [15]. Historical budgets are 1%, 5%, 10% and 20%; r takes 5, 10, 20 and 50. A maximizes whole-group alerts within floor(B Nref). B minimizes reference loss. C minimizes it among capacity-feasible groups. Ties in B/C loss select fewer alerts. Equal scores move together; nonempty partial sets use the lowest included score. No alarms use +infinity and all alarms use -infinity. These conventions can underfill capacity and do not impose later capacity.
+$$
+\mathrm{Brier\ skill}=1-\frac{BS_{\mathrm{model}}}{BS_{\mathrm{reference}}}
+$$
 
-An alert represents one candidate shift for inspection. TP is a hazardous shift flagged, FP a non-hazardous shift flagged and FN a hazardous shift missed. Loss per 100 records is L100 = 100(r FN + FP)/N. Its difference from no alarms is Delta Lnone,100 = 100(FP - r TP)/N. Negative differences mean lower hypothetical loss. Excess = max(0, Alerts - floor(B Ntest)); all alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums phase excesses, without cancellation by spare slots elsewhere.
+Prior-only distribution change is a specific modeling assumption [15]. A probability correction is monotone within a fold; differing fold-specific corrections should not be assumed to preserve pooled rankings. Native exact TreeSHAP decomposes each XGBoost raw log-odds prediction into feature contributions and a bias term, using training leaf covers as its tree-path-dependent reference [16,17]. Refitted group ablations ask a different question: how predictions change after a model is trained without the group. They are not causal feature effects.
 
-Paired moving-block intervals use 2,000 replicates and block length 32, separately within test phases, without wrapping across endpoints or phase boundaries [16,17]. Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The original contrasts cover C-A, C-B, secondary B-A and refitted-fixed. The separately specified supplement adds policy-minus-no-alarm and ML-minus-direct-grade contrasts; its rules, seeds and results are retained independently. Intervals are unadjusted exploratory comparisons.
+Cost-sensitive decisions use the hypothetical loss L = r FN + FP, with false-alert cost 1 [18]. Historical budgets are 1%, 5%, 10% and 20%; r takes 5, 10, 20 and 50. A maximizes whole-group alerts within floor(B Nref). B minimizes reference loss. C minimizes it among capacity-feasible groups. Ties in B/C loss select fewer alerts. Equal scores move together; nonempty partial sets use the lowest included score. No alarms use +infinity and all alarms use -infinity. These conventions can underfill capacity and do not impose later capacity.
+
+An alert represents one candidate shift for inspection. TP is a hazardous shift flagged, FP a non-hazardous shift flagged and FN a hazardous shift missed. In the following equations, r is the assumed missed-hazard cost relative to false-alert cost 1, N is the evaluated record count, B is the historical capacity fraction and Ntest is the current test-block size. Loss and its difference from no alarms are:
+
+$$
+L_{100}=\frac{100(r\,FN+FP)}{N}
+$$
+
+$$
+\Delta L_{\mathrm{none},100}=\frac{100(FP-r\,TP)}{N}
+$$
+
+Negative loss differences mean lower hypothetical loss. Capacity excess is calculated separately within each test block:
+
+$$
+\mathrm{Excess}=\max\{0,\mathrm{Alerts}-\lfloor BN_{\mathrm{test}}\rfloor\}
+$$
+
+All alerts remain in evaluation, including excess demand. No dispatch, truncation, queueing, separate true-positive inspection cost or accident-severity cost is modeled. Pooled excess sums phase excesses, without cancellation by spare slots elsewhere.
+
+Paired moving-block intervals use 2,000 replicates and block length 32, separately within test phases, without wrapping across endpoints or phase boundaries [19,20]. Both compared methods use the same sampled rows; pooled sampling preserves phase sizes. Intervals condition on saved predictions, fitted rules and the current cohort, and exclude full fitting/tuning/selection uncertainty. The original contrasts cover C-A, C-B, secondary B-A and refitted-fixed. The separately specified supplement adds policy-minus-no-alarm and ML-minus-direct-grade contrasts; its rules, seeds and results are recorded separately. Intervals are unadjusted exploratory comparisons.
 
 The direct-rule supplement thresholds seismic, seismoacoustic and ghazard separately on the original historical reference rows [1]. UCI explicitly defines seismic severity from a to d; all three ARFF domains use these codes. The common a<b<c<d ordering is the study's ordinal interpretation for the two other assessments, not a verified deployed policy. The mirror contains seismic codes a, b; the two other fields contain a, b and c, with no observed d. Each field uses the same A/B/C objectives, whole-grade ties and canonical thresholds as ML. Duplicate reference alert sets are collapsed: none uses +infinity, all uses -infinity, and partial sets use their minimum included observed grade. No best grade field is selected from test results. Saved ML scores, cutoffs and alerts are reused exactly; no model is retrained.
 
@@ -93,12 +115,13 @@ Table 3b. Attenuation of the AP protocol gap after matching test records.
 | --- | --- | --- | --- |
 | LR | 0.11141 | 0.01145 | 89.7% |
 | CART | 0.14330 | 0.01876 | 86.9% |
+| XGBoost | 0.12525 | 0.01328 | 89.4% |
 
 The different-cohort gap compares random validation on 2,578 records with record-order validation on 2,063; the common-cohort gap evaluates both on the same 2,063 records. Attenuation = 1 - common-cohort gap / different-cohort gap, calculated before rounding. The record-order predictions and fitted random models are unchanged. Attenuation is descriptive cohort sensitivity, not a causal decomposition or a confidence interval.
 
 The interval in Table 3a belongs to the protocol difference, not to AP-minus-pi. All common-cohort point AP values exceed the prevalence reference; that descriptive observation alone is not a significance test against a random-ranking null. Finite-sample random-order AP and the horizontal PR reference are distinct concepts. No global label permutation is introduced.
 
-Restricting the comparison to common rows reduces the original different-cohort gap by 89.7% for LR, 86.9% for CART. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. Table 3b makes the original and matched gaps directly comparable; the Stage 1 technical report retains the full protocol detail.
+Restricting the comparison to common rows reduces the original different-cohort gap by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost. The comparison changes which records contribute to the random score, not its fitted models. Cohort matching establishes evaluation-population sensitivity, while residual differences combine training history, sample size and tuning. Neither attenuation nor the residual is a causal estimate of leakage or drift. Table 3b makes the original and matched gaps directly comparable; the Stage 1 technical report retains the full protocol detail.
 
 Stage-specific XGBoost results further separate ranking from cohort composition: phase 1: AP 0.1341 at prevalence 0.0698; phase 2: AP 0.0284 at prevalence 0.0194; phase 3: AP 0.0731 at prevalence 0.0465; phase 4: AP 0.0618 at prevalence 0.0349. These are Stage 1 outer-model predictions, not Stage 2 fixed-model scores. The supplementary holdout overlaps these records and is not used to choose a model, subset or budget.
 
@@ -114,7 +137,7 @@ Table 4. Common-cohort probability references. LR is prior-corrected; CART and X
 | CART | 0.0433 | 0.0455 | 0.0472 | 0.0408 | -0.0607 |
 | XGBoost | 0.0429 | 0.0455 | 0.0573 | 0.0408 | -0.0494 |
 
-![Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The panel axes differ.](../../results/phase1/figures/reliability_lr.png)
+![Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The fitted panel spans 0-100%; the corrected panel zooms to 0-30% on both axes. Bin counts and n are displayed.](../../reports/overall/calibration_detail.png)
 
 The historical constant is deployable within each recorded protocol because it uses training labels only. The retrospective constant uses the evaluated prevalence for assessment and does not generate predictions. Stage 2 does not apply cost cutoffs to corrected LR probabilities: its A/B/C rules operate on raw reference scores. A calibration gain therefore does not constitute an observed reduction in Stage 2 warning loss.
 
@@ -130,7 +153,7 @@ Table 5. Full design versus a refitted learner using all three hazard-rating fie
 
 Ratings-only denotes a separately fitted LR, CART or XGBoost using seismic, seismoacoustic and ghazard together. It is not a direct grade-to-alarm rule or the mine's deployed practice. The paired gain intervals include zero under the retained configurations. XGBoost ablations reuse full-design training-selected parameters, so the contrasts are conditional design comparisons rather than equally retuned optima for every subset.
 
-![Figure 3. Full-feature XGBoost attribution and phase-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution.](../../results/phase1/figures/shap_phase_stability.png)
+![Figure 3. Full-feature XGBoost attribution and phase-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.](../../reports/overall/shap_readable.png)
 
 The leading contributions are energy, nbumps2, gpuls. Removing the seismic-activity group and refitting yields AP 0.1292 versus 0.0862 for the full design; the paired difference is 0.0430 with interval [-0.0034, 0.1067]. The interval includes zero. Large attribution and uncertain refitted benefit can coexist because they concern different models and questions. Correlated inputs, interactions and sampling variability are possible explanations, not identified causes. No subset is selected from these test results.
 
@@ -280,9 +303,25 @@ Table 13. Frozen prevalence scenarios for C selected at r=10. Loss differences a
 
 The full supplement retains prevalences 2%, 5%, 10% and 15%. The compact display pairs loss and workload at 5% and 10% without reselecting policies. Assuming unchanged within-class rates, L100(pi)=100[r pi FNR+(1-pi)FPR], alert fraction=pi TPR+(1-pi)FPR and precision=pi TPR/alert fraction. Precision is undefined at zero expected alerts (NA); observed zero-alert precision retains its existing zero convention. These scenarios neither diagnose actual shift nor estimate the probability of exceeding capacity.
 
+## 5.6 Monitoring information at matched grades and slots
+
+Historical threshold transfer changes both detection and workload. This supplement holds workload and grade allocation fixed to ask how much additional hazardous-shift coverage the monitoring variables supply. The four-input baseline contains seismic, seismoacoustic, ghazard and shift type; the extended design uses the retained 17 columns. Both use XGBoost, the same four historical fitting/test splits and the same inner AP search, tuned separately for each design. Neither policy-reference labels nor test labels enter fitting or tuning. The two designs therefore receive matched tuning opportunities, unlike the earlier ratings-only ablation that omits shift type.
+
+Within each test block, K=floor(B*Ntest) slots are allocated to higher seismic grades first and then to higher model scores within each grade. Both models receive identical total and grade-specific slots. A boundary tie is allocated uniformly: h slots among m tied records containing p hazardous labels contributes E(TP)=h*p/m; labels evaluate the allocation and do not determine it. Counts with decimals are expectations over tie allocation. Each of the 2,000 paired block-bootstrap draws reranks its sampled multiset and recomputes the slots and ties. Length 32 is primary; lengths 16 and 64 and the complete table remain in the supplement. These conditional intervals freeze model fits and tuning and do not cover their uncertainty.
+
+At 20% test-batch slots, the pooled baseline has E(TP)=30.71 and the extended design 32.00, each using 412 slots. The difference is 1.29 with conditional 95% interval [-5.48, 7.05]. All 16 block-specific primary intervals and all four pooled intervals include zero; the point differences vary across blocks. This workflow has not established a consistent monitoring-information increment, and it does not establish that monitoring information is generally uninformative.
+
+![Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.](../../reports/overall/monitoring_increment.png)
+
+The two uses of 20% answer different questions. Historical C at r=10 produces 34 test alerts and 2 detections, whereas this batch study allocates 412 slots to each model. Its 32.00 expected detections cannot be compared with C as an improvement at equal workload. The batch task is retrospective ranking, not observed dispatch. Its protocol was specified after these test records had been examined; the records overlap the two stages and add no independent validation cohort.
+
+[Exploratory supplement: matched design, all intervals and reproduction details](../../reports/information/monitoring_information_increment.pdf)
+
+[Supplementary decision combinations and threshold evidence](../../reports/overall/comparator_appendix.md)
+
 ## 6 Integrated interpretation and next evidence
 
-The two analyses connect through evidence requirements. Common-cohort comparisons make protocol gaps interpretable, but do not isolate leakage. Training-prior correction improves probability errors relative to the raw model, while the reference determines the sign of Brier skill. Large feature attribution describes a fitted model; a refitted ablation can show a different and uncertain predictive contribution. Each result supports a defined interpretation rather than an undifferentiated claim of a better warning model.
+Common-cohort comparisons establish protocol-gap sensitivity, probability correction concerns a named error reference, and feature attribution concerns fitted-model use. These supporting analyses distinguish the forecast evidence needed to interpret subsequent warning decisions.
 
 Decision evaluation adds information that ranking, probability assessment and attribution do not supply. At the displayed cost, C can lower loss and inspection demand relative to A while having no favorable pooled point difference against no alarms. Historical capacity choices explain why rules are silent or active, whereas later counts show their transferred coverage and workload. Refitting changes which score function is subjected to a historical cutoff. These comparisons establish workflow-specific tradeoffs; they do not identify a universally preferred policy.
 
@@ -290,11 +329,13 @@ Phase-specific evidence must accompany the pooled comparison. In phase 1, C at 5
 
 The shared cohort is also the main inference boundary. Recorded order supplies no verified timestamps or longwall continuity. Deduplication reproduces a public mirror, not a certified operational history. Costs, capacity slots and the absence of an excess-demand penalty are explicit scenario assumptions. The target counts hazardous shifts, not accidents, executed inspections or interventions. Two analyses of the same observed records increase explanatory coverage, not the number of independent validation cohorts.
 
-The separately specified supplement adds direct grade rules and the previously missing no-alarm and ML-minus-grade paired contrasts. It strengthens the decision comparison without changing the original model selection. At r=10, pooled C intervals do not identify an ML loss advantage over those comparators, whereas cost-only B has lower loss than the grade rules but no resolved loss direction against no alarms. Decision value therefore depends on both selection mechanism and comparator. Full refit/reselection uncertainty remains a separate research task. Cross-row lag features require continuity and working-face evidence, or must remain an explicitly record-order sensitivity analysis. Prospective intervention and independent-site outcomes would address engineering effectiveness beyond these retrospective comparisons.
+Additional direct-grade and no-alarm contrasts show that decision value depends on the comparator: cost-only XGBoost has lower loss than the identical grade-rule decisions at r=10, while its no-alarm interval spans zero. The matched-information analysis fixes workload and does not establish a consistent monitoring increment beyond grades and shift type. Full refit/reselection uncertainty requires a separate protocol; credible lag features require verified continuity. Independent-site and inspection outcomes are the next evidence needed.
 
 ## 7 Conclusions
 
-Comparable-cohort evaluation reduces the original AP protocol gaps by 89.7% for LR, 86.9% for CART; the attenuation quantifies cohort sensitivity, not a causal share of leakage or drift. The decision analysis then exposes the coverage cost of reducing workload: at r=10 and budget 20%, C changes A's 557 alerts and 25/88 detections to 34 alerts and 2/88 detections. Phase 1 C at 5% and 10% has no detections and positive loss-difference intervals; the nonzero pooled C intervals span zero. The three grade B rules collapse to one decision pattern, all alarms in phase 1 and none later. XGBoost B lowers assumed loss through 101 fewer false alerts and 1 fewer detection, but its interval against no alarms still crosses zero. Joint loss, detection and workload accounting shows why historical optimality, capacity feasibility and an advantage over one comparator do not establish later decision value on their own.
+Comparable-cohort evaluation reduces the original AP gaps by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost; this quantifies cohort sensitivity, not leakage or drift attribution. At r=10 and a 20% historical budget, capacity-constrained cost rules produce 34 alerts and 2/88 detections, versus 557 alerts and 25/88 for budget-only rules. Phase 1 C at 5% and 10% has no detections and positive loss-difference intervals; the nonzero pooled C intervals span zero. Joint loss, detection and workload accounting shows why historical optimality and capacity feasibility do not establish later decision value.
+
+Fixing grade allocations and test-batch slots provides a different comparison: at 20%, monitoring inputs add 1.29 expected detections to a grade-plus-shift model, with conditional interval [-5.48, 7.05] and 412 slots per model. The block-specific evidence does not establish a consistent increment. Historical threshold transfer and equal-slot batch ranking should therefore remain distinct when interpreting decision value. Independent timestamped working-face data with inspection outcomes are needed to test transfer beyond this cohort.
 
 ## Data, code, contributions and AI assistance
 
@@ -316,7 +357,7 @@ The author directed scope, protocol refinement and review priorities. ChatGPT an
 
 [5] Hernández-Orallo J, Flach P, Ferri C. A Unified View of Performance Metrics: Translating Threshold Choice into Expected Classification Loss. Journal of Machine Learning Research, 2012, 13:2813-2869. https://jmlr.org/papers/v13/hernandez-orallo12a.html
 
-[6] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems; 2023;108:17. doi:10.1007/s10846-023-01887-2.
+[6] Spahic R, Hepsø V, Lundteigen MA. A Novel Warning Identification Framework for Risk-Informed Anomaly Detection. Journal of Intelligent & Robotic Systems, 2023, 108:17. DOI: 10.1007/s10846-023-01887-2.
 
 [7] Saito T, Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets. PLOS ONE, 2015, 10(3):e0118432. DOI: 10.1371/journal.pone.0118432.
 
@@ -328,14 +369,20 @@ The author directed scope, protocol refinement and review priorities. ChatGPT an
 
 [11] Roberts DR et al. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography, 2017, 40:913-929. DOI: 10.1111/ecog.02881.
 
-[12] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. Proceedings of ICML, PMLR 80, 2018:3122-3130. https://proceedings.mlr.press/v80/lipton18a.html
+[12] Pakdaman Naeini M, Cooper G, Hauskrecht M. Obtaining Well Calibrated Probabilities Using Bayesian Binning. Proceedings of the AAAI Conference on Artificial Intelligence, 2015, 29(1). DOI: 10.1609/aaai.v29i1.9602.
 
-[13] Lundberg SM et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence, 2020, 2:56-67. DOI: 10.1038/s42256-019-0138-9.
+[13] Guo C, Pleiss G, Sun Y, Weinberger KQ. On Calibration of Modern Neural Networks. Proceedings of ICML, PMLR 70, 2017:1321-1330. https://proceedings.mlr.press/v70/guo17a.html
 
-[14] XGBoost documentation. Booster.predict and exact feature contributions. https://xgboost.readthedocs.io/en/stable/python/python_api.html
+[14] Brier GW. Verification of Forecasts Expressed in Terms of Probability. Monthly Weather Review, 1950, 78(1):1-3. DOI: 10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2.
 
-[15] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf
+[15] Lipton ZC, Wang YX, Smola AJ. Detecting and Correcting for Label Shift with Black Box Predictors. Proceedings of ICML, PMLR 80, 2018:3122-3130. https://proceedings.mlr.press/v80/lipton18a.html
 
-[16] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html
+[16] Lundberg SM et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence, 2020, 2:56-67. DOI: 10.1038/s42256-019-0138-9.
 
-[17] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics; 1989;17(3):1217–1241. doi:10.1214/aos/1176347265.
+[17] XGBoost documentation. Booster.predict and exact feature contributions. https://xgboost.readthedocs.io/en/stable/python/python_api.html
+
+[18] Elkan C. The Foundations of Cost-Sensitive Learning. Proceedings of IJCAI, 2001:973-978. Author manuscript: https://cseweb.ucsd.edu/~elkan/rescale.pdf
+
+[19] Shalizi CR. Simulation for Inference I: The Bootstrap. Carnegie Mellon University course notes, 2018. https://stat.cmu.edu/~cshalizi/dst/18/lectures/18/lecture-18.html
+
+[20] Künsch HR. The Jackknife and the Bootstrap for General Stationary Observations. The Annals of Statistics, 1989, 17(3):1217–1241. DOI: 10.1214/aos/1176347265.

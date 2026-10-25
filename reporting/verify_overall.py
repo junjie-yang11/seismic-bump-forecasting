@@ -4,6 +4,7 @@ The default needs only the standard library. ``--pdf`` additionally checks
 exported PDF text with pypdf in the reporting environment. No model is fitted.
 """
 from __future__ import annotations
+import itertools
 import argparse
 import csv
 import hashlib
@@ -21,6 +22,11 @@ NS={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 
 
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def ordinary_paragraph_text(paragraph):
+    """Keep checking ordinary Word text even beside structurally checked math."""
+    return ''.join(node.text or '' for node in paragraph.findall('.//w:t',NS))
 
 
 def _checks(root, pdf_text):
@@ -61,8 +67,10 @@ def _checks(root, pdf_text):
         for node in core:
             if node.tag.rsplit('}',1)[-1] in ('creator','lastModifiedBy'):
                 check(not node.text,'clean Word author metadata')
+    from reporting.verify_math import verify_equations
+    verify_equations(body,md,check)
     for p in body.findall('w:p',NS):
-        text=''.join(p.itertext())
+        text=ordinary_paragraph_text(p)
         if text.strip():check(text in md,'Word paragraph agrees with manuscript')
     word_tables=[]
     for t in body.findall('w:tbl',NS):
@@ -80,7 +88,9 @@ def _checks(root, pdf_text):
         tables[declared['id']]=observed[1:]
     references=re.findall(r'^\[(\d+)\] (.+)$',md,re.M)
     check([int(n) for n,_ in references]==list(range(1,len(references)+1)),'continuous bibliography')
-    check(len(references)==17,'retained scientific, data and method references')
+    expected_sources=('10.24432/C5W902','281395657','10.1016/j.engappai.2017.06.002','10.1016/j.earscirev.2023.104371','hernandez-orallo12a','10.1007/s10846-023-01887-2','10.1371/journal.pone.0118432','github.com/datasets/seismic-bumps','10.1145/2939672.2939785','10.1016/j.ins.2011.12.028','10.1111/ecog.02881','lipton18a','10.1038/s42256-019-0138-9','xgboost.readthedocs.io','rescale.pdf','lecture-18','10.1214/aos/1176347265','10.1609/aaai.v29i1.9602','guo17a','10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2')
+    check(len(references)==len(expected_sources),'complete expected scientific, data and method bibliography')
+    for source in expected_sources:check(sum(source in text for _,text in references)==1,'one traceable bibliography source '+source)
     prose=md.split('## References')[0]
     # Bibliographic indices are positive; [0,0] is an explicitly reported zero interval.
     citations=[int(n) for group in re.findall(r'\[([1-9]\d*(?:,[1-9]\d*)*)\]',prose) for n in group.split(',')]
@@ -124,19 +134,42 @@ def _checks(root, pdf_text):
         check(int(full[m]['n'])==len(labels) and int(full[m]['positives'])==sum(labels.values()),'AP cohort '+m)
         expected.append([m,fmt(random),fmt(ap),fmt(ap-pi),fmt(result['delta']),bounds(result['ci_low'],result['ci_high'])])
     check(tables['ranking']==expected,'AP table and descriptive baseline gains')
-    gaps=read('results/phase1/gap_attenuation.csv')
-    original=read('results/phase1/metrics_by_scheme.csv');expected=[]
-    for model in ('LR','CART'):
-        g=take(gaps,model=model)
-        name=next(r['model'] for r in shared if ('logistic' in r['model'])==(model=='LR'))
-        oldrandom=take(original,model=name,validation='random stratified 10-fold')
-        ordered=take(original,model=name,validation='time-ordered expanding window')
-        common=take(shared,model=name)
-        oldgap=float(oldrandom['pr_auc'])-float(ordered['pr_auc'])
-        newgap=float(common['random_pr_auc'])-float(common['time_pr_auc'])
-        reduction=1-newgap/oldgap
+    gaps=read('results/phase1/gap_attenuation_all_models.csv')
+    allrandom=read('results/phase1/random_predictions_by_seed.csv')
+    basetime=read('results/phase1/predictions.csv')
+    xrandom=read('results/phase1/xgboost_random_predictions.csv')
+    xtime=read('results/phase1/engineering_predictions.csv')
+    def raw_ap(records):
+        total_positive=sum(float(r['y']) for r in records);positive=seen=0;area=0.
+        check(total_positive>0,'AP has positives')
+        for _,group in itertools.groupby(sorted(records,key=lambda r:-float(r['score'])),lambda r:float(r['score'])):
+            batch=list(group);hits=sum(float(r['y']) for r in batch);positive+=hits;seen+=len(batch)
+            area+=(hits/total_positive)*(positive/seen)
+        return area
+    expected=[]
+    for model in ('LR','CART','XGBoost'):
+        if model=='XGBoost':
+            randomized=xrandom
+            ordered=[r for r in xtime if r['model']=='XGBoost' and r['variant']=='full' and r['validation']=='time']
+        else:
+            name=next(r['model'] for r in shared if ('logistic' in r['model'])==(model=='LR'))
+            randomized=[r for r in allrandom if r['model']==name]
+            ordered=[r for r in basetime if r['model']==name and r['validation']=='time']
+        census={int(r['row']):float(r['y']) for r in ordered}
+        check(len(census)==len(ordered)==2063,'unique chronological AP records '+model)
+        check(set(int(r['seed']) for r in randomized)==set(range(5)),'five saved random seeds '+model)
+        full_ap=[];matched_ap=[]
+        for seed in range(5):
+            records=[r for r in randomized if int(r['seed'])==seed]
+            check(len({int(r['row']) for r in records})==len(records)==2578,'complete random row coverage '+model)
+            common=[r for r in records if int(r['row']) in census]
+            check(len(common)==2063 and all(float(r['y'])==census[int(r['row'])] for r in common),'aligned AP labels '+model)
+            full_ap.append(raw_ap(records));matched_ap.append(raw_ap(common))
+        ordered_ap=raw_ap(ordered)
+        oldgap=math.fsum(full_ap)/5-ordered_ap;newgap=math.fsum(matched_ap)/5-ordered_ap
+        reduction=1-newgap/oldgap;g=take(gaps,model=model)
         for actual,value in ((g['original_gap'],oldgap),(g['same_test_gap'],newgap),(g['gap_reduction_fraction'],reduction)):
-            check(math.isclose(float(actual),value,rel_tol=1e-12,abs_tol=1e-14),'gap from original/common AP sources')
+            check(math.isclose(float(actual),value,rel_tol=1e-12,abs_tol=1e-14),'gap independently from saved row predictions '+model)
         expected.append([model,fmt(oldgap,5),fmt(newgap,5),f'{100*reduction:.1f}%'])
     check(tables['gap_attenuation']==expected,'Table 3b uses unrounded gaps')
     check('Attenuation = 1 - common-cohort gap / different-cohort gap' in md,'attenuation formula explicit')
@@ -295,6 +328,39 @@ def _checks(root, pdf_text):
         observed=take(se,method='XGBoost',fold=fold,mechanism='C',cost=10,budget=budget)
         for field in ('slots','excess'):check(int(r[field])==int(float(observed[field])),'plot capacity field '+field)
     check((out/'decision_tradeoffs.png').read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid decision plot PNG')
+    information_rows=read('results/phase2/information/rows.csv')
+    information=read('results/phase2/information/evaluations.csv')
+    information_ci=read('results/phase2/information/intervals.csv')
+    monitoring_plot=read('reports/overall/monitoring_increment.csv')
+    numerical=json.loads((root/'results/phase2/information/verification.json').read_text(encoding='utf-8'))
+    check(numerical.get('passed') and numerical.get('refit'),'actual matched-information refit and calculation certificate')
+    check(numerical['verifier_sha256']==sha(root/'phase2/information/verify.py'),'current numerical verifier')
+    provenance=numerical['provenance']
+    check(provenance['helper_sha256']==sha(root/'phase2/information/provenance.py'),'current provenance calculation path')
+    check(provenance['archive_sha256']==sha(root/'results/phase2/information/historical_context.zip'),'preserved original context archive')
+    check(len(monitoring_plot)==20 and len({(r['fold'],r['budget']) for r in monitoring_plot})==20,'all monitoring plot settings')
+    for r in monitoring_plot:
+        fold=int(r['fold']);budget=float(r['budget']);suffix=f'_prob_b{round(budget*100):02d}'
+        cohort=[v for v in information_rows if fold<0 or int(v['fold'])==fold]
+        expected_n=len(cohort);p=sum(float(v['y']) for v in cohort)
+        base=math.fsum(float(v['base'+suffix])*float(v['y']) for v in cohort)
+        extended=math.fsum(float(v['extended'+suffix])*float(v['y']) for v in cohort)
+        allocation=sum(math.floor(budget*sum(int(v['fold'])==f for v in cohort)) for f in range(4))
+        for name,value in (('n',expected_n),('positives',p),('k',allocation),('base_etp',base),('extended_etp',extended),('delta_etp',extended-base)):
+            check(math.isclose(float(r[name]),value,abs_tol=1e-10),'matched plot row-level '+name)
+        for design in ('base','extended'):
+            check(math.isclose(math.fsum(float(v[design+suffix]) for v in cohort),allocation,abs_tol=1e-10),'identical allocated slots '+design)
+        ci=take(information_ci,fold=fold,budget=budget,block_length=32)
+        check(int(r['block_length'])==32,'main monitoring interval length')
+        for name in ('ci_low','ci_high'):check(float(r[name])==float(ci[name]),'correct reranking interval '+name)
+    twenty=take(information,fold=-1,budget=.2);ci20=take(information_ci,fold=-1,budget=.2,block_length=32)
+    check('E(TP)='+fmt(twenty['base_etp'],2) in md and fmt(twenty['delta_etp'],2)+' with conditional 95% interval '+bounds(ci20['ci_low'],ci20['ci_high'],2) in md,'monitoring quantitative claim')
+    main_intervals=[r for r in information_ci if int(r['block_length'])==32 and int(r['fold'])>=0]
+    check(len(main_intervals)==16 and all(float(r['ci_low'])<=0<=float(r['ci_high']) for r in main_intervals),'all block-specific intervals span zero')
+    check('cannot be compared with C as an improvement at equal workload' in md and 'protocol was specified after these test records had been examined' in md,'budget distinction and exploratory scope')
+    check('SVG/main' in ET.tostring(body,encoding='unicode'),'native vector alternative embedded')
+    for name in ('calibration_detail.png','shap_readable.png','monitoring_increment.png'):
+        check((out/name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid presentation figure '+name)
     appendix=(out/'comparator_appendix.md').read_text(encoding='utf-8')
     lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in sc if r['comparison']=='policy-none'}
     for e in se:
@@ -307,9 +373,9 @@ def _checks(root, pdf_text):
         cells=['Pooled' if int(r['fold'])<0 else str(int(r['fold'])+1),r['right_method'],r['rule'],effect(r)]
         check('| '+' | '.join(cells)+' |' in appendix,'full-cost appendix paired contrast')
     figures=len(body.findall('.//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}inline'))
-    check(figures==4,'four inline figures including decision evidence')
+    check(figures==5,'five inline figures including matched monitoring evidence')
     pdf=out/(STEM+'.pdf');check(pdf.read_bytes().startswith(b'%PDF-'),'valid PDF export')
-    pages=None
+    pages=None;embedded_images=[]
     if pdf_text:
         from pypdf import PdfReader
         reader=PdfReader(pdf);pages=len(reader.pages)
@@ -322,11 +388,27 @@ def _checks(root, pdf_text):
                 for cell in row:
                     for value in re.findall(r'\b\d+\.\d+\b',cell):check(value in text,'PDF table decimal '+value)
         check('References' in (reader.pages[-1].extract_text() or ''),'reference section retained at report end')
+        for token in ('Brier','reference','Excess','Alerts','100','none'):
+            check(token in text,'native formula text retained in PDF '+token)
+        for number,page in enumerate(reader.pages,1):
+            objects=page['/Resources'].get_object().get('/XObject',{})
+            def inspect_image(operator,arguments,cm,tm):
+                if operator!=b'Do' or arguments[0] not in objects:return
+                obj=objects[arguments[0]].get_object()
+                if obj.get('/Subtype')!='/Image':return
+                width=math.hypot(cm[0],cm[1]);height=math.hypot(cm[2],cm[3])
+                check(width>0 and height>0,'positive PDF image geometry')
+                check(cm[4]>=0 and cm[5]>=0 and cm[4]+width<=float(page.mediabox.width)+1 and cm[5]+height<=float(page.mediabox.height)+1,'embedded PDF image within page')
+                embedded_images.append(dict(page=number,pixels=[int(obj['/Width']),int(obj['/Height'])],
+                    drawn_points=[width,height],effective_ppi=[round(int(obj['/Width'])*72/width,2),round(int(obj['/Height'])*72/height,2)]))
+            page.extract_text(visitor_operand_before=inspect_image)
+        check(len(embedded_images)==4,'four raster research figures; overview retained as vector')
     return dict(checks=count,tables=len(tables),figures=figures,pages=pages,pdf_text_checked=pdf_text,
+                embedded_pdf_images=embedded_images,equation_verifier_sha256=sha(root/'reporting/verify_math.py'),
                 scope='Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.',
                 manifest_sha256=sha(out/'report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
                 checked_row_and_table_inputs_sha256=checked_inputs,
-                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md')})
+                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md','evidence_overview.svg','calibration_detail.png','shap_readable.png','monitoring_increment.png','monitoring_increment.csv')})
 
 
 def verify(root=ROOT,pdf_text=False):

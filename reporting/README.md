@@ -50,7 +50,7 @@ The ranking report manifest records the hash of `overall.py`, which contains its
 
 ## Matched information-source study
 
-The separately specified [information study](../phase2/information/README.md) adds a short report without changing the original manuscripts. In the research environment, first run `python -B -m phase2.information.run` and `python -B -m phase2.information.verify --refit`. The reporting environment then reads the verified evidence:
+The separately specified [information study](../phase2/information/README.md) provides a detailed short supplement whose core finding is included in Section 5.6 and Figure 5 of the integrated manuscript. The original stage-specific manuscripts remain unchanged. In the research environment, first run `python -B -m phase2.information.run` and `python -B -m phase2.information.verify --refit`. The reporting environment then reads the verified evidence:
 
 ```text
 python -B -m reporting.information
@@ -59,3 +59,21 @@ python -B -m reporting.verify_information --pdf
 ```
 
 The [short report](../reports/information/monitoring_information_increment.md) contains one phase-specific table and one interval figure, with block length 32 as the main analysis and 16/64 retained as sensitivity settings. Saved scores, models, tuning predictions, inclusion probabilities and bootstrap evidence are under `results/phase2/information/`. Plain calculation/model loading and full candidate/final refitting are separately identified by the numerical verifier. Existing Quick Check covers the original study and discovers the new behavior tests; the two information-study verifiers above are separate additional checks. Export Word documents serially.
+
+## Current manuscript revision and evidence scope
+
+For presentation updates to retained evidence, first compute and independently check the complete three-model gap summary in the research environment:
+
+```text
+python -B -m phase1.gap_summary
+python -B -m phase1.verify_results --reports
+python -B -m phase2.information.verify --refit
+```
+
+The last command repeats all matched-information candidate and final fits and independently replays the saved decisions and resampling calculations; it does not reselect historical Stage 2 policies. The retained original run manifest is unchanged. Its bounded [historical context snapshot](../results/phase2/information/README.md) preserves the old presentation and derived-summary bytes, while computational inputs and evidence remain live hash checks.
+
+In the reporting environment, generate/export/verify the integrated report, then repeat that sequence for the ranking and matched-information reports using their commands above. Export Word documents serially. All three report manifests bind the shared writer version. The main report includes four editable native Word equations and matching Markdown math; its verifier checks fractions, subscripts, signs and floor delimiters through a separately specified mathematical structure. Figure 1 includes an SVG alternative with a PNG fallback. Figures 2/3 are redrawn from saved calibration bins/SHAP means, without changing those source tables. Figure 5 reads the saved length-32 matched-information intervals; all 20 phase/pooled-budget settings are retained in [plot data](../reports/overall/monitoring_increment.csv). No new bootstrap is run by report generation.
+
+The complete comparator appendix stays in [Markdown](../reports/overall/comparator_appendix.md), with locked technical reports and exploratory short reports as supporting materials. The main text retains the selection objectives, data isolation, canonical tie/threshold rules and conditional interval scope needed to understand its findings. Computational checks and page-by-page visual inspection are separate tasks.
+
+The original `results/phase1/gap_attenuation.csv` remains the locked two-model summary. The standalone updater and the end of `phase1.run_research` write `results/phase1/gap_attenuation_all_models.csv`; Table 3b reads this separate three-model result. This keeps original Stage 2 input hashes intact. Both the Stage 1 verifier and the integrated-report verifier reconstruct the new summary from saved row predictions.

@@ -1,5 +1,5 @@
 {
-  "checks": 825,
+  "checks": 830,
   "tables": 1,
   "figures": 1,
   "phase_and_pooled_rows": 20,
@@ -7,17 +7,17 @@
   "pages": 3,
   "pdf_text_checked": true,
   "scope": "Source/code/output hashes, row-derived expected detections and allocation counts, complete main table and all-length plot data, Word/Markdown agreement and optional PDF text; numerical bootstrap/model refit verification is separate",
-  "manifest_sha256": "739091a9a67f4e8891c3bcdd8d9a17c6c88a7dd38fe5ad4cdc63e270d74f9b12",
+  "manifest_sha256": "477411329cf8a0a3b6480d062155461ad2e004e640a07999410a624b48e5af01",
   "outputs_sha256": {
-    "monitoring_information_increment.md": "140babc707485adab96e9aebf5e207fb5492815fa8ea892f41a771be389bbb1f",
-    "monitoring_information_increment.docx": "86aee6b3615bf823a0b6bce15ca25d8f1a701b2571af47060824e732ac7dd1da",
-    "monitoring_information_increment.pdf": "58238f6e51e30e06103d4f1a518852c9140a8c790d26ed24927399c0ff472d1f",
+    "monitoring_information_increment.md": "90daee8ec877198bf12288e7bdb7decd7a533fc6fa6c24b6d9abf70393152e10",
+    "monitoring_information_increment.docx": "6b42f36b4f005606cbc9ff687e2eb90ecbc8caf07296f4388b2392ab42df55c3",
+    "monitoring_information_increment.pdf": "9ff275ed8ee450a4ccc7c7307d1c275fd67c1998bf3ddeb29580665d68dd2d84",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
     "information_increment.png": "2883379c7a534b967e21b1d5ecd8928ed5b26c2ef56495989604845166a788fa"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-24T23:09:05.509920+00:00",
-  "completed_at_utc": "2026-10-24T23:09:05.745553+00:00",
-  "verifier_sha256": "bdb36acf12dee7573b0f431ae79f3b4ab246ad126668ff45d593573dc9d7777b"
+  "started_at_utc": "2026-10-25T10:13:57.520516+00:00",
+  "completed_at_utc": "2026-10-25T10:13:57.755514+00:00",
+  "verifier_sha256": "9fa463f684962f2fdf9be9a44c509dc467d514e105b714b7e4b9ad8ba78fb946"
 }
