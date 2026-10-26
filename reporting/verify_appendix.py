@@ -15,12 +15,12 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def checks(root,pdf=False):
-    out=root/'reports/overall';counter=0
+    out=root/'reports/comparators';counter=0
     def check(condition,label):
         nonlocal counter
         counter+=1
         if not condition:raise AssertionError(label)
-    manifest=json.loads((out/'appendix_manifest.json').read_text(encoding='utf-8'))
+    manifest=json.loads((out/'metadata/appendix_manifest.json').read_text(encoding='utf-8'))
     check(sha(root/'reporting/appendix.py')==manifest['generator_sha256'],'current appendix generator')
     for name,digest in manifest['inputs'].items():check(sha(root/name)==digest,'current input '+name)
     for name,digest in manifest['outputs'].items():check(sha(out/name)==digest,'generated artifact '+name)
@@ -71,13 +71,13 @@ def checks(root,pdf=False):
                 check(row[2] in text and row[3].split()[0] in text,'PDF supplemental row identifiers and estimates')
         check(all(float(p.mediabox.width)>float(p.mediabox.height) for p in reader.pages),'landscape supplement')
         check('/Author' not in (reader.metadata or {}),'clean PDF metadata')
-    return dict(checks=counter,tables=8,settings=1260,pages=pages,pdf_text_checked=pdf,manifest_sha256=sha(out/'appendix_manifest.json'),
+    return dict(checks=counter,tables=8,settings=1260,pages=pages,pdf_text_checked=pdf,manifest_sha256=sha(out/'metadata/appendix_manifest.json'),
         scope='All frozen supplemental rows reconstructed from saved CSVs; Word and Markdown compared; optional complete PDF text and orientation. No fitting, threshold selection or resampling.',
         outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf')})
 
 
 def verify(root=ROOT,pdf=False):
-    root=Path(root);record=root/'reports/overall/appendix_verification.json';record.parent.mkdir(parents=True,exist_ok=True)
+    root=Path(root);record=root/'reports/comparators/metadata/appendix_verification.json';record.parent.mkdir(parents=True,exist_ok=True)
     record.write_text(json.dumps(dict(passed=False,status='running')),encoding='utf-8')
     try:
         result=checks(root,pdf);result.update(passed=True,status='passed',completed_at_utc=datetime.now(timezone.utc).isoformat(),verifier_sha256=sha(Path(__file__)))

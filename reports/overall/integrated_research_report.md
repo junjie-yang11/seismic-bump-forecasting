@@ -24,7 +24,7 @@ Threshold-choice theory relates scores, operating conditions and expected classi
 
 The evaluated models are logistic regression (LR), bagged classification and regression trees (CART), and XGBoost. The study contributes three connected elements. First, common-cohort forecast assessment quantifies how the apparent AP protocol gap changes with the evaluated records: the gaps shrink by 89.7% for LR, 86.9% for CART, 89.4% for XGBoost, without identifying a causal share of leakage or drift. Second, the decision analysis jointly measures transferred loss, detections, workload and capacity excess, explains historical no-alarm choices and compares fixed with refitted models. A matched-allocation supplement then asks whether monitoring information adds coverage beyond grades and shift type. Third, the implementation connects source row mappings, saved predictions, historical threshold candidates and row-level decisions to verification through separate calculation paths. This is an application and empirical evaluation of established learning, explanation, threshold-choice and resampling methods.
 
-![Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.](../../reports/overall/evidence_overview.png)
+![Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.](../../reports/overall/figures/evidence_overview.png)
 
 ## 2 Data, target and common evaluation records
 
@@ -141,7 +141,7 @@ Table 4. Common-cohort probability references. LR is prior-corrected; CART and X
 | CART | 0.0433 | 0.0455 | 0.0472 | 0.0408 | -0.0607 |
 | XGBoost | 0.0429 | 0.0455 | 0.0573 | 0.0408 | -0.0494 |
 
-![Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The fitted panel spans 0-100%; the corrected panel zooms to 0-30% on both axes. Bin counts and n are displayed.](../../reports/overall/calibration_detail.png)
+![Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The fitted panel spans 0-100%; the corrected panel zooms to 0-30% on both axes. Bin counts and n are displayed.](../../reports/overall/figures/calibration_detail.png)
 
 The historical constant is deployable within each recorded protocol because it uses training labels only. The retrospective constant uses the evaluated prevalence for assessment and does not generate predictions. Stage 2 does not apply cost cutoffs to corrected LR probabilities: its A/B/C rules operate on raw reference scores. A calibration gain therefore does not constitute an observed reduction in Stage 2 warning loss.
 
@@ -157,7 +157,7 @@ Table 5. Full design versus a refitted learner using all three hazard-rating fie
 
 Ratings-only denotes a separately fitted LR, CART or XGBoost using seismic, seismoacoustic and ghazard together. It is not a direct grade-to-alarm rule or the mine's deployed practice. The paired gain intervals include zero under the retained configurations. XGBoost ablations reuse full-design training-selected parameters, so the contrasts are conditional design comparisons rather than equally retuned optima for every subset.
 
-![Figure 3. Full-feature XGBoost attribution and block-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.](../../reports/overall/shap_readable.png)
+![Figure 3. Full-feature XGBoost attribution and block-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.](../../reports/overall/figures/shap_readable.png)
 
 The leading contributions are energy, nbumps2, gpuls. Removing the seismic-activity group and refitting yields AP 0.1292 versus 0.0862 for the full design; the paired difference is 0.0430 with interval [-0.0034, 0.1067]. The interval includes zero. Large attribution and uncertain refitted benefit can coexist because they concern different models and questions. Correlated inputs, interactions and sampling variability are possible explanations, not identified causes. No subset is selected from these test results.
 
@@ -190,7 +190,7 @@ At r=10 and budget 20%, record block 2 C-A is -36.50 per 100 records, with paire
 
 ## 5.1 Frozen policies compared with no alarms
 
-![Figure 4. Fixed-XGBoost C at r=10 across four historical budgets. Left: loss versus no alarms per 100 records (negative favors C), with conditional 95% block intervals. Right: alerts (gray) and hazardous shifts flagged, TP (green); P denotes all hazardous shifts. Shaded pooling is supplementary. Zero intervals reflect identical decisions. Intervals exclude fitting and selection uncertainty.](../../reports/overall/decision_tradeoffs.png)
+![Figure 4. Fixed-XGBoost C at r=10 across four historical budgets. Left: loss versus no alarms per 100 records (negative favors C), with conditional 95% block intervals. Right: alerts (gray) and hazardous shifts flagged, TP (green); P denotes all hazardous shifts. Shaded pooling is supplementary. Zero intervals reflect identical decisions. Intervals exclude fitting and selection uncertainty.](../../reports/overall/figures/decision_tradeoffs.png)
 
 Table 7. Frozen XGBoost C minus no alarms at r=10, per 100 records. Brackets are paired 95% intervals; negative favors C.
 
@@ -353,7 +353,7 @@ $$
 E(L)=rP+K-(r+1)E(TP_{\mathrm{total}})
 $$
 
-![Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.](../../reports/overall/monitoring_increment.png)
+![Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.](../../reports/overall/figures/monitoring_increment.png)
 
 The two uses of 20% answer different questions. Historical C at r=10 produces 34 test alerts and 2 detections, whereas this batch study allocates 412 slots to each model. Its 32.00 expected detections cannot be compared with C as an improvement at equal workload. The batch task is retrospective ranking, not observed dispatch. Its protocol was specified after these test records had been examined; the records overlap the two stages and add no independent validation cohort.
 

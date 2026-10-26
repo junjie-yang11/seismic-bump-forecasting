@@ -1,6 +1,6 @@
 {
   "title": "Ranking Within Hazard Grades at Fixed Inspection Capacity: A Retrospective Pilot",
-  "created_at_utc": "2026-10-25T19:27:27.196703+00:00",
+  "created_at_utc": "2026-10-26T00:15:46.616113+00:00",
   "inputs": {
     "phase2/ranking/protocol.json": "b6a8fb429b645bf87febdd9c98fa6285225d07c893a2912230d7d4eb4f27577e",
     "results/phase2/ranking/evaluations.csv": "e281470aa43138655ccbca187b4b47443d6803438b8be7b7d9251b18198998cc",
@@ -9,7 +9,7 @@
     "results/phase2/ranking/allocations.csv": "0f8381d63bcaa4d4cec5e01725a077739c3a23be092fbd2273d44279a12fd2f4"
   },
   "generator_sha256": "ce0211ced5d5260c7c563416c25430ff624ed1ad41772c4ee4a094d19582b3a4",
-  "writer_sha256": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
+  "writer_sha256": "c035568efc25838cdaddb63205fab6f404050dd7e31f44eb54d09553921599ee",
   "tables": [
     {
       "id": "ranking_primary",
@@ -278,6 +278,6 @@
   },
   "outputs": {
     "within_grade_ranking_pilot.md": "160c0633f8039955ba925fdf318cb084005d5e19c38434268ac27e1d2f6f1406",
-    "within_grade_ranking_pilot.docx": "a571269cc3736a957de575f09fc2fe0743115c479c3197a270dd7f5615682c3e"
+    "within_grade_ranking_pilot.docx": "cb2badc1fe1274a03432ec7aed8139417af92ac0e97317a9dfe7984a36f6d17d"
   }
 }

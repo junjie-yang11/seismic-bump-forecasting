@@ -56,7 +56,7 @@ def _checks(root, pdf_text):
         values=list(map(float,values));a,b=min(values),max(values)
         return fmt(a,d) if a==b else f'{fmt(a,d)} to {fmt(b,d)}'
 
-    manifest=json.loads((out/'report_manifest.json').read_text(encoding='utf-8'))
+    manifest=json.loads((out/'metadata/report_manifest.json').read_text(encoding='utf-8'))
     check(sha(root/'reporting/overall.py')==manifest['generator_sha256'],'current generator hash')
     for relative,value in manifest['inputs'].items():check(sha(root/relative)==value,'unchanged source '+relative)
     for name,value in manifest['outputs'].items():check(sha(out/name)==value,'current generated artifact '+name)
@@ -321,7 +321,7 @@ def _checks(root, pdf_text):
                 row.append(effect(take(sc,left_method='XGBoost',right_method=m,fold=f,mechanism='C',cost=10,budget=b)))
             expected.append(row)
     check(expand(tables['grade_intervals'],('XGBoost','seismic','seismoacoustic','ghazard'))==sorted(expected),'all block-specific ML-minus-grade intervals')
-    plot=read('reports/overall/decision_tradeoffs.csv')
+    plot=read('reports/overall/figures/decision_tradeoffs.csv')
     check(len(plot)==20,'all four budgets in four record blocks plus supplemental pooled figure')
     check(len({(r['fold'],r['budget']) for r in plot})==20,'unique plot settings')
     for r in plot:
@@ -338,11 +338,11 @@ def _checks(root, pdf_text):
         for field in ('ci_low','ci_high'):check(float(r[field])==float(ci[field]),'correct policy-minus-none interval '+field)
         observed=take(se,method='XGBoost',fold=fold,mechanism='C',cost=10,budget=budget)
         for field in ('slots','excess'):check(int(r[field])==int(float(observed[field])),'plot capacity field '+field)
-    check((out/'decision_tradeoffs.png').read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid decision plot PNG')
+    check((out/'figures/decision_tradeoffs.png').read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid decision plot PNG')
     information_rows=read('results/phase2/information/rows.csv')
     information=read('results/phase2/information/evaluations.csv')
     information_ci=read('results/phase2/information/intervals.csv')
-    monitoring_plot=read('reports/overall/monitoring_increment.csv')
+    monitoring_plot=read('reports/overall/figures/monitoring_increment.csv')
     numerical=json.loads((root/'results/phase2/information/verification.json').read_text(encoding='utf-8'))
     check(numerical.get('passed') and numerical.get('refit'),'actual matched-information refit and calculation certificate')
     check(numerical['verifier_sha256']==sha(root/'phase2/information/verify.py'),'current numerical verifier')
@@ -370,9 +370,11 @@ def _checks(root, pdf_text):
     check(len(main_intervals)==16 and all(float(r['ci_low'])<=0<=float(r['ci_high']) for r in main_intervals),'all block-specific intervals span zero')
     check('cannot be compared with C as an improvement at equal workload' in md and 'protocol was specified after these test records had been examined' in md,'budget distinction and exploratory scope')
     check('SVG/main' in ET.tostring(body,encoding='unicode'),'native vector alternative embedded')
-    for name in ('calibration_detail.png','shap_readable.png','monitoring_increment.png'):
+    for name in ('figures/calibration_detail.png','figures/shap_readable.png','figures/monitoring_increment.png'):
         check((out/name).read_bytes().startswith(b'\x89PNG\r\n\x1a\n'),'valid presentation figure '+name)
-    appendix=(out/'comparator_appendix.md').read_text(encoding='utf-8')
+    pointer=(out/'comparator_appendix.md').read_text(encoding='utf-8')
+    check('../comparators/comparator_appendix.md' in pointer and len(pointer)<600,'legacy appendix entry is a short migration link')
+    appendix=(out/'../comparators/comparator_appendix.md').read_text(encoding='utf-8')
     lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in sc if r['comparison']=='policy-none'}
     for e in se:
         ci=lookup[(e['method'],e['rule'],e['cost'],e['fold'])]
@@ -426,14 +428,15 @@ def _checks(root, pdf_text):
     return dict(checks=count,tables=len(tables),figures=figures,pages=pages,pdf_text_checked=pdf_text,
                 embedded_pdf_images=embedded_images,equation_verifier_sha256=sha(root/'reporting/verify_math.py'),
                 scope='Saved-source hashes, aligned row counts/decisions, independently reconstructed report tables, citation and Word/Markdown agreement; optional exported-PDF text. No model fitting or field validation.',
-                manifest_sha256=sha(out/'report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
+                manifest_sha256=sha(out/'metadata/report_manifest.json'),generator_sha256=sha(root/'reporting/overall.py'),
                 checked_row_and_table_inputs_sha256=checked_inputs,
-                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md','evidence_overview.svg','calibration_detail.png','shap_readable.png','monitoring_increment.png','monitoring_increment.csv','calibration_detail.svg','shap_readable.svg','decision_tradeoffs.svg','monitoring_increment.svg')})
+                outputs_sha256={name:sha(out/name) for name in (STEM+'.md',STEM+'.docx',STEM+'.pdf','figures/evidence_overview.png','figures/decision_tradeoffs.png','figures/decision_tradeoffs.csv','../comparators/comparator_appendix.md','comparator_appendix.md','figures/evidence_overview.svg','figures/calibration_detail.png','figures/shap_readable.png','figures/monitoring_increment.png','figures/monitoring_increment.csv','figures/calibration_detail.svg','figures/shap_readable.svg','figures/decision_tradeoffs.svg','figures/monitoring_increment.svg')})
 
 
 def verify(root=ROOT,pdf_text=False):
     root=Path(root);out=root/'reports/overall';out.mkdir(parents=True,exist_ok=True)
-    record=out/'verification.json';started=datetime.now(timezone.utc).isoformat()
+    (out/'metadata').mkdir(parents=True,exist_ok=True)
+    record=out/'metadata/verification.json';started=datetime.now(timezone.utc).isoformat()
     record.write_text(json.dumps(dict(passed=False,status='running',started_at_utc=started)),encoding='utf-8')
     try:
         result=_checks(root,pdf_text)

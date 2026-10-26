@@ -8,7 +8,7 @@ Start with the [research overview](PROJECT_OVERVIEW.md), read the [integrated pa
 | --- | --- | --- | --- |
 | Stage 1: forecast reliability and explainability | [Stage 1 workflow](../phase1/README.md) | [Stage 1 evidence](../results/phase1/README.md) | [Technical report](../reports/phase1/technical_report.pdf) |
 | Stage 2: historical warning-threshold transfer | [Locked protocol and workflow](../phase2/README.md) | [Reference scores, thresholds and transferred decisions](../results/phase2/README.md) | [Original locked-study technical report](../reports/phase2/phase2_threshold_transfer_report.pdf) |
-| Stage 2 supplement: no-alarm and direct-grade comparisons | [Comparator protocol and code](../phase2/comparators/README.md) | [Comparison evidence](../results/phase2/comparators/README.md) | [Integrated paper](../reports/overall/integrated_research_report.pdf) and [complete comparison supplement](../reports/overall/decision_comparison_supplement.pdf) |
+| Stage 2 supplement: no-alarm and direct-grade comparisons | [Comparator protocol and code](../phase2/comparators/README.md) | [Comparison evidence](../results/phase2/comparators/README.md) | [Integrated paper](../reports/overall/integrated_research_report.pdf) and [complete comparison supplement](../reports/comparators/decision_comparison_supplement.pdf) |
 | Stage 2 exploratory pilot: within-grade ranking | [Ranking protocol and code](../phase2/ranking/README.md) | [Ranking evidence](../results/phase2/ranking/README.md) | [Ranking short report](../reports/ranking/within_grade_ranking_pilot.pdf) |
 | Stage 2 exploratory supplement: matched monitoring information | [Information protocol and code](../phase2/information/README.md) | [Information evidence](../results/phase2/information/README.md) | [Information short report](../reports/information/monitoring_information_increment.pdf); the core finding is also in the integrated paper |
 
@@ -34,7 +34,7 @@ The root README provides the public entry. [Author contributions](../CONTRIBUTIO
 
 Local virtual environments and historical review copies are excluded from Git. They are not experimental results or paper deliverables. On the author's workstation, the old review-work directory has been archived outside the checkout with its original bytes, a file inventory and restoration instructions. Environment directories retain their original paths and are hidden in the normal Windows folder view; they remain available for execution.
 
-Future temporary reviews should use an output directory outside the checkout. Saved research evidence under results and historical published records under docs/audits stay in the repository. Current report figures and verification records remain beside their reports because the generators and checkers bind those paths.
+Future temporary reviews should use an output directory outside the checkout. Saved research evidence under results and historical published records under docs/audits stay in the repository. Current main-paper figures and plotting tables are in `reports/overall/figures/`; formal generation and verification records are in `reports/overall/metadata/`. Full comparator documents and their records are in `reports/comparators/` and its `metadata/` directory. The legacy appendix entry in `reports/overall/` is a short migration link. The original stage reports and exploratory short reports retain their existing directories.
 
 ## Execution order
 

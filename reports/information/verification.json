@@ -9,18 +9,18 @@
   "source_links_checked": 8,
   "standalone_background_checked": true,
   "scope": "Source/code/output hashes, row-derived expected detections and allocation counts, complete main table and all-length plot data, Word/Markdown agreement and optional PDF text; numerical bootstrap/model refit verification is separate",
-  "manifest_sha256": "d374441a4aebb6e9832c455865e70485187e00eac10cd1fab78707589355de88",
+  "manifest_sha256": "02518583539f70f1410cb6d639903221c7e5de66cd1654e70b020fa199bc63c5",
   "outputs_sha256": {
     "monitoring_information_increment.md": "d57c2b83aa512438ac30e6df113f2821a63d7247f51d887ae9e943387b540fc8",
-    "monitoring_information_increment.docx": "8ea09450b7b898a9e481ca501381ce1cd536f87d98d4ba58c5b9f912cf3f4b38",
-    "monitoring_information_increment.pdf": "78e8887b1613a736e65a750da8010d2acec1dd1098c7529a8d49a775d0ccd931",
+    "monitoring_information_increment.docx": "8931ad3cd858ec9690fed3b90528bbb2ef709b9b3b843a8b9ac78d06bfba72e9",
+    "monitoring_information_increment.pdf": "f1ffa26d183dbc8387f865e0911f58e5c13dd461b248e7cc56e263f9c987d711",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
     "information_increment.png": "0058be9b18d0e7f23ac5cb4bb4519a3ae360a9e8f119591cffdd68b7da0c04f5",
-    "information_increment.svg": "79465646654c6399c53366ecd0731ff91fb1cf1a9916ce676a5eb89625f96827"
+    "information_increment.svg": "f17aa8b6a0e1331d763e7a8df17879244384c563311eef0e2d2d79107516075b"
   },
   "passed": true,
   "status": "passed",
-  "started_at_utc": "2026-10-25T19:34:28.263399+00:00",
-  "completed_at_utc": "2026-10-25T19:34:28.696825+00:00",
+  "started_at_utc": "2026-10-26T00:17:27.463733+00:00",
+  "completed_at_utc": "2026-10-26T00:17:27.658979+00:00",
   "verifier_sha256": "c857c2728d662886dba3f75734796d6f1096ed47f9820621c1c06c0b6c942f3a"
 }

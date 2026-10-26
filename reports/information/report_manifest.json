@@ -1,6 +1,6 @@
 {
   "title": "Monitoring Information Beyond Hazard Grades and Shift Type",
-  "created_at_utc": "2026-10-25T19:33:05.708248+00:00",
+  "created_at_utc": "2026-10-26T00:15:47.396437+00:00",
   "inputs": {
     "phase2/information/protocol.json": "0b0fd33122d25270016b097c1eee989f7af2adf230033bbed616f2dc28cae407",
     "reporting/edition.py": "ba433aa2748d58aa3102fc8728d74d8879f7d8ef704a20cd909cbc1c07455938",
@@ -18,7 +18,7 @@
     "results/phase2/information/rows.csv": "99f0a7a92fc4747ade2cb1d8a6d5f97550274a29c36180006e5c1048521dae42"
   },
   "generator_sha256": "00b5077b111ad7cdcc512ac5de9bf8fe3b8283c7ea63371a38c5c8157a3ad7d1",
-  "writer_sha256": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
+  "writer_sha256": "c035568efc25838cdaddb63205fab6f404050dd7e31f44eb54d09553921599ee",
   "source_version": "de833195e2e7d025ca75c1efb57ac6d866127461",
   "edition_tag": "manuscript-2026-10-26",
   "source_links": [
@@ -239,9 +239,9 @@
   },
   "outputs": {
     "monitoring_information_increment.md": "d57c2b83aa512438ac30e6df113f2821a63d7247f51d887ae9e943387b540fc8",
-    "monitoring_information_increment.docx": "8ea09450b7b898a9e481ca501381ce1cd536f87d98d4ba58c5b9f912cf3f4b38",
+    "monitoring_information_increment.docx": "8931ad3cd858ec9690fed3b90528bbb2ef709b9b3b843a8b9ac78d06bfba72e9",
     "figure_data.csv": "075ef48cb57224ef18c9524e657c1c1348fe878bf2060dc0d3ded03dd6d40dee",
     "information_increment.png": "0058be9b18d0e7f23ac5cb4bb4519a3ae360a9e8f119591cffdd68b7da0c04f5",
-    "information_increment.svg": "79465646654c6399c53366ecd0731ff91fb1cf1a9916ce676a5eb89625f96827"
+    "information_increment.svg": "f17aa8b6a0e1331d763e7a8df17879244384c563311eef0e2d2d79107516075b"
   }
 }

@@ -14,7 +14,7 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def build(root=ROOT):
-    root=Path(root);dest=root/'reports/overall';dest.mkdir(parents=True,exist_ok=True);record=dest/'appendix_verification.json'
+    root=Path(root);dest=root/'reports/comparators';dest.mkdir(parents=True,exist_ok=True);(dest/'metadata').mkdir(parents=True,exist_ok=True);record=dest/'metadata/appendix_verification.json'
     record.write_text(json.dumps(dict(passed=False,status='building')),encoding='utf-8')
     (dest/(STEM+'.pdf')).unlink(missing_ok=True)
     try:
@@ -24,7 +24,7 @@ def build(root=ROOT):
             return list(csv.DictReader(path.open(encoding='utf-8',newline='')))
         evaluations=read('results/phase2/comparators/evaluations.csv')
         intervals=read('results/phase2/comparators/intervals.csv')
-        for name in ('reporting/overall.py','reporting/edition.py','reports/overall/comparator_appendix.md','phase2/comparators/protocol.json'):
+        for name in ('reporting/overall.py','reporting/edition.py','reports/comparators/comparator_appendix.md','phase2/comparators/protocol.json'):
             inputs[name]=sha(root/name)
         lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in intervals if r['comparison']=='policy-none'}
         def effect(r):return f"{float(r['loss_delta100']):.2f} [{float(r['ci_low']):.2f}, {float(r['ci_high']):.2f}]"
@@ -74,7 +74,7 @@ def build(root=ROOT):
         manifest=dict(edition_tag=EDITION_TAG,generator_sha256=sha(Path(__file__)),inputs=inputs,tables=tables,
             created_at_utc=datetime.now(timezone.utc).isoformat(),scope='Full frozen comparison presentation; no fits, threshold selection or new intervals',
             outputs={name:sha(dest/name) for name in (STEM+'.md',STEM+'.docx')})
-        (dest/'appendix_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+        (dest/'metadata/appendix_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
         record.write_text(json.dumps(dict(passed=False,status='awaiting verification')),encoding='utf-8')
         print('Complete decision supplement generated: 8 tables, 1260 settings.')
     except (Exception,KeyboardInterrupt) as error:

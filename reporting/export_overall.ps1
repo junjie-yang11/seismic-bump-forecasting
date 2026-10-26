@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('overall','ranking','information')][string]$ReportDirectory = 'overall',
+    [ValidateSet('overall','comparators','ranking','information')][string]$ReportDirectory = 'overall',
     [ValidateSet('integrated_research_report','within_grade_ranking_pilot','monitoring_information_increment','decision_comparison_supplement')][string]$Stem = 'integrated_research_report'
 )
 $ErrorActionPreference = 'Stop'

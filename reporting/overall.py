@@ -125,7 +125,7 @@ def decision_figure(rows, destination):
     import matplotlib.pyplot as plt
     from matplotlib.ticker import MaxNLocator
     destination=Path(destination)
-    with (destination/'decision_tradeoffs.csv').open('w',encoding='utf-8',newline='') as stream:
+    with (destination/'figures/decision_tradeoffs.csv').open('w',encoding='utf-8',newline='') as stream:
         writer=csv.DictWriter(stream,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
     fig,axes=plt.subplots(5,2,figsize=(9.2,8.5),gridspec_kw={'width_ratios':[1.25,1]},sharex='col')
     low=min(float(r['ci_low']) for r in rows);high=max(float(r['ci_high']) for r in rows)
@@ -158,7 +158,7 @@ def decision_figure(rows, destination):
     axes[-1,0].set_xlabel('Loss difference vs no alarms / 100 records',fontsize=12)
     axes[-1,1].set_xlabel('Alerts and TP/P (hazardous shifts flagged)',fontsize=12)
     fig.tight_layout(h_pad=1.0,w_pad=2.0)
-    fig.savefig(destination/'decision_tradeoffs.png',dpi=320,bbox_inches='tight');fig.savefig(destination/'decision_tradeoffs.svg',bbox_inches='tight');plt.close(fig)
+    fig.savefig(destination/'figures/decision_tradeoffs.png',dpi=320,bbox_inches='tight');fig.savefig(destination/'figures/decision_tradeoffs.svg',bbox_inches='tight');plt.close(fig)
 
 
 def decision_signature(decisions, fold, methods, budgets):
@@ -273,8 +273,8 @@ def assemble():
     information20=one(information,fold=-1,budget=.2)
     information20_ci=one(information_ci,fold=-1,budget=.2,block_length=32)
     from reporting.visuals import supporting_figures, monitoring_figure
-    supporting_figures(s1('calibration_bins'),s1('shap_importance'),DEST)
-    monitoring_figure(information,information_ci,DEST)
+    supporting_figures(s1('calibration_bins'),s1('shap_importance'),DEST/'figures')
+    monitoring_figure(information,information_ci,DEST/'figures')
     evidence.text('reporting/visuals.py');evidence.text('reporting/word_math.py');evidence.text('reporting/edition.py')
 
     def effect(row):
@@ -315,7 +315,7 @@ def assemble():
     para(f'Threshold-choice theory relates scores, operating conditions and expected classification loss {cite("s1_14")}. Risk-informed warning identification connects warnings to assessment and response, but its assessment-based Seismic Bumps comparison differs from this study\'s subsequent-shift event label {cite("warning")}. '
          f'Precision-recall interpretation also depends on the evaluation prevalence {cite("s1_15")}. These sources motivate explicit comparators; they do not establish that a retrospectively selected rule will work at a new mine or future operating condition.')
     para(f'The evaluated models are logistic regression (LR), bagged classification and regression trees (CART), and XGBoost. The study contributes three connected elements. First, common-cohort forecast assessment quantifies how the apparent AP protocol gap changes with the evaluated records: the gaps shrink by {reductions}, without identifying a causal share of leakage or drift. Second, the decision analysis jointly measures transferred loss, detections, workload and capacity excess, explains historical no-alarm choices and compares fixed with refitted models. A matched-allocation supplement then asks whether monitoring information adds coverage beyond grades and shift type. Third, the implementation connects source row mappings, saved predictions, historical threshold candidates and row-level decisions to verification through separate calculation paths. This is an application and empirical evaluation of established learning, explanation, threshold-choice and resampling methods.')
-    figure('reports/overall/evidence_overview.png', 'Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.')
+    figure('reports/overall/figures/evidence_overview.png', 'Figure 1. Conceptual organization of the study. Shared records support complementary forecast and decision analyses. The branches do not imply that corrected Stage 1 probabilities are inputs to Stage 2 rules.')
 
     heading('2 Data, target and common evaluation records', page=True)
     para(f'The official source contains {source["original_rows"]:,} records and {source["original_positives"]} positive shift labels. An ARFF-to-mirror audit reproduces first-occurrence deduplication without reordering: {source["removed_rows"]} exact duplicate occurrences, all negative, are removed to yield {source["mirror_rows"]:,} mirror records {cite("s1_1","s1_2")}. '
@@ -401,7 +401,7 @@ def assemble():
           ['Model','Model Brier','Historical Brier','Historical skill','Retrospective Brier','Retrospective skill'],
           [[m,num(historical[m]['model_brier']),num(historical[m]['historical_brier']),num(historical[m]['historical_skill']),
             num(historical[m]['oracle_brier']),num(historical[m]['oracle_skill'])] for m in models])
-    figure('reports/overall/calibration_detail.png', 'Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The fitted panel spans 0-100%; the corrected panel zooms to 0-30% on both axes. Bin counts and n are displayed.', width=6.2)
+    figure('reports/overall/figures/calibration_detail.png', 'Figure 2. LR calibration before and after training-prior correction on the common test cohort. Quantile bins retain ties; point size reflects bin count. The fitted panel spans 0-100%; the corrected panel zooms to 0-30% on both axes. Bin counts and n are displayed.', width=6.2)
     para('The historical constant is deployable within each recorded protocol because it uses training labels only. The retrospective constant uses the evaluated prevalence for assessment and does not generate predictions. Stage 2 does not apply cost cutoffs to corrected LR probabilities: its A/B/C rules operate on raw reference scores. A calibration gain therefore does not constitute an observed reduction in Stage 2 warning loss.')
 
     heading('4.2 Feature use and incremental predictive evidence', page=True)
@@ -413,7 +413,7 @@ def assemble():
     table('ablation', 'Full design versus a refitted learner using all three hazard-rating fields.',
           ['Model','Full AP','Ratings-only AP','Full minus ratings','95% paired interval'], rows)
     para('Ratings-only denotes a separately fitted LR, CART or XGBoost using seismic, seismoacoustic and ghazard together. It is not a direct grade-to-alarm rule or the mine\'s deployed practice. The paired gain intervals include zero under the retained configurations. XGBoost ablations reuse full-design training-selected parameters, so the contrasts are conditional design comparisons rather than equally retuned optima for every subset.')
-    figure('reports/overall/shap_readable.png', 'Figure 3. Full-feature XGBoost attribution and block-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.')
+    figure('reports/overall/figures/shap_readable.png', 'Figure 3. Full-feature XGBoost attribution and block-specific shares. Contributions describe the fitted models on raw log-odds; the eight displayed features are selected by global mean absolute contribution. Each heatmap cell is its share of the sum over all 17 features in the block.')
     para(f'The leading contributions are {", ".join(r["feature"] for r in importance[:3])}. Removing the seismic-activity group and refitting yields AP {num(removed["pr_auc"])} versus {num(full["XGBoost"]["pr_auc"])} for the full design; '
          f'the paired difference is {num(removed_ci["delta"])} with interval {interval(removed_ci["ci_low"], removed_ci["ci_high"])}. The interval includes zero. Large attribution and uncertain refitted benefit can coexist because they concern different models and questions. Correlated inputs, interactions and sampling variability are possible explanations, not identified causes. No subset is selected from these test results.')
 
@@ -445,8 +445,8 @@ def assemble():
 
     heading('5.1 Frozen policies compared with no alarms')
     decision_figure(decision_figure_rows(supplement,supplement_ci),DEST)
-    evidence.text('reports/overall/decision_tradeoffs.csv')
-    figure('reports/overall/decision_tradeoffs.png', 'Figure 4. Fixed-XGBoost C at r=10 across four historical budgets. Left: loss versus no alarms per 100 records (negative favors C), with conditional 95% block intervals. Right: alerts (gray) and hazardous shifts flagged, TP (green); P denotes all hazardous shifts. Shaded pooling is supplementary. Zero intervals reflect identical decisions. Intervals exclude fitting and selection uncertainty.',width=6.4)
+    evidence.text('reports/overall/figures/decision_tradeoffs.csv')
+    figure('reports/overall/figures/decision_tradeoffs.png', 'Figure 4. Fixed-XGBoost C at r=10 across four historical budgets. Left: loss versus no alarms per 100 records (negative favors C), with conditional 95% block intervals. Right: alerts (gray) and hazardous shifts flagged, TP (green); P denotes all hazardous shifts. Shaded pooling is supplementary. Zero intervals reflect identical decisions. Intervals exclude fitting and selection uncertainty.',width=6.4)
     rows=[]
     for f in (0,1,2,3,-1):
         groups={}
@@ -574,7 +574,7 @@ def assemble():
     para(f'At 20% test-batch slots, the pooled baseline has {num(information20["base_etp"],2)} expected total detections and the extended design {num(information20["extended_etp"],2)}, each using {integer(information20["k"])} slots. The difference is {num(information20["delta_etp"],2)} with conditional 95% interval {interval(information20_ci["ci_low"],information20_ci["ci_high"],2)}. All 16 block-specific primary intervals and all four pooled intervals include zero; the point differences vary across blocks. This workflow has not established a consistent monitoring-information increment, and it does not establish that monitoring information is generally uninformative.')
     para('At fixed hazardous count P and allocated slots K, expected loss uses the total expected detections; a separate cost grid would restate this contrast:')
     equation('expected_loss')
-    figure('reports/overall/monitoring_increment.png','Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.',width=6.2)
+    figure('reports/overall/figures/monitoring_increment.png','Figure 5. Extended minus grade-plus-shift expected detections at identical seismic-grade allocations and test-batch slots. Positive differences favor added monitoring; bars are conditional 95% paired reranking intervals at block length 32. All four blocks and four slot fractions are shown; pooled results are supplementary. These fractions fix test-batch slots, whereas the earlier historical budgets constrain reference threshold selection and permit future workload to change.',width=6.2)
     para(f'The two uses of 20% answer different questions. Historical C at r=10 produces {integer(c20["alerts"])} test alerts and {integer(c20["tp"])} detections, whereas this batch study allocates {integer(information20["k"])} slots to each model. Its {num(information20["extended_etp"],2)} expected detections cannot be compared with C as an improvement at equal workload. The batch task is retrospective ranking, not observed dispatch. Its protocol was specified after these test records had been examined; the records overlap the two stages and add no independent validation cohort.')
     from reporting.edition import edition_url
     items.append(dict(kind='link',text='Exploratory supplement: matched design, all intervals and reproduction details',target=edition_url('reports/information/monitoring_information_increment.pdf')))
@@ -727,7 +727,7 @@ def write_comparison_appendix():
     lookup={(r['left_method'],r['rule'],r['cost'],r['fold']):r for r in intervals if r['comparison']=='policy-none'}
     lines=['# Frozen decision comparison appendix',
            'This generated appendix retains all planned A/B/C settings. Record block results precede pooled summaries. Negative loss differences favor the left policy. Intervals are unadjusted 95% percentile intervals from 2,000 paired within-block moving-block draws of length 32, conditional on frozen policies and these records. They exclude refitting and selection uncertainty. Exact zero intervals can follow identical decisions and do not establish transfer stability.',
-           '[Protocol](../../phase2/comparators/protocol.json) · [Evidence and verification](../../results/phase2/comparators/README.md) · [Main manuscript](integrated_research_report.md)',
+           '[Protocol](../../phase2/comparators/protocol.json) · [Evidence and verification](../../results/phase2/comparators/README.md) · [Main manuscript](../overall/integrated_research_report.md)',
            '## Policy minus no alarms']
     for cost in (5,10,20,50):
         lines.append('### Assumed missed-shift cost '+str(cost))
@@ -753,27 +753,31 @@ def write_comparison_appendix():
                    num(r['loss_delta100'],2)+' '+interval(r['ci_low'],r['ci_high'],2)]
             table.append('| '+' | '.join(cells)+' |')
         lines.append('\n'.join(table))
-    (DEST/'comparator_appendix.md').write_text('\n\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'reports/comparators').mkdir(parents=True,exist_ok=True)
+    (DEST/'../comparators/comparator_appendix.md').write_text('\n\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
 
 
 def build():
     DEST.mkdir(parents=True,exist_ok=True)
-    certificate=DEST/'verification.json'
+    (DEST/'figures').mkdir(parents=True,exist_ok=True)
+    (DEST/'metadata').mkdir(parents=True,exist_ok=True)
+    certificate=DEST/'metadata/verification.json'
     started=datetime.now(timezone.utc).isoformat()
     certificate.write_text(json.dumps(dict(passed=False,status='building',started_at_utc=started)),encoding='utf-8')
     try:
         # A prior PDF cannot certify a newly generated Word manuscript.
         (DEST/(STEM+'.pdf')).unlink(missing_ok=True)
-        overview_figure(DEST/'evidence_overview.png')
+        overview_figure(DEST/'figures/evidence_overview.png')
         items,tables,inputs,source_checks=assemble()
         write_outputs(items)
         write_comparison_appendix()
+        (DEST/'comparator_appendix.md').write_text('# Comparison appendix moved\n\nThe complete comparison tables are now in [reports/comparators/comparator_appendix.md](../comparators/comparator_appendix.md). This small pointer preserves links in retained study guides.\n',encoding='utf-8')
         from reporting.edition import EDITION_TAG
         manifest=dict(title=TITLE,edition_tag=EDITION_TAG,scope='Integrated reporting with frozen-policy, direct-grade and exploratory matched-information evidence; no ML fitting or policy selection in reporting',
                       inputs=inputs,generator_sha256=digest(Path(__file__)),tables=tables,
                       source_certificates_at_build=source_checks,
-                      outputs={name:digest(DEST/name) for name in (STEM+'.md',STEM+'.docx','evidence_overview.png','decision_tradeoffs.png','decision_tradeoffs.csv','comparator_appendix.md','evidence_overview.svg','calibration_detail.png','shap_readable.png','monitoring_increment.png','monitoring_increment.csv','calibration_detail.svg','shap_readable.svg','decision_tradeoffs.svg','monitoring_increment.svg')})
-        (DEST/'report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+                      outputs={name:digest(DEST/name) for name in (STEM+'.md',STEM+'.docx','figures/evidence_overview.png','figures/decision_tradeoffs.png','figures/decision_tradeoffs.csv','../comparators/comparator_appendix.md','comparator_appendix.md','figures/evidence_overview.svg','figures/calibration_detail.png','figures/shap_readable.png','figures/monitoring_increment.png','figures/monitoring_increment.csv','figures/calibration_detail.svg','figures/shap_readable.svg','figures/decision_tradeoffs.svg','figures/monitoring_increment.svg')})
+        (DEST/'metadata/report_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
         certificate.write_text(json.dumps(dict(passed=False,status='awaiting independent verification')),encoding='utf-8')
         print(f'Integrated manuscript generated: {len(tables)} tables; model and decision evidence untouched.')
     except (Exception,KeyboardInterrupt) as error:

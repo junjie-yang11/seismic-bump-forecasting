@@ -1,12 +1,12 @@
 {
   "edition_tag": "manuscript-2026-10-26",
-  "generator_sha256": "2d476b17e17e58833f8a6bac755b61e59426e3e6fd010474e9a68388130b5cb2",
+  "generator_sha256": "976666baa0dfc7186d98235aa875c9a4ecd4d4462a4a7133bced09e0202f0c0e",
   "inputs": {
     "results/phase2/comparators/evaluations.csv": "19ba7dd6016de3006ae080d2f071533b2fd2d95c0dc263e54c52b4dc17126468",
     "results/phase2/comparators/intervals.csv": "c5c06f8df03d1967be522edc96932e62d6b81792d288ff99552d8d8b728168ae",
-    "reporting/overall.py": "216729fac0d0fb17f3a798a23839a1ce4c55975d2a89d64b2fee034e53040a3c",
+    "reporting/overall.py": "c035568efc25838cdaddb63205fab6f404050dd7e31f44eb54d09553921599ee",
     "reporting/edition.py": "ba433aa2748d58aa3102fc8728d74d8879f7d8ef704a20cd909cbc1c07455938",
-    "reports/overall/comparator_appendix.md": "ef18de0aa6e344971cea0435b92bff361cb4c660cd877a9c34c68f118dddaf7e",
+    "reports/comparators/comparator_appendix.md": "c64d3396c93f8db792747952b86b44758bf4d2662d8d0e921cc86f22d7b3ea49",
     "phase2/comparators/protocol.json": "588f3a9b905094cf9447cc4906b4a01b8d96b781e4609364dc2608b8a4cf6716"
   },
   "tables": [
@@ -11295,10 +11295,10 @@
       ]
     }
   ],
-  "created_at_utc": "2026-10-25T19:27:34.998255+00:00",
+  "created_at_utc": "2026-10-26T00:15:46.331463+00:00",
   "scope": "Full frozen comparison presentation; no fits, threshold selection or new intervals",
   "outputs": {
     "decision_comparison_supplement.md": "4a6ac6082f700ec52116e8d6a717a1ccda26813973763e3b5a281a89c80d0ba7",
-    "decision_comparison_supplement.docx": "6ca204fcfa198067d461d59f60c439d5bc685dd3671196f207a2c12698745c9f"
+    "decision_comparison_supplement.docx": "89f2a11c71da13b283c09fe6c6cbbc9a5b2dda571ea3d7414176426b6aee0ed2"
   }
 }

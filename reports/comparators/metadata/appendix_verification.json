@@ -4,15 +4,15 @@
   "settings": 1260,
   "pages": 42,
   "pdf_text_checked": true,
-  "manifest_sha256": "eb7eb1504f0c1fd0cba47f3053f0f74bf245179dc89205fdbfb7e04064b5903f",
+  "manifest_sha256": "75838dac5e72e4d1911f578a7c66bf6f17a002a0519298dddf3365a31390c38d",
   "scope": "All frozen supplemental rows reconstructed from saved CSVs; Word and Markdown compared; optional complete PDF text and orientation. No fitting, threshold selection or resampling.",
   "outputs_sha256": {
     "decision_comparison_supplement.md": "4a6ac6082f700ec52116e8d6a717a1ccda26813973763e3b5a281a89c80d0ba7",
-    "decision_comparison_supplement.docx": "6ca204fcfa198067d461d59f60c439d5bc685dd3671196f207a2c12698745c9f",
-    "decision_comparison_supplement.pdf": "5c331de5a0fad2a8b24c5f9def6157f525e9c1aae8e10a9901b0f509420a6deb"
+    "decision_comparison_supplement.docx": "89f2a11c71da13b283c09fe6c6cbbc9a5b2dda571ea3d7414176426b6aee0ed2",
+    "decision_comparison_supplement.pdf": "98198c437d8b6949a39172db876657d159286b00eef38dc81aa0aff9ff626cf8"
   },
   "passed": true,
   "status": "passed",
-  "completed_at_utc": "2026-10-25T19:33:10.541192+00:00",
-  "verifier_sha256": "8540386196d4ddd3c73505fae8f3b375a8fee7c53427ebdeed0c0ae0179ba1a2"
+  "completed_at_utc": "2026-10-26T00:17:27.367357+00:00",
+  "verifier_sha256": "e0ee99f9f5eb157af930fe3179f984c423f076d5c2991f957c557bd5ed37f539"
 }
